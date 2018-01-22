@@ -87,8 +87,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\assimp\include;$(SolutionDir)lib\glm\include;$(SolutionDir)lib\entityx\include;$(SolutionDir)lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\entityx\lib;$(SolutionDir)lib\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glfw3dll.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\entityx\lib\Debug;$(SolutionDir)lib\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glfw3dll.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,7 +118,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\entityx\lib;$(SolutionDir)lib\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\entityx\lib\Release;$(SolutionDir)lib\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;glfw3dll.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
