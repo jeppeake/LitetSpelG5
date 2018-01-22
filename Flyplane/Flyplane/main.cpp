@@ -1,6 +1,10 @@
 #include <GL\glew.h>
 #include <GLFW/glfw3.h>
-
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h> 
+#include <glm\glm.hpp>
+#include <entityx\entityx.h>
 
 int main(void)
 {
@@ -27,6 +31,14 @@ int main(void)
 		//system("pause");
 		
 	}
+
+
+	Assimp::Importer importer;
+
+
+	entityx::EntityX ex;
+
+	entityx::Entity entity = ex.entities.create();
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
