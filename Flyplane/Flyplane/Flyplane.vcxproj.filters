@@ -28,6 +28,9 @@
     <Filter Include="Source Files\util">
       <UniqueIdentifier>{dfde3a9d-cfbd-4dba-89d4-24e80bda3400}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\terrain">
+      <UniqueIdentifier>{bc562431-498e-4e4d-91a4-b4c504f6a815}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="lodepng.cpp">
       <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="heightmap.cpp">
+      <Filter>Source Files\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +97,12 @@
     </ClInclude>
     <ClInclude Include="lodepng.h">
       <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="heightmap.h">
+      <Filter>Source Files\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>Source Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
