@@ -8,6 +8,17 @@ int main(void)
 	Window w;
 	w.open(1280, 720);
 
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		//system("pause");
+		
+	}
+
+	entityx::EntityX ex;
+
+	entityx::Entity entity = ex.entities.create();
+
 
 	EngineState* engine = new PlayingState();
 	engine->init();
