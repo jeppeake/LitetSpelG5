@@ -16,6 +16,12 @@
     <Filter Include="Source Files\enginestate">
       <UniqueIdentifier>{cf4509c2-5c01-44f3-b114-16f0b840d141}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{7d9c9e14-d556-4821-a369-326e33cc62cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems">
+      <UniqueIdentifier>{bd75a8c1-8ee8-4145-89e9-a2745d359297}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -43,6 +49,15 @@
     </ClInclude>
     <ClInclude Include="playingstate.h">
       <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="physics.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="testsystem.h">
+      <Filter>Source Files\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

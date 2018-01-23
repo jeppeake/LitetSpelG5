@@ -130,7 +130,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enginestate.h" />
+    <ClInclude Include="physics.h" />
     <ClInclude Include="playingstate.h" />
+    <ClInclude Include="testsystem.h" />
+    <ClInclude Include="transform.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
