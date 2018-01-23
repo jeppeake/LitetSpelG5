@@ -3,6 +3,7 @@
 #include "enginestate.h"
 #include "playingstate.h"
 #include "renderer.h"
+#include "model.h"
 
 int main(void)
 {
@@ -10,7 +11,6 @@ int main(void)
 	
 	w.open(1280, 720);
 	Renderer r;
-
 
 
 	EngineState* engine = new PlayingState();

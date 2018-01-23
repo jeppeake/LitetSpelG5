@@ -172,6 +172,11 @@ void Model::load(const std::string & file)
 
 	recursiveDeleteNodes(root);
 
+	for (int i = 0; i < model_meshes.size(); i++) {
+		std::cout << model_meshes[i].first->name << "\n";
+		std::cout << model_meshes[i].first->numIndices() << "\n";
+	}
+
 	aiReleaseImport(scene);
 }
 

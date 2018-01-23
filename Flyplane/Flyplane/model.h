@@ -38,7 +38,6 @@ struct Vertex {
 class Model {
 	class Mesh
 	{
-		std::string name = "";
 		std::vector<GLuint> indices;
 		std::vector<Vertex> vertices;
 		GLuint ebo = 0;
@@ -46,6 +45,8 @@ class Model {
 		GLuint vao = 0;
 		unsigned int material_index;
 	public:
+		std::string name = "";
+
 		Mesh(aiMesh* mesh);
 		Mesh(const std::vector<Vertex>& vertices,
 			const std::vector<GLuint>& indices);
