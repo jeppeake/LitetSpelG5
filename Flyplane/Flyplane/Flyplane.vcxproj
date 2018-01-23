@@ -124,12 +124,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enginestate.h" />
+    <ClInclude Include="physics.h" />
+    <ClInclude Include="playingstate.h" />
+    <ClInclude Include="testsystem.h" />
+    <ClInclude Include="transform.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="window.h" />
@@ -137,6 +142,10 @@
   <ItemGroup>
     <None Include="fragmentShader.glsl" />
     <None Include="vertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="equipment.h" />
+    <ClInclude Include="weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

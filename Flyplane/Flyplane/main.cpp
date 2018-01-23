@@ -1,6 +1,7 @@
 #include <GL\glew.h>
 #include "window.h"
 #include "enginestate.h"
+#include "playingstate.h"
 #include "renderer.h"
 
 int main(void)
@@ -12,7 +13,7 @@ int main(void)
 
 
 
-	EngineState* engine = new TestState();
+	EngineState* engine = new PlayingState();
 	engine->init();
 
 	while (!w.shouldClose()) {
