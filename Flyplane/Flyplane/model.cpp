@@ -6,6 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <GL\glew.h>
+#include <stack>
 
 Model::Mesh::Mesh(aiMesh * mesh)
 {
@@ -96,6 +97,7 @@ void Model::Mesh::unbind()
 	glBindVertexArray(0);
 }
 
+
 void Model::load(const std::string & file)
 {
 	const aiScene* scene = aiImportFile(file.c_str(),
@@ -111,11 +113,6 @@ void Model::load(const std::string & file)
 		std::cout << "Could not open model '" << file << "': " + std::string(aiGetErrorString()) << "\n";
 		return;
 	}
-	if (!scene->HasMeshes())
-	{
-		std::cout << "No meshes in: '" << file << "'\n";
-		return;
-	}
 
 
 	for (int i = 0; i < scene->mNumMeshes; i++)
@@ -124,5 +121,83 @@ void Model::load(const std::string & file)
 	}
 
 
+
+	// build tree
+	std::stack<aiNode*> aistack;
+	std::stack<Node*> stack;
+	aiNode* aicurrent = scene->mRootNode;
+	Node* root = new Node();
+	Node* current = root;
+	bool done = false;
+	while (!done)
+	{
+		// Process node
+		// ---------------------------
+
+		for (int i = 0; i < aicurrent->mNumMeshes; i++)
+		{
+			size_t index = aicurrent->mMeshes[i];
+			current->meshes.push_back(&meshes[i]);
+		}
+		current->name = std::string(aicurrent->mName.C_Str());
+
+		for (int i = 0; i < aicurrent->mNumChildren; i++)
+		{
+			current->children.push_back(new Node());
+
+			// ---------------------------
+
+
+			aistack.push(aicurrent->mChildren[i]);
+			stack.push(current->children[i]);
+		}
+
+
+		if (aistack.empty())
+		{
+			done = true;
+		}
+		else
+		{
+			aicurrent = aistack.top();
+			aistack.pop();
+
+			current = stack.top();
+			stack.pop();
+		}
+	}
+
+	// flatten tree
+	recursiveFlatten(root, glm::mat4());
+
+	recursiveDeleteNodes(root);
+
 	aiReleaseImport(scene);
+}
+
+void Model::recursiveFlatten(Node * node, glm::mat4 transform)
+{
+	glm::mat4 current_transform = transform * node->transform;
+
+	for (int i = 0; i < node->meshes.size(); i++) {
+		auto pair = std::make_pair(node->meshes[i], current_transform);
+		model_meshes.push_back(pair);
+	}
+
+	for (int i = 0; i < node->children.size(); i++)
+	{
+		recursiveFlatten(node->children[i], current_transform);
+	}
+}
+
+void Model::recursiveDeleteNodes(Node * node)
+{
+	if (node->children.size() > 0)
+	{
+		for (int i = 0; i < node->children.size(); i++)
+		{
+			recursiveDeleteNodes(node->children[i]);
+			delete node->children[i];
+		}
+	}
 }
