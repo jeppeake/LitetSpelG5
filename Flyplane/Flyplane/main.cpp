@@ -1,58 +1,16 @@
 #include <GL\glew.h>
-#include <GLFW/glfw3.h>
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h> 
-#include <glm\glm.hpp>
-#include <entityx\entityx.h>
+
+#include "window.h"
 
 int main(void)
 {
-	GLFWwindow* window;
+	Window w;
+	w.open(1280, 720);
 
-	/* Initialize the library */
-	if (!glfwInit())
-		return -1;
+	while (!w.shouldClose()) {
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
+		w.update();
 	}
-
-	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
-
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		//system("pause");
-		
-	}
-
-
-	Assimp::Importer importer;
-
-
-	entityx::EntityX ex;
-
-	entityx::Entity entity = ex.entities.create();
-
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
-	{
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
-
-		/* Poll for and process events */
-		glfwPollEvents();
-	}
-
-	glfwTerminate();
+	
 	return 0;
 }
