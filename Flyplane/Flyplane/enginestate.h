@@ -24,21 +24,3 @@ public:
 
 	virtual void update() = 0;
 };
-
-class TestState : public EngineState {
-	Timer t;
-public:
-
-	virtual ~TestState() {}
-
-	virtual void init() {
-		t.restart();
-	}
-
-	virtual void update() {
-		double time = t.elapsed();
-		glClearColor(abs(sin(time)), abs(cos(time)), 0.0, 1.0);
-
-	}
-
-};
