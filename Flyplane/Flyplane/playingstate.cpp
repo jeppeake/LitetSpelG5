@@ -4,6 +4,7 @@
 #include "testsystem.h"
 #include "transform.h"
 #include "weaponsystem.h"
+#include "heightmap.h"
 void PlayingState::init()
 {
 	
@@ -40,6 +41,8 @@ void PlayingState::init()
 	testents.push_back(testWept);
 	entityx::Entity equip = ex.entities.create();
 	equip.assign<Equipment>(testents);
+
+	Heightmap map("korven.png");
 }
 
 void PlayingState::update()
