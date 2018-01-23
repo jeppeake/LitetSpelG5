@@ -55,4 +55,8 @@ public:
 
 	void uniformv(const std::string& name, GLuint count, const GLint* values);
 	void uniform(const std::string& name, const GLint value);
+
+	GLuint getId() {
+		return this->id;
+	}
 };

@@ -2,18 +2,19 @@
 #define RENDERER_H
 #include <GL\glew.h>
 #include <GLFW/glfw3.h>
+#include "shader.h"
+#include <glm\glm.hpp>
+#include "model.h"
+#include "camera.h"
 
 class Renderer {
 private:
-	GLuint vertex_buffer;
-	GLuint vertex_shader;
-	GLuint fragment_shader;
-	GLuint program;
-	GLint vertex_pos;
-	GLint vertex_tex;
+	ShaderProgram shader;
+	glm::mat4x4 matrix;
+	Camera camera;
 public:
 	Renderer();
 	~Renderer();
-	void Render();
+	void Render(Model &model);
 };
 #endif

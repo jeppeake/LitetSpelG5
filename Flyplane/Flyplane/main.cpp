@@ -11,14 +11,15 @@ int main(void)
 	
 	w.open(1280, 720);
 	Renderer r;
-
+	Model m;
+	m.load("assets/MIG-212A.fbx");
 
 	EngineState* engine = new PlayingState();
 	engine->init();
 
 	while (!w.shouldClose()) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		r.Render();
+		r.Render(m);
 		engine->update();
 
 		EngineState* new_state = engine->newState();

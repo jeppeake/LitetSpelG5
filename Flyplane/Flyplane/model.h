@@ -83,13 +83,13 @@ class Model {
 
 	std::vector<Mesh> meshes;
 
-	std::vector<std::pair<Mesh*, glm::mat4>> model_meshes;
+	
 
 
 public:
 
 	//std::vector<Material> materials;
-
+	std::vector<std::pair<Mesh*, glm::mat4>> model_meshes;
 	void load(const std::string& file);
 
 
