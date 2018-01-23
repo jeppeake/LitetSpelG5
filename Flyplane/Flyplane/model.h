@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
 #include <assimp/vector3.h>
@@ -73,10 +74,16 @@ class Model {
 
 		// relative to parent
 		glm::mat4 transform;
-	} root;
+	};
 
+
+	void recursiveFlatten(Node* node, glm::mat4 transform);
+	void recursiveDeleteNodes(Node* node);
 
 	std::vector<Mesh> meshes;
+
+	std::vector<std::pair<Mesh*, glm::mat4>> model_meshes;
+
 
 public:
 
