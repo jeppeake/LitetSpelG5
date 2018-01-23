@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\enginestate">
+      <UniqueIdentifier>{cf4509c2-5c01-44f3-b114-16f0b840d141}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,6 +27,9 @@
     <ClCompile Include="timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="playingstate.cpp">
+      <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -33,7 +39,10 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="enginestate.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="playingstate.h">
+      <Filter>Source Files\enginestate</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
