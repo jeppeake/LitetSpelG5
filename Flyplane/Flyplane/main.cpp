@@ -33,12 +33,33 @@ int main(void)
 	}
 
 
-	Assimp::Importer importer;
+	struct Position {
+		Position(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 
+		float x, y, z;
+	};
+
+	struct WeaponStats {
+		//projectile model, sound, range?, ammo, speed, 
+		WeaponStats(unsigned int ammo, unsigned int range, float speed, float falloff) : ammo(ammo), range(range), speed(speed), falloff(falloff) {}
+
+		unsigned int ammo, range;
+		float speed, falloff;
+	};
+
+	Assimp::Importer importer;
 
 	entityx::EntityX ex;
 
 	entityx::Entity entity = ex.entities.create();
+
+	entityx::Entity testWep = ex.entities.create();
+
+	testWep.assign<WeaponStats>(10, 100, 100.0f, 0.01f);
+	testWep.assign<Position>(0.0f, 0.0f, 0.0f);
+
+
+
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
