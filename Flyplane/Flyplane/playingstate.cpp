@@ -3,7 +3,7 @@
 
 #include "testsystem.h"
 #include "transform.h"
-
+#include "weaponsystem.h"
 void PlayingState::init()
 {
 	
@@ -15,6 +15,7 @@ void PlayingState::init()
 	ex.systems.add<System class here>();
 	*/
 	ex.systems.add<TestSystem>();
+	ex.systems.add<WeaponSystem>();
 
 	ex.systems.configure();
 
@@ -28,6 +29,17 @@ void PlayingState::init()
 	*/
 	auto entity = ex.entities.create();
 	entity.assign<Transform>(glm::vec3(), glm::quat());
+
+	entityx::Entity testWep = ex.entities.create();
+	testWep.assign<WeaponStats>(10, 100, 100.0f, 0.01f);
+	entityx::Entity testWept = ex.entities.create();
+	testWept.assign<WeaponStats>(10, 100, 1000.0f, 0.01f);
+
+	std::vector<Entity> testents;
+	testents.push_back(testWep);
+	testents.push_back(testWept);
+	entityx::Entity equip = ex.entities.create();
+	equip.assign<Equipment>(testents);
 }
 
 void PlayingState::update()
@@ -45,4 +57,5 @@ void PlayingState::update()
 	*/
 
 	ex.systems.update<TestSystem>(dt);
+	ex.systems.update<WeaponSystem>(dt);
 }

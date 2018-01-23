@@ -135,6 +135,7 @@
     <ClInclude Include="testsystem.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="weaponsystem.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
