@@ -1,8 +1,9 @@
 #pragma once
 
-class Equipment {
-private:
+struct Equipment {
+	//projectile model, sound, range?, ammo, speed, 
+	Equipment(std::vector<Entity> slots) : slots(slots) {}
 
-public:
-	virtual void use();
+	unsigned int selected = 0;
+	std::vector<Entity> slots;
 };

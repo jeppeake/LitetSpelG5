@@ -17,7 +17,7 @@ struct TestSystem : public entityx::System<TestSystem> {
 			transform = entity.component<Transform>();
 			transform->pos += glm::vec3(0.1);
 
-			std::cout << transform->pos.x << "\n";
+			//std::cout << transform->pos.x << "\n";
 		}
 	};
 };
