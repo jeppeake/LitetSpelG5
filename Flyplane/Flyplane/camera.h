@@ -13,6 +13,7 @@ private:
 public:
 	Camera();
 	~Camera();
+	void update();
 	glm::mat4 getViewMatrix() const;
 	const glm::mat4& getProjMatrix() const;
 };
