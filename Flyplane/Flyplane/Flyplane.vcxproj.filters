@@ -16,6 +16,15 @@
     <Filter Include="Source Files\enginestate">
       <UniqueIdentifier>{cf4509c2-5c01-44f3-b114-16f0b840d141}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{7d9c9e14-d556-4821-a369-326e33cc62cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\systems">
+      <UniqueIdentifier>{bd75a8c1-8ee8-4145-89e9-a2745d359297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{e590b3e7-ccd4-4de7-892b-ea6c4665ce31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,6 +38,12 @@
     </ClCompile>
     <ClCompile Include="playingstate.cpp">
       <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +59,21 @@
     <ClInclude Include="playingstate.h">
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="physics.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="testsystem.h">
+      <Filter>Source Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
@@ -52,5 +82,13 @@
     <ClInclude Include="equipment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragmentShader.glsl">
+      <Filter>Source Files\graphics</Filter>
+    </None>
+    <None Include="vertexShader.glsl">
+      <Filter>Source Files\graphics</Filter>
+    </None>
   </ItemGroup>
 </Project>

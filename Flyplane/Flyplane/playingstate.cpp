@@ -1,6 +1,9 @@
 #include "playingstate.h"
 #include <glm\gtc\constants.hpp>
 
+#include "testsystem.h"
+#include "transform.h"
+
 void PlayingState::init()
 {
 	
@@ -11,7 +14,7 @@ void PlayingState::init()
 
 	ex.systems.add<System class here>();
 	*/
-
+	ex.systems.add<TestSystem>();
 
 	ex.systems.configure();
 
@@ -23,7 +26,8 @@ void PlayingState::init()
 	auto entity = ex.entities.create();
 	entity.assign<Component class here>(Component constructor params);
 	*/
-
+	auto entity = ex.entities.create();
+	entity.assign<Transform>(glm::vec3(), glm::quat());
 }
 
 void PlayingState::update()
@@ -39,4 +43,6 @@ void PlayingState::update()
 	/*
 	ex.systems.update<System class here>(dt);
 	*/
+
+	ex.systems.update<TestSystem>(dt);
 }
