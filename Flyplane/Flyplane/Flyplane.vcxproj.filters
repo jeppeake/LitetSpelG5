@@ -22,6 +22,9 @@
     <Filter Include="Source Files\systems">
       <UniqueIdentifier>{bd75a8c1-8ee8-4145-89e9-a2745d359297}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{e590b3e7-ccd4-4de7-892b-ea6c4665ce31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,11 +36,14 @@
     <ClCompile Include="timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="playingstate.cpp">
       <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +68,12 @@
     <ClInclude Include="testsystem.h">
       <Filter>Source Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
@@ -70,16 +82,13 @@
     <ClInclude Include="equipment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertexShader.glsl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="fragmentShader.glsl">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics</Filter>
+    </None>
+    <None Include="vertexShader.glsl">
+      <Filter>Source Files\graphics</Filter>
     </None>
   </ItemGroup>
 </Project>
