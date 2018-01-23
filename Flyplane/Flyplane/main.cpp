@@ -2,31 +2,24 @@
 #include "window.h"
 #include "enginestate.h"
 #include "playingstate.h"
+#include "renderer.h"
 
 int main(void)
 {
 	Window w;
+	
 	w.open(1280, 720);
+	Renderer r;
 
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		//system("pause");
-		
-	}
-
-	entityx::EntityX ex;
-
-	entityx::Entity entity = ex.entities.create();
 
 
 	EngineState* engine = new PlayingState();
 	engine->init();
 
 	while (!w.shouldClose()) {
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		engine->update();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		r.Render();
+		//engine->update();
 
 		EngineState* new_state = engine->newState();
 		if (new_state) {
