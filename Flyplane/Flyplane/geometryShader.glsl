@@ -1,5 +1,6 @@
+#version 420
 layout(triangles) in;
-layout(triangles, max_vertices = 3) out;
+layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 Pos[];
 in vec3 Normal[];

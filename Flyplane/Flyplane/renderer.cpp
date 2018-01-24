@@ -29,11 +29,12 @@ void Renderer::Render(Model &model) {
 }
 
 void Renderer::Render(Heightmap &map) {
-	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	this->terrainShader.use();
+	this->terrainShader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	map.bind();
 	glm::mat4 trans(1);
 	trans = glm::translate(trans, map.pos);
-	this->shader.uniform("modelMatrix", trans);
+	this->terrainShader.uniform("modelMatrix", trans);
 	glDrawElements(GL_TRIANGLE_STRIP, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
