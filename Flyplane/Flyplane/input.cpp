@@ -1,14 +1,36 @@
 #include "input.h"
 #include "window.h"
 #include <unordered_map>
-
-std::unordered_map<int, bool> keys;
-bool Input::isKeyDown(int key)
+#include <iostream>
+namespace
+{
+	static std::unordered_map<int, int> keys;
+	static std::unordered_map<int, int> pre_keys;
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (action == GLFW_PRESS)
+		{
+			pre_keys[key]++;
+		}
+	}
+}
+bool Input::initialize()
 {
 	if (!Window::getWindow().isInitialized())
+	{
 		return false;
-	int state = glfwGetKey(Window::getWindow().getGLFWWindow(), key);
-	if (state == GLFW_PRESS)
+	}
+	glfwSetKeyCallback(Window::getWindow().getGLFWWindow(), key_callback);
+	return true;
+}
+bool Input::isKeyDown(int key)
+{
+	return Window::getWindow().keyDown(key);
+}
+
+bool Input::isKeyPressed(int key)
+{
+	if (keys[key] > 0)
 	{
 		return true;
 	}
@@ -18,28 +40,10 @@ bool Input::isKeyDown(int key)
 	}
 }
 
-bool Input::isKeyPressed(int key)
+void Input::reset()
 {
-	/*
-		Fix dis shit
-	*/
-	if (!Window::getWindow().isInitialized())
-		return false;
-	int state = glfwGetKey(Window::getWindow().getGLFWWindow(), key);
-	if (state == GLFW_RELEASE && keys[key])
-	{
-		keys[key] = false;
-		return true;
-	}
-	else if(state == GLFW_PRESS && !keys[key])
-	{
-		return false;
-	}
-	else
-	{
-		keys[key] = false;
-		return false;
-	}
+	keys = pre_keys;
+	pre_keys.clear();
 }
 
 glm::vec2 Input::mouseMov()

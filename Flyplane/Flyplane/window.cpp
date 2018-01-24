@@ -55,7 +55,6 @@ void Window::open(int width, int height)
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
@@ -106,7 +105,6 @@ void Window::open()
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{

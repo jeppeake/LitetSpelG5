@@ -1,4 +1,5 @@
 #include <GL\glew.h>
+#include <thread>
 #include "window.h"
 #include "enginestate.h"
 #include "playingstate.h"
@@ -8,9 +9,11 @@
 
 int main(void)
 {	
+	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
 	//w.open();
 	Renderer r;
+	Input::initialize();
 	Model m;
 	m.load("assets/MIG-212A.fbx");
 
@@ -31,10 +34,7 @@ int main(void)
 			engine = new_state;
 			engine->init();
 		}
-		if (Input::isKeyPressed(GLFW_KEY_A))
-		{
-			std::cout << "Shiiieeet" << std::endl;
-		}
+		Input::reset();
 		Window::getWindow().update();
 	}
 	
