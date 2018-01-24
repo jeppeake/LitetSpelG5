@@ -19,11 +19,16 @@ int main(void)
 	EngineState* engine = new PlayingState();
 	engine->init();
 
+	Timer deltatime;
+
 	while (!Window::getWindow().shouldClose()) {
+		double dt = deltatime.restart();
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		r.Render(m);
 		r.Render(map);
-		engine->update();
+		r.update(dt);
+		engine->update(dt);
 
 		EngineState* new_state = engine->newState();
 		if (new_state) {

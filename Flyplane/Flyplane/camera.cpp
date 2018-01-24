@@ -1,12 +1,15 @@
 #include "camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <iostream>
 #include <glm\gtx\transform.hpp>
+#include <GL\glew.h>
 #include <GLFW\glfw3.h>
+#include "window.h"
 #include "input.h"
 
 Camera::Camera() {
-	this->pos = glm::vec3(0, 0, 20);
+	this->pos = glm::vec3(0, 10, 0);
 	this->forward = glm::vec3(1, 0, 0);
 	this->up = glm::vec3(0, 1, 0);
 	this->projMatrix = glm::infinitePerspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f);
@@ -22,9 +25,16 @@ Camera::~Camera() {
 void Camera::update(float dt)
 {
 	// DEBUG FPS CAMERA
+	auto dm = Input::mouseMov();
+	pitch += dm.y * 0.005f;
+	yaw -= dm.x * 0.005f;
 
-	Input::
+	float hpi = glm::half_pi<float>() - 0.001;
+	pitch = glm::clamp(pitch, -hpi, hpi);
 
+	float speed = 15.f;
+	if (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT))
+		speed = 50.f;
 
 	glm::vec3 walk_dir;
 	if (Input::isKeyDown(GLFW_KEY_W))
@@ -35,11 +45,17 @@ void Camera::update(float dt)
 		walk_dir += glm::vec3(1, 0, 0);
 	if (Input::isKeyDown(GLFW_KEY_D))
 		walk_dir += glm::vec3(-1, 0, 0);
-	glm::mat3 rot = glm::rotate(yaw, glm::vec3(0,1,0))*glm::rotate(pitch, glm::vec3(0, 0, 1));
-	forward = normalize(rot * walk_dir);
+
+	glm::mat3 rot = glm::rotate(yaw, glm::vec3(0,1,0))*glm::rotate(pitch, glm::vec3(1, 0, 0));
+	forward = normalize(rot * glm::vec3(0,0,1));
+
+	walk_dir = rot * walk_dir;
+
+	pos += walk_dir * dt * speed;
 
 
-	pos += forward * dt * 1.f;
+	auto size = Window::getWindow().size();
+	this->projMatrix = glm::infinitePerspective(glm::radians(90.0f), size.x/size.y, 0.1f);
 }
 
 glm::mat4 Camera::getViewMatrix() const
