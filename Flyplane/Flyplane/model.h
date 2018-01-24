@@ -8,6 +8,7 @@
 #include <assimp/vector3.h>
 #include <assimp/vector2.h>
 #include <assimp/mesh.h>
+#include "texture.h"
 
 struct Vertex {
 	glm::vec3 position;
@@ -76,6 +77,9 @@ class Model {
 		// relative to parent
 		glm::mat4 transform;
 	};
+
+
+	Texture texture;
 
 
 	void recursiveFlatten(Node* node, glm::mat4 transform);
