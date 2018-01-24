@@ -4,6 +4,7 @@
 #include <iostream>
 namespace
 {
+	static bool inititalized = false;
 	static std::unordered_map<int, int> keys;
 	static std::unordered_map<int, int> pre_keys;
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -16,11 +17,12 @@ namespace
 }
 bool Input::initialize()
 {
-	if (!Window::getWindow().isInitialized())
+	if (!Window::getWindow().isInitialized() || inititalized)
 	{
 		return false;
 	}
 	glfwSetKeyCallback(Window::getWindow().getGLFWWindow(), key_callback);
+	inititalized = true;
 	return true;
 }
 bool Input::isKeyDown(int key)
