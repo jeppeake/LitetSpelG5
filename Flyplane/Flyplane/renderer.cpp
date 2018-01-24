@@ -35,7 +35,7 @@ void Renderer::Render(Heightmap &map) {
 	glm::mat4 trans(1);
 	trans = glm::translate(trans, map.pos);
 	this->terrain_shader.uniform("modelMatrix", trans);
-	glDrawElements(GL_TRIANGLE_STRIP, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::update(float dt)
