@@ -8,6 +8,7 @@
 using namespace std;
 
 Renderer::Renderer() {
+	glEnable(GL_TEXTURE_2D);
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->shader.use();
 }
@@ -17,8 +18,8 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Render(Model &model) {
-	shader.uniform("Sampler", 17);
-	model.texture.bind(17);
+	shader.uniform("Sampler", 0);
+	model.texture.bind(0);
 	this->tal += 0.0005;
 	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	for (int i = 0; i < model.model_meshes.size(); i++) {
