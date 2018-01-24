@@ -8,6 +8,7 @@
 #include <assimp/vector3.h>
 #include <assimp/vector2.h>
 #include <assimp/mesh.h>
+#include "texture.h"
 
 struct Vertex {
 	glm::vec3 position;
@@ -52,7 +53,7 @@ class Model {
 			const std::vector<GLuint>& indices);
 		~Mesh();
 
-		unsigned int numIndices()
+		size_t numIndices()
 		{
 			return indices.size();
 		}
@@ -78,6 +79,9 @@ class Model {
 	};
 
 
+	
+
+
 	void recursiveFlatten(Node* node, glm::mat4 transform);
 	void recursiveDeleteNodes(Node* node);
 
@@ -87,7 +91,7 @@ class Model {
 
 
 public:
-
+	Texture texture;
 	//std::vector<Material> materials;
 	std::vector<std::pair<Mesh*, glm::mat4>> model_meshes;
 	void load(const std::string& file);

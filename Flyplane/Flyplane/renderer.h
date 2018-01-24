@@ -1,5 +1,3 @@
-#ifndef RENDERER_H
-#define RENDERER_H
 #include <GL\glew.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
@@ -13,6 +11,7 @@ private:
 	ShaderProgram shader;
 	glm::mat4x4 matrix;
 	Camera camera;
+	float tal = 0;
 public:
 	Renderer();
 	~Renderer();

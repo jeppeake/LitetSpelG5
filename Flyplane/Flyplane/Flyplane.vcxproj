@@ -141,6 +141,7 @@
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="playingstate.h" />
     <ClInclude Include="shader.h" />

@@ -6,10 +6,9 @@
 #include "model.h"
 
 int main(void)
-{
-	Window w;
-	
-	w.open(1280, 720);
+{	
+	Window::getWindow().open(1280, 720);
+	//w.open();
 	Renderer r;
 	Model m;
 	m.load("assets/MIG-212A.fbx");
@@ -19,7 +18,7 @@ int main(void)
 	EngineState* engine = new PlayingState();
 	engine->init();
 
-	while (!w.shouldClose()) {
+	while (!Window::getWindow().shouldClose()) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		r.Render(m);
 		r.Render(map);
@@ -32,7 +31,7 @@ int main(void)
 			engine->init();
 		}
 
-		w.update();
+		Window::getWindow().update();
 	}
 	
 	return 0;
