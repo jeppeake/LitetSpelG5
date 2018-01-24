@@ -7,8 +7,8 @@ private:
 	std::vector<unsigned char> heightmap;
 	Texture tex;
 	unsigned int width, height;
-	float hScale = 0.01f;
-	float spread = 1.0f;
+	float hScale = 0.04f;
+	float spread = 0.5f;
 	GLuint ebo = 0;
 	GLuint vbo = 0;
 	GLuint vao = 0;
@@ -20,5 +20,5 @@ public:
 	std::vector<GLuint> indices;
 	void bind();
 	void unbind();
-	glm::vec3 pos = glm::vec3(-20.0f, -10.0f, -20.0f);
+	glm::vec3 pos = glm::vec3(-100.0f, -50.0f, -100.0f);
 };

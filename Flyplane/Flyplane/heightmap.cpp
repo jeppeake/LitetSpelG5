@@ -4,6 +4,10 @@
 #include <iostream>
 #include "model.h"
 
+int index(int x, int y, int width) {
+	return x + y * width;
+}
+
 Heightmap::Heightmap(const std::string &file) {
 	loadMap(file);
 }
@@ -23,6 +27,27 @@ void Heightmap::loadMap(const std::string &file) {
 	}
 
 	int count = 0;
+	for (int ix = 0; ix < width; ix++) {
+		for (int iy = 0; iy < height; iy++) {
+			int i = ix * 4 + iy * 4 * width;
+			int sumColors =  (unsigned int)img[i] + (unsigned int)img[i + 1] +  (unsigned int)img[i + 2] + (unsigned int)img[i + 3];
+			//std::cout << "Color intesnity:" << sumColors << "\n";
+			Vertex vertex;
+			float x = ix * spread;
+			float y = sumColors * hScale;
+			float z = iy * spread;
+			vertex.position = glm::vec3(x, y, z);
+			vertex.tex_coords = glm::vec2((x / spread), (z / spread));
+			vertex.normal = glm::vec3(0.0, 1.0, 0.0);
+			vertices.push_back(vertex);
+			/*vertices.push_back(sumColors * hScale);
+			vertices.push_back((count / width) * spread);
+			vertices.push_back()*/
+			//std::cout << "x= " << (count % width) * spread << " y= " << sumColors/255 * hScale << " z=" << (count / width) * spread << "\n";
+			count++;
+		}
+	}
+	/*
 	for (int i = 0; i < width*height * 4; i += 4) {
 		//std::cout << (unsigned int)img[i] << " " << (unsigned int)img[i+1] << " " << (unsigned int)img[i+2] << " " << (unsigned int)img[i + 3] << "\n";
 		int sumColors = (255 - (unsigned int)img[i]) + (255 - (unsigned int)img[i + 1]) + (255 - (unsigned int)img[i + 2]) + (255 - (unsigned int)img[i + 3]);
@@ -31,23 +56,37 @@ void Heightmap::loadMap(const std::string &file) {
 		float x = (count % width) * spread;
 		float y = sumColors * hScale;
 		float z = (count / width) * spread;
-		vertex.position = glm::vec3(x, y, z);
-		vertex.tex_coords = glm::vec2((x / spread)/width, (z / spread) / height);
+		vertex.position = pos + glm::vec3(x, y, z);
+		vertex.tex_coords = glm::vec2((x / spread), (z / spread));
 		vertex.normal = glm::vec3(0.0, 1.0, 0.0);
 		vertices.push_back(vertex);
 		/*vertices.push_back(sumColors * hScale);
 		vertices.push_back((count / width) * spread);
-		vertices.push_back()*/
+		vertices.push_back()
 		//std::cout << "x= " << (count % width) * spread << " y= " << sumColors/255 * hScale << " z=" << (count / width) * spread << "\n";
 		count++;
 	}
+	*/
 
+	for (int x = 0; x < width-1; x++) {
+		for (int y = 0; y < height-1; y++) {
+			indices.push_back(index(x, y, width));
+			indices.push_back(index(x + 1, y, width));
+			indices.push_back(index(x+1, y+1, width));
+
+			indices.push_back(index(x, y, width));
+			indices.push_back(index(x + 1, y + 1, width));
+			indices.push_back(index(x, y + 1, width));
+			
+		}
+	}
+	/*
 	for (int i = 0; i < width*height - width; i += 1) {
 		indices.push_back(i);
 		indices.push_back(i + width);
 		//std::cout << i << " " << i + width << " ";
 	}
-
+	*/
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 

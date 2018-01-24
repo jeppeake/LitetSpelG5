@@ -14,7 +14,7 @@ int main(void)
 	Model m;
 	m.load("assets/MIG-212A.fbx");
 
-	Heightmap map("cloude.png", "terraintex.png");
+	Heightmap map("cloude.png", "bog.png");
 
 	EngineState* engine = new PlayingState();
 	engine->init();
