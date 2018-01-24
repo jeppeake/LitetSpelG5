@@ -1,3 +1,4 @@
+#pragma once
 #include <GL\glew.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
@@ -8,6 +9,7 @@
 class Renderer {
 private:
 	ShaderProgram shader;
+	ShaderProgram terrainShader;
 	glm::mat4x4 matrix;
 	Camera camera;
 	float tal = 0;
