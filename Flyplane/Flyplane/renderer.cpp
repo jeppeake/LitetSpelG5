@@ -18,7 +18,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Render(Model &model) {
-	shader.uniform("Sampler", 0);
+	shader.uniform("texSampler", 0);
 	model.texture.bind(0);
 	this->tal += 0.0005;
 	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
