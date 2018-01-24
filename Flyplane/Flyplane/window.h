@@ -14,6 +14,7 @@ class Window
 	double frames;
 	std::string title;
 	glm::vec2 last_mouse_pos;
+	glm::dvec2 mouse_pos;
 public:
 
 	Window();

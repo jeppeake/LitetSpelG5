@@ -143,6 +143,11 @@ void Window::update()
 	scroll = scrolls[window];
 	scrolls[window] = glm::vec2(0, 0);
 
+
+	last_mouse_pos = mouse_pos;
+	glfwGetCursorPos(window, &mouse_pos.x, &mouse_pos.y);
+	
+
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 	auto _size = size();
@@ -164,15 +169,12 @@ glm::vec2 Window::mouseMovement()
 {
 	glm::vec2 pos = mousePosition();
 	glm::vec2 result = pos - last_mouse_pos;
-	last_mouse_pos = pos;
 	return result;
 }
 
 glm::vec2 Window::mousePosition()
 {
-	glm::dvec2 pos;
-	glfwGetCursorPos(window, &pos.x, &pos.y);
-	return pos;
+	return glm::vec2(mouse_pos);
 }
 
 glm::vec2 Window::size()

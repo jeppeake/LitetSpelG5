@@ -44,9 +44,8 @@ void PlayingState::init()
 	equip.assign<Equipment>(testents);
 }
 
-void PlayingState::update()
+void PlayingState::update(double dt)
 {
-	double dt = deltatime.restart();
 	double time = t.elapsed();
 
 	double r = (1 + sin(time))*0.5;

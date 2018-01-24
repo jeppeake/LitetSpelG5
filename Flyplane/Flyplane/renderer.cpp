@@ -38,3 +38,8 @@ void Renderer::Render(Heightmap &map) {
 	glDrawElements(GL_TRIANGLE_STRIP, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
+void Renderer::update(float dt)
+{
+	camera.update(dt);
+}
+

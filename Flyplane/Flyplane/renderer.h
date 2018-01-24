@@ -18,4 +18,8 @@ public:
 	~Renderer();
 	void Render(Model &model);
 	void Render(Heightmap &map);
+
+
+	// DEBUG
+	void update(float dt);
 };
