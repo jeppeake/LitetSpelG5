@@ -20,6 +20,7 @@ public:
 	~Window();
 
 	void open(int width, int height);
+	void open();
 	void close();
 
 	void update();
