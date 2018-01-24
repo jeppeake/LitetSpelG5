@@ -17,8 +17,6 @@ Model::Mesh::Mesh(aiMesh * mesh)
 	// Vertices
 	for (int i = 0; i < mesh->mNumVertices; i++)
 	{
-		//aiVector3D vec = mesh->mVertices[i];
-		//std::cout << vec.x << " " << vec.y << " " << vec.z << "\n";
 		aiVector3D normal;
 		if (mesh->HasNormals())
 		{

@@ -41,8 +41,6 @@ void PlayingState::init()
 	testents.push_back(testWept);
 	entityx::Entity equip = ex.entities.create();
 	equip.assign<Equipment>(testents);
-
-	Heightmap map("korven.png");
 }
 
 void PlayingState::update()
