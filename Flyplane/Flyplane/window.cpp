@@ -45,7 +45,7 @@ void Window::open(int width, int height)
 	//glfwWindowHint(GLFW_DEPTH_BITS, 16);
 	//glfwWindowHint(GLFW_STENCIL_BITS, 0);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
 
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -55,7 +55,6 @@ void Window::open(int width, int height)
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
@@ -97,7 +96,7 @@ void Window::open()
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
 	window = glfwCreateWindow(mode->width, mode->height, title.c_str(), display, NULL);
 	if (!window)
@@ -106,7 +105,6 @@ void Window::open()
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
