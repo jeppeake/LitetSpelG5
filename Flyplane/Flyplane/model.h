@@ -79,7 +79,7 @@ class Model {
 	};
 
 
-	Texture texture;
+	
 
 
 	void recursiveFlatten(Node* node, glm::mat4 transform);
@@ -91,7 +91,7 @@ class Model {
 
 
 public:
-
+	Texture texture;
 	//std::vector<Material> materials;
 	std::vector<std::pair<Mesh*, glm::mat4>> model_meshes;
 	void load(const std::string& file);

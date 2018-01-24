@@ -12,6 +12,7 @@ private:
 	ShaderProgram shader;
 	glm::mat4x4 matrix;
 	Camera camera;
+	float tal = 0;
 public:
 	Renderer();
 	~Renderer();
