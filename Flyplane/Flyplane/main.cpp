@@ -31,6 +31,10 @@ int main(void)
 			engine = new_state;
 			engine->init();
 		}
+		if (Input::isKeyPressed(GLFW_KEY_A))
+		{
+			std::cout << "Shiiieeet" << std::endl;
+		}
 		Window::getWindow().update();
 	}
 	
