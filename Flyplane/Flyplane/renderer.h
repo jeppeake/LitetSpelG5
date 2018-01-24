@@ -10,8 +10,7 @@
 class Renderer {
 private:
 	ShaderProgram shader;
-	ShaderProgram terrainShader;
-	glm::mat4x4 matrix;
+	ShaderProgram terrain_shader;
 	Camera camera;
 	float tal = 0;
 public:
