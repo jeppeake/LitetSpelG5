@@ -13,7 +13,7 @@ int main(void)
 	Model m;
 	m.load("assets/MIG-212A.fbx");
 
-	Heightmap map("korven.png");
+	Heightmap map("cloude.png", "terraintex.png");
 
 	EngineState* engine = new PlayingState();
 	engine->init();
