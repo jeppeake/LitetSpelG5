@@ -32,7 +32,7 @@ void Heightmap::loadMap(const std::string &file) {
 		float y = sumColors * hScale;
 		float z = (count / width) * spread;
 		vertex.position = glm::vec3(x, y, z);
-		vertex.tex_coords = glm::vec2((x / spread)/width, (y / spread) / height);
+		vertex.tex_coords = glm::vec2((x / spread)/width, (z / spread) / height);
 		vertex.normal = glm::vec3(0.0, 1.0, 0.0);
 		vertices.push_back(vertex);
 		/*vertices.push_back(sumColors * hScale);
