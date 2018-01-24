@@ -52,7 +52,7 @@ class Model {
 			const std::vector<GLuint>& indices);
 		~Mesh();
 
-		unsigned int numIndices()
+		size_t numIndices()
 		{
 			return indices.size();
 		}

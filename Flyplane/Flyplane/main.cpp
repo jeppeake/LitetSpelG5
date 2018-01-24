@@ -9,7 +9,8 @@ int main(void)
 {
 	Window w;
 	
-	w.open(1280, 720);
+	//w.open(1280, 720);
+	w.open();
 	Renderer r;
 	Model m;
 	m.load("assets/MIG-212A.fbx");

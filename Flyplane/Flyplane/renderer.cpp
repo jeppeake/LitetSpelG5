@@ -21,6 +21,6 @@ void Renderer::Render(Model &model) {
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
 		this->shader.uniform("modelMatrix", model.model_meshes[i].second);
-		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (GLsizei)model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
