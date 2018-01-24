@@ -10,10 +10,12 @@ private:
 	glm::vec3 up;
 	glm::mat4 projMatrix;
 
+	float yaw, pitch;
+
 public:
 	Camera();
 	~Camera();
-	void update();
+	void update(float dt);
 	glm::mat4 getViewMatrix() const;
 	const glm::mat4& getProjMatrix() const;
 };
