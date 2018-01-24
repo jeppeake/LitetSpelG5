@@ -157,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl" />
+    <None Include="geometryShader.glsl" />
+    <None Include="terrainFragmentShader.glsl" />
+    <None Include="terrainVertexShader.glsl" />
     <None Include="vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

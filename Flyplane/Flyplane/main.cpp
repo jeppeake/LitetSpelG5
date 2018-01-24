@@ -14,12 +14,15 @@ int main(void)
 	Model m;
 	m.load("assets/MIG-212A.fbx");
 
+	Heightmap map("cloude.png", "terraintex.png");
+
 	EngineState* engine = new PlayingState();
 	engine->init();
 
 	while (!Window::getWindow().shouldClose()) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		r.Render(m);
+		r.Render(map);
 		engine->update();
 
 		EngineState* new_state = engine->newState();
