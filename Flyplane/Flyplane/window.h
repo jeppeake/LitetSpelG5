@@ -25,10 +25,11 @@ public:
 		static Window i;
 		return i;
 	}
+	bool isInitialized();
 	void open(int width, int height);
 	void open();
 	void close();
-
+	GLFWwindow *getGLFWWindow();
 	void update();
 
 	bool shouldClose();

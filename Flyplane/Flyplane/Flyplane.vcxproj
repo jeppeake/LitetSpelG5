@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="heightmap.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="heightmap.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />

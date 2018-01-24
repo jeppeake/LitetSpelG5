@@ -24,6 +24,13 @@ Window::~Window()
 	close();
 }
 
+bool Window::isInitialized()
+{
+	if (window)
+		return true;
+	else
+		return false;
+}
 void Window::open(int width, int height)
 {
 	if (window)
@@ -48,7 +55,7 @@ void Window::open(int width, int height)
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
-
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
@@ -99,6 +106,7 @@ void Window::open()
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
@@ -115,6 +123,11 @@ void Window::open()
 void Window::close()
 {
 	glfwTerminate();
+}
+
+GLFWwindow * Window::getGLFWWindow()
+{
+	return window;
 }
 
 void Window::update()

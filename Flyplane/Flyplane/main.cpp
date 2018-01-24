@@ -4,6 +4,7 @@
 #include "playingstate.h"
 #include "renderer.h"
 #include "model.h"
+#include "input.h"
 
 int main(void)
 {	
@@ -27,7 +28,6 @@ int main(void)
 			engine = new_state;
 			engine->init();
 		}
-
 		Window::getWindow().update();
 	}
 	
