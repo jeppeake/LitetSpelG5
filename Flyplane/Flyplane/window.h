@@ -18,7 +18,13 @@ public:
 
 	Window();
 	~Window();
-
+	Window(const Window &other) = delete;
+	void operator=(const Window &other) = delete;
+	static Window &getWindow()
+	{
+		static Window i;
+		return i;
+	}
 	void open(int width, int height);
 	void open();
 	void close();
