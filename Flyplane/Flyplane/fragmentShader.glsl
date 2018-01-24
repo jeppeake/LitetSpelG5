@@ -10,5 +10,6 @@ void main() {
 	normalize(Normal);
 	float result = dot(sun, Normal);
 	result = clamp(result, 0, 1);
-	gl_FragColor = vec4(texture(texSampler, Tex).rgb, 1);
+	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;
+	gl_FragColor = vec4(color * result, 1) + vec4(color * 0.2, 1);
 }
