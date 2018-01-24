@@ -122,6 +122,9 @@
     <ClInclude Include="input.h">
       <Filter>Source Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="rendersystem.h">
+      <Filter>Source Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
