@@ -36,6 +36,8 @@ void Camera::update(float dt)
 	if (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT))
 		speed = 50.f;
 
+	
+
 	glm::vec3 walk_dir;
 	if (Input::isKeyDown(GLFW_KEY_W))
 		walk_dir += glm::vec3(0, 0, 1);
@@ -52,7 +54,10 @@ void Camera::update(float dt)
 	walk_dir = rot * walk_dir;
 
 	pos += walk_dir * dt * speed;
-
+	if (Input::isKeyDown(GLFW_KEY_SPACE))
+		pos.y += speed * dt;
+	if (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL))
+		pos.y -= speed * dt;
 
 	auto size = Window::getWindow().size();
 	this->projMatrix = glm::infinitePerspective(glm::radians(90.0f), size.x/size.y, 0.1f);
