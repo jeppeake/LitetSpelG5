@@ -18,4 +18,3 @@ public:
 	void Render(Model &model);
 	void Render(Heightmap &map);
 };
-#endif
