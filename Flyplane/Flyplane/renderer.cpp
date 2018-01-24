@@ -8,7 +8,7 @@ using namespace std;
 Renderer::Renderer() {
 	glEnable(GL_TEXTURE_2D);
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
-	this->terrainShader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
+	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 }
 
 Renderer::~Renderer() {
@@ -29,12 +29,12 @@ void Renderer::Render(Model &model) {
 }
 
 void Renderer::Render(Heightmap &map) {
-	this->terrainShader.use();
-	this->terrainShader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	this->terrain_shader.use();
+	this->terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	map.bind();
 	glm::mat4 trans(1);
 	trans = glm::translate(trans, map.pos);
-	this->terrainShader.uniform("modelMatrix", trans);
+	this->terrain_shader.uniform("modelMatrix", trans);
 	glDrawElements(GL_TRIANGLE_STRIP, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 

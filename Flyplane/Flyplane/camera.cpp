@@ -14,6 +14,11 @@ Camera::~Camera() {
 
 void Camera::update()
 {
+	// DEBUG FPS CAMERA
+	
+
+
+
 }
 
 glm::mat4 Camera::getViewMatrix() const

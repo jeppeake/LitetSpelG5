@@ -30,6 +30,7 @@ void PlayingState::init()
 	*/
 	auto entity = ex.entities.create();
 	entity.assign<Transform>(glm::vec3(), glm::quat());
+	entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 
 	entityx::Entity testWep = ex.entities.create();
 	testWep.assign<WeaponStats>(10, 100, 100.0f, 0.01f);
