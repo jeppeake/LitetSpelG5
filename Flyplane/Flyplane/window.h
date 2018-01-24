@@ -18,11 +18,18 @@ public:
 
 	Window();
 	~Window();
-
+	Window(const Window &other) = delete;
+	void operator=(const Window &other) = delete;
+	static Window &getWindow()
+	{
+		static Window i;
+		return i;
+	}
+	bool isInitialized();
 	void open(int width, int height);
 	void open();
 	void close();
-
+	GLFWwindow *getGLFWWindow();
 	void update();
 
 	bool shouldClose();

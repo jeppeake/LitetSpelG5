@@ -1,15 +1,15 @@
 uniform sampler2D texSampler;
-varying vec3 Pos;
-varying vec3 Normal;
-varying vec2 Tex;
+in vec3 vPos;
+in vec3 vNormal;
+in vec2 vTex;
 
 
 void main() {
 	vec3 sun = vec3(0, 1, 1);
 	normalize(sun);
-	normalize(Normal);
-	float result = dot(sun, Normal);
+	normalize(vNormal);
+	float result = dot(sun, vNormal);
 	result = clamp(result, 0, 1);
-	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;
+	vec3 color = texture(texSampler, vec2(vTex.x, 1 - vTex.y)).rgb;
 	gl_FragColor = vec4(color * result, 1) + vec4(color * 0.2, 1);
 }
