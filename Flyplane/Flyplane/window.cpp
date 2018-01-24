@@ -37,8 +37,8 @@ void Window::open(int width, int height)
 
 	//glfwWindowHint(GLFW_DEPTH_BITS, 16);
 	//glfwWindowHint(GLFW_STENCIL_BITS, 0);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -53,7 +53,7 @@ void Window::open(int width, int height)
 	if (err != GLEW_OK)
 	{
 		std::cout << "glewInit failed: " << std::string((const char*)glewGetErrorString(err)) << "\n";
-		system("pause");
+		std::cin.ignore();
 		exit(1);
 	}
 
@@ -64,6 +64,52 @@ void Window::open(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
+}
+
+void Window::open()
+{
+	if (window)
+		return;
+	if (!glfwInit())
+	{
+		std::cout << "failed to initiate GLFW" << std::endl;
+		std::cin.ignore();
+		exit(EXIT_FAILURE);
+	}
+	title = "Flyplane";
+
+	auto display = glfwGetPrimaryMonitor();
+	if (!display) {
+		std::cerr << "No primary monitor found" << std::endl;
+		std::cin.ignore();
+		exit(-1);
+	}
+	const GLFWvidmode* mode = glfwGetVideoMode(display);
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	window = glfwCreateWindow(mode->width, mode->height, title.c_str(), display, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	glfwMakeContextCurrent(window);
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		std::cout << "glewInit failed: " << std::string((const char*)glewGetErrorString(err)) << "\n";
+		std::cin.ignore();
+	}
+	scrolls[window] = glm::vec2(0, 0);
+	glfwSetScrollCallback(window, scrollCallback);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 
 void Window::close()

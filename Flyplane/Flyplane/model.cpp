@@ -2,11 +2,13 @@
 
 #include <iostream>
 
+#include <assimp/material.h>
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <GL\glew.h>
 #include <stack>
+#include "texture.h"
 
 Model::Mesh::Mesh(aiMesh * mesh)
 {
@@ -17,8 +19,6 @@ Model::Mesh::Mesh(aiMesh * mesh)
 	// Vertices
 	for (int i = 0; i < mesh->mNumVertices; i++)
 	{
-		//aiVector3D vec = mesh->mVertices[i];
-		//std::cout << vec.x << " " << vec.y << " " << vec.z << "\n";
 		aiVector3D normal;
 		if (mesh->HasNormals())
 		{
@@ -121,6 +121,37 @@ void Model::load(const std::string & file)
 	}
 
 
+	std::string model_dir;
+	size_t last = file.find_last_of('/');
+	if (last >= file.size())
+		model_dir = "";
+	else
+		model_dir = file.substr(0, last + 1);
+
+	for (int i = 0; i < scene->mNumMaterials; i++) {
+		auto t = aiTextureType_DIFFUSE;
+		auto mat = scene->mMaterials[i];
+
+		aiString name;
+		mat->Get(AI_MATKEY_NAME, name);
+
+		if (mat->GetTextureCount(t) == 0) {
+			std::cout << "ERROR: texture not found\n";
+			system("pause");
+			exit(EXIT_FAILURE);
+		}
+	
+
+		aiString filename;
+		mat->Get(AI_MATKEY_TEXTURE(t, 0), filename);
+		std::string tex_file = model_dir + std::string(filename.C_Str());
+		if (!texture.loadTexture(tex_file))
+		{
+			std::cout << "ERROR: Could not load texture: '" << tex_file << "'\n";
+		}
+		
+	}
+
 
 	// build tree
 	std::stack<aiNode*> aistack;
@@ -176,6 +207,7 @@ void Model::load(const std::string & file)
 		std::cout << model_meshes[i].first->name << "\n";
 		std::cout << model_meshes[i].first->numIndices() << "\n";
 	}
+
 
 	aiReleaseImport(scene);
 }
