@@ -5,6 +5,7 @@
 #include <glm\glm.hpp>
 #include "model.h"
 #include "camera.h"
+#include "heightmap.h"
 
 class Renderer {
 private:
@@ -17,4 +18,5 @@ public:
 	Renderer();
 	~Renderer();
 	void Render(Model &model);
+	void Render(Heightmap &map);
 };

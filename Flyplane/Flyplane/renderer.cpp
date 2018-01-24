@@ -27,3 +27,13 @@ void Renderer::Render(Model &model) {
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
+
+void Renderer::Render(Heightmap &map) {
+	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	map.bind();
+	glm::mat4 trans(1);
+	trans = glm::translate(trans, map.pos);
+	this->shader.uniform("modelMatrix", trans);
+	glDrawElements(GL_TRIANGLE_STRIP, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
+}
+
