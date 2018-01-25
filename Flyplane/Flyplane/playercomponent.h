@@ -4,4 +4,6 @@ struct PlayerComponent {
 	PlayerComponent() {
 
 	}
+
+	Camera camera;
 };

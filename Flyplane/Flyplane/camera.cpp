@@ -22,6 +22,7 @@ Camera::~Camera() {
 
 }
 
+/*
 void Camera::update(float dt)
 {
 	// DEBUG FPS CAMERA
@@ -61,15 +62,29 @@ void Camera::update(float dt)
 
 	auto size = Window::getWindow().size();
 	this->projMatrix = glm::infinitePerspective(glm::radians(90.0f), size.x/size.y, 0.1f);
+
 }
+*/
 
 glm::mat4 Camera::getViewMatrix() const
 {
 	return glm::lookAt(this->pos, this->pos + this->forward, this->up);
 }
 
- const glm::mat4& Camera::getProjMatrix() const
+const glm::mat4& Camera::getProjMatrix() const
 {
 	return this->projMatrix;
 }
+
+void Camera::setTransform(const Transform &t)
+{
+	pos = t.pos;
+	forward = glm::toMat3(t.orientation)*glm::vec3(0, 0, 1);
+	up = glm::toMat3(t.orientation)*glm::vec3(0, 1, 0);
+
+	// BAD
+	auto size = glm::vec2(Window::getWindow().size());
+	this->projMatrix = glm::infinitePerspective(glm::radians(80.0f), size.x / size.y, 0.1f);
+}
+
 

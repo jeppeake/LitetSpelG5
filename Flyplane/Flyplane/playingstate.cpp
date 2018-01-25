@@ -34,6 +34,9 @@ void PlayingState::init()
 	entity.assign<Component class here>(Component constructor params);
 	*/
 	
+	auto v = []() {
+		return (rand() % 1000 - 500)*0.05;
+	};
 
 
 	for (int i = 0; i < 200; i++) {
@@ -49,19 +52,16 @@ void PlayingState::init()
 	glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
-	entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+	entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
 
 
 
 	entityx::Entity wep1 = ex.entities.create();
-
 	Model* weaponmodel;
-
 	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2);
-
-	wep1.assign<Weapon>(stats, weaponmodel);
+	wep1.assign<Weapon>(stats, weaponmodel, true);
 }
 
 void PlayingState::update(double dt)
