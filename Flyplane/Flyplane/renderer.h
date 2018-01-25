@@ -12,6 +12,7 @@ class Renderer {
 private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
+	ShaderProgram shadow;
 	Camera camera;
 	float tal = 0;
 public:

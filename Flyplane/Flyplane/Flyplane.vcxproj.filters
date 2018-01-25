@@ -159,5 +159,11 @@
     <None Include="terrainFragmentShader.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
+    <None Include="shadowVertexShader.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="shadowFragmentShader.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
