@@ -43,8 +43,13 @@ void Renderer::Render(Heightmap &map) {
 	glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
+void Renderer::setCamera(const Camera & camera)
+{
+	this->camera = camera;
+}
+
 void Renderer::update(float dt)
 {
-	camera.update(dt);
+
 }
 

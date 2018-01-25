@@ -16,12 +16,6 @@
     <Filter Include="Source Files\enginestate">
       <UniqueIdentifier>{cf4509c2-5c01-44f3-b114-16f0b840d141}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\components">
-      <UniqueIdentifier>{7d9c9e14-d556-4821-a369-326e33cc62cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\systems">
-      <UniqueIdentifier>{bd75a8c1-8ee8-4145-89e9-a2745d359297}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{e590b3e7-ccd4-4de7-892b-ea6c4665ce31}</UniqueIdentifier>
     </Filter>
@@ -33,6 +27,15 @@
     </Filter>
     <Filter Include="Source Files\graphics\shaders">
       <UniqueIdentifier>{14dc2d3b-957d-4a45-82e3-42dcda168024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ecs">
+      <UniqueIdentifier>{27ee9131-481d-4944-adbd-92f450287b2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ecs\systems">
+      <UniqueIdentifier>{bd75a8c1-8ee8-4145-89e9-a2745d359297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ecs\components">
+      <UniqueIdentifier>{7d9c9e14-d556-4821-a369-326e33cc62cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -84,10 +87,10 @@
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
-      <Filter>Source Files\components</Filter>
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
     <ClInclude Include="physics.h">
-      <Filter>Source Files\components</Filter>
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>Source Files\graphics</Filter>
@@ -114,33 +117,33 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="modelcomponent.h">
-      <Filter>Source Files\components</Filter>
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="rendersystem.h">
-      <Filter>Source Files\systems</Filter>
+      <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
     <ClInclude Include="physicssystem.h">
-      <Filter>Source Files\systems</Filter>
+      <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
     <ClInclude Include="playercomponent.h">
-      <Filter>Source Files\components</Filter>
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
     <ClInclude Include="playersystem.h">
-      <Filter>Source Files\systems</Filter>
+      <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
-      <Filter>Source Files\components</Filter>
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
     <ClInclude Include="weaponsystem.h">
-      <Filter>Source Files\systems</Filter>
+      <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
     <ClInclude Include="equipment.h">
-      <Filter>Source Files\components</Filter>
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

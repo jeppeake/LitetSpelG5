@@ -26,7 +26,7 @@ public:
 	void Render(Model &model, Transform &trans);
 	void Render(Heightmap &map);
 
-
+	void setCamera(const Camera& camera);
 	// DEBUG
 	void update(float dt);
 };
