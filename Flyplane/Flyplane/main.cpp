@@ -23,11 +23,18 @@ int main(void)
 
 	Timer deltatime;
 
+	auto t = Transform();
+
 	while (!Window::getWindow().shouldClose()) {
 		double dt = deltatime.restart();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		auto t = Transform();
+		
+		t.pos.x += 0.03;
+
+		t.orientation += glm::quat(0.01, 0.01, -0.01, 0)*t.orientation;
+		t.orientation = normalize(t.orientation);
+
 		Renderer::getRenderer().Render(m, t);
 		Renderer::getRenderer().Render(map);
 		Renderer::getRenderer().update(dt);
