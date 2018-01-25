@@ -9,6 +9,7 @@
 #include "playercomponent.h"
 #include "playersystem.h"
 Model m;
+Model weaponmodel;
 void PlayingState::init()
 {
 	m.load("assets/MIG-212A.fbx");
@@ -52,13 +53,22 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
+	
 
 
+	std::vector<Weapon> weapons;
 
-	entityx::Entity wep1 = ex.entities.create();
-	Model* weaponmodel;
-	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2);
-	wep1.assign<Weapon>(stats, weaponmodel, true);
+	
+	weaponmodel.load("assets/testbullet.fbx");
+	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2, 0.5f);
+	WeaponStats* stats2 = new WeaponStats(100, 100, 1000, 0.2, 0.02f);
+
+	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(-1,-0.2,0));
+	weapons.emplace_back(stats2, &weaponmodel, true, glm::vec3(-2, -0.2, 0));
+	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(1, -0.2, 0));
+	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(2, -0.2, 0));
+
+	entity.assign <Equipment>(weapons);
 }
 
 void PlayingState::update(double dt)
