@@ -65,10 +65,10 @@ void Renderer::Render(Model &model, Transform &trans) {
 void Renderer::Render(Heightmap &map) {
 	this->terrain_shader.use();
 	this->terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
-	terrain_shader.uniform("shadowMatrix", shadowMatrix);
+	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
 	map.bind();
 	glm::mat4 trans(1);
-	trans = glm::translate(trans, map.pos);
+	trans = glm::mat4();
 	this->terrain_shader.uniform("modelMatrix", trans);
 	glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }

@@ -8,6 +8,7 @@
 #include "heightmap.h"
 #include "playercomponent.h"
 #include "playersystem.h"
+#include "terraincomponent.h"
 Model m;
 Model weaponmodel;
 void PlayingState::init()
@@ -73,7 +74,12 @@ void PlayingState::init()
 	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(1, -0.2, 0));
 	weapons.emplace_back(bomb, &weaponmodel, true, glm::vec3(0, -0.2, -0.5));
 
+
+	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/trist.png");
 	entity.assign <Equipment>(weapons);
+
+	entityx::Entity terrain = ex.entities.create();
+	terrain.assign<Terrain>(hm);
 }
 
 void PlayingState::update(double dt)

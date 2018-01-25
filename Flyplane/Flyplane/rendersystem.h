@@ -8,6 +8,7 @@
 #include "modelcomponent.h"
 #include "transform.h"
 #include "playercomponent.h"
+#include "terraincomponent.h"
 
 using namespace entityx;
 
@@ -27,6 +28,12 @@ struct RenderSystem : public System<RenderSystem> {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
 			Renderer::getRenderer().Render(*model->mptr, *transform.get());
+		}
+
+		ComponentHandle<Terrain> terrain;
+		for (Entity entity : es.entities_with_components(terrain)) {
+			terrain = entity.component<Terrain>();
+			Renderer::getRenderer().Render(*terrain->hmptr);
 		}
 	}
 

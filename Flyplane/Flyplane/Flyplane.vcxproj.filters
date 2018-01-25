@@ -140,6 +140,9 @@
     <ClInclude Include="map.h">
       <Filter>Source Files\terrain</Filter>
     </ClInclude>
+    <ClInclude Include="terraincomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
