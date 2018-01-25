@@ -35,7 +35,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (int i = 0; i < equip->slots.size(); i++) {
 				Weapon* weapon = &equip->slots[i];
 				time_t current = time(NULL);
-				if (weapon->playerOwned && Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) && playerActiveWeapon == playerCount && weapon->timer.elapsed() > weapon->stats->cooldown && !(weapon->stats->ammo <= 0 && !weapon->stats->infAmmo)) {
+				if (weapon->playerOwned && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_A)) && playerActiveWeapon == playerCount && weapon->timer.elapsed() > weapon->stats->cooldown && !(weapon->stats->ammo <= 0 && !weapon->stats->infAmmo)) {
 					weapon->shouldFire = true;
 				}
 				if (weapon->shouldFire) {
