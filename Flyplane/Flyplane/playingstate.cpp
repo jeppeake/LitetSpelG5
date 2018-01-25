@@ -31,11 +31,18 @@ void PlayingState::init()
 	auto entity = ex.entities.create();
 	entity.assign<Component class here>(Component constructor params);
 	*/
-	auto entity = ex.entities.create();
-	entity.assign<Transform>(glm::vec3(), glm::quat());
-	entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 	
-	entity.assign <ModelComponent>(&m);
+
+
+	for (int i = 0; i < 200; i++) {
+		auto entity = ex.entities.create();
+		glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
+		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
+		entity.assign<Transform>(pos, normalize(orien));
+		//entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign <ModelComponent>(&m);
+	}
+
 
 	entityx::Entity testWep = ex.entities.create();
 	testWep.assign<WeaponStats>(10, 100, 100.0f, 0.01f);
@@ -63,7 +70,7 @@ void PlayingState::update(double dt)
 	*/
 	
 
-	ex.systems.update<TestSystem>(dt);
-	ex.systems.update<WeaponSystem>(dt);
+	//ex.systems.update<TestSystem>(dt);
+	//ex.systems.update<WeaponSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
 }
