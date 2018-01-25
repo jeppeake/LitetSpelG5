@@ -32,7 +32,13 @@ Renderer::Renderer() {
 
 	glm::mat4 proj = glm::ortho<float>(-100, 100, -100, 100, -100, 100);
 	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	this->projView = proj * view;
+	glm::mat4 m(
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 0.1
+	);
+	this->shadowMatrix = m * proj * view;
 }
 
 Renderer::~Renderer() {
@@ -51,6 +57,7 @@ void Renderer::Render(Model &model, Transform &trans) {
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
 		this->shader.uniform("modelMatrix", modelMatrix);
+		shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
@@ -58,6 +65,7 @@ void Renderer::Render(Model &model, Transform &trans) {
 void Renderer::Render(Heightmap &map) {
 	this->terrain_shader.use();
 	this->terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	terrain_shader.uniform("shadowMatrix", shadowMatrix);
 	map.bind();
 	glm::mat4 trans(1);
 	trans = glm::translate(trans, map.pos);
@@ -72,7 +80,7 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 	this->shadow.use();
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
-		this->shader.uniform("MVP", projView * modelMatrix);
+		this->shader.uniform("MVP", shadowMatrix * modelMatrix);
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }

@@ -15,7 +15,7 @@ private:
 	ShaderProgram shadow;
 	GLuint frameBuffer;
 	GLuint depthTexture;
-	glm::mat4 projView;
+	glm::mat4 shadowMatrix;
 	Camera camera;
 public:
 	Renderer(const Renderer &other) = delete;
