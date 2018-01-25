@@ -27,11 +27,7 @@ struct PlayerSystem : public System<PlayerSystem> {
 			player = entity.component<PlayerComponent>();
 
 
-			Transform cam = *transform.get();
-			glm::vec3 offset(2, 3, -10);
-			offset = glm::toMat3(cam.orientation)*offset;
-			cam.pos += offset;
-			player->camera.setTransform(cam);
+
 
 			
 
@@ -44,7 +40,7 @@ struct PlayerSystem : public System<PlayerSystem> {
 			angular_vel.x = -physics->turnRate * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y);
 
 			
-			angular_vel = glm::toMat3(cam.orientation)*angular_vel;
+			angular_vel = glm::toMat3(transform->orientation)*angular_vel;
 
 			/*
 			float x = (glm::toMat3(cam.orientation) * glm::vec3(0.0, 0.0, 1.0)).x * float(glm::sin(physics->turnRate * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X) / 2));
@@ -66,7 +62,7 @@ struct PlayerSystem : public System<PlayerSystem> {
 			transform->orientation = normalize(transform->orientation);
 
 
-			physics->velocity = glm::toMat3(cam.orientation)*glm::vec3(0.0, 0.0, 1.0) * (((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2) * (100 * float(dt)) + 50);
+			physics->velocity = glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * (((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2) * (100 * float(dt)) + 50);
 		}
 	}
 

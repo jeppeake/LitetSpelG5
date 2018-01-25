@@ -16,14 +16,24 @@ struct RenderSystem : public System<RenderSystem> {
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<PlayerComponent> player;
-		for (Entity entity : es.entities_with_components(player)) {
+		ComponentHandle<Transform> transform;
+		for (Entity entity : es.entities_with_components(player, transform)) {
 			player = entity.component<PlayerComponent>();
+			transform = entity.component<Transform>();
+
+			Transform cam = *transform.get();
+			glm::vec3 offset(2, 3, -10);
+			offset = glm::toMat3(cam.orientation)*offset;
+			cam.pos += offset;
+			player->camera.setTransform(cam);
+
 			Renderer::getRenderer().setCamera(player->camera);
 		}
 
 
+
+
 		ComponentHandle<ModelComponent> model;
-		ComponentHandle<Transform> transform;
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
@@ -35,6 +45,9 @@ struct RenderSystem : public System<RenderSystem> {
 			terrain = entity.component<Terrain>();
 			Renderer::getRenderer().Render(*terrain->hmptr);
 		}
+
+		
+
 	}
 
 };
