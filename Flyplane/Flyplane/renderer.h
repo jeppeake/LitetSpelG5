@@ -13,6 +13,8 @@ private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
 	ShaderProgram shadow;
+	GLuint frameBuffer;
+	GLuint depthTexture;
 	glm::mat4 projView;
 	Camera camera;
 public:
