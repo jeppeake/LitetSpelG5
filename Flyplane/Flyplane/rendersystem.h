@@ -10,7 +10,7 @@
 
 using namespace entityx;
 
-class RenderSystem : public System<RenderSystem> {
+struct RenderSystem : public System<RenderSystem> {
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<ModelComponent> model;
