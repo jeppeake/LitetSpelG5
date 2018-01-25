@@ -30,7 +30,11 @@ Model::Mesh::Mesh(aiMesh * mesh)
 			tex_coords.x = mesh->mTextureCoords[0][i].x;
 			tex_coords.y = mesh->mTextureCoords[0][i].y;
 		}
-		vertices.emplace_back(mesh->mVertices[i],
+		auto pos = mesh->mVertices[i];
+		aiVector3D new_pos(pos.x, pos.z, -pos.y);
+
+
+		vertices.emplace_back(new_pos,
 			normal,
 			tex_coords);
 	}
@@ -106,7 +110,8 @@ void Model::load(const std::string & file)
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_OptimizeMeshes |
 		aiProcess_OptimizeGraph |
-		aiProcess_SortByPType
+		aiProcess_SortByPType |
+		aiProcess_ImproveCacheLocality
 	);
 	if (!scene)
 	{

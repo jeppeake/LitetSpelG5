@@ -25,9 +25,22 @@ struct PlayerSystem : public System<PlayerSystem> {
 			physics = entity.component<Physics>();
 			transform = entity.component<Transform>();
 			player = entity.component<PlayerComponent>();
+
+
+			Transform cam = *transform.get();
+			glm::vec3 offset(2, 3, -10);
+			offset = glm::toMat3(cam.orientation)*offset;
+			cam.pos += offset;
+			player->camera.setTransform(cam);
+
+			
+
 			//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
 			//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
 			physics->velocity = glm::vec3(Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X), Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y), 0.0);
+			transform->orientation += glm::quat(dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y),-dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y), -dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X), dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X));
+			transform->orientation = normalize(transform->orientation);
+			//physics->velocity = glm::vec3(Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X), Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y), 0.0);
 		}
 	}
 
