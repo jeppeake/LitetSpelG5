@@ -86,3 +86,10 @@ float Input::gamepad_axis(int axis) {
 		return ret;
 	}
 }
+
+bool Input::gamepad_button_pressed(int button) {
+	GLFWgamepadstate gamepad_state;
+	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad_state)) {
+		return gamepad_state.buttons[GLFW_GAMEPAD_BUTTON_A];
+	}
+}

@@ -6,7 +6,8 @@
 #include "weaponsystem.h"
 #include "rendersystem.h"
 #include "heightmap.h"
-
+#include "playercomponent.h"
+#include "playersystem.h"
 Model m;
 void PlayingState::init()
 {
@@ -21,6 +22,7 @@ void PlayingState::init()
 	ex.systems.add<PhysicsSystem>();
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
+	ex.systems.add<PlayerSystem>();
 	ex.systems.configure();
 
 	/*
@@ -39,9 +41,17 @@ void PlayingState::init()
 		glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		//entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 	}
+
+	auto entity = ex.entities.create();
+	glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
+	glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
+	entity.assign<Transform>(pos, normalize(orien));
+	entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+	entity.assign <ModelComponent>(&m);
+	entity.assign <PlayerComponent>();
 
 
 
@@ -64,8 +74,9 @@ void PlayingState::update(double dt)
 	ex.systems.update<System class here>(dt);
 	*/
 	
-
+	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
+
 	ex.systems.update<RenderSystem>(dt);
 }

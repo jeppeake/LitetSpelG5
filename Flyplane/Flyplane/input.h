@@ -13,5 +13,6 @@ public:
 
 	static bool gamepad_present();
 	static float gamepad_axis(int axis);
+	static bool gamepad_button_pressed(int button);
 };
 

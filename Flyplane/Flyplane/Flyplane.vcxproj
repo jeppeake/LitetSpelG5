@@ -145,6 +145,8 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="physics.h" />
+    <ClInclude Include="playercomponent.h" />
+    <ClInclude Include="playersystem.h" />
     <ClInclude Include="playingstate.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="shader.h" />
