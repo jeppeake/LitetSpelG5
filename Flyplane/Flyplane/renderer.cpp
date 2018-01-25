@@ -11,7 +11,7 @@ Renderer::Renderer() {
 	glEnable(GL_TEXTURE_2D);
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
-	this->shadow_shader.create("", "");
+	
 	glm::mat4 proj = glm::ortho<float>(-100, 100, -100, 100, -100, 100);
 	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	this->projView = proj * view;
