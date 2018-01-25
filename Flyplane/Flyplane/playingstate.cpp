@@ -46,12 +46,9 @@ void PlayingState::init()
 
 
 	entityx::Entity wep1 = ex.entities.create();
-
 	Model* weaponmodel;
-
 	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2);
-
-	wep1.assign<Weapon>(stats, weaponmodel);
+	wep1.assign<Weapon>(stats, weaponmodel, true);
 }
 
 void PlayingState::update(double dt)

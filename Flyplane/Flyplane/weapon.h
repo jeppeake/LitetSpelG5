@@ -12,8 +12,9 @@ struct WeaponStats {
 };
 
 struct Weapon {
-	Weapon(WeaponStats* stats, Model* model) : stats(stats), model(model) { }
+	Weapon(WeaponStats* stats, Model* model, bool playerOwned) : stats(stats), model(model), playerOwned(playerOwned) { }
 	WeaponStats* stats;
 	Model* model;
-	bool shouldFire = true;
+	bool shouldFire = false;
+	bool playerOwned;
 };
