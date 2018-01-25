@@ -28,6 +28,8 @@ struct PlayerSystem : public System<PlayerSystem> {
 			//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
 			//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
 			physics->velocity = glm::vec3(Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X), Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y), 0.0);
+			transform->orientation += glm::quat(dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y),-dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y), -dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X), dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X));
+			transform->orientation = normalize(transform->orientation);
 		}
 	}
 
