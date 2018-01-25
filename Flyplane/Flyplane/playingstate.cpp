@@ -55,16 +55,13 @@ void PlayingState::init()
 
 
 
-	entityx::Entity testWep = ex.entities.create();
-	testWep.assign<WeaponStats>(10, 100, 100.0f, 0.01f);
-	entityx::Entity testWept = ex.entities.create();
-	testWept.assign<WeaponStats>(10, 100, 1000.0f, 0.01f);
+	entityx::Entity wep1 = ex.entities.create();
 
-	std::vector<Entity> testents;
-	testents.push_back(testWep);
-	testents.push_back(testWept);
-	entityx::Entity equip = ex.entities.create();
-	equip.assign<Equipment>(testents);
+	Model* weaponmodel;
+
+	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2);
+
+	wep1.assign<Weapon>(stats, weaponmodel);
 }
 
 void PlayingState::update(double dt)
