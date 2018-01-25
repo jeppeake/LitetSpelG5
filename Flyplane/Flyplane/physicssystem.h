@@ -4,11 +4,12 @@
 #include <entityx\Entity.h>
 #include "transform.h"
 #include "physics.h"
+#include "input.h"
 #include <iostream>
 
 using namespace entityx;
 
-struct TestSystem : public entityx::System<TestSystem> {
+struct PhysicsSystem : public entityx::System<PhysicsSystem> {
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 
@@ -18,10 +19,18 @@ struct TestSystem : public entityx::System<TestSystem> {
 			physics = entity.component<Physics>();
 			transform = entity.component<Transform>();
 
-			physics->calcVelocity();
-			physics->calcAcceleration();
+			calcAcceleration(physics);
 			
+			physics->velocity += physics->acceleration * float(dt);
+
 			transform->pos += float(dt) * physics->velocity;
 		}
+		std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
+		std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
 	};
+
+
+	void calcAcceleration(ComponentHandle<Physics> physics) {
+		physics->acceleration = physics->g;
+	}
 };

@@ -10,5 +10,8 @@ public:
 	static void reset();
 	static glm::vec2 mouseMov();
 	static glm::vec2 mousePos();
+
+	static bool gamepad_present();
+	static float gamepad_axis(int axis);
 };
 
