@@ -42,6 +42,10 @@ GLuint compileShader(GLenum type, const std::string& name)
 		exit(1);
 	}
 
+
+
+
+
 	return shader;
 }
 
@@ -82,6 +86,24 @@ void ShaderProgram::create(const std::string & vert, const std::string & frag)
 	glAttachShader(id, vs);
 	glAttachShader(id, fs);
 	glLinkProgram(id);
+	
+	GLint success = 0;
+	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		GLint log_size = 0;
+		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_size);
+		std::vector<GLchar> error(log_size);
+		glGetShaderInfoLog(id, log_size, &log_size, &error[0]);
+		std::string errorstr{ &error[0] };
+
+		std::cout << errorstr << "\n";
+
+		glDeleteProgram(id);
+		system("pause");
+		exit(1);
+	}
+
 }
 
 void ShaderProgram::use()
