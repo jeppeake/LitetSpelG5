@@ -75,6 +75,9 @@
     <ClCompile Include="input.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="playersystem.h">
       <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Source Files\terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
