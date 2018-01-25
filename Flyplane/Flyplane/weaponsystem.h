@@ -17,7 +17,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 		for (Entity entity : es.entities_with_components(weapon)) {
 			weapon = entity.component<Weapon>();
-			if (weapon->playerOwned && GetAsyncKeyState(VK_F1) && ) {
+			if (weapon->playerOwned && GetAsyncKeyState(VK_F1)) {
 				weapon->shouldFire = true;
 			}
 			if (weapon->shouldFire) {

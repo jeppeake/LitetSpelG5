@@ -12,6 +12,7 @@ class Renderer {
 private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
+	ShaderProgram shadow;
 	ShaderProgram shadow_shader;
 	glm::mat4 projView;
 	Camera camera;
@@ -29,7 +30,7 @@ public:
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
 
-
+	void setCamera(const Camera& camera);
 	// DEBUG
 	void update(float dt);
 };

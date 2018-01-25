@@ -4,13 +4,14 @@
 #include <glm\gtx\transform.hpp>
 #include <glm\mat4x4.hpp>
 #include <glm\vec3.hpp>
-
+#include <iostream>
 using namespace std;
 
 Renderer::Renderer() {
 	glEnable(GL_TEXTURE_2D);
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
+	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
 	
 	glm::mat4 proj = glm::ortho<float>(-100, 100, -100, 100, -100, 100);
 	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -58,8 +59,13 @@ void Renderer::RenderShadow(Model & model, Transform & trans)
 	}
 }
 
+void Renderer::setCamera(const Camera & camera)
+{
+	this->camera = camera;
+}
+
 void Renderer::update(float dt)
 {
-	camera.update(dt);
+
 }
 
