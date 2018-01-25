@@ -41,6 +41,16 @@ struct PlayerSystem : public System<PlayerSystem> {
 			transform->orientation += glm::quat(dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y),-dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y), -dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X), dt * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X));
 			transform->orientation = normalize(transform->orientation);
 			//physics->velocity = glm::vec3(Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X), Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y), 0.0);
+
+
+			if (Input::isKeyDown(GLFW_KEY_W))
+				physics->velocity += glm::vec3(0.0, 0.0, 10.0);
+			if (Input::isKeyDown(GLFW_KEY_S))
+				physics->velocity += glm::vec3(0.0, 0.0, -10.0);
+			if (Input::isKeyDown(GLFW_KEY_A))
+				physics->velocity += glm::vec3(5.0, 0.0, 0.0);
+			if (Input::isKeyDown(GLFW_KEY_D))
+				physics->velocity += glm::vec3(-5.0, 0.0, 0.0);
 		}
 	}
 

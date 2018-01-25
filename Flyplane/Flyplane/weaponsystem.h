@@ -35,11 +35,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (int i = 0; i < equip->slots.size(); i++) {
 				Weapon* weapon = &equip->slots[i];
 				time_t current = time(NULL);
-				if (weapon->playerOwned && Input::isKeyDown(GLFW_KEY_F1) && playerActiveWeapon == playerCount && weapon->timer.elapsed() > weapon->stats->cooldown) {
+				if (weapon->playerOwned && Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) && playerActiveWeapon == playerCount && weapon->timer.elapsed() > weapon->stats->cooldown && !(weapon->stats->ammo <= 0 && !weapon->stats->infAmmo)) {
 					weapon->shouldFire = true;
 				}
 				if (weapon->shouldFire) {
-					std::cout << "Shot gun at speed " << weapon->stats->speed << "\n";
 					weapon->shouldFire = false;
 					weapon->timer.restart();
 
@@ -48,6 +47,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation);
 					projectile.assign<Physics>(0.2, 1, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats->speed), glm::vec3());
 					projectile.assign<ModelComponent>(weapon->model);
+
+					weapon->stats->ammo--;
 				}
 				if (weapon->playerOwned)
 					playerCount++;
