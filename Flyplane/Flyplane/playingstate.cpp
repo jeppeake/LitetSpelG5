@@ -53,7 +53,7 @@ void PlayingState::init()
 	glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
-	entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
+	entity.assign<Physics>(1000.0, 1.0, 2.f, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
 	
@@ -64,7 +64,7 @@ void PlayingState::init()
 	
 	weaponmodel.load("assets/testbullet.fbx");
 	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2, 0.5f);
-	WeaponStats* stats2 = new WeaponStats(100, 100, 1000, 0.2, 0.02f);
+	WeaponStats* stats2 = new WeaponStats(100, 100, 0, 0.2, 0.02f);
 
 	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(-1,-0.2,0));
 	weapons.emplace_back(stats2, &weaponmodel, true, glm::vec3(-2, -0.2, 0));
@@ -87,6 +87,11 @@ void PlayingState::update(double dt)
 	ex.systems.update<System class here>(dt);
 	*/
 	
+	if(Input::isKeyDown(GLFW_KEY_SPACE))
+		std::cout << ex.entities.size() << "\n";
+
+
+
 	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
