@@ -12,19 +12,16 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		ComponentHandle<WeaponStats> stats;
 		ComponentHandle<Equipment> equip;
+		ComponentHandle<Weapon> weapon;
+		ComponentHandle<Transform> trans;
 
-		for (Entity entity : es.entities_with_components(equip)) {
-			stats = entity.component<WeaponStats>();
-			equip = entity.component<Equipment>();
-			if (GetAsyncKeyState(VK_F1))
+		for (Entity entity : es.entities_with_components(weapon)) {
+			weapon = entity.component<Weapon>();
+			if (weapon->shouldFire)
 			{
-				std::cout << "Shot gun at speed " << equip->slots[equip->selected].component<WeaponStats>()->speed << "\n";
-			}
-
-			if (GetAsyncKeyState(VK_F2))
-			{
-				equip->selected = (equip->selected + 1) % equip->slots.size();
-				std::cout << "Switched to weapon: " << equip->selected << "\n";
+				std::cout << "Shot gun at speed " << weapon->stats->speed << "\n";
+				//spawn bullet/missile/bomb at trans, 
+				weapon->shouldFire = false;
 			}
 		}
 	};
