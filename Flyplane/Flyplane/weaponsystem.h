@@ -35,7 +35,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (int i = 0; i < equip->slots.size(); i++) {
 				Weapon* weapon = &equip->slots[i];
 				time_t current = time(NULL);
-				if (weapon->playerOwned && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_A)) && playerActiveWeapon == playerCount && weapon->timer.elapsed() > weapon->stats->cooldown && !(weapon->stats->ammo <= 0 && !weapon->stats->infAmmo)) {
+				if (weapon->playerOwned && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && playerActiveWeapon == playerCount && weapon->timer.elapsed() > weapon->stats->cooldown && !(weapon->stats->ammo <= 0 && !weapon->stats->infAmmo)) {
 					weapon->shouldFire = true;
 				}
 				if (weapon->shouldFire) {
@@ -59,7 +59,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		if (playerCount > nrPlayerWeapons)
 			nrPlayerWeapons = playerCount;
 
-		if (Input::isKeyDown(GLFW_KEY_F2) && switchT.elapsed() > 0.2f) {
+		if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
 			playerActiveWeapon = (playerActiveWeapon + 1) % nrPlayerWeapons;
 			std::cout << "Selected weapon: " << playerActiveWeapon << "\n";
 			switchT.restart();
