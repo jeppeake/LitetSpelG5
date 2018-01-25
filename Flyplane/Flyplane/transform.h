@@ -6,6 +6,7 @@
 
 struct Transform {
 	Transform(glm::vec3 pos, glm::quat orientation) : pos(pos), orientation(orientation) {}
+	Transform() {}
 	glm::vec3 pos;
 	glm::quat orientation;
 };

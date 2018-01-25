@@ -4,12 +4,13 @@
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
 
+#include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
 
 using namespace entityx;
 
-class RenderSystem : public System<RenderSystem> {
+struct RenderSystem : public System<RenderSystem> {
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<ModelComponent> model;
@@ -17,8 +18,7 @@ class RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
-
-
+			Renderer::getRenderer().Render(*model->mptr, *transform.get());
 		}
 	}
 

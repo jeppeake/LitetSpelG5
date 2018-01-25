@@ -6,6 +6,7 @@
 #include "model.h"
 #include "camera.h"
 #include "heightmap.h"
+#include "transform.h"
 
 class Renderer {
 private:
@@ -14,9 +15,15 @@ private:
 	Camera camera;
 	float tal = 0;
 public:
+	Renderer(const Renderer &other) = delete;
+	static Renderer& getRenderer()
+	{
+		static Renderer s;
+		return s;
+	}
 	Renderer();
 	~Renderer();
-	void Render(Model &model);
+	void Render(Model &model, Transform &trans);
 	void Render(Heightmap &map);
 
 
