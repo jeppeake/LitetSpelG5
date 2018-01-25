@@ -25,8 +25,8 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem> {
 
 			transform->pos += float(dt) * physics->velocity;
 		}
-		std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
-		std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
+		//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
+		//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
 	};
 
 
