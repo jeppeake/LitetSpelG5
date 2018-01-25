@@ -17,8 +17,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 		for (Entity entity : es.entities_with_components(weapon)) {
 			weapon = entity.component<Weapon>();
-			if (weapon->shouldFire)
-			{
+			if (weapon->playerOwned && GetAsyncKeyState(VK_F1)) {
+				weapon->shouldFire = true;
+			}
+			if (weapon->shouldFire) {
 				std::cout << "Shot gun at speed " << weapon->stats->speed << "\n";
 				//spawn bullet/missile/bomb at trans, 
 				weapon->shouldFire = false;
