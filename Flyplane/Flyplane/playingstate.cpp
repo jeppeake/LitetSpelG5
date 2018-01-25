@@ -1,7 +1,7 @@
 #include "playingstate.h"
 #include <glm\gtc\constants.hpp>
 
-#include "testsystem.h"
+#include "physicssystem.h"
 #include "transform.h"
 #include "weaponsystem.h"
 #include "rendersystem.h"
@@ -18,7 +18,7 @@ void PlayingState::init()
 
 	ex.systems.add<System class here>();
 	*/
-	ex.systems.add<TestSystem>();
+	ex.systems.add<PhysicsSystem>();
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
 	ex.systems.configure();
@@ -42,6 +42,7 @@ void PlayingState::init()
 		//entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 	}
+
 
 
 	entityx::Entity testWep = ex.entities.create();
@@ -70,7 +71,7 @@ void PlayingState::update(double dt)
 	*/
 	
 
-	//ex.systems.update<TestSystem>(dt);
-	//ex.systems.update<WeaponSystem>(dt);
+	ex.systems.update<PhysicsSystem>(dt);
+	ex.systems.update<WeaponSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
 }
