@@ -6,13 +6,12 @@
 #include "renderer.h"
 #include "model.h"
 #include "input.h"
-
+#include "transform.h"
 int main(void)
 {	
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
 	//w.open();
-	Renderer r;
 	Input::initialize();
 	Model m;
 	m.load("assets/MIG-212A.fbx");
@@ -28,9 +27,10 @@ int main(void)
 		double dt = deltatime.restart();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		r.Render(m);
-		r.Render(map);
-		r.update(dt);
+		auto t = Transform();
+		Renderer::getRenderer().Render(m, t);
+		Renderer::getRenderer().Render(map);
+		Renderer::getRenderer().update(dt);
 		engine->update(dt);
 
 		EngineState* new_state = engine->newState();

@@ -4,6 +4,7 @@
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
 
+#include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
 
@@ -17,8 +18,7 @@ class RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
-
-
+			Renderer::getRenderer().Render(*model->mptr);
 		}
 	}
 

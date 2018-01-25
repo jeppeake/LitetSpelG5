@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "transform.h"
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\mat4x4.hpp>
 #include <glm\vec3.hpp>
@@ -15,7 +16,7 @@ Renderer::~Renderer() {
 
 }
 
-void Renderer::Render(Model &model) {
+void Renderer::Render(Model &model, Transform &trans) {
 	this->shader.use();
 	shader.uniform("texSampler", 0);
 	model.texture.bind(0);
