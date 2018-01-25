@@ -125,6 +125,12 @@
     <ClInclude Include="physicssystem.h">
       <Filter>Source Files\systems</Filter>
     </ClInclude>
+    <ClInclude Include="playercomponent.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="playersystem.h">
+      <Filter>Source Files\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">

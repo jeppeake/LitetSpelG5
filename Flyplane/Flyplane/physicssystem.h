@@ -27,10 +27,12 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem> {
 		}
 		//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
 		//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
+		//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) << "\n";
+		//std::cout << Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_CROSS) << "\n";
 	};
 
 
 	void calcAcceleration(ComponentHandle<Physics> physics) {
-		physics->acceleration = physics->g;
+		//physics->acceleration = physics->g;
 	}
 };
