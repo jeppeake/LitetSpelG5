@@ -1,9 +1,10 @@
 #pragma once
+#include "weapon.h"
 
 struct Equipment {
 	//projectile model, sound, range?, ammo, speed, 
-	Equipment(std::vector<Entity> slots) : slots(slots) {}
+	Equipment(std::vector<Weapon> slots) : slots(slots) {}
 
 	unsigned int selected = 0;
-	std::vector<Entity> slots;
+	std::vector<Weapon> slots;
 };

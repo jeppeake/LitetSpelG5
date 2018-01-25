@@ -37,7 +37,17 @@ struct PlayerSystem : public System<PlayerSystem> {
 
 			//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X) << " ";
 			//std::cout << Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y) << "\n";
-			//physics->velocity = glm::vec3(Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X), Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y), 0.0);
+			physics->velocity = glm::vec3(Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X), Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y), 0.0);
+			float x = (glm::toMat3(cam.orientation) * glm::vec3(0.0, 0.0, 1.0)).x * float(glm::sin(physics->turnRate / 2)) * Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X);
+			float y = (glm::toMat3(cam.orientation) * glm::vec3(0.0, 0.0, 1.0)).y * float(glm::sin(physics->turnRate / 2));
+			float z = (glm::toMat3(cam.orientation) * glm::vec3(0.0, 0.0, 1.0)).z * float(glm::sin(physics->turnRate / 2));
+			float w = cos(physics->turnRate / 2);
+			transform->orientation = glm::quat(x, y, z, w);
+			
+			transform->orientation = normalize(transform->orientation);
+
+
+			physics->velocity = glm::toMat3(cam.orientation)*glm::vec3(0.0, 0.0, 1.0) * (((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2) * (100 * float(dt)));
 		}
 	}
 
