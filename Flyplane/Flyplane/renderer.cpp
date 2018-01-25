@@ -28,7 +28,6 @@ void Renderer::Render(Model &model, Transform &trans) {
 	this->shader.use();
 	shader.uniform("texSampler", 0);
 	model.texture.bind(0);
-	this->tal += 0.005;
 	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
@@ -51,7 +50,7 @@ void Renderer::RenderShadow(Model & model, Transform & trans)
 {
 	glm::mat4 modelMatrix = glm::translate(trans.pos) * glm::toMat4(trans.orientation);
 
-	this->shadow_shader.use();
+	this->shadow.use();
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
 		this->shader.uniform("MVP", projView * modelMatrix);

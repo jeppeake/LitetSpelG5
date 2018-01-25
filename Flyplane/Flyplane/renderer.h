@@ -13,10 +13,8 @@ private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
 	ShaderProgram shadow;
-	ShaderProgram shadow_shader;
 	glm::mat4 projView;
 	Camera camera;
-	float tal = 0;
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
