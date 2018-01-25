@@ -63,13 +63,15 @@ void PlayingState::init()
 
 	
 	weaponmodel.load("assets/testbullet.fbx");
-	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2, 0.5f);
-	WeaponStats* stats2 = new WeaponStats(100, 100, 0, 0.2, 0.02f);
+
+	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2, 0.5f, true);
+	WeaponStats* stats2 = new WeaponStats(100, 100, 1000, 0.2, 0.02f, false);
+	WeaponStats* bomb = new WeaponStats(10, 100, 0, 0.2, 0.5f, false);
 
 	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(-1,-0.2,0));
 	weapons.emplace_back(stats2, &weaponmodel, true, glm::vec3(-2, -0.2, 0));
 	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(1, -0.2, 0));
-	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(2, -0.2, 0));
+	weapons.emplace_back(bomb, &weaponmodel, true, glm::vec3(0, -0.2, -0.5));
 
 	entity.assign <Equipment>(weapons);
 }

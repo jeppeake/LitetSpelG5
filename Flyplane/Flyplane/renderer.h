@@ -13,7 +13,9 @@ private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
 	ShaderProgram shadow;
-	glm::mat4 projView;
+	GLuint frameBuffer;
+	GLuint depthTexture;
+	glm::mat4 shadowMatrix;
 	Camera camera;
 public:
 	Renderer(const Renderer &other) = delete;
