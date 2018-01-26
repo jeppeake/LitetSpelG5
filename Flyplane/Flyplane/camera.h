@@ -6,12 +6,12 @@
 
 class Camera {
 private:
-	glm::vec3 pos;
-	glm::vec3 forward;
-	glm::vec3 up;
+	Transform transform;
+	//glm::vec3 forward;
+	//glm::vec3 up;
 	glm::mat4 projMatrix;
 
-	float yaw, pitch;
+	//float yaw, pitch;
 
 public:
 	Camera();
@@ -20,4 +20,5 @@ public:
 	glm::mat4 getViewMatrix() const;
 	const glm::mat4& getProjMatrix() const;
 	void setTransform(const Transform& t);
+	Transform getTransform() const;
 };
