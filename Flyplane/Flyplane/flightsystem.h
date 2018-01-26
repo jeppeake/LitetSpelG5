@@ -7,6 +7,7 @@
 #include "input.h"
 #include "flightcomponent.h"
 #include <iostream>
+#include <glm/gtx/projection.hpp>
 
 using namespace entityx;
 
@@ -39,6 +40,12 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			transform->orientation += spin * float(dt);
 			transform->orientation = normalize(transform->orientation);
 
+			float boost = 50;
+			float breakForce = 50;
+			float normalSpeed = 100;
+
+			float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
+			physics->velocity = glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * speed;
 			float power = ((flight->engine_power * flight->throttle) / physics->calcTotalDrag());
 			physics->velocity += glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * power;
 		}

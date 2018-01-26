@@ -53,7 +53,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
-		entity.assign <FlightComponent>(10.f, 2.f);
+		entity.assign <FlightComponent>(1000.f, 2.f);
 	}
 
 	auto entity = ex.entities.create();
@@ -63,7 +63,7 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(10.f, 2.f);
+	entity.assign <FlightComponent>(1000.f, 2.f);
 
 
 	std::vector<Weapon> weapons;
@@ -77,9 +77,9 @@ void PlayingState::init()
 	WeaponStats* stats2 = new WeaponStats(100, 10, 100, 0.2, 0.02f, true);
 	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 0.2, 0.5f, true);
 
-	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-2, -0.3,0));
-	weapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.2, 0.5, 2));
-	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(2, -0.3, 0));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
+	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(1.7, -0.15, -1.5));
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 

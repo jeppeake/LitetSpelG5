@@ -5,10 +5,10 @@
 
 struct WeaponStats {
 	//projectile model, sound, range?, ammo, speed, 
-	WeaponStats(unsigned int ammo, float lifetime, float speed, float falloff, float cooldown, bool infAmmo) : ammo(ammo), lifetime(lifetime), speed(speed), falloff(falloff), cooldown(cooldown), infAmmo(infAmmo) {}
+	WeaponStats(unsigned int ammo, unsigned int lifetime, float speed, float falloff, float cooldown, bool infAmmo) : ammo(ammo), lifetime(lifetime), speed(speed), falloff(falloff), cooldown(cooldown), infAmmo(infAmmo) {}
 
-	unsigned int ammo;
-	float speed, falloff, cooldown, lifetime;
+	unsigned int ammo, lifetime;
+	float speed, falloff, cooldown;
 	bool infAmmo;
 };
 
