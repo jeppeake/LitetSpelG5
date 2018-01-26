@@ -31,24 +31,24 @@ struct PlayerSystem : public System<PlayerSystem> {
 
 
 			float roll = 0.0;
-			if (Input::isKeyDown(GLFW_KEY_A))
+			if (Input::isKeyDown(GLFW_KEY_LEFT))
 				roll -= 1.0;
-			if (Input::isKeyDown(GLFW_KEY_D))
+			if (Input::isKeyDown(GLFW_KEY_RIGHT))
 				roll += 1.0;
 
 			float pitch = 0.0;
-			if (Input::isKeyDown(GLFW_KEY_W))
+			if (Input::isKeyDown(GLFW_KEY_UP))
 				pitch -= 1.0;
-			if (Input::isKeyDown(GLFW_KEY_S))
+			if (Input::isKeyDown(GLFW_KEY_DOWN))
 				pitch += 1.0;
 
 
 			float throttle = 0.0;
-			if (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT))
+			if (Input::isKeyDown(GLFW_KEY_W))
 				throttle = 1.0;
 
 			float brake = 0.0;
-			if (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL))
+			if (Input::isKeyDown(GLFW_KEY_S))
 				brake = 1.0;
 
 
