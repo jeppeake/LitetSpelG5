@@ -27,7 +27,7 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 
 			angular_vel.z = flight->turnrate * flight->roll;
 			angular_vel.x = -flight->turnrate * flight->pitch;
-			angular_vel.y = flight->turnrate * flight->jaw;
+			angular_vel.y = flight->turnrate * flight->yaw;
 
 			angular_vel = glm::toMat3(transform->orientation)*angular_vel;
 

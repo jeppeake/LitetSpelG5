@@ -9,7 +9,7 @@ struct FlightComponent {
 		return liftCoeff * ((density * glm::pow(velocity, 2)) / 2) * wingArea;
 	}
 
-	float jaw, pitch, roll = 0.f;
+	float yaw, pitch, roll = 0.f;
 	float throttle, airBrake = 0.f;
 	float engine_power;
 	float turnrate;
