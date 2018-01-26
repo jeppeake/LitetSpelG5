@@ -73,9 +73,9 @@ void PlayingState::init()
 	weaponmodel.load("assets/basicgun.fbx");
 	GAU.load("assets/GAU-15.fbx");
 
-	WeaponStats* stats = new WeaponStats(100, 10, 50, 0.2, 0.5f, true);
-	WeaponStats* stats2 = new WeaponStats(100, 10, 100, 0.2, 0.02f, true);
-	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 0.2, 0.5f, true);
+	WeaponStats* stats = new WeaponStats(100, 10, 100, 0.2, 0.4f, true);
+	WeaponStats* stats2 = new WeaponStats(10000, 10, 100, 0.2, 0.02f, false);
+	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
 	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
 	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
