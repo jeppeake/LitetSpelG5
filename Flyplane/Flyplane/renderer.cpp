@@ -68,7 +68,7 @@ void Renderer::Render(Heightmap &map) {
 	terrain_shader.uniform("shadowMatrix", shadowMatrix);
 	map.bind();
 	glm::mat4 trans(1);
-	trans = glm::mat4();
+	trans = glm::translate(map.pos);
 	this->terrain_shader.uniform("modelMatrix", trans);
 	glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }

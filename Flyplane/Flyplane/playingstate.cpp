@@ -94,10 +94,11 @@ void PlayingState::update(double dt)
 {
 	double time = t.elapsed();
 
-	double r = (1 + sin(time))*0.5;
+	/*double r = (1 + sin(time))*0.5;
 	double g = (1 + sin(time + glm::two_pi<double>() / 3.0))*0.5;
-	double b = (1 + sin(time + 2.0*glm::two_pi<double>() / 3.0))*0.5;
-	glClearColor(r,g,b, 1.0);
+	double b = (1 + sin(time + 2.0*glm::two_pi<double>() / 3.0))*0.5;*/
+	
+	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
 
 	/*
 	ex.systems.update<System class here>(dt);
