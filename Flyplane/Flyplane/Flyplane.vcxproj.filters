@@ -143,6 +143,12 @@
     <ClInclude Include="terraincomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
+    <ClInclude Include="flightcomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="flightsystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">

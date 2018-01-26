@@ -9,6 +9,8 @@
 #include "playercomponent.h"
 #include "playersystem.h"
 #include "terraincomponent.h"
+#include "flightsystem.h"
+#include "flightcomponent.h"
 Model m;
 Model weaponmodel;
 void PlayingState::init()
@@ -25,6 +27,7 @@ void PlayingState::init()
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
+	ex.systems.add<FlightSystem>();
 	ex.systems.configure();
 
 	/*
@@ -48,6 +51,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
+		entity.assign <FlightComponent>(0,0,0,0,0);
 	}
 
 	auto entity = ex.entities.create();
@@ -57,7 +61,7 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, 2.f, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
-	
+	entity.assign <FlightComponent>(0, 0, 0, 0, 0);
 
 
 	std::vector<Weapon> weapons;
@@ -102,6 +106,7 @@ void PlayingState::update(double dt)
 
 	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
+	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
 
 	ex.systems.update<RenderSystem>(dt);
