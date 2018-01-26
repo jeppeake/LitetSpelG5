@@ -12,6 +12,7 @@
 #include "flightsystem.h"
 #include "flightcomponent.h"
 Model m;
+Model projectile;
 Model weaponmodel;
 void PlayingState::init()
 {
@@ -67,19 +68,20 @@ void PlayingState::init()
 	std::vector<Weapon> weapons;
 
 	
-	weaponmodel.load("assets/testbullet.fbx");
+	projectile.load("assets/bullet.fbx");
+	weaponmodel.load("assets/basicgun.fbx");
 
-	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2, 0.5f, true);
-	WeaponStats* stats2 = new WeaponStats(100, 100, 1000, 0.2, 0.02f, true);
+	WeaponStats* stats = new WeaponStats(100, 100, 50, 0.2, 0.5f, true);
+	WeaponStats* stats2 = new WeaponStats(100, 100, 100, 0.2, 0.02f, true);
 	WeaponStats* bomb = new WeaponStats(10, 100, 0, 0.2, 0.5f, true);
 
-	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(-1,-0.2,0));
-	weapons.emplace_back(stats2, &weaponmodel, true, glm::vec3(-2, -0.2, 0));
-	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(1, -0.2, 0));
-	weapons.emplace_back(bomb, &weaponmodel, true, glm::vec3(0, -0.2, -0.5));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-2,-1,0));
+	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(2, -1, 0));
+	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -1, -0.1));
 
 
-	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/trist.png");
+	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
 	entity.assign <Equipment>(weapons);
 
 	entityx::Entity terrain = ex.entities.create();

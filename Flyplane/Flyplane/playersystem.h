@@ -29,11 +29,45 @@ struct PlayerSystem : public System<PlayerSystem> {
 			player = entity.component<PlayerComponent>();
 			flight = entity.component<FlightComponent>();
 
-			flight->pitch = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y);
-			flight->roll = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X);
 
-			flight->throttle = (Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1);
-			flight->airBrake = (Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1);
+			float roll = 0.0;
+			if (Input::isKeyDown(GLFW_KEY_A))
+				roll -= 1.0;
+			if (Input::isKeyDown(GLFW_KEY_D))
+				roll += 1.0;
+
+			float pitch = 0.0;
+			if (Input::isKeyDown(GLFW_KEY_W))
+				pitch -= 1.0;
+			if (Input::isKeyDown(GLFW_KEY_S))
+				pitch += 1.0;
+
+
+			float throttle = 0.0;
+			if (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT))
+				throttle = 1.0;
+
+			float brake = 0.0;
+			if (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL))
+				brake = 1.0;
+
+
+
+			if (Input::gamepad_present()) {
+				roll = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X);
+				pitch = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y);
+				throttle = (Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f;
+				brake = (Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f;
+			}
+
+			flight->pitch = pitch;
+			flight->roll = roll;
+
+			flight->throttle = throttle;
+			flight->airBrake = brake;
+
+
+			
 		}
 	}
 

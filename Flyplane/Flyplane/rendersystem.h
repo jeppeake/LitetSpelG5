@@ -4,11 +4,13 @@
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
 
+#include <glm/gtc/quaternion.hpp>
 #include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
 #include "playercomponent.h"
 #include "terraincomponent.h"
+#include "equipment.h"
 
 using namespace entityx;
 
@@ -22,10 +24,17 @@ struct RenderSystem : public System<RenderSystem> {
 			transform = entity.component<Transform>();
 
 			Transform cam = *transform.get();
-			glm::vec3 offset(2, 3, -10);
+			glm::vec3 offset(0, 2, -5);
 			offset = glm::toMat3(cam.orientation)*offset;
 			cam.pos += offset;
-			player->camera.setTransform(cam);
+
+			Transform p_cam = player->camera.getTransform();
+
+			float f = 0.001;
+			p_cam.pos = glm::mix(p_cam.pos, cam.pos, 1.f - glm::pow(f, dt));
+			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, 1.f - glm::pow(f, float(dt)));
+
+			player->camera.setTransform(p_cam);
 
 			Renderer::getRenderer().setCamera(player->camera);
 		}
@@ -46,8 +55,18 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().Render(*terrain->hmptr);
 		}
 
-		
+		ComponentHandle<Equipment> equip;
+		for (Entity entity : es.entities_with_components(equip, transform)) {
+			equip = entity.component<Equipment>();
+			transform = entity.component<Transform>();
+			for (int i = 0; i < equip->slots.size(); i++) {
+				Transform newTrans;
+				newTrans.orientation = transform->orientation;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->slots[i].offset;
 
+				Renderer::getRenderer().Render(*equip->slots[i].model, newTrans);
+			}
+		}
 	}
 
 };

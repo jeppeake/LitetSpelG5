@@ -9,12 +9,12 @@
 #include "input.h"
 
 Camera::Camera() {
-	this->pos = glm::vec3(0, 10, 0);
-	this->forward = glm::vec3(1, 0, 0);
-	this->up = glm::vec3(0, 1, 0);
+	//this->pos = glm::vec3(0, 10, 0);
+	//this->forward = glm::vec3(1, 0, 0);
+	//this->up = glm::vec3(0, 1, 0);
 	this->projMatrix = glm::infinitePerspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f);
-	this->yaw = 0;
-	this->pitch = 0;
+	//this->yaw = 0;
+	//this->pitch = 0;
 
 }
 
@@ -68,7 +68,8 @@ void Camera::update(float dt)
 
 glm::mat4 Camera::getViewMatrix() const
 {
-	return glm::lookAt(this->pos, this->pos + this->forward, this->up);
+	return glm::inverse(glm::translate(transform.pos)*glm::toMat4(glm::rotate(transform.orientation, glm::pi<float>(), glm::vec3(0,1,0))));
+	//return glm::lookAt(this->pos, this->pos + this->forward, this->up);
 }
 
 const glm::mat4& Camera::getProjMatrix() const
@@ -78,13 +79,21 @@ const glm::mat4& Camera::getProjMatrix() const
 
 void Camera::setTransform(const Transform &t)
 {
+	/*
 	pos = t.pos;
 	forward = glm::toMat3(t.orientation)*glm::vec3(0, 0, 1);
 	up = glm::toMat3(t.orientation)*glm::vec3(0, 1, 0);
+	*/
+	transform = t;
 
 	// BAD
 	auto size = glm::vec2(Window::getWindow().size());
 	this->projMatrix = glm::infinitePerspective(glm::radians(80.0f), size.x / size.y, 0.1f);
+}
+
+Transform Camera::getTransform() const
+{
+	return transform;
 }
 
 
