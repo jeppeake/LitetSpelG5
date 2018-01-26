@@ -14,6 +14,7 @@
 Model m;
 Model projectile;
 Model weaponmodel;
+Model GAU;
 void PlayingState::init()
 {
 	m.load("assets/MIG-212A.fbx");
@@ -70,15 +71,16 @@ void PlayingState::init()
 	
 	projectile.load("assets/bullet.fbx");
 	weaponmodel.load("assets/basicgun.fbx");
+	GAU.load("assets/GAU-15.fbx");
 
-	WeaponStats* stats = new WeaponStats(100, 100, 50, 0.2, 0.5f, true);
-	WeaponStats* stats2 = new WeaponStats(100, 100, 100, 0.2, 0.02f, true);
-	WeaponStats* bomb = new WeaponStats(10, 100, 0, 0.2, 0.5f, true);
+	WeaponStats* stats = new WeaponStats(100, 10, 50, 0.2, 0.5f, true);
+	WeaponStats* stats2 = new WeaponStats(100, 10, 100, 0.2, 0.02f, true);
+	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 0.2, 0.5f, true);
 
-	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-2,-1,0));
-	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
-	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(2, -1, 0));
-	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -1, -0.1));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-2, -0.3,0));
+	weapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.2, 0.5, 2));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(2, -0.3, 0));
+	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 
 	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
