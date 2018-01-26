@@ -109,10 +109,11 @@ void PlayingState::update(double dt)
 
 
 
+
 	ex.systems.update<PlayerSystem>(dt);
-	ex.systems.update<PhysicsSystem>(dt);
-	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
+	ex.systems.update<FlightSystem>(dt);
+	ex.systems.update<PhysicsSystem>(dt);
 
 	ex.systems.update<RenderSystem>(dt);
 }
