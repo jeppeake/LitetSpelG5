@@ -12,7 +12,8 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		player = entity.component<PlayerComponent>();
 		flight = entity.component<FlightComponent>();
 
-
+		double fbt = 0.5;
+		double f = 0.01;
 		auto control = [dt](float init, int key1, int key2) {
 			double f = 0.01;
 			float val = init;
@@ -46,8 +47,8 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 
 		if (Input::gamepad_present()) {
-			new_roll = glm::mix(roll, Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X), float(1.0 - glm::pow(f, dt)));
-			new_pitch = glm::mix(pitch, Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y), float(1.0 - glm::pow(f, dt)));
+			roll = glm::mix(flight->roll, Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X), float(1.0 - glm::pow(f, dt)));
+			pitch = glm::mix(flight->pitch, Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y), float(1.0 - glm::pow(f, dt)));
 			new_throttle = glm::mix(throttle, ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f), float(1.0 - glm::pow(fbt, dt)));
 			new_brake = glm::mix(brake, ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f), float(1.0 - glm::pow(fbt, dt)));
 		}
@@ -65,19 +66,11 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		else {
 			new_brake = glm::mix(brake, 0.f, float(1.0 - glm::pow(fbt, dt)));
 		}
-
-		if (new_pitch != 0.f)
-			pitch = new_pitch;
-		else
-			pitch = glm::mix(pitch, 0.f, float(1.0 - glm::pow(f, dt)));
-		if (new_roll != 0.f)
-			roll = new_roll;
-		else
-			roll = glm::mix(roll, 0.f, float(1.0 - glm::pow(f, dt)));
-
-		if (throttle > 0.5f && brake > 0.5f) {
-			physics->drift = brake + throttle - 1.f;
-			std::cout << physics->drift << "\n";
+		float d1 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f);
+		float d2 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f);
+		if (d1 > 0.5f && d2 > 0.5f) {
+			physics->drift = d1 + d2 - 1.f;
+			std::cout << "D: " << physics->drift << "\n";
 		}
 
 		flight->pitch = pitch;
