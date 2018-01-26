@@ -9,6 +9,7 @@
 #include "modelcomponent.h"
 #include "equipment.h"
 #include "playercomponent.h"
+#include "projectilecomponent.h"
 #include <ctime>
 
 using namespace entityx;
@@ -21,6 +22,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Weapon> weapon;
 		ComponentHandle<Transform> trans;
+		ComponentHandle<Projectile> projectile;
 
 		for (Entity entity : es.entities_with_components(equip, trans)) {
 			equip = entity.component<Equipment>();
@@ -48,20 +50,28 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					//spawn bullet/missile/bomb at trans, 
 					entityx::Entity projectile = es.create();
 					projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation);
-
-					projectile.assign<Physics>(0.2, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats->speed), glm::vec3());
-					projectile.assign<ModelComponent>(weapon->model);
+					projectile.assign<Physics>(0.2, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats->speed) + planeSpeed, glm::vec3());
+					projectile.assign<ModelComponent>(weapon->projectileModel);
+					projectile.assign<Projectile>(weapon->stats->lifetime);
 
 					if(!weapon->stats->infAmmo)
 						weapon->stats->ammo--;
 				}
 			}
+
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
 				equip->selected = (equip->selected + 1) % equip->slots.size();
 				std::cout << "Selected weapon: " << equip->selected << ", input: " << Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) << "\n";
 				switchT.restart();
 			}
 			
+		}
+
+		for (Entity entity : es.entities_with_components(projectile)) {
+			projectile = entity.component<Projectile>();
+			if (projectile->timer.elapsed() > projectile->lifetime)
+				entity.destroy();
+
 		}
 
 		

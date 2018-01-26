@@ -153,6 +153,7 @@
     <ClInclude Include="playersystem.h" />
     <ClInclude Include="playingstate.h" />
     <ClInclude Include="rendersystem.h" />
+    <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="physicssystem.h" />
     <ClInclude Include="terraincomponent.h" />

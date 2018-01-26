@@ -140,20 +140,28 @@ void Model::load(const std::string & file)
 		aiString name;
 		mat->Get(AI_MATKEY_NAME, name);
 
+		
+		std::string tex_file;
 		if (mat->GetTextureCount(t) == 0) {
-			std::cout << "ERROR: texture not found\n";
-			system("pause");
-			exit(EXIT_FAILURE);
+			std::cout << "ERROR: texture not in model\n";
+			//system("pause");
+			//exit(EXIT_FAILURE);
+			tex_file = "assets/textures/korven.png";
 		}
-	
-
-		aiString filename;
-		mat->Get(AI_MATKEY_TEXTURE(t, 0), filename);
-		std::string tex_file = model_dir + std::string(filename.C_Str());
+		else 
+		{
+			aiString filename;
+			mat->Get(AI_MATKEY_TEXTURE(t, 0), filename);
+			tex_file = model_dir + std::string(filename.C_Str());
+		}
+		 
 		if (!texture.loadTexture(tex_file))
 		{
 			std::cout << "ERROR: Could not load texture: '" << tex_file << "'\n";
 		}
+	
+
+
 		
 	}
 
