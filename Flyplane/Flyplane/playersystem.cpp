@@ -13,23 +13,24 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		flight = entity.component<FlightComponent>();
 
 
-		double f = 0.001;
-		double fbt = 0.00005;
+		auto control = [dt](float init, int key1, int key2) {
+			double f = 0.01;
+			float val = init;
+			float new_val = 0.f;
+			if (Input::isKeyDown(key1))
+				new_val = glm::mix(val, -1.f, float(1.0 - glm::pow(f, dt)));
+			if (Input::isKeyDown(key2))
+				new_val = glm::mix(val, 1.f, float(1.0 - glm::pow(f, dt)));
+			if (new_val != 0.f)
+				val = new_val;
+			else
+				val = glm::mix(val, 0.f, float(1.0 - glm::pow(f, dt)));
+			return val;
+		};
 
-		float roll = flight->roll;
-
-		float new_roll = 0.f;
-		if (Input::isKeyDown(GLFW_KEY_LEFT))
-			new_roll = glm::mix(roll, -1.f, float(1.0 - glm::pow(f, dt)));
-		if (Input::isKeyDown(GLFW_KEY_RIGHT))
-			new_roll = glm::mix(roll, 1.f, float(1.0 - glm::pow(f, dt)));
-
-		float pitch = flight->pitch;
-		float new_pitch = 0.f;
-		if (Input::isKeyDown(GLFW_KEY_UP))
-			new_pitch = glm::mix(pitch, -1.f, float(1.0 - glm::pow(f, dt)));
-		if (Input::isKeyDown(GLFW_KEY_DOWN))
-			new_pitch = glm::mix(pitch, 1.f, float(1.0 - glm::pow(f, dt)));
+		float roll = control(flight->roll, GLFW_KEY_LEFT, GLFW_KEY_RIGHT);
+		float pitch = control(flight->pitch, GLFW_KEY_UP, GLFW_KEY_DOWN);
+		float yaw = control(flight->yaw, GLFW_KEY_D, GLFW_KEY_A);
 
 		float throttle = flight->throttle;
 		float new_throttle = 0.f;
@@ -81,6 +82,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		flight->pitch = pitch;
 		flight->roll = roll;
+		flight->yaw = yaw;
 
 		flight->throttle = throttle;
 		flight->airBrake = brake;

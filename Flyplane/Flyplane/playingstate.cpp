@@ -67,7 +67,7 @@ void PlayingState::init()
 
 
 	std::vector<Weapon> weapons;
-
+	std::vector<Weapon> pweapons;
 	
 	projectile.load("assets/bullet.fbx");
 	weaponmodel.load("assets/basicgun.fbx");
@@ -77,14 +77,14 @@ void PlayingState::init()
 	WeaponStats* stats2 = new WeaponStats(100, 10, 100, 0.2, 0.02f, true);
 	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 0.2, 0.5f, true);
 
-	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
+	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
 	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
-	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(1.7, -0.15, -1.5));
+	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(1.7, -0.15, -1.5));
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 
 	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
-	entity.assign <Equipment>(weapons);
+	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(hm);
@@ -94,10 +94,11 @@ void PlayingState::update(double dt)
 {
 	double time = t.elapsed();
 
-	double r = (1 + sin(time))*0.5;
+	/*double r = (1 + sin(time))*0.5;
 	double g = (1 + sin(time + glm::two_pi<double>() / 3.0))*0.5;
-	double b = (1 + sin(time + 2.0*glm::two_pi<double>() / 3.0))*0.5;
-	glClearColor(r,g,b, 1.0);
+	double b = (1 + sin(time + 2.0*glm::two_pi<double>() / 3.0))*0.5;*/
+	
+	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
 
 	/*
 	ex.systems.update<System class here>(dt);

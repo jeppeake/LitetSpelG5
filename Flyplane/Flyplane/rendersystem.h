@@ -22,14 +22,16 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
+			ComponentHandle<Physics> physics = entity.component<Physics>();
 
 			Transform cam = *transform.get();
-			glm::vec3 offset(0, 3, -9);
+			glm::vec3 offset(0, 3, -7);
 			offset = glm::toMat3(cam.orientation)*offset;
 			cam.pos += offset;
 
 			Transform p_cam = player->camera.getTransform();
 
+			//double v = length(physics->velocity)*0.001;
 			double f_pos = 0.0001;
 			double f_orien = 0.01;
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
@@ -61,12 +63,19 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(equip, transform)) {
 			equip = entity.component<Equipment>();
 			transform = entity.component<Transform>();
-			for (int i = 0; i < equip->slots.size(); i++) {
+			for (int i = 0; i < equip->primary.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
-				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->slots[i].offset;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;
 
-				Renderer::getRenderer().Render(*equip->slots[i].model, newTrans);
+				Renderer::getRenderer().Render(*equip->primary[i].model, newTrans);
+			}
+			for (int i = 0; i < equip->special.size(); i++) {
+				Transform newTrans;
+				newTrans.orientation = transform->orientation;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->special[i].offset;
+
+				Renderer::getRenderer().Render(*equip->special[i].model, newTrans);
 			}
 		}
 	}
