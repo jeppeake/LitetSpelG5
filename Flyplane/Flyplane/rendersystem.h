@@ -55,6 +55,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().Render(*terrain->hmptr);
 		}
 
+		ComponentHandle<Equipment> equip;
 		for (Entity entity : es.entities_with_components(equip, transform)) {
 			equip = entity.component<Equipment>();
 			transform = entity.component<Transform>();

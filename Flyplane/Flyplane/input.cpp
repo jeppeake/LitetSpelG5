@@ -77,7 +77,7 @@ bool Input::gamepad_present() {
 }
 
 float Input::gamepad_axis(int axis) {
-	if (!gamepad_present)
+	if (!gamepad_present())
 		return 0;
 	GLFWgamepadstate gamepad_state;
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad_state)){
@@ -90,7 +90,7 @@ float Input::gamepad_axis(int axis) {
 }
 
 bool Input::gamepad_button_pressed(int button) {
-	if (!gamepad_present)
+	if (!gamepad_present())
 		return 0;
 	GLFWgamepadstate gamepad_state;
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad_state)) {
