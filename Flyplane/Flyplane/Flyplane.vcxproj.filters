@@ -149,6 +149,9 @@
     <ClInclude Include="flightsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
+    <ClInclude Include="projectilecomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
