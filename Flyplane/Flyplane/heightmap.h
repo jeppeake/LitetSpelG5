@@ -8,7 +8,7 @@ private:
 	Texture tex;
 	unsigned int width, height;
 	float hScale = 0.04f;
-	float spread = 0.5f;
+	float spread = 2.0f;
 	GLuint ebo = 0;
 	GLuint vbo = 0;
 	GLuint vao = 0;

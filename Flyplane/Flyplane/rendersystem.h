@@ -10,6 +10,7 @@
 #include "transform.h"
 #include "playercomponent.h"
 #include "terraincomponent.h"
+#include "equipment.h"
 
 using namespace entityx;
 
@@ -54,8 +55,17 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().Render(*terrain->hmptr);
 		}
 
-		
+		for (Entity entity : es.entities_with_components(equip, transform)) {
+			equip = entity.component<Equipment>();
+			transform = entity.component<Transform>();
+			for (int i = 0; i < equip->slots.size(); i++) {
+				Transform newTrans;
+				newTrans.orientation = transform->orientation;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->slots[i].offset;
 
+				Renderer::getRenderer().Render(*equip->slots[i].model, newTrans);
+			}
+		}
 	}
 
 };

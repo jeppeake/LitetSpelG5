@@ -9,7 +9,10 @@
 #include "playercomponent.h"
 #include "playersystem.h"
 #include "terraincomponent.h"
+#include "flightsystem.h"
+#include "flightcomponent.h"
 Model m;
+Model projectile;
 Model weaponmodel;
 void PlayingState::init()
 {
@@ -25,6 +28,7 @@ void PlayingState::init()
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
+	ex.systems.add<FlightSystem>();
 	ex.systems.configure();
 
 	/*
@@ -48,6 +52,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
+		entity.assign <FlightComponent>(0,0,0,0,0);
 	}
 
 	auto entity = ex.entities.create();
@@ -57,25 +62,26 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, 2.f, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
-	
+	entity.assign <FlightComponent>(0, 0, 0, 0, 0);
 
 
 	std::vector<Weapon> weapons;
 
 	
-	weaponmodel.load("assets/testbullet.fbx");
+	projectile.load("assets/bullet.fbx");
+	weaponmodel.load("assets/basicgun.fbx");
 
 	WeaponStats* stats = new WeaponStats(100, 100, 100, 0.2, 0.5f, true);
 	WeaponStats* stats2 = new WeaponStats(100, 100, 1000, 0.2, 0.02f, true);
 	WeaponStats* bomb = new WeaponStats(10, 100, 0, 0.2, 0.5f, true);
 
-	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(-1,-0.2,0));
-	weapons.emplace_back(stats2, &weaponmodel, true, glm::vec3(-2, -0.2, 0));
-	weapons.emplace_back(stats, &weaponmodel, true, glm::vec3(1, -0.2, 0));
-	weapons.emplace_back(bomb, &weaponmodel, true, glm::vec3(0, -0.2, -0.5));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-2,-1,0));
+	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
+	weapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(2, -1, 0));
+	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -1, -0.5));
 
 
-	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/trist.png");
+	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
 	entity.assign <Equipment>(weapons);
 
 	entityx::Entity terrain = ex.entities.create();
@@ -102,6 +108,7 @@ void PlayingState::update(double dt)
 
 	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
+	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
 
 	ex.systems.update<RenderSystem>(dt);

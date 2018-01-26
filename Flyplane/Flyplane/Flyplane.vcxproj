@@ -140,6 +140,8 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="enginestate.h" />
+    <ClInclude Include="flightcomponent.h" />
+    <ClInclude Include="flightsystem.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
