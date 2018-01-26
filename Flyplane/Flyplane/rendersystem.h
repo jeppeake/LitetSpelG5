@@ -4,6 +4,7 @@
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
 
+#include <glm/gtc/quaternion.hpp>
 #include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
@@ -22,10 +23,17 @@ struct RenderSystem : public System<RenderSystem> {
 			transform = entity.component<Transform>();
 
 			Transform cam = *transform.get();
-			glm::vec3 offset(2, 3, -10);
+			glm::vec3 offset(0, 2, -5);
 			offset = glm::toMat3(cam.orientation)*offset;
 			cam.pos += offset;
-			player->camera.setTransform(cam);
+
+			Transform p_cam = player->camera.getTransform();
+
+			float f = 0.001;
+			p_cam.pos = glm::mix(p_cam.pos, cam.pos, 1.f - glm::pow(f, dt));
+			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, 1.f - glm::pow(f, float(dt)));
+
+			player->camera.setTransform(p_cam);
 
 			Renderer::getRenderer().setCamera(player->camera);
 		}
