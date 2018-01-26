@@ -2,7 +2,9 @@
 #include "weapon.h"
 
 struct FlightComponent {
-	FlightComponent(float jaw, float pitch, float roll, float throttle, float airBrake) : jaw(jaw), pitch(pitch), roll(roll), throttle(throttle), airBrake(airBrake) {}
-	float jaw, pitch, roll;
-	float throttle, airBrake;
+	FlightComponent(float engine_power, float turnrate) : engine_power(engine_power), turnrate(turnrate) {}
+	float jaw, pitch, roll = 0.f;
+	float throttle, airBrake = 0.f;
+	float engine_power;
+	float turnrate;
 };

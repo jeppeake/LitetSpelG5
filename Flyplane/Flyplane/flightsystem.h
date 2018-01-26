@@ -24,8 +24,8 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 
 			glm::vec3 angular_vel;
 
-			angular_vel.z = physics->turnRate * flight->roll;
-			angular_vel.x = -physics->turnRate * flight->pitch;
+			angular_vel.z = flight->turnrate * flight->roll;
+			angular_vel.x = -flight->turnrate * flight->pitch;
 
 			angular_vel = glm::toMat3(transform->orientation)*angular_vel;
 
@@ -39,12 +39,8 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			transform->orientation += spin * float(dt);
 			transform->orientation = normalize(transform->orientation);
 
-			float boost = 50;
-			float breakForce = 50;
-			float normalSpeed = 100;
-
-			float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
-			physics->velocity = glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * speed;
+			float power = ((flight->engine_power * flight->throttle) / physics->calcTotalDrag());
+			physics->velocity += glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * power;
 		}
 	};
 };
