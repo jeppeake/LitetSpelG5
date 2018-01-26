@@ -57,7 +57,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			}
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
 				equip->selected = (equip->selected + 1) % equip->slots.size();
-				std::cout << "Selected weapon: " << equip->selected << "\n";
+				std::cout << "Selected weapon: " << equip->selected << ", input: " << Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) << "\n";
 				switchT.restart();
 			}
 			
