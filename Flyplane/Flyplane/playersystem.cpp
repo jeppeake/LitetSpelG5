@@ -13,8 +13,8 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		flight = entity.component<FlightComponent>();
 
 
-		auto control = [](float init, int key1, int key2, float dt) {
-			double f = 0.001;
+		auto control = [dt](float init, int key1, int key2) {
+			double f = 0.01;
 			float val = init;
 			float new_val = 0.f;
 			if (Input::isKeyDown(key1))
@@ -28,10 +28,9 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			return val;
 		};
 
-		float roll = control(flight->roll, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, dt);
-		float pitch = control(flight->pitch, GLFW_KEY_UP, GLFW_KEY_DOWN, dt);
-		//float yaw = control(flight->pitch, GLFW_KEY_UP, GLFW_KEY_DOWN, dt);
-
+		float roll = control(flight->roll, GLFW_KEY_LEFT, GLFW_KEY_RIGHT);
+		float pitch = control(flight->pitch, GLFW_KEY_UP, GLFW_KEY_DOWN);
+		float yaw = control(flight->yaw, GLFW_KEY_D, GLFW_KEY_A);
 
 
 		float throttle = 0.0;
@@ -53,6 +52,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		flight->pitch = pitch;
 		flight->roll = roll;
+		flight->yaw = yaw;
 
 		flight->throttle = throttle;
 		flight->airBrake = brake;
