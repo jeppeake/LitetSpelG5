@@ -49,19 +49,19 @@ void PlayingState::init()
 		glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		entity.assign<Physics>(1000.0, 1.0, 20.f, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
-		entity.assign <FlightComponent>(0,0,0,0,0);
+		entity.assign <FlightComponent>(10.f, 2.f);
 	}
 
 	auto entity = ex.entities.create();
 	glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
-	entity.assign<Physics>(1000.0, 1.0, 2.f, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
+	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(0, 0, 0, 0, 0);
+	entity.assign <FlightComponent>(10.f, 2.f);
 
 
 	std::vector<Weapon> weapons;

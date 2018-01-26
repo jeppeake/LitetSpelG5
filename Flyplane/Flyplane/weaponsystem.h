@@ -45,7 +45,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					//spawn bullet/missile/bomb at trans, 
 					entityx::Entity projectile = es.create();
 					projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation);
-					projectile.assign<Physics>(0.2, 1, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats->speed), glm::vec3());
+					projectile.assign<Physics>(0.2, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats->speed), glm::vec3());
 					projectile.assign<ModelComponent>(weapon->model);
 
 					weapon->stats->ammo--;
