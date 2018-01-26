@@ -66,10 +66,8 @@ glm::vec2 Input::mousePos()
 bool Input::gamepad_present() {
 	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	if (present) {
-		std::cout << "Joystick detected" << "\n";
 		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
 		{
-			std::cout << "Gamepad mode" << "\n";
 			return true;
 		}
 	}

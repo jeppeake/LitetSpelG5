@@ -54,8 +54,8 @@ struct PlayerSystem : public System<PlayerSystem> {
 
 
 			if (Input::gamepad_present()) {
-				roll = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X);
-				pitch = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_Y);
+				roll = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X);
+				pitch = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y);
 				throttle = (Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f;
 				brake = (Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f;
 			}
