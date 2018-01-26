@@ -61,12 +61,19 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(equip, transform)) {
 			equip = entity.component<Equipment>();
 			transform = entity.component<Transform>();
-			for (int i = 0; i < equip->slots.size(); i++) {
+			for (int i = 0; i < equip->primary.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
-				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->slots[i].offset;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;
 
-				Renderer::getRenderer().Render(*equip->slots[i].model, newTrans);
+				Renderer::getRenderer().Render(*equip->primary[i].model, newTrans);
+			}
+			for (int i = 0; i < equip->special.size(); i++) {
+				Transform newTrans;
+				newTrans.orientation = transform->orientation;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->special[i].offset;
+
+				Renderer::getRenderer().Render(*equip->special[i].model, newTrans);
 			}
 		}
 	}
