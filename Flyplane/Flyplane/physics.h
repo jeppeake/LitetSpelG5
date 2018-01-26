@@ -12,4 +12,5 @@ struct Physics {
 	}
 	double mass, dragCoeff;
 	glm::vec3 acceleration, added_forces, velocity;
+	float drift = 0;
 };
