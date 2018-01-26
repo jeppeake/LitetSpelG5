@@ -24,18 +24,17 @@ struct RenderSystem : public System<RenderSystem> {
 			transform = entity.component<Transform>();
 
 			Transform cam = *transform.get();
-			glm::vec3 offset(0, 4, -8);
+			glm::vec3 offset(0, 3, -9);
 			offset = glm::toMat3(cam.orientation)*offset;
 			cam.pos += offset;
 
 			Transform p_cam = player->camera.getTransform();
 
-			double f_pos = 0.001;
-			double f_orien = 0.001;
+			double f_pos = 0.0001;
+			double f_orien = 0.01;
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
-			std::cout << p_cam.pos.y << " | " << cam.pos.y << "\n";
 
 			player->camera.setTransform(p_cam);
 
