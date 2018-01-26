@@ -66,6 +66,8 @@ void Window::open(int width, int height)
 	scrolls[window] = glm::vec2(0, 0);
 	glfwSetScrollCallback(window, scrollCallback);
 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
