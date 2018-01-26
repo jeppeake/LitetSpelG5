@@ -63,7 +63,6 @@ void Window::open(int width, int height)
 		exit(1);
 	}
 
-
 	scrolls[window] = glm::vec2(0, 0);
 	glfwSetScrollCallback(window, scrollCallback);
 
