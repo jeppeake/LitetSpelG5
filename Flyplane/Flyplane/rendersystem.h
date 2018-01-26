@@ -30,9 +30,10 @@ struct RenderSystem : public System<RenderSystem> {
 
 			Transform p_cam = player->camera.getTransform();
 
-			float f = 0.001;
-			p_cam.pos = glm::mix(p_cam.pos, cam.pos, 1.f - glm::pow(f, dt));
-			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, 1.f - glm::pow(f, float(dt)));
+			float f_pos = 0.000001f;
+			float f_orien = 0.01f;
+			p_cam.pos = glm::mix(p_cam.pos, cam.pos, 1.f - glm::pow(f_pos, float(dt)));
+			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, 1.f - glm::pow(f_orien, float(dt)));
 
 			player->camera.setTransform(p_cam);
 
