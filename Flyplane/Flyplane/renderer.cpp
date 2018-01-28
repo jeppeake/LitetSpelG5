@@ -39,6 +39,8 @@ Renderer::Renderer() {
 		0.5, 0.5, 0.5, 0.1
 	);
 	this->shadowMatrix = m * proj * view;
+
+	
 }
 
 Renderer::~Renderer() {

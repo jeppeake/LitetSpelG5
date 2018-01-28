@@ -1,3 +1,4 @@
+#version 420
 uniform sampler2D texSampler;
 uniform sampler2D shadowMap;
 uniform mat4 shadowMatrix;
