@@ -21,6 +21,7 @@ private:
 	GLuint frameBuffer;
 	GLuint depthTexture;
 	glm::mat4 shadowMatrix;
+	glm::mat4 debugMVP;
 	Camera camera;
 	std::vector<RenderObject> list;
 	std::vector<Heightmap*> mapList;
