@@ -22,7 +22,7 @@ Heightmap::Heightmap(const std::string &file, const std::string &texFile) {
 void Heightmap::loadMap(const std::string &file) {
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, file);
-	pos = glm::vec3(-(width / 2.0f)*spread, pos.y, -(height / 2.0f)*spread);
+	pos = glm::vec3(-(width / 2.0)*spread, pos.y, -(height / 2.0)*spread);
 	if (error != 0) {
 		std::cout << "[ERROR] Failed to load heightmap." << "\n";
 	}
@@ -96,7 +96,7 @@ void Heightmap::unbind() {
 
 double Heightmap::heightAt(glm::vec3 _pos) {
 	double height = 0;
-	_pos = _pos - pos;
+	_pos = _pos - this->pos;
 	int z = (int)(_pos.x / spread);
 	int x = (int)(_pos.z / spread);
 
