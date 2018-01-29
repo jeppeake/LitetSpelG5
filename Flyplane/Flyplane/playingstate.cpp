@@ -15,6 +15,9 @@ Model m;
 Model projectile;
 Model weaponmodel;
 Model GAU;
+Heightmap* hm;
+
+entityx::Entity entity;
 void PlayingState::init()
 {
 	m.load("assets/MIG-212A.fbx");
@@ -56,7 +59,7 @@ void PlayingState::init()
 		entity.assign <FlightComponent>(1000.f, 2.f);
 	}
 
-	auto entity = ex.entities.create();
+	entity = ex.entities.create();
 	glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
@@ -83,7 +86,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 
-	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
+	hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
 	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();
@@ -108,12 +111,12 @@ void PlayingState::update(double dt)
 		std::cout << ex.entities.size() << "\n";
 
 
-
-
 	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
 	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
 
 	ex.systems.update<RenderSystem>(dt);
+
+	double h = hm->heightAt(entity.component<Transform>().get()->pos);
 }

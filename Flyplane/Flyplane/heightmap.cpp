@@ -93,3 +93,37 @@ void Heightmap::bind() {
 void Heightmap::unbind() {
 	glBindVertexArray(0);
 }
+
+double Heightmap::heightAt(glm::vec3 _pos) {
+	double height = 0;
+	_pos = _pos - pos;
+	int z = (int)(_pos.x / spread);
+	int x = (int)(_pos.z / spread);
+
+	if (index(x, z, width) > vertices.size())
+		return height;
+
+	glm::vec3 v1 = vertices[index(x, z, width)].position;
+	glm::vec3 v2 = vertices[index(x+1, z, width)].position;
+	glm::vec3 v3 = vertices[index(x, z+1, width)].position;
+	glm::vec3 v4 = vertices[index(x+1, z+1, width)].position;
+
+	
+
+	float sqX = (_pos.z / spread) - x;
+	float sqZ = (_pos.x / spread) - z;
+	if ((sqX + sqZ) < 1)
+	{
+		height = v1.y;
+		height += (v2.y - v1.y) * sqX;
+		height += (v3.y - v1.y) * sqZ;
+	}
+	else
+	{
+		height = v4.y;
+		height += (v2.y - v4.y) * (1.0f - sqZ);
+		height += (v3.y - v4.y) * (1.0f - sqX);
+	}
+	
+	return height;
+}
