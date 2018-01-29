@@ -31,12 +31,13 @@ public:
 			double height = map->heightAt(pos);
 			if (entity.has_component<PlayerComponent>())
 			{
-				std::cout << "Entity: " << pos.y << " : Terrain : " << height << std::endl;
-				//std::cout << "Height over terrain: " << pos.y - height << "\n";
+				//std::cout << "Entity: " << pos.y << " : Terrain : " << height << std::endl;
+				std::cout << "Height over terrain: " << pos.y - height << "\n";
 			}
 			if (pos.y <= height)
 			{
 				events.emit<CollisionEvent>(entity, terrain);
+				entity.destroy();
 			}
 		}
 	}
