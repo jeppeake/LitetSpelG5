@@ -1,3 +1,4 @@
+#version 420
 layout(location = 0) out float fragment_depth;
 
 void main() {
