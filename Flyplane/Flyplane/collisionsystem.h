@@ -31,7 +31,8 @@ public:
 			double height = map->heightAt(pos);
 			if (entity.has_component<PlayerComponent>())
 			{
-				std::cout << "Pos: " << pos.y << " : Height : " << height << std::endl;
+				std::cout << "Entity: " << pos.y << " : Terrain : " << height << std::endl;
+				//std::cout << "Height over terrain: " << pos.y - height << "\n";
 			}
 			if (pos.y <= height)
 			{

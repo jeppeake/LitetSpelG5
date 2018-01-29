@@ -41,8 +41,10 @@ Model::Mesh::Mesh(aiMesh * mesh)
 		auto pos = mesh->mVertices[i];
 		aiVector3D new_pos(pos.x, pos.z, -pos.y);
 
-		if(is_bb)
-			std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+		if (is_bb) 
+		{
+			//std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+		}
 
 		vertices.emplace_back(pos,
 			normal,
