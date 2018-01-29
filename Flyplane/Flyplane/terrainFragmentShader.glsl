@@ -13,7 +13,7 @@ void main() {
 	float depth = texture(shadowMap, shadowCoord.xy).z;
 	float visibility = 1.0;
 	if(depth < shadowCoord.z) {
-		visibility = 0.5;
+		visibility = 0.0;
 	}
 
 	vec3 sun = vec3(0, 1, 1);
@@ -22,5 +22,5 @@ void main() {
 	float result = dot(sun, vNormal);
 	result = clamp(result, 0, 1);
 	vec3 color = texture(texSampler, vec2(vTex.x, 1 - vTex.y)).rgb;
-	gl_FragColor = vec4(color * result, 1) * visibility + vec4(color * 0.2, 1);
+	gl_FragColor = vec4(depth, depth, depth, 1);//vec4(color * result, 1) * visibility + vec4(color * 0.2, 1);
 }
