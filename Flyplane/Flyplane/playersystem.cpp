@@ -82,8 +82,8 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			driftFactor = d1 + d2 - 1.f;
 		}
 		new_drift = glm::mix(physics->drift, driftFactor, float(1.0 - glm::pow(fbt, dt)));
-		std::cout << new_drift << "\n";
-		std::cout << physics->drift << "\n";
+		//std::cout << new_drift << "\n";
+		//std::cout << physics->drift << "\n";
 		physics->drift = new_drift;
 
 		flight->pitch = pitch;
