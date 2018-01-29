@@ -142,10 +142,11 @@ void Renderer::RenderScene() {
 	//Render terrain
 	terrain_shader.use();
 	terrain_shader.uniform("shadowMatrix", shadowMatrix);
+	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	for (int i = 0; i < mapList.size(); i++) {
 		mapList[i]->bind();
 		glm::mat4 trans(1);
-		trans = glm::translate(mapList[i]->pos);
+		//trans = glm::translate(mapList[i]->pos);
 		this->terrain_shader.uniform("modelMatrix", trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
