@@ -26,12 +26,14 @@ void PlayingState::init()
 
 	ex.systems.add<System class here>();
 	*/
+	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
+
 	ex.systems.add<PhysicsSystem>();
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
-	ex.systems.add<CollisionSystem>();
+	ex.systems.add<CollisionSystem>(hm);
 	ex.systems.configure();
 
 	/*
@@ -85,7 +87,6 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 
-	Heightmap* hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
 	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();
