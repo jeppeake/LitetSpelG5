@@ -48,13 +48,13 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 			Weapon* weapon = &equip->special[equip->selected];
 
-			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && weapon->timer.elapsed() > weapon->stats->cooldown && weapon->stats->ammo > 0) {
+			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && weapon->timer.elapsed() > weapon->stats->cooldown && weapon->stats->ammo > 0) {
 				weapon->shouldFire = true;
 			}
 			
 			for (int i = 0; i < equip->primary.size(); i++) {
 				Weapon* pweapon = &equip->primary[i];
-				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats->cooldown && pweapon->stats->ammo > 0) {
+				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats->cooldown && pweapon->stats->ammo > 0) {
 					pweapon->shouldFire = true;
 				}
 				if (pweapon->shouldFire) {

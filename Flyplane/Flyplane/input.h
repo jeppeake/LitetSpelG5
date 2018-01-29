@@ -6,6 +6,7 @@ public:
 	Input() = delete;
 	static bool initialize();
 	static bool isKeyDown(int key);
+	static bool isMouseButtonDown(int key);
 	static bool isKeyPressed(int key);
 	static void reset();
 	static glm::vec2 mouseMov();

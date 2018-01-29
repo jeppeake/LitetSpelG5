@@ -72,7 +72,7 @@ void Renderer::Render(Model &model, Transform &trans) {
 	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
-		this->shader.uniform("modelMatrix", modelMatrix);
+		this->shader.uniform("modelMatrix", modelMatrix*model.model_meshes[i].second);
 		shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
@@ -138,8 +138,9 @@ void Renderer::RenderScene() {
 		shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
 
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
-			list[i].model->model_meshes[j].first->bind();
-			//this->shader.uniform("modelMatrix", modelMatrix);
+			auto m = list[i].model->model_meshes[j];
+			m.first->bind();
+			this->shader.uniform("modelMatrix", modelMatrix*m.second);
 			//shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
