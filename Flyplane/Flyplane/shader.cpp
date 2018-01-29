@@ -4,6 +4,28 @@
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
 
+
+void checkLinkError(GLuint id, const std::string& paths) 
+{
+	GLint success = 0;
+	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		GLint log_size = 0;
+		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_size);
+		std::vector<GLchar> error(log_size);
+		glGetShaderInfoLog(id, log_size, &log_size, &error[0]);
+		std::string errorstr{ &error[0] };
+
+		std::cout << "Error in:\n" << paths << "\n" <<  errorstr << "\n";
+
+		glDeleteProgram(id);
+		system("pause");
+		exit(1);
+	}
+}
+
+
 GLuint compileShader(GLenum type, const std::string& name)
 {
 	GLuint shader = glCreateShader(type);
@@ -35,7 +57,7 @@ GLuint compileShader(GLenum type, const std::string& name)
 		glGetShaderInfoLog(shader, log_size, &log_size, &error[0]);
 		std::string errorstr{ &error[0] };
 
-		std::cout << errorstr << "\n";
+		std::cout << "Error in '" << name << "':\n" << errorstr << "\n";
 
 		glDeleteShader(shader);
 		system("pause");
@@ -75,6 +97,8 @@ void ShaderProgram::create(const std::string & vert, const std::string & geom, c
 	glAttachShader(id, gs);
 	glAttachShader(id, vs);
 	glLinkProgram(id);
+
+	checkLinkError(id, vert + "\n" + geom + "\n" + frag);
 }
 
 void ShaderProgram::create(const std::string & vert, const std::string & frag)
@@ -86,24 +110,8 @@ void ShaderProgram::create(const std::string & vert, const std::string & frag)
 	glAttachShader(id, vs);
 	glAttachShader(id, fs);
 	glLinkProgram(id);
-	
-	GLint success = 0;
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE)
-	{
-		GLint log_size = 0;
-		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_size);
-		std::vector<GLchar> error(log_size);
-		glGetShaderInfoLog(id, log_size, &log_size, &error[0]);
-		std::string errorstr{ &error[0] };
 
-		std::cout << errorstr << "\n";
-
-		glDeleteProgram(id);
-		system("pause");
-		exit(1);
-	}
-
+	checkLinkError(id, vert + "\n" + frag);
 }
 
 void ShaderProgram::use()
