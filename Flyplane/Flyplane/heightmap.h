@@ -20,6 +20,6 @@ public:
 	std::vector<GLuint> indices;
 	void bind();
 	void unbind();
-	glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
 	double heightAt(glm::vec3 pos);
 };
