@@ -153,7 +153,7 @@ void Renderer::RenderScene() {
 		mapList[i]->bind();
 		glm::mat4 trans(1);
 		//trans = glm::translate(mapList[i]->pos);
-		this->terrain_shader.uniform("modelMatrix", trans);
+		this->terrain_shader.uniform("modelMatrix", glm::mat4());
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
 

@@ -29,10 +29,13 @@ public:
 		{
 			glm::vec3 pos = transform.get()->pos;
 			double height = map->heightAt(pos);
+			if (entity.has_component<PlayerComponent>())
+			{
+				std::cout << "Pos: " << pos.y << " : Height : " << height << std::endl;
+			}
 			if (pos.y <= height)
 			{
 				events.emit<CollisionEvent>(entity, terrain);
-				
 			}
 		}
 	}
