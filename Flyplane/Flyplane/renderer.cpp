@@ -42,6 +42,9 @@ Renderer::Renderer() {
 		0.5, 0.5, 0.5, 0.1
 	);
 	this->shadowMatrix = m * proj * view;
+	view = glm::lookAt(glm::vec3(0, 1, 0), glm::vec3(0), glm::vec3(1, 0, 0));
+	proj = glm::ortho<float>(-10000, 10000, -100, 100, -100, 100);
+	debugMVP = proj * view;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -125,7 +128,9 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	//shader.uniform("ViewProjMatrix", debugMVP);
 
+	
 	for (int i = 0; i < list.size(); i++) {
 		glm::mat4 modelMatrix = glm::translate(list[i].trans->pos) * glm::toMat4(list[i].trans->orientation);
 		list[i].model->texture.bind(0);

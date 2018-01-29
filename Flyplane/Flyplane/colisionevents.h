@@ -1,7 +1,7 @@
 #pragma once
 #include <entityx/entityx.h>
-struct colisionEvent
+struct CollisionEvent
 {
-	colisionEvent(entityx::Entity ent1, entityx::Entity ent2) : ent1(ent1), ent2(ent2) {}
+	CollisionEvent(entityx::Entity ent1, entityx::Entity ent2) : ent1(ent1), ent2(ent2) {}
 	entityx::Entity ent1, ent2;
 };

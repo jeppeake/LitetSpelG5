@@ -161,6 +161,9 @@
     <ClInclude Include="colisionevents.h">
       <Filter>Source Files\ecs\events</Filter>
     </ClInclude>
+    <ClInclude Include="collisionsystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">

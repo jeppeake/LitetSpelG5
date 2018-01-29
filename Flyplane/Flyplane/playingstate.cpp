@@ -11,6 +11,7 @@
 #include "terraincomponent.h"
 #include "flightsystem.h"
 #include "flightcomponent.h"
+#include "collisionsystem.h"
 Model m;
 Model projectile;
 Model weaponmodel;
@@ -30,6 +31,7 @@ void PlayingState::init()
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
+	ex.systems.add<CollisionSystem>();
 	ex.systems.configure();
 
 	/*
@@ -114,6 +116,6 @@ void PlayingState::update(double dt)
 	ex.systems.update<WeaponSystem>(dt);
 	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
-
+	ex.systems.update<CollisionSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
 }
