@@ -50,14 +50,17 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
-			Renderer::getRenderer().Render(*model->mptr, *transform.get());
+			//Renderer::getRenderer().Render(*model->mptr, *transform.get());
+			Renderer::getRenderer().addToList(model->mptr, transform.get());
 		}
 
 		ComponentHandle<Terrain> terrain;
 		for (Entity entity : es.entities_with_components(terrain)) {
 			terrain = entity.component<Terrain>();
-			Renderer::getRenderer().Render(*terrain->hmptr);
+			//Renderer::getRenderer().Render(*terrain->hmptr);
+			Renderer::getRenderer().addToList(terrain->hmptr);
 		}
+		Renderer::getRenderer().RenderScene();
 
 		ComponentHandle<Equipment> equip;
 		for (Entity entity : es.entities_with_components(equip, transform)) {

@@ -35,6 +35,7 @@ public:
 
 	bool shouldClose();
 
+	bool mouseButtonDown(int button);
 	bool keyDown(int key);
 
 	glm::vec2 mouseMovement();

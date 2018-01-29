@@ -22,7 +22,7 @@ int main(void)
 	while (!Window::getWindow().shouldClose()) {
 		double dt = deltatime.restart();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Renderer::getRenderer().update(dt);
 		engine->update(dt);
