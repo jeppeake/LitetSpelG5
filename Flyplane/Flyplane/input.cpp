@@ -35,6 +35,11 @@ bool Input::isKeyDown(int key)
 	return Window::getWindow().keyDown(key);
 }
 
+bool Input::isMouseButtonDown(int key)
+{
+	return Window::getWindow().mouseButtonDown(key);
+}
+
 bool Input::isKeyPressed(int key)
 {
 	if (keys[key] > 0)
