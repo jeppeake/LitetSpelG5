@@ -14,7 +14,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		auto mv = Input::mouseMov();
 
-		double fbt = 0.5;
+		double fbt = 0.05;
 		double f = 0.01;
 		auto control = [dt](float init, int key1, int key2) {
 			double f = 0.01;
@@ -73,12 +73,18 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		else {
 			new_brake = glm::mix(brake, 0.f, float(1.0 - glm::pow(fbt, dt)));
 		}
+
+		float new_drift = 0.f;
 		float d1 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f);
 		float d2 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f);
+		float driftFactor = 0.f;
 		if (d1 > 0.5f && d2 > 0.5f) {
-			physics->drift = d1 + d2 - 1.f;
-			std::cout << "D: " << physics->drift << "\n";
+			driftFactor = d1 + d2 - 1.f;
 		}
+		new_drift = glm::mix(physics->drift, driftFactor, float(1.0 - glm::pow(fbt, dt)));
+		std::cout << new_drift << "\n";
+		std::cout << physics->drift << "\n";
+		physics->drift = new_drift;
 
 		flight->pitch = pitch;
 		flight->roll = roll;
@@ -86,8 +92,6 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		flight->throttle = throttle;
 		flight->airBrake = brake;
-
-
 
 	}
 }
