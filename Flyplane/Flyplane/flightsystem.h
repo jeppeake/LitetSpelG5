@@ -45,10 +45,16 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			float breakForce = 50;
 			float normalSpeed = 100;
 
+			float drift = glm::pow(physics->drift, 0.005);
+
+			float driftFactor = (1.000001f - drift);
+
 			float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
-			physics->velocity = glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * speed;
-			float power = ((flight->engine_power * flight->throttle) / physics->calcTotalDrag());
-			physics->velocity += glm::toMat3(transform->orientation)*glm::vec3(0.0, 0.0, 1.0) * power;
+			physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * drift;
+
+
+			//float power = ((flight->engine_power * flight->throttle) / physics->calcTotalDrag());
+			//physics->velocity += glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * power * driftFactor + physics->velocity * physics->drift;
 		}
 	};
 };

@@ -7,12 +7,20 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <GL\glew.h>
+#include <glm\gtx\transform.hpp>
 #include <stack>
 #include "texture.h"
 
 Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
+
+	bool is_bb = false;
+	if (name.substr(0, 3) == "BB_") {
+		std::cout << name << " IS BOUNDING BOX\n";
+		is_bb = true;
+	}
+
 
 	material_index = mesh->mMaterialIndex;
 
@@ -33,8 +41,10 @@ Model::Mesh::Mesh(aiMesh * mesh)
 		auto pos = mesh->mVertices[i];
 		aiVector3D new_pos(pos.x, pos.z, -pos.y);
 
+		if(is_bb)
+			std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
 
-		vertices.emplace_back(new_pos,
+		vertices.emplace_back(pos,
 			normal,
 			tex_coords);
 	}
@@ -111,7 +121,9 @@ void Model::load(const std::string & file)
 		aiProcess_OptimizeMeshes |
 		aiProcess_OptimizeGraph |
 		aiProcess_SortByPType |
+		//aiProcess_PreTransformVertices |
 		aiProcess_ImproveCacheLocality
+
 	);
 	if (!scene)
 	{
@@ -159,18 +171,12 @@ void Model::load(const std::string & file)
 		{
 			std::cout << "ERROR: Could not load texture: '" << tex_file << "'\n";
 		}
-	
-
-
-		
 	}
 
-
+	/*
 	// build tree
 	std::stack<aiNode*> aistack;
 	std::stack<Node*> stack;
-	aiNode* aicurrent = scene->mRootNode;
-	Node* root = new Node();
 	Node* current = root;
 	bool done = false;
 	while (!done)
@@ -210,24 +216,56 @@ void Model::load(const std::string & file)
 			stack.pop();
 		}
 	}
+	*/
+
+	aiNode* airoot = scene->mRootNode;
+	Node* root = new Node();
+
+	recursiveBuildTree(airoot, root);
 
 	// flatten tree
-	recursiveFlatten(root, glm::mat4());
+	recursiveFlatten(root, glm::scale(glm::vec3(0.01)));
 
 	recursiveDeleteNodes(root);
 
+	std::cout << file << ":\n";
+	std::cout << "\tnum meshes: " <<  model_meshes.size() << "\n";
+	
 	for (int i = 0; i < model_meshes.size(); i++) {
-		std::cout << model_meshes[i].first->name << "\n";
-		std::cout << model_meshes[i].first->numIndices() << "\n";
+		std::cout << "\t" << model_meshes[i].first->name << "\n";
+		//std::cout << "\t" << model_meshes[i].first->numIndices() << "\n";
 	}
-
+	
 
 	aiReleaseImport(scene);
+}
+
+void Model::recursiveBuildTree(aiNode *ainode, Node* node)
+{
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++) {
+			node->transform[i][j] = ainode->mTransformation[j][i];
+		}
+
+	for (int i = 0; i < ainode->mNumMeshes; i++)
+	{
+		unsigned int index = ainode->mMeshes[i];
+		node->meshes.push_back(&meshes[index]);
+	}
+
+	node->children.resize(ainode->mNumChildren);
+	for (int i = 0; i < ainode->mNumChildren; i++)
+	{
+		node->children[i] = new Node();
+		recursiveBuildTree(ainode->mChildren[i], node->children[i]);
+	}
 }
 
 void Model::recursiveFlatten(Node * node, glm::mat4 transform)
 {
 	glm::mat4 current_transform = transform * node->transform;
+
+	//current_transform = glm::mat4();
 
 	for (int i = 0; i < node->meshes.size(); i++) {
 		auto pair = std::make_pair(node->meshes[i], current_transform);
@@ -247,7 +285,7 @@ void Model::recursiveDeleteNodes(Node * node)
 		for (int i = 0; i < node->children.size(); i++)
 		{
 			recursiveDeleteNodes(node->children[i]);
-			delete node->children[i];
 		}
+		delete node;
 	}
 }

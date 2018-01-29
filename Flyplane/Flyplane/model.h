@@ -8,6 +8,7 @@
 #include <assimp/vector3.h>
 #include <assimp/vector2.h>
 #include <assimp/mesh.h>
+#include <assimp/scene.h>
 #include "texture.h"
 
 struct Vertex {
@@ -78,10 +79,7 @@ class Model {
 		glm::mat4 transform;
 	};
 
-
-	
-
-
+	void recursiveBuildTree(aiNode *ainode, Node* node);
 	void recursiveFlatten(Node* node, glm::mat4 transform);
 	void recursiveDeleteNodes(Node* node);
 
