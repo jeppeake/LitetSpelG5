@@ -3,7 +3,7 @@
 #include "playercomponent.h"
 #include "flightcomponent.h"
 #include "modelcomponent.h"
-#include "colisionevents.h"
+#include "collisionevents.h"
 #include "terraincomponent.h"
 #include "transform.h"
 #include <entityx/entityx.h>
@@ -32,7 +32,7 @@ public:
 			if (entity.has_component<PlayerComponent>())
 			{
 				//std::cout << "Entity: " << pos.y << " : Terrain : " << height << std::endl;
-				std::cout << "Height over terrain: " << pos.y - height << "\n";
+				//std::cout << "Height over terrain: " << pos.y - height << "\n";
 			}
 			if (pos.y <= height)
 			{

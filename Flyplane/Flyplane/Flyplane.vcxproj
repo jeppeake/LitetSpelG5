@@ -140,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
-    <ClInclude Include="colisionevents.h" />
+    <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
