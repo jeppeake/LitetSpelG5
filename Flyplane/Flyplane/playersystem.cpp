@@ -12,7 +12,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		player = entity.component<PlayerComponent>();
 		flight = entity.component<FlightComponent>();
 
-		double fbt = 0.5;
+		double fbt = 0.4;
 		double f = 0.01;
 		auto control = [dt](float init, int key1, int key2) {
 			double f = 0.01;
