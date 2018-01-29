@@ -64,19 +64,24 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			throttle = new_throttle;
 		}
 		else {
-			new_throttle = glm::mix(throttle, 0.f, float(1.0 - glm::pow(fbt, dt)));
+			throttle = glm::mix(throttle, 0.f, float(1.0 - glm::pow(fbt, dt)));
 		}
 
 		if (new_brake != 0.f) {
 			brake = new_brake;
 		}
 		else {
-			new_brake = glm::mix(brake, 0.f, float(1.0 - glm::pow(fbt, dt)));
+			brake = glm::mix(brake, 0.f, float(1.0 - glm::pow(fbt, dt)));
 		}
 
 		float new_drift = 0.f;
-		float d1 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f);
-		float d2 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f);
+		float d1 = 0;
+		float d2 = 0;
+
+		if (Input::gamepad_present()) {
+			d1 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f);
+			d2 = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f);
+		}
 		float driftFactor = 0.f;
 		if (d1 > 0.5f && d2 > 0.5f) {
 			driftFactor = d1 + d2 - 1.f;
@@ -89,6 +94,8 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		flight->pitch = pitch;
 		flight->roll = roll;
 		flight->yaw = yaw;
+
+		//std::cout << throttle << "\n";
 
 		flight->throttle = throttle;
 		flight->airBrake = brake;

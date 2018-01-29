@@ -9,9 +9,9 @@ struct FlightComponent {
 		return liftCoeff * ((density * glm::pow(velocity, 2)) / 2) * wingArea;
 	}
 
-	float yaw, pitch, roll = 0.f;
-	float throttle, airBrake = 0.f;
-	float engine_power;
-	float turnrate;
-	float liftCoeff, wingArea;
+	float yaw = 0.f, pitch = 0.f, roll = 0.f;
+	float throttle = 0.f, airBrake = 0.f;
+	float engine_power = 0.f;
+	float turnrate = 0.f;
+	float liftCoeff = 0.f, wingArea = 0.f;
 };

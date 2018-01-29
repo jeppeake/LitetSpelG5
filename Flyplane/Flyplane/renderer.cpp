@@ -159,9 +159,8 @@ void Renderer::RenderScene() {
 		terrain_shader.uniform("texSampler", 0);
 		glActiveTexture(GL_TEXTURE0);
 		mapList[i]->bind();
-		glm::mat4 trans(1);
-		//trans = glm::translate(mapList[i]->pos);
-		this->terrain_shader.uniform("modelMatrix", glm::mat4());
+		glm::mat4 trans = glm::translate(mapList[i]->pos);
+		this->terrain_shader.uniform("modelMatrix", trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
 

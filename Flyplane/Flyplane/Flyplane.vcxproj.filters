@@ -158,11 +158,11 @@
     <ClInclude Include="projectilecomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
-    <ClInclude Include="colisionevents.h">
-      <Filter>Source Files\ecs\events</Filter>
-    </ClInclude>
     <ClInclude Include="collisionsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionevents.h">
+      <Filter>Source Files\ecs\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
