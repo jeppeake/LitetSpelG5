@@ -37,6 +37,9 @@
     <Filter Include="Source Files\ecs\components">
       <UniqueIdentifier>{7d9c9e14-d556-4821-a369-326e33cc62cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ecs\events">
+      <UniqueIdentifier>{4f050f0e-48ab-4063-9dac-945aaf97cf35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="projectilecomponent.h">
       <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="colisionevents.h">
+      <Filter>Source Files\ecs\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
