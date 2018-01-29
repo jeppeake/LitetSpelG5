@@ -8,6 +8,11 @@
 #include "heightmap.h"
 #include "transform.h"
 
+struct RenderObject {
+	Model* model;
+	Transform* trans;
+};
+
 class Renderer {
 private:
 	ShaderProgram shader;
@@ -16,7 +21,10 @@ private:
 	GLuint frameBuffer;
 	GLuint depthTexture;
 	glm::mat4 shadowMatrix;
+	glm::mat4 debugMVP;
 	Camera camera;
+	std::vector<RenderObject> list;
+	std::vector<Heightmap*> mapList;
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -26,9 +34,12 @@ public:
 	}
 	Renderer();
 	~Renderer();
+	void addToList(Model* model, Transform* trans);
+	void addToList(Heightmap* map);
 	void Render(Model &model, Transform &trans);
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
+	void RenderScene();
 
 	void setCamera(const Camera& camera);
 	// DEBUG
