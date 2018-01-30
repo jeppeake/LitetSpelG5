@@ -1,5 +1,6 @@
 #include "playingstate.h"
 #include <glm\gtc\constants.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "physicssystem.h"
 #include "transform.h"
@@ -14,6 +15,7 @@
 #include "collisionsystem.h"
 Model m;
 Model projectile;
+Model missile;
 Model weaponmodel;
 Model GAU;
 Heightmap* hm;
@@ -62,7 +64,7 @@ void PlayingState::init()
 	}
 
 	entity = ex.entities.create();
-	glm::vec3 pos(rand() % 100, 800, rand() % 100);
+	glm::vec3 pos(rand() % 100, 1500, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
@@ -77,14 +79,15 @@ void PlayingState::init()
 	projectile.load("assets/bullet.fbx");
 	weaponmodel.load("assets/basicgun.fbx");
 	GAU.load("assets/GAU-15.fbx");
+	missile.load("assets/Weapons/Missiles/Fishrod/fishrod.fbx");
 
 	WeaponStats* stats = new WeaponStats(100, 10, 100, 0.2, 0.4f, true);
 	WeaponStats* stats2 = new WeaponStats(10000, 10, 100, 0.2, 0.02f, false);
 	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
-	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
-	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
-	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(1.7, -0.15, -1.5));
+	pweapons.emplace_back(stats, &missile, &missile, glm::vec3(-1.7, -0.25, -1.5));
+	weapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.2, 0.5, 2), glm::vec3(0.1), glm::angleAxis(180.f,glm::vec3(0,0,1)));
+	pweapons.emplace_back(stats, &missile, &missile, glm::vec3(1.7, -0.25, -1.5));
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 

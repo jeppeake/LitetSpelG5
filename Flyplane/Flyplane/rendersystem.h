@@ -4,7 +4,8 @@
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
 
-#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
 #include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
@@ -26,21 +27,25 @@ struct RenderSystem : public System<RenderSystem> {
 
 			Transform cam = *transform.get();
 			glm::vec3 offset(0, 3, -7);
-			offset = glm::toMat3(cam.orientation)*offset;
-			cam.pos += offset;
+			offset = glm::toMat3(normalize(cam.orientation))*offset;
+			//cam.pos += offset;
 
 			Transform p_cam = player->camera.getTransform();
 
 			//double v = length(physics->velocity)*0.001;
-			double f_pos = 0.0001;
-			double f_orien = 0.01;
+			double f_pos = 0.05;
+			double f_orien = 0.0;
+			p_cam.pos += 0.95f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
-
 			player->camera.setTransform(p_cam);
 
-			Renderer::getRenderer().setCamera(player->camera);
+			p_cam.pos += offset;
+			Camera c = player->camera;
+			c.setTransform(p_cam);
+
+			Renderer::getRenderer().setCamera(c);
 		}
 
 
@@ -51,7 +56,7 @@ struct RenderSystem : public System<RenderSystem> {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
 			//Renderer::getRenderer().Render(*model->mptr, *transform.get());
-			Renderer::getRenderer().addToList(model->mptr, transform.get());
+			Renderer::getRenderer().addToList(model->mptr, *transform.get());
 		}
 
 		ComponentHandle<Terrain> terrain;
@@ -69,16 +74,20 @@ struct RenderSystem : public System<RenderSystem> {
 			for (int i = 0; i < equip->primary.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
-				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;// *glm::toMat4(equip->primary[i].rot) * glm::scale(equip->primary[i].scale);
+				newTrans.orientation = transform->orientation * equip->primary[i].rot;
+				newTrans.scale = equip->primary[i].scale;
 
-				Renderer::getRenderer().Render(*equip->primary[i].model, newTrans);
+				Renderer::getRenderer().addToList(equip->primary[i].model, newTrans);
 			}
 			for (int i = 0; i < equip->special.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
 				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->special[i].offset;
+				newTrans.orientation = transform->orientation * equip->special[i].rot;
+				newTrans.scale = equip->special[i].scale;
 
-				Renderer::getRenderer().Render(*equip->special[i].model, newTrans);
+				Renderer::getRenderer().addToList(equip->special[i].model, newTrans);
 			}
 		}
 	}

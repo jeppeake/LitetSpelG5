@@ -86,6 +86,11 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		if (d1 > 0.5f && d2 > 0.5f) {
 			driftFactor = d1 + d2 - 1.f;
 		}
+		if (Input::isKeyDown(GLFW_KEY_SPACE)) {
+			driftFactor = 1.0f;
+		}
+
+
 		new_drift = glm::mix(physics->drift, driftFactor, float(1.0 - glm::pow(fbt, dt)));
 		//std::cout << new_drift << "\n";
 		//std::cout << physics->drift << "\n";

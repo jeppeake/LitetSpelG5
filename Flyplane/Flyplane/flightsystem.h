@@ -41,16 +41,16 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			transform->orientation += spin * float(dt);
 			transform->orientation = normalize(transform->orientation);
 
-			float boost = 50;
+			float boost = 100;
 			float breakForce = 50;
-			float normalSpeed = 50;
+			float normalSpeed = 100;
 
 			float drift = glm::pow(physics->drift, 0.005);
 
-			float driftFactor = (1.000001f - drift);
+			float driftFactor = (1.001000001f - drift);
 
 			float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
-			physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * drift;
+			physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift / 1000));
 
 			
 
