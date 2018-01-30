@@ -25,6 +25,8 @@ private:
 	Camera camera;
 	std::vector<RenderObject> list;
 	std::vector<Heightmap*> mapList;
+
+
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -37,6 +39,7 @@ public:
 	void addToList(Model* model, Transform* trans);
 	void addToList(Heightmap* map);
 	void Render(Model &model, Transform &trans);
+	void Render(RenderObject& obj);
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
 	void RenderScene();
