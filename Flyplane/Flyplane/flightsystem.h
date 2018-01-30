@@ -43,7 +43,7 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 
 			float boost = 100;
 			float breakForce = 50;
-			float normalSpeed = 50;
+			float normalSpeed = 100;
 
 			float drift = glm::pow(physics->drift, 0.005);
 
