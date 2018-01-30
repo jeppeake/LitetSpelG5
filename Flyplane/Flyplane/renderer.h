@@ -25,7 +25,7 @@ private:
 	Camera camera;
 	std::vector<RenderObject> list;
 	std::vector<Heightmap*> mapList;
-
+	glm::mat4 m;
 
 public:
 	Renderer(const Renderer &other) = delete;

@@ -100,6 +100,8 @@ void PlayingState::init()
 
 
 	hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
+	hm->pos.x -= 2560;
+	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();

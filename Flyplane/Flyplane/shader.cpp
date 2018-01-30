@@ -127,6 +127,9 @@ GLuint ShaderProgram::findUniformLocation(const std::string & name)
 	if (it == uniform_locations.end())
 	{
 		uniform_location = glGetUniformLocation(id, name.c_str());
+		if (uniform_location == -1) {
+			std::cout << "ERROR: could not find '" << name << "' in shader\n";
+		}
 		uniform_locations[name] = uniform_location;
 	}
 	else

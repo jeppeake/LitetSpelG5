@@ -32,8 +32,10 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			return 0.f;
 		};
 
-		flight->roll += mv.x * 0.01;
-		flight->pitch += mv.y * 0.01;
+		flight->roll += mv.x * 0.005;
+		flight->roll = glm::clamp(flight->roll, -1.f, 1.f);
+		flight->pitch += mv.y * 0.005;
+		flight->pitch = glm::clamp(flight->pitch, -1.f, 1.f);
 
 		float roll = control2(GLFW_KEY_LEFT, GLFW_KEY_RIGHT);
 		float pitch = control2(GLFW_KEY_UP, GLFW_KEY_DOWN);
