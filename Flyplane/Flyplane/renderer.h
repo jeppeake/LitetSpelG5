@@ -10,7 +10,7 @@
 
 struct RenderObject {
 	Model* model;
-	Transform* trans;
+	Transform trans;
 };
 
 class Renderer {
@@ -25,6 +25,8 @@ private:
 	Camera camera;
 	std::vector<RenderObject> list;
 	std::vector<Heightmap*> mapList;
+
+
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -34,9 +36,10 @@ public:
 	}
 	Renderer();
 	~Renderer();
-	void addToList(Model* model, Transform* trans);
+	void addToList(Model* model, Transform trans);
 	void addToList(Heightmap* map);
 	void Render(Model &model, Transform &trans);
+	void Render(RenderObject& obj);
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
 	void RenderScene();
