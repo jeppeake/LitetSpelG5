@@ -10,7 +10,7 @@ in vec2 vTex;
 
 void main() {
 	vec3 shadowCoord = (shadowMatrix * vec4(vPos, 1)).xyz;
-	float depth = texture(shadowMap, vec2(shadowCoord.x, 1-shadowCoord.y)).r;
+	float depth = texture(shadowMap, shadowCoord.xy).r;
 	float visibility = 1.0;
 	if(depth < shadowCoord.z) {
 		visibility = 0.0;
