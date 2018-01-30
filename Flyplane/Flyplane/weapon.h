@@ -13,15 +13,16 @@ struct WeaponStats {
 };
 
 struct Weapon {
-	Weapon(WeaponStats* stats, Model* model, Model* projectileModel, glm::vec3 offset) : stats(stats), model(model), projectileModel(projectileModel), offset(offset) { }
-	Weapon(WeaponStats* stats, Model* model, Model* projectileModel, glm::vec3 offset, glm::vec3 scale, glm::quat rot) : stats(stats), model(model), projectileModel(projectileModel), offset(offset), scale(scale), rot(rot) { }
-	Weapon(WeaponStats* stats, Model* model, Model* projectileModel, glm::vec3 offset, glm::vec3 scale, glm::quat rot, bool isMissile) : stats(stats), model(model), projectileModel(projectileModel), offset(offset), scale(scale), rot(rot), isMissile(isMissile) { }
-	WeaponStats* stats;
+	Weapon(WeaponStats stats, Model* model, Model* projectileModel, glm::vec3 offset) : stats(stats), model(model), projectileModel(projectileModel), offset(offset) { }
+	Weapon(WeaponStats stats, Model* model, Model* projectileModel, glm::vec3 offset, glm::vec3 scale, glm::quat rot) : stats(stats), model(model), projectileModel(projectileModel), offset(offset), scale(scale), rot(rot) { }
+	Weapon(WeaponStats stats, Model* model, Model* projectileModel, glm::vec3 offset, glm::vec3 scale, glm::quat rot, bool isMissile, bool dissappear) : stats(stats), model(model), projectileModel(projectileModel), offset(offset), scale(scale), rot(rot), isMissile(isMissile), dissappear(dissappear) { }
+	WeaponStats stats;
 	Model* model;
 	Model* projectileModel;
 	bool shouldFire = false;
 	bool active = false;
 	bool isMissile = false;
+	bool dissappear = false;
 	Timer timer;
 	glm::vec3 offset = glm::vec3(1.0,-0.5,0.0);
 	glm::vec3 scale = glm::vec3(1);
