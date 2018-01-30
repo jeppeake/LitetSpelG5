@@ -21,30 +21,30 @@ Renderer::Renderer() {
 	
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);//GL_CLAMP_TO_BORDER?
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
-	glm::mat4 proj = glm::ortho<float>(-100000, 100000, -100000, 100000, -100000, 100000);
-	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	glm::mat4 proj = glm::ortho<float>(-1000.f, 1000.f, -1000.f, 1000.f, 0.f, 2000.f);
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1000.0f, 1000.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 m(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 0.1
 	);
-	this->shadowMatrix = m * proj * view;
+	this->shadowMatrix = proj * view;
 	view = glm::lookAt(glm::vec3(0, 1, 0), glm::vec3(0), glm::vec3(1, 0, 0));
-	proj = glm::ortho<float>(-10000, 10000, -100, 100, -100, 100);
+	proj = glm::ortho<float>(-1000, 1000, -100, 100, 0, 1500);
 	debugMVP = proj * view;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -124,8 +124,16 @@ void Renderer::RenderScene() {
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
 			shadow.uniform("MVP", shadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
+			shadow.uniform("MVP", shadowMatrix);
+
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
+	}
+	for (int i = 0; i < mapList.size(); i++) {
+		mapList[i]->bind();
+		glm::mat4 trans = glm::translate(mapList[i]->pos);
+		this->terrain_shader.uniform("MVP", shadowMatrix*trans);
+		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
 
