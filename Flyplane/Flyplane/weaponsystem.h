@@ -29,7 +29,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
 		entityx::Entity missile = es.create();
-		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation);
+		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->scale);
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed, glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime);
@@ -60,7 +60,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			player = entity.component<PlayerComponent>();
 
 			Weapon* weapon = &equip->special[equip->selected];
-			std::cout << "selectd weapon ammo: " << weapon->stats.ammo << "\n";
 
 			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0) {
 				weapon->shouldFire = true;
@@ -83,7 +82,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
 				equip->selected = (equip->selected + 1) % equip->special.size();
-				std::cout << "Selected weapon: " << equip->selected << ", input: " << Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) << "\n";
 				switchT.restart();
 			}
 
@@ -91,7 +89,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				weapon->shouldFire = false;
 				weapon->timer.restart();
 
-				spawnBullet(trans.get(), weapon, planeSpeed, es);
 				if (weapon->isMissile)
 					spawnMissile(trans.get(), weapon, planeSpeed, es);
 				else
@@ -102,7 +99,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				if (weapon->dissappear && weapon->stats.ammo <= 0) {
 					equip->special.erase(equip->special.begin() + equip->selected);
-					std::cout << equip->special.size() << "\n";
 					equip->selected = 0;
 					equip->special[0].timer.restart();
 				}

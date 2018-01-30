@@ -85,10 +85,18 @@ void PlayingState::init()
 	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-1.7, -0.25, -1.5),glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(1.7, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	pweapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.3, 0.6, 1.8), glm::vec3(0.1), glm::angleAxis(180.f,glm::vec3(0,0,1)));
-	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-2.1, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(2.1, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	pweapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.25, 0.6, 1.8), glm::vec3(0.05), glm::angleAxis(180.f,glm::vec3(0,0,1)));
+	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
 	hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
