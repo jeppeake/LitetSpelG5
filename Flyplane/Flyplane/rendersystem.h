@@ -27,21 +27,25 @@ struct RenderSystem : public System<RenderSystem> {
 
 			Transform cam = *transform.get();
 			glm::vec3 offset(0, 3, -7);
-			offset = glm::toMat3(cam.orientation)*offset;
-			cam.pos += offset;
+			offset = glm::toMat3(normalize(cam.orientation))*offset;
+			//cam.pos += offset;
 
 			Transform p_cam = player->camera.getTransform();
 
 			//double v = length(physics->velocity)*0.001;
-			double f_pos = 0.0001;
-			double f_orien = 0.01;
+			double f_pos = 0.05;
+			double f_orien = 0.0;
+			p_cam.pos += 0.9f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
-
 			player->camera.setTransform(p_cam);
 
-			Renderer::getRenderer().setCamera(player->camera);
+			p_cam.pos += offset;
+			Camera c = player->camera;
+			c.setTransform(p_cam);
+
+			Renderer::getRenderer().setCamera(c);
 		}
 
 
