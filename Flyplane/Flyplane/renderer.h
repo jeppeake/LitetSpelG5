@@ -10,7 +10,7 @@
 
 struct RenderObject {
 	Model* model;
-	Transform* trans;
+	Transform trans;
 };
 
 class Renderer {
@@ -36,7 +36,7 @@ public:
 	}
 	Renderer();
 	~Renderer();
-	void addToList(Model* model, Transform* trans);
+	void addToList(Model* model, Transform trans);
 	void addToList(Heightmap* map);
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
