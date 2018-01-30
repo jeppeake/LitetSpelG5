@@ -167,6 +167,12 @@
     <ClInclude Include="missilecomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="aicomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
