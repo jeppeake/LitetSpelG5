@@ -4,7 +4,7 @@
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
 
-#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include "renderer.h"
 #include "modelcomponent.h"
@@ -52,7 +52,7 @@ struct RenderSystem : public System<RenderSystem> {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
 			//Renderer::getRenderer().Render(*model->mptr, *transform.get());
-			Renderer::getRenderer().addToList(model->mptr, transform.get());
+			Renderer::getRenderer().addToList(model->mptr, *transform.get());
 		}
 
 		ComponentHandle<Terrain> terrain;
@@ -71,19 +71,19 @@ struct RenderSystem : public System<RenderSystem> {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
 				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;// *glm::toMat4(equip->primary[i].rot) * glm::scale(equip->primary[i].scale);
-				newTrans.orientation = equip->primary[i].rot;
+				newTrans.orientation = transform->orientation * equip->primary[i].rot;
 				newTrans.scale = equip->primary[i].scale;
 
-				Renderer::getRenderer().addToList(equip->primary[i].model, &newTrans);
+				Renderer::getRenderer().addToList(equip->primary[i].model, newTrans);
 			}
 			for (int i = 0; i < equip->special.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
 				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->special[i].offset;
-				newTrans.orientation = equip->special[i].rot;
+				newTrans.orientation = transform->orientation * equip->special[i].rot;
 				newTrans.scale = equip->special[i].scale;
 
-				Renderer::getRenderer().addToList(equip->special[i].model, &newTrans);
+				Renderer::getRenderer().addToList(equip->special[i].model, newTrans);
 			}
 		}
 	}

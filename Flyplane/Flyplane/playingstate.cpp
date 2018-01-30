@@ -1,5 +1,6 @@
 #include "playingstate.h"
 #include <glm\gtc\constants.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "physicssystem.h"
 #include "transform.h"
@@ -83,7 +84,7 @@ void PlayingState::init()
 	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
 	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
-	weapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.2, 0.5, 2), glm::vec3(0.1),glm::quat(0,0,90,1));
+	weapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.2, 0.5, 2), glm::vec3(0.2), glm::angleAxis(180.f,glm::vec3(0,0,1)));
 	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(1.7, -0.15, -1.5));
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
