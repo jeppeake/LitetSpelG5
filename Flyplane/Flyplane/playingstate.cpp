@@ -81,7 +81,7 @@ void PlayingState::init()
 	GAU.load("assets/GAU-15.fbx");
 	missile.load("assets/Weapons/Missiles/Fishrod/fishrod.fbx");
 
-	WeaponStats stats = WeaponStats(1, 10, 1000, 0.2, 1.0f, false);
+	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
 	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 

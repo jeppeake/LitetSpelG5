@@ -115,8 +115,20 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
 			if (projectile->timer.elapsed() > 1) {
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 400.0);
-				//do guided missile shit
+				glm::quat q;
+				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 1.0) - trans->pos;
+				glm::vec3 u = missile->target - trans->pos;
+
+				glm::vec3 cross = glm::cross(glm::normalize(v), glm::normalize(u));
+
+				float turnRate = 10000.0f;
+				
+				q = glm::angleAxis((float)(turnRate*dt),cross);
+				trans->orientation = q;
+
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,30);
+
+				std::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "\n";
 			}
 				
 		}
