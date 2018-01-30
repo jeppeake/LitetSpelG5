@@ -35,7 +35,7 @@ struct RenderSystem : public System<RenderSystem> {
 			//double v = length(physics->velocity)*0.001;
 			double f_pos = 0.05;
 			double f_orien = 0.0;
-			p_cam.pos += 0.9f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
+			p_cam.pos += 0.95f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
