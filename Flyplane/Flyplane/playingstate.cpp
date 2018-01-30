@@ -51,7 +51,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -62,7 +62,7 @@ void PlayingState::init()
 	}
 
 	entity = ex.entities.create();
-	glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
+	glm::vec3 pos(rand() % 100, 800, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
@@ -83,7 +83,7 @@ void PlayingState::init()
 	WeaponStats* bomb = new WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
 	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(-1.7, -0.15, -1.5));
-	weapons.emplace_back(stats2, &weaponmodel, &projectile, glm::vec3(-0.2, 0.5, 2));
+	weapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.2, 0.5, 2), glm::vec3(0.1),glm::quat(0,0,90,1));
 	pweapons.emplace_back(stats, &weaponmodel, &projectile, glm::vec3(1.7, -0.15, -1.5));
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 

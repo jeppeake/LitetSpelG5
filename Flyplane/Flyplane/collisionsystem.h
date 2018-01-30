@@ -3,7 +3,7 @@
 #include "playercomponent.h"
 #include "flightcomponent.h"
 #include "modelcomponent.h"
-#include "colisionevents.h"
+#include "collisionevents.h"
 #include "terraincomponent.h"
 #include "transform.h"
 #include <entityx/entityx.h>
@@ -29,10 +29,15 @@ public:
 		{
 			glm::vec3 pos = transform.get()->pos;
 			double height = map->heightAt(pos);
+			if (entity.has_component<PlayerComponent>())
+			{
+				//std::cout << "Entity: " << pos.y << " : Terrain : " << height << std::endl;
+				//std::cout << "Height over terrain: " << pos.y - height << "\n";
+			}
 			if (pos.y <= height)
 			{
 				events.emit<CollisionEvent>(entity, terrain);
-				
+				entity.destroy();
 			}
 		}
 	}
