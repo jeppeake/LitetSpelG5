@@ -9,12 +9,12 @@
 using namespace std;
 
 Renderer::Renderer() {
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
-	this->shader.uniform("shadowMap", 1);
-	this->terrain_shader.uniform("shadowMap", 1);
+	//this->shader.uniform("shadowMap", 1);
+	//this->terrain_shader.uniform("shadowMap", 1);
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
