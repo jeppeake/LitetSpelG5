@@ -65,7 +65,7 @@ struct RenderSystem : public System<RenderSystem> {
 			//Renderer::getRenderer().Render(*terrain->hmptr);
 			Renderer::getRenderer().addToList(terrain->hmptr);
 		}
-		Renderer::getRenderer().RenderScene();
+		
 
 		ComponentHandle<Equipment> equip;
 		for (Entity entity : es.entities_with_components(equip, transform)) {
@@ -90,6 +90,8 @@ struct RenderSystem : public System<RenderSystem> {
 				Renderer::getRenderer().addToList(equip->special[i].model, newTrans);
 			}
 		}
+
+		Renderer::getRenderer().RenderScene();
 	}
 
 };
