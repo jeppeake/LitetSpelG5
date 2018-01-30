@@ -9,7 +9,7 @@ varying vec2 Tex;
 
 void main() {
 	vec3 shadowCoord = (shadowMatrix * vec4(Pos, 1)).xyz;
-	float depth = texture(shadowMap, shadowCoord.xy).z;
+	float depth = texture(shadowMap, shadowCoord.xy).r;
 	float visibility = 1.0;
 	if(depth < shadowCoord.z) {
 		visibility = 0.5;
@@ -21,5 +21,6 @@ void main() {
 	float result = dot(sun, n);
 	result = clamp(result, 0, 1);
 	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;
-	gl_FragColor = vec4(color * result, 1) * visibility + vec4(color * 0.2, 1);
+	//gl_FragColor = vec4(color * result, 1) * visibility + vec4(color * 0.2, 1);
+	gl_FragColor = vec4(vec3(depth), 1);
 }
