@@ -35,7 +35,7 @@ Renderer::Renderer() {
 		cout << "framebuffer broken" << endl;
 
 	glm::mat4 proj = glm::ortho<float>(-1000.f, 1000.f, -1000.f, 1000.f, 0.f, 2000.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1000.0f, 1000.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	glm::mat4 view = glm::lookAt(glm::vec3(1000.0f, 1000.0f, 1000.0f), glm::vec3(1000, 0, 1000), glm::vec3(1, 0, 0));
 	glm::mat4 m(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
@@ -43,9 +43,10 @@ Renderer::Renderer() {
 		0.5, 0.5, 0.5, 0.1
 	);
 	this->shadowMatrix = proj * view;
-	view = glm::lookAt(glm::vec3(0, 1, 0), glm::vec3(0), glm::vec3(1, 0, 0));
-	proj = glm::ortho<float>(-1000, 1000, -100, 100, 0, 1500);
-	debugMVP = proj * view;
+	
+	//view = glm::lookAt(glm::vec3(0, 1, 0), glm::vec3(0), glm::vec3(1, 0, 0));
+	//proj = glm::ortho<float>(-1000, 1000, -100, 100, 0, 1500);
+	//debugMVP = proj * view;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -124,7 +125,7 @@ void Renderer::RenderScene() {
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
 			shadow.uniform("MVP", shadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
-			shadow.uniform("MVP", shadowMatrix);
+			//shadow.uniform("MVP", shadowMatrix);
 
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
