@@ -41,9 +41,9 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			transform->orientation += spin * float(dt);
 			transform->orientation = normalize(transform->orientation);
 
-			float boost = 50;
+			float boost = 100;
 			float breakForce = 50;
-			float normalSpeed = 50;
+			float normalSpeed = 100;
 
 			float drift = glm::pow(physics->drift, 0.005);
 
