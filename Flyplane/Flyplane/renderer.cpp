@@ -67,17 +67,17 @@ void Renderer::addToList(Heightmap* map) {
 void Renderer::Render(Model &model, Transform &trans) {
 	glm::mat4 modelMatrix = glm::translate(trans.pos) * glm::toMat4(trans.orientation) * glm::scale(trans.scale);
 
-	this->shader.use();
+	//this->shader.use();
 
-	shader.uniform("texSampler", 0);
+	//shader.uniform("texSampler", 0);
 	model.texture.bind(0);
 
-	this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	//this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
 		this->shader.uniform("modelMatrix", modelMatrix*model.model_meshes[i].second);
-		shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
+		//shader.uniform("shadowMatrix", shadowMatrix);
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
@@ -123,8 +123,7 @@ void Renderer::RenderScene() {
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
 			shadow.uniform("MVP", shadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
-			//shadow.uniform("MVP", shadowMatrix);
-
+			
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
 	}
@@ -147,6 +146,7 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	shader.uniform("shadowMatrix", shadowMatrix);
 	//shader.uniform("ViewProjMatrix", debugMVP);
 
 	
