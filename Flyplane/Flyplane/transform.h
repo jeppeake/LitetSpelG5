@@ -9,5 +9,5 @@ struct Transform {
 	Transform() {}
 	glm::vec3 pos;
 	glm::quat orientation;
-	glm::vec3 scale;
+	glm::vec3 scale = glm::vec3(1);
 };
