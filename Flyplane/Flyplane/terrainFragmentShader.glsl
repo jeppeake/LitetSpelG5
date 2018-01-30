@@ -22,5 +22,5 @@ void main() {
 	float result = dot(sun, n);
 	result = clamp(result, 0, 1);
 	vec3 color = texture(texSampler, vec2(vTex.x, 1 - vTex.y)).rgb;
-	gl_FragColor = vec4(depth, depth, depth, 1);//vec4(color * result, 1) * visibility + vec4(color * 0.2, 1);
+	gl_FragColor = vec4(color * result, 1) * visibility + vec4(color * 0.2, 1); //vec4(depth, depth, depth, 1);
 }
