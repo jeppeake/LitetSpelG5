@@ -150,6 +150,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="physics.h" />
