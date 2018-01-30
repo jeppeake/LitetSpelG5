@@ -64,7 +64,7 @@ void PlayingState::init()
 	}
 
 	entity = ex.entities.create();
-	glm::vec3 pos(rand() % 100, 800, rand() % 100);
+	glm::vec3 pos(rand() % 100, 1500, rand() % 100);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
