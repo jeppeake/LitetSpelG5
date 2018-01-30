@@ -5,6 +5,7 @@
 #include <entityx\Entity.h>
 
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
 #include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
@@ -69,16 +70,20 @@ struct RenderSystem : public System<RenderSystem> {
 			for (int i = 0; i < equip->primary.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
-				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;
+				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->primary[i].offset;// *glm::toMat4(equip->primary[i].rot) * glm::scale(equip->primary[i].scale);
+				newTrans.orientation = equip->primary[i].rot;
+				newTrans.scale = equip->primary[i].scale;
 
-				Renderer::getRenderer().Render(*equip->primary[i].model, newTrans);
+				Renderer::getRenderer().addToList(equip->primary[i].model, &newTrans);
 			}
 			for (int i = 0; i < equip->special.size(); i++) {
 				Transform newTrans;
 				newTrans.orientation = transform->orientation;
 				newTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->special[i].offset;
+				newTrans.orientation = equip->special[i].rot;
+				newTrans.scale = equip->special[i].scale;
 
-				Renderer::getRenderer().Render(*equip->special[i].model, newTrans);
+				Renderer::getRenderer().addToList(equip->special[i].model, &newTrans);
 			}
 		}
 	}

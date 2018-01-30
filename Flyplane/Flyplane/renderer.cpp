@@ -109,7 +109,7 @@ void Renderer::RenderScene() {
 
 	//Render shadow
 	for (int i = 0; i < list.size(); i++) {
-		glm::mat4 modelMatrix = glm::translate(list[i].trans->pos) * glm::toMat4(list[i].trans->orientation);
+		glm::mat4 modelMatrix = glm::translate(list[i].trans->pos) * glm::toMat4(list[i].trans->orientation) * glm::scale(list[i].trans->scale);
 
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
