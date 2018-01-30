@@ -21,7 +21,7 @@ Renderer::Renderer() {
 	
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 4*1024, 4*1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);//GL_CLAMP_TO_BORDER?
@@ -35,7 +35,7 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
-	glm::mat4 proj = glm::ortho<float>(-100.f, 100.f, -100.f, 100.f, -1000.f, 200.f);
+	glm::mat4 proj = glm::ortho<float>(-1000.f, 1000.f, -1000.f, 1000.f, -1000.f, 200.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
@@ -113,7 +113,7 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 void Renderer::RenderScene() {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	shadow.use();
-	glViewport(0, 0, 1024, 1024);
+	glViewport(0, 0, 4*1024, 4*1024);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//Render shadow
