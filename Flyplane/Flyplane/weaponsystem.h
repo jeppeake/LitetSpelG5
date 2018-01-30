@@ -10,7 +10,9 @@
 #include "equipment.h"
 #include "playercomponent.h"
 #include "projectilecomponent.h"
+#include "missilecomponent.h"
 #include <ctime>
+
 
 using namespace entityx;
 
@@ -25,6 +27,15 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<Projectile>(weapon->stats->lifetime);
 	}
 
+	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
+		entityx::Entity missile = es.create();
+		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation);
+		missile.assign<Physics>(weapon->stats->mass, 1, planeSpeed, glm::vec3());
+		missile.assign<ModelComponent>(weapon->projectileModel);
+		missile.assign<Projectile>(weapon->stats->lifetime);
+		missile.assign<Missile>(glm::vec3(0, 0, 0));
+	}
+
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		ComponentHandle<WeaponStats> stats;
 		ComponentHandle<Equipment> equip;
@@ -32,6 +43,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		ComponentHandle<Weapon> weapon;
 		ComponentHandle<Transform> trans;
 		ComponentHandle<Projectile> projectile;
+		ComponentHandle<Missile> missile;
+		ComponentHandle<Physics> physics;
 
 		for (Entity entity : es.entities_with_components(equip, trans)) {
 			equip = entity.component<Equipment>();
@@ -60,7 +73,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				if (pweapon->shouldFire) {
 					pweapon->shouldFire = false;
 					pweapon->timer.restart();
-					spawnBullet(trans.get(), pweapon, planeSpeed, es);
+					if(pweapon->isMissile)
+						spawnMissile(trans.get(), pweapon, planeSpeed, es);
+					else
+						spawnBullet(trans.get(), pweapon, planeSpeed, es);
 				}
 			}
 
@@ -75,8 +91,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				weapon->timer.restart();
 
 				spawnBullet(trans.get(), weapon, planeSpeed, es);
-				if (!weapon->stats->infAmmo)
-					weapon->stats->ammo--;
+				if (weapon->isMissile)
+					spawnMissile(trans.get(), weapon, planeSpeed, es);
+				else
+					spawnBullet(trans.get(), weapon, planeSpeed, es);
 			}
 			
 		}
@@ -85,6 +103,15 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			projectile = entity.component<Projectile>();
 			if (projectile->timer.elapsed() > projectile->lifetime)
 				entity.destroy();
+		}
+
+
+		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
+			if (projectile->timer.elapsed() > 1) {
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 400.0);
+				//do guided missile shit
+			}
+				
 		}
 	};
 };
