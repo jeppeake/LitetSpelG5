@@ -129,15 +129,15 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				glm::vec3 cross = glm::cross(vn, un);
 
 
-				float turnRate = 1.f;
+				float turnRate = 2.f;
 
 				
 
 				q = glm::angleAxis((float)(turnRate * dt), glm::normalize(cross));
 				trans->orientation = q * trans->orientation;
 				trans->orientation = glm::normalize(trans->orientation);
-				std::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,100);
+				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,200);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";

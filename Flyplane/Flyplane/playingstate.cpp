@@ -20,6 +20,7 @@ Model projectile;
 Model missile;
 Model weaponmodel;
 Model GAU;
+Model gunpod;
 Heightmap* hm;
 
 entityx::Entity entity;
@@ -84,13 +85,14 @@ void PlayingState::init()
 	projectile.load("assets/bullet.fbx");
 	weaponmodel.load("assets/basicgun.fbx");
 	GAU.load("assets/GAU-15.fbx");
+	gunpod.load("assets/Weapons/Guns/37mm_gunpod/37mm_gunpod.fbx");
 	missile.load("assets/Weapons/Missiles/Fishrod/fishrod.fbx");
 
-	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, true);
+	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
 	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
-	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(10.0), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
@@ -100,7 +102,7 @@ void PlayingState::init()
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(2.1, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	pweapons.emplace_back(stats2, &GAU, &projectile, glm::vec3(-0.25, 0.6, 1.8), glm::vec3(0.05), glm::angleAxis(180.f,glm::vec3(0,0,1)));
+	pweapons.emplace_back(stats2, &gunpod, &projectile, glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::angleAxis(0.f,glm::vec3(0,0,1)));
 	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
