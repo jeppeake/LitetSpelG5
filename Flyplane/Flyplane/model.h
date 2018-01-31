@@ -92,8 +92,12 @@ class Model {
 	void recursiveFlatten(Node* node, glm::mat4 transform);
 	void recursiveDeleteNodes(Node* node);
 
+
+	void buildBoundingBoxes(Mesh* mesh, glm::mat4 transform);
+
 	std::vector<Mesh> meshes;
 
+	float bounding_radius;
 	
 	std::vector<BoundingBox> bounding_boxes;
 
@@ -104,5 +108,8 @@ public:
 	void load(const std::string& file);
 
 	std::vector<BoundingBox>* getBoundingBoxes();
+	inline float getBoundingRadius() {
+		return bounding_radius;
+	}
 
 };

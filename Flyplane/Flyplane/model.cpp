@@ -1,7 +1,7 @@
 #include "model.h"
 
 #include <iostream>
-
+#include <limits>
 #include <assimp/material.h>
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -193,22 +193,88 @@ void Model::load(const std::string & file)
 	std::cout << file << ":\n";
 	std::cout << "\tnum meshes: " << meshes.size() << "\n";
 	std::cout << "\tnum meshes in hierarchy: " <<  model_meshes.size() << "\n";
-	
-	for (int i = 0; i < model_meshes.size(); i++) {
-		auto m = model_meshes[i].first;
-		auto t = model_meshes[i].second;
-		std::cout << "\t" << m->name << "\n";
-		if (m->is_bb) {
-			for (int i = 0; i < m->vertices.size(); i++) {
-				auto pos = m->vertices[i].position;
-				auto res = t*glm::vec4(pos, 1.f);
-				std::cout << res.x << ", " << res.y << ", " << res.z << "\n";
-			}
-		}
-	}
+	std::cout << "\tbounding boxes: " << bounding_boxes.size() << "\n";
 	
 
 	aiReleaseImport(scene);
+}
+
+
+void Model::buildBoundingBoxes(Mesh * m, glm::mat4 transform)
+{
+	BoundingBox bmin;
+	BoundingBox bmax;
+
+	bmin.sides[0].x = std::numeric_limits<float>::max();
+	bmax.sides[0].x = -std::numeric_limits<float>::max();
+
+	bmin.sides[1].y = std::numeric_limits<float>::max();
+	bmax.sides[1].y = -std::numeric_limits<float>::max();
+
+	bmin.sides[2].z = std::numeric_limits<float>::max();
+	bmax.sides[2].z = -std::numeric_limits<float>::max();
+
+	float max_radius = 0.f;
+	
+
+	for (int i = 0; i < m->vertices.size(); i++) {
+		auto pos = m->vertices[i].position;
+
+
+		float len = glm::length(pos);
+		if (len > max_radius)
+			max_radius = len;
+
+		if (pos.x < bmin.sides[0].x)
+			bmin.sides[0].x = pos.x;
+		if (pos.x > bmax.sides[0].x)
+			bmax.sides[0].x = pos.x;
+
+
+		if (pos.y < bmin.sides[1].y)
+			bmin.sides[1].y = pos.y;
+		if (pos.y > bmax.sides[1].y)
+			bmax.sides[1].y = pos.y;
+
+
+		if (pos.z < bmin.sides[2].z)
+			bmin.sides[2].z = pos.z;
+		if (pos.z > bmax.sides[2].z)
+			bmax.sides[2].z = pos.z;
+
+		// if new box
+		if (i % 24 == 23)
+		{
+			BoundingBox result;
+			result.center.x = (bmax.sides[0].x - bmin.sides[0].x)*0.5f;
+			result.center.y = (bmax.sides[1].y - bmin.sides[1].y)*0.5f;
+			result.center.z = (bmax.sides[2].z - bmin.sides[2].z)*0.5f;
+
+			result.sides[0].x = bmax.sides[0].x - result.center.x;
+			result.sides[1].y = bmax.sides[1].y - result.center.y;
+			result.sides[2].z = bmax.sides[2].z - result.center.z;
+
+
+			bounding_boxes.push_back(result);
+
+
+			bmin.sides[0].x = std::numeric_limits<float>::max();
+			bmax.sides[0].x = -std::numeric_limits<float>::max();
+
+			bmin.sides[1].y = std::numeric_limits<float>::max();
+			bmax.sides[1].y = -std::numeric_limits<float>::max();
+
+			bmin.sides[2].z = std::numeric_limits<float>::max();
+			bmax.sides[2].z = -std::numeric_limits<float>::max();
+		}
+	}
+	bounding_radius = max_radius;
+}
+
+
+std::vector<BoundingBox>* Model::getBoundingBoxes()
+{
+	return &bounding_boxes;
 }
 
 void Model::recursiveBuildTree(aiNode *ainode, Node* node)
@@ -238,9 +304,17 @@ void Model::recursiveFlatten(Node * node, glm::mat4 transform)
 
 	//current_transform = glm::mat4();
 
-	for (int i = 0; i < node->meshes.size(); i++) {
-		auto pair = std::make_pair(node->meshes[i], current_transform);
-		model_meshes.push_back(pair);
+	for (int i = 0; i < node->meshes.size(); i++) 
+	{
+		if (!node->meshes[i]->is_bb) 
+		{
+			auto pair = std::make_pair(node->meshes[i], current_transform);
+			model_meshes.push_back(pair);
+		}
+		else 
+		{
+			buildBoundingBoxes(node->meshes[i], current_transform);
+		}
 	}
 
 	for (int i = 0; i < node->children.size(); i++)
