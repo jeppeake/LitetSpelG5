@@ -1,7 +1,6 @@
 #pragma once
-
 #include "transform.h"
-
+class Heightmap;
 struct BoundingBox {
 	glm::vec3 sides[3];
 	glm::vec3 center;
@@ -10,6 +9,6 @@ struct BoundingBox {
 
 	bool intersect(BoundingBox &box);
 	bool intersect(const glm::vec3& point);
-
+	bool intersect(Heightmap *map);
 	void setTransform(const Transform& transform);
 };

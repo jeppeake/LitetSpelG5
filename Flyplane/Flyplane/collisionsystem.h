@@ -27,10 +27,10 @@ public:
 		entityx::ComponentHandle<ModelComponent> model;
 		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
 		{
-			auto boxes = model->mptr->getBoundingBoxes();
+			auto boxes = *model->mptr->getBoundingBoxes();
 			glm::vec3 pos = transform.get()->pos;
 			double height = map->heightAt(pos);
-			if (boxes->empty())
+			if (boxes.empty())
 			{
 				if (pos.y <= height)
 				{
@@ -42,9 +42,14 @@ public:
 			{
 				if (pos.y - height < model->mptr->getBoundingRadius())
 				{
-					for (size_t i = 0; i < boxes->size(); i++)
+					for (size_t i = 0; i < boxes.size(); i++)
 					{
-						//boxes[i].setTransform(transform);
+						boxes[i].setTransform(*transform.get());
+						if (boxes[i].intersect(terr->hmptr))
+						{
+							events.emit<CollisionEvent>(entity, terrain);
+							entity.destroy();
+						}
 					}
 				}
 			}
