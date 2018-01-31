@@ -42,8 +42,10 @@ public:
 			{
 				if (pos.y - height < model->mptr->getBoundingRadius())
 				{
-					events.emit<CollisionEvent>(entity, terrain);
-					entity.destroy();
+					for (size_t i = 0; i < boxes->size(); i++)
+					{
+						//boxes[i].setTransform(transform);
+					}
 				}
 			}
 		}
