@@ -139,4 +139,8 @@ void PlayingState::update(double dt)
 	ex.systems.update<PhysicsSystem>(dt);
 	ex.systems.update<CollisionSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
+
+	if (Input::isKeyPressed(GLFW_KEY_F5)) {
+		this->changeState(new PlayingState());
+	}
 }
