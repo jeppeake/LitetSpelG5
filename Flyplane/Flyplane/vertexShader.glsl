@@ -11,6 +11,6 @@ varying vec2 Tex;
 void main() {
 	Pos = (modelMatrix * vec4(pos, 1.0)).xyz;
 	Tex = tex;
-	Normal = vec3(modelMatrix * vec4(normal, 0));
+	Normal = transpose(inverse(mat3(modelMatrix)))*normal;
 	gl_Position = ViewProjMatrix * modelMatrix * vec4(pos, 1.0);
 }
