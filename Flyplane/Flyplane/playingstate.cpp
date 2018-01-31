@@ -71,8 +71,7 @@ void PlayingState::init()
 		std::vector<Behaviour*> behaviours;
 		behaviours.push_back(new Constant_Turn(0));
 		entity.assign<AIComponent>(behaviours);
-		entity.assign <CollisionComponent>();
-		entity.assign<AIComponent>();
+		entity.assign<CollisionComponent>();
 	}
 
 	entity = ex.entities.create();
@@ -98,7 +97,7 @@ void PlayingState::init()
 
 	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
 	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
-	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
+	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);

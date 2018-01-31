@@ -87,7 +87,7 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 
 			float boost = 800;
 			float breakForce = 100;
-			float normalSpeed = 200;
+			float normalSpeed = 50;
 
 			float maxDrift = 0.002;
 
