@@ -25,6 +25,10 @@ bool overlaps(float min1, float max1, float min2, float max2)
 
 bool BoundingBox::intersect(BoundingBox & box)
 {
+	glm::vec3 sides[3];
+	for (int i = 0; i < 3; i++)
+		sides[i] = glm::toMat3(transform.orientation)*this->sides[i];
+
 	glm::vec3 normals[3];
 	glm::vec3 corners[8];
 	normals[0] = glm::normalize(sides[0]);
@@ -37,16 +41,20 @@ bool BoundingBox::intersect(BoundingBox & box)
 		{
 			for (float z = -1; z <= 1; z += 2)
 			{
-				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + center;
+				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + glm::toMat3(transform.orientation)*center + transform.pos;
 				i++;
 			}
 		}
 	}
+
+	glm::vec3 bsides[3];
+	for (int i = 0; i < 3; i++)
+		bsides[i] = glm::toMat3(box.transform.orientation)*box.sides[i];
 	glm::vec3 bnormals[3];
 	glm::vec3 bcorners[8];
-	bnormals[0] = glm::normalize(box.sides[0]);
-	bnormals[1] = glm::normalize(box.sides[1]);
-	bnormals[2] = glm::normalize(box.sides[2]);
+	bnormals[0] = glm::normalize(bsides[0]);
+	bnormals[1] = glm::normalize(bsides[1]);
+	bnormals[2] = glm::normalize(bsides[2]);
 	i = 0;
 	for (float x = -1; x <= 1; x += 2)
 	{
@@ -54,7 +62,7 @@ bool BoundingBox::intersect(BoundingBox & box)
 		{
 			for (float z = -1; z <= 1; z += 2)
 			{
-				bcorners[i] = x * box.sides[0] + y * box.sides[1] + z * box.sides[2] + box.center;
+				bcorners[i] = x * bsides[0] + y * bsides[1] + z * bsides[2] + glm::toMat3(box.transform.orientation)*box.center + box.transform.pos;
 				i++;
 			}
 		}
@@ -85,6 +93,10 @@ bool BoundingBox::intersect(BoundingBox & box)
 
 bool BoundingBox::intersect(const glm::vec3 & point)
 {
+	glm::vec3 sides[3];
+	for (int i = 0; i < 3; i++)
+		sides[i] = glm::toMat3(transform.orientation)*this->sides[i];
+
 	glm::vec3 normals[3];
 	glm::vec3 corners[8];
 	normals[0] = glm::normalize(sides[0]);
@@ -97,7 +109,7 @@ bool BoundingBox::intersect(const glm::vec3 & point)
 		{
 			for (float z = -1; z <= 1; z += 2)
 			{
-				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + center;
+				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + center + transform.pos;
 				i++;
 			}
 		}
@@ -113,4 +125,9 @@ bool BoundingBox::intersect(const glm::vec3 & point)
 		}
 	}
 	return true;
+}
+
+void BoundingBox::setTransform(const Transform & transform)
+{
+	this->transform = transform;
 }
