@@ -11,6 +11,7 @@
 #include "playercomponent.h"
 #include "projectilecomponent.h"
 #include "missilecomponent.h"
+#include "collisioncomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
 
@@ -26,6 +27,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<Physics>(weapon->stats.mass, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats.speed) + planeSpeed, glm::vec3());
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime);
+		projectile.assign<CollisionComponent>();
 	}
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
@@ -35,6 +37,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
+		missile.assign<CollisionComponent>();
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
