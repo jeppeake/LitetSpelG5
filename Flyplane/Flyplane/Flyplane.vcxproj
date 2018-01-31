@@ -168,6 +168,8 @@
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="physicssystem.h" />
+    <ClInclude Include="soundcomponent.h" />
+    <ClInclude Include="soundsystem.h" />
     <ClInclude Include="terraincomponent.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="transform.h" />

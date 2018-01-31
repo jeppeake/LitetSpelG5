@@ -13,6 +13,7 @@
 #include "flightsystem.h"
 #include "flightcomponent.h"
 #include "collisionsystem.h"
+#include "soundsystem.h"
 
 #include "aicomponent.h"
 Model m;
@@ -22,10 +23,13 @@ Model weaponmodel;
 Model GAU;
 Model gunpod;
 Heightmap* hm;
+sf::SoundBuffer soundBuffer;
 
 entityx::Entity entity;
 void PlayingState::init()
 {
+	if (!soundBuffer.loadFromFile("assets/Sound/airplane-takeoff.wav"))
+		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
 	/*
 	* add systems
@@ -40,6 +44,7 @@ void PlayingState::init()
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
 	ex.systems.add<CollisionSystem>(hm);
+	ex.systems.add<SoundSystem>();
 	ex.systems.configure();
 
 	/*
@@ -67,6 +72,9 @@ void PlayingState::init()
 		entity.assign <CollisionComponent>();
 		entity.assign<AIComponent>();
 	}
+
+	entity = ex.entities.create();
+	entity.assign<SoundComponent>(soundBuffer);
 
 	entity = ex.entities.create();
 	float x = rand() % 100;
