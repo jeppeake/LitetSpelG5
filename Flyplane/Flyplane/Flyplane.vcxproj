@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="input.cpp" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="aicomponent.h" />
+    <ClInclude Include="boundingbox.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />

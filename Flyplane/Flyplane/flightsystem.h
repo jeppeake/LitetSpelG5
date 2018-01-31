@@ -47,7 +47,9 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			flight->i_throttle = glm::mix(flight->throttle, flight->i_throttle, float(1.0 - glm::pow(fbt, dt)));
 			flight->i_airBrake = glm::mix(flight->airBrake, flight->i_airBrake, float(1.0 - glm::pow(fbt, dt)));
 
-			flight->drift = glm::mix(flight->drift, flight->i_drift, float(1.0 - glm::pow(fbt, dt)));
+			float fd = 0.0001;
+			flight->drift = glm::mix(flight->drift, flight->i_drift, float(1.0 - glm::pow(fd, dt)));
+			//std::cout << "D: " << flight->drift << "\n";
 
 			if (flight->i_throttle != 0.f) {
 				flight->throttle = flight->i_throttle;
@@ -65,9 +67,11 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 
 			glm::vec3 angular_vel;
 
-			angular_vel.z = flight->turnrate * flight->roll;
-			angular_vel.x = -flight->turnrate * flight->pitch;
-			angular_vel.y = flight->turnrate * flight->yaw;
+			float turnrate = flight->turnrate + flight->turnrate * flight->drift;
+
+			angular_vel.z = turnrate * 1.5 * flight->roll;
+			angular_vel.x = -turnrate * flight->pitch;
+			angular_vel.y = turnrate * 0.5 * flight->yaw;
 
 			angular_vel = glm::toMat3(transform->orientation)*angular_vel;
 
@@ -81,7 +85,7 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			transform->orientation += spin * float(dt);
 			transform->orientation = normalize(transform->orientation);
 
-			float boost = 200;
+			float boost = 800;
 			float breakForce = 100;
 			float normalSpeed = 200;
 
