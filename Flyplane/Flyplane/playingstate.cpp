@@ -15,6 +15,9 @@
 #include "collisionsystem.h"
 
 #include "aicomponent.h"
+#include "aisystem.h"
+#include "behaviour.h"
+#include "constant_turn.h"
 Model m;
 Model projectile;
 Model missile;
@@ -40,6 +43,7 @@ void PlayingState::init()
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
 	ex.systems.add<CollisionSystem>(hm);
+	ex.systems.add<AISystem>();
 	ex.systems.configure();
 
 	/*
@@ -56,15 +60,17 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 0; i++) {
+	for (int i = 0; i < 10; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, rand() % 100, rand() % 100);
+		glm::vec3 pos(rand() % 100, 1500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(1000.f, 2.f);
-		entity.assign<AIComponent>();
+		std::vector<Behaviour*> behaviours;
+		behaviours.push_back(new Constant_Turn(0));
+		entity.assign<AIComponent>(behaviours);
 	}
 
 	entity = ex.entities.create();
@@ -134,6 +140,7 @@ void PlayingState::update(double dt)
 
 
 	ex.systems.update<PlayerSystem>(dt);
+	ex.systems.update<AISystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
 	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
