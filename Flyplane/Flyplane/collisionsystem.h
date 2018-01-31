@@ -49,6 +49,7 @@ public:
 						{
 							events.emit<CollisionEvent>(entity, terrain);
 							entity.destroy();
+							break;
 						}
 					}
 				}
