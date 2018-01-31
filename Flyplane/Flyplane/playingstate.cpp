@@ -13,6 +13,8 @@
 #include "flightsystem.h"
 #include "flightcomponent.h"
 #include "collisionsystem.h"
+
+#include "aicomponent.h"
 Model m;
 Model projectile;
 Model missile;
@@ -61,10 +63,13 @@ void PlayingState::init()
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(1000.f, 2.f);
+		entity.assign<AIComponent>();
 	}
 
 	entity = ex.entities.create();
-	glm::vec3 pos(rand() % 100, 1500, rand() % 100);
+	float x = rand() % 100;
+	float z = rand() % 100;
+	glm::vec3 pos(x, 1500, z);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
@@ -81,11 +86,11 @@ void PlayingState::init()
 	GAU.load("assets/GAU-15.fbx");
 	missile.load("assets/Weapons/Missiles/Fishrod/fishrod.fbx");
 
-	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
+	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, true);
 	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
-	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(10.0), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
@@ -99,7 +104,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
-	hm = new Heightmap("assets/textures/cloude.png", "assets/textures/bog.png");
+	hm = new Heightmap("assets/textures/race.png", "assets/textures/bog.png");
 	hm->pos.x -= 2560;
 	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
