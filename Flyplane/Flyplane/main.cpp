@@ -7,8 +7,14 @@
 #include "model.h"
 #include "input.h"
 #include "transform.h"
+#include <sfml\Audio.hpp>
 int main(void)
 {	
+	sf::SoundBuffer buffer;
+	buffer.loadFromFile("sound.wav");
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.play();
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
 	//w.open();
