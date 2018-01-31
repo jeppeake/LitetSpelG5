@@ -1,7 +1,7 @@
 #include "model.h"
 
 #include <iostream>
-
+#include <limits>
 #include <assimp/material.h>
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -15,9 +15,10 @@ Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
 
-	bool is_bb = false;
+	is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
 		std::cout << name << " IS BOUNDING BOX\n";
+		std::cout << mesh->mNumVertices << "\n";
 		is_bb = true;
 	}
 
@@ -41,9 +42,10 @@ Model::Mesh::Mesh(aiMesh * mesh)
 		auto pos = mesh->mVertices[i];
 		aiVector3D new_pos(pos.x, pos.z, -pos.y);
 
-		if (is_bb) 
+		if (is_bb)
 		{
-			//std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+			if (i % 24 == 0)
+				std::cout << "New BB\n";
 		}
 
 		vertices.emplace_back(pos,
@@ -60,32 +62,34 @@ Model::Mesh::Mesh(aiMesh * mesh)
 			indices.push_back(face.mIndices[j]);
 		}
 	}
+	if (!is_bb) 
+	{
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+		glGenBuffers(1, &ebo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
 
-	unsigned int stride = 2 * sizeof(glm::vec3) + sizeof(glm::vec2);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(sizeof(glm::vec3)));
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(glm::vec3)));
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
 
-	glBindVertexArray(0);
+		unsigned int stride = 2 * sizeof(glm::vec3) + sizeof(glm::vec2);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(sizeof(glm::vec3)));
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(glm::vec3)));
+
+
+		glBindVertexArray(0);
+	}
 }
 
 Model::Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<GLuint>& _indices)
@@ -175,50 +179,6 @@ void Model::load(const std::string & file)
 		}
 	}
 
-	/*
-	// build tree
-	std::stack<aiNode*> aistack;
-	std::stack<Node*> stack;
-	Node* current = root;
-	bool done = false;
-	while (!done)
-	{
-		// Process node
-		// ---------------------------
-
-		for (int i = 0; i < aicurrent->mNumMeshes; i++)
-		{
-			size_t index = aicurrent->mMeshes[i];
-			current->meshes.push_back(&meshes[i]);
-		}
-		current->name = std::string(aicurrent->mName.C_Str());
-
-		for (int i = 0; i < aicurrent->mNumChildren; i++)
-		{
-			current->children.push_back(new Node());
-
-			// ---------------------------
-
-
-			aistack.push(aicurrent->mChildren[i]);
-			stack.push(current->children[i]);
-		}
-
-
-		if (aistack.empty())
-		{
-			done = true;
-		}
-		else
-		{
-			aicurrent = aistack.top();
-			aistack.pop();
-
-			current = stack.top();
-			stack.pop();
-		}
-	}
-	*/
 
 	aiNode* airoot = scene->mRootNode;
 	Node* root = new Node();
@@ -231,15 +191,90 @@ void Model::load(const std::string & file)
 	recursiveDeleteNodes(root);
 
 	std::cout << file << ":\n";
-	std::cout << "\tnum meshes: " <<  model_meshes.size() << "\n";
-	
-	for (int i = 0; i < model_meshes.size(); i++) {
-		std::cout << "\t" << model_meshes[i].first->name << "\n";
-		//std::cout << "\t" << model_meshes[i].first->numIndices() << "\n";
-	}
+	std::cout << "\tnum meshes: " << meshes.size() << "\n";
+	std::cout << "\tnum meshes in hierarchy: " <<  model_meshes.size() << "\n";
+	std::cout << "\tbounding boxes: " << bounding_boxes.size() << "\n";
 	
 
 	aiReleaseImport(scene);
+}
+
+
+void Model::buildBoundingBoxes(Mesh * m, glm::mat4 transform)
+{
+	BoundingBox bmin;
+	BoundingBox bmax;
+
+	bmin.sides[0].x = std::numeric_limits<float>::max();
+	bmax.sides[0].x = -std::numeric_limits<float>::max();
+
+	bmin.sides[1].y = std::numeric_limits<float>::max();
+	bmax.sides[1].y = -std::numeric_limits<float>::max();
+
+	bmin.sides[2].z = std::numeric_limits<float>::max();
+	bmax.sides[2].z = -std::numeric_limits<float>::max();
+
+	float max_radius = 0.f;
+	
+
+	for (int i = 0; i < m->vertices.size(); i++) {
+		auto pos = m->vertices[i].position;
+
+
+		float len = glm::length(pos);
+		if (len > max_radius)
+			max_radius = len;
+
+		if (pos.x < bmin.sides[0].x)
+			bmin.sides[0].x = pos.x;
+		if (pos.x > bmax.sides[0].x)
+			bmax.sides[0].x = pos.x;
+
+
+		if (pos.y < bmin.sides[1].y)
+			bmin.sides[1].y = pos.y;
+		if (pos.y > bmax.sides[1].y)
+			bmax.sides[1].y = pos.y;
+
+
+		if (pos.z < bmin.sides[2].z)
+			bmin.sides[2].z = pos.z;
+		if (pos.z > bmax.sides[2].z)
+			bmax.sides[2].z = pos.z;
+
+		// if new box
+		if (i % 24 == 23)
+		{
+			BoundingBox result;
+			result.center.x = (bmax.sides[0].x - bmin.sides[0].x)*0.5f;
+			result.center.y = (bmax.sides[1].y - bmin.sides[1].y)*0.5f;
+			result.center.z = (bmax.sides[2].z - bmin.sides[2].z)*0.5f;
+
+			result.sides[0].x = bmax.sides[0].x - result.center.x;
+			result.sides[1].y = bmax.sides[1].y - result.center.y;
+			result.sides[2].z = bmax.sides[2].z - result.center.z;
+
+
+			bounding_boxes.push_back(result);
+
+
+			bmin.sides[0].x = std::numeric_limits<float>::max();
+			bmax.sides[0].x = -std::numeric_limits<float>::max();
+
+			bmin.sides[1].y = std::numeric_limits<float>::max();
+			bmax.sides[1].y = -std::numeric_limits<float>::max();
+
+			bmin.sides[2].z = std::numeric_limits<float>::max();
+			bmax.sides[2].z = -std::numeric_limits<float>::max();
+		}
+	}
+	bounding_radius = max_radius;
+}
+
+
+std::vector<BoundingBox>* Model::getBoundingBoxes()
+{
+	return &bounding_boxes;
 }
 
 void Model::recursiveBuildTree(aiNode *ainode, Node* node)
@@ -269,9 +304,17 @@ void Model::recursiveFlatten(Node * node, glm::mat4 transform)
 
 	//current_transform = glm::mat4();
 
-	for (int i = 0; i < node->meshes.size(); i++) {
-		auto pair = std::make_pair(node->meshes[i], current_transform);
-		model_meshes.push_back(pair);
+	for (int i = 0; i < node->meshes.size(); i++) 
+	{
+		if (!node->meshes[i]->is_bb) 
+		{
+			auto pair = std::make_pair(node->meshes[i], current_transform);
+			model_meshes.push_back(pair);
+		}
+		else 
+		{
+			buildBoundingBoxes(node->meshes[i], current_transform);
+		}
 	}
 
 	for (int i = 0; i < node->children.size(); i++)

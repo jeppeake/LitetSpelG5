@@ -30,8 +30,6 @@ struct RenderSystem : public System<RenderSystem> {
 			offset = glm::toMat3(normalize(cam.orientation))*offset;
 			//cam.pos += offset;
 
-			std::cout << transform->pos.x << ", " << transform->pos.z << "\n";
-
 			Transform p_cam = player->camera.getTransform();
 
 			//double v = length(physics->velocity)*0.001;
