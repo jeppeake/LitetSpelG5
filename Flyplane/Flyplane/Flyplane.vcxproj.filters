@@ -191,6 +191,12 @@
     <ClInclude Include="constant_turn.h">
       <Filter>Source Files\ecs\behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="soundcomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="soundsystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
