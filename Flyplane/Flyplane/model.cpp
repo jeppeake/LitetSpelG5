@@ -15,7 +15,7 @@ Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
 
-	bool is_bb = false;
+	is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
 		std::cout << name << " IS BOUNDING BOX\n";
 		std::cout << mesh->mNumVertices << "\n";
@@ -46,8 +46,6 @@ Model::Mesh::Mesh(aiMesh * mesh)
 		{
 			if (i % 24 == 0)
 				std::cout << "New BB\n";
-			std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
-			
 		}
 
 		vertices.emplace_back(pos,
@@ -64,32 +62,34 @@ Model::Mesh::Mesh(aiMesh * mesh)
 			indices.push_back(face.mIndices[j]);
 		}
 	}
+	if (!is_bb) 
+	{
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+		glGenBuffers(1, &ebo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
 
-	unsigned int stride = 2 * sizeof(glm::vec3) + sizeof(glm::vec2);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(sizeof(glm::vec3)));
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(glm::vec3)));
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
 
-	glBindVertexArray(0);
+		unsigned int stride = 2 * sizeof(glm::vec3) + sizeof(glm::vec2);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(sizeof(glm::vec3)));
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(glm::vec3)));
+
+
+		glBindVertexArray(0);
+	}
 }
 
 Model::Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<GLuint>& _indices)
@@ -179,50 +179,6 @@ void Model::load(const std::string & file)
 		}
 	}
 
-	/*
-	// build tree
-	std::stack<aiNode*> aistack;
-	std::stack<Node*> stack;
-	Node* current = root;
-	bool done = false;
-	while (!done)
-	{
-		// Process node
-		// ---------------------------
-
-		for (int i = 0; i < aicurrent->mNumMeshes; i++)
-		{
-			size_t index = aicurrent->mMeshes[i];
-			current->meshes.push_back(&meshes[i]);
-		}
-		current->name = std::string(aicurrent->mName.C_Str());
-
-		for (int i = 0; i < aicurrent->mNumChildren; i++)
-		{
-			current->children.push_back(new Node());
-
-			// ---------------------------
-
-
-			aistack.push(aicurrent->mChildren[i]);
-			stack.push(current->children[i]);
-		}
-
-
-		if (aistack.empty())
-		{
-			done = true;
-		}
-		else
-		{
-			aicurrent = aistack.top();
-			aistack.pop();
-
-			current = stack.top();
-			stack.pop();
-		}
-	}
-	*/
 
 	aiNode* airoot = scene->mRootNode;
 	Node* root = new Node();
@@ -235,11 +191,20 @@ void Model::load(const std::string & file)
 	recursiveDeleteNodes(root);
 
 	std::cout << file << ":\n";
-	std::cout << "\tnum meshes: " <<  model_meshes.size() << "\n";
+	std::cout << "\tnum meshes: " << meshes.size() << "\n";
+	std::cout << "\tnum meshes in hierarchy: " <<  model_meshes.size() << "\n";
 	
 	for (int i = 0; i < model_meshes.size(); i++) {
-		std::cout << "\t" << model_meshes[i].first->name << "\n";
-		//std::cout << "\t" << model_meshes[i].first->numIndices() << "\n";
+		auto m = model_meshes[i].first;
+		auto t = model_meshes[i].second;
+		std::cout << "\t" << m->name << "\n";
+		if (m->is_bb) {
+			for (int i = 0; i < m->vertices.size(); i++) {
+				auto pos = m->vertices[i].position;
+				auto res = t*glm::vec4(pos, 1.f);
+				std::cout << res.x << ", " << res.y << ", " << res.z << "\n";
+			}
+		}
 	}
 	
 
