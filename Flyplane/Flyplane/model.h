@@ -99,6 +99,8 @@ class Model {
 	
 	std::vector<BoundingBox> bounding_boxes;
 
+	bool loaded = false;
+
 public:
 	Texture texture;
 	//std::vector<Material> materials;

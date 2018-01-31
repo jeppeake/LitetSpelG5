@@ -140,7 +140,6 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AI.h" />
     <ClInclude Include="aicomponent.h" />
     <ClInclude Include="aisystem.h" />
     <ClInclude Include="behaviour.h" />

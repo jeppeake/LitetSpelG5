@@ -11,6 +11,8 @@
 #include "playercomponent.h"
 #include "projectilecomponent.h"
 #include "missilecomponent.h"
+#include "collisioncomponent.h"
+#include "aicomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
 
@@ -26,6 +28,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<Physics>(weapon->stats.mass, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats.speed) + planeSpeed, glm::vec3());
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime);
+		projectile.assign<CollisionComponent>();
 	}
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
@@ -35,6 +38,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
+		missile.assign<CollisionComponent>();
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -62,13 +66,13 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 			Weapon* weapon = &equip->special[equip->selected];
 
-			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0) {
+			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0) {
 				weapon->shouldFire = true;
 			}
 			
 			for (int i = 0; i < equip->primary.size(); i++) {
 				Weapon* pweapon = &equip->primary[i];
-				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
+				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
 					pweapon->shouldFire = true;
 				}
 				if (pweapon->shouldFire) {
@@ -114,15 +118,30 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		}
 
 
+		entityx::ComponentHandle<AIComponent> ai;
+		entityx::ComponentHandle<Transform> aitrans;
 		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
 			missile = entity.component<Missile>();
 			trans = entity.component<Transform>();
 			physics = entity.component<Physics>();
 			projectile = entity.component<Projectile>();
 			if (projectile->timer.elapsed() > 1) {
+				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
+				float bestDot = -1;
+				Entity cure;
+				for (Entity enemy : es.entities_with_components(ai, aitrans)) {
+					glm::vec3 dir = aitrans->pos - trans->pos;
+					float dot = glm::dot(dir, v);
+					if (dot > bestDot) {
+						bestDot = dot;
+						missile->target = aitrans.get();
+						cure = enemy;
+					}
+				}
+
 				glm::quat q;
 
-				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
+				
 				glm::vec3 u = missile->target->pos - trans->pos;
 				glm::vec3 vn = glm::normalize(v);
 				glm::vec3 un = glm::normalize(u);
@@ -141,6 +160,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
+					cure.destroy();
+					entity.destroy();
 				}
 			}
 				

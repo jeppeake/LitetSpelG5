@@ -40,6 +40,9 @@
     <Filter Include="Source Files\ecs\events">
       <UniqueIdentifier>{4f050f0e-48ab-4063-9dac-945aaf97cf35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ecs\behaviours">
+      <UniqueIdentifier>{1eccaa47-4f78-41cf-8d3f-06e856162e43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,7 +88,7 @@
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
     <ClCompile Include="boundingbox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +173,6 @@
     <ClInclude Include="missilecomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="aicomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
@@ -183,19 +183,13 @@
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
     <ClInclude Include="aisystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="behaviour.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="constant_turn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="soundsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
-    <ClInclude Include="soundcomponent.h">
-      <Filter>Source Files\ecs\components</Filter>
+    <ClInclude Include="behaviour.h">
+      <Filter>Source Files\ecs\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_turn.h">
+      <Filter>Source Files\ecs\behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

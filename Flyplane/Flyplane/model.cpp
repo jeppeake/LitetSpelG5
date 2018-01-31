@@ -120,6 +120,11 @@ void Model::Mesh::unbind()
 
 void Model::load(const std::string & file)
 {
+	if (loaded) {
+		std::cout << "WARNING: model trying to load '" << file << "' already in use\n";
+		return;
+	}
+
 	const aiScene* scene = aiImportFile(file.c_str(),
 		//aiProcess_GenNormals |
 		aiProcess_Triangulate |
@@ -137,12 +142,11 @@ void Model::load(const std::string & file)
 		return;
 	}
 
-
+	loaded = true;
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		meshes.emplace_back(scene->mMeshes[i]);
 	}
-
 
 	std::string model_dir;
 	size_t last = file.find_last_of('/');

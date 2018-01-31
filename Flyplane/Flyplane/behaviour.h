@@ -1,13 +1,15 @@
 #pragma once
-#include <vector>
+
 class Behaviour {
 public:
 	Behaviour(int priority) {
 		this->priority = priority;
 	}
-	int getPriority() {
+	virtual int getPriority() {
 		return priority;
 	}
-private:
+
+	virtual glm::vec3 act() = 0;
+
 	int priority = 0;
 };
