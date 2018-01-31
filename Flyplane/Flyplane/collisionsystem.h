@@ -19,7 +19,6 @@ public:
 		entityx::Entity terrain;
 		for (entityx::Entity entity : es.entities_with_components(terr))
 		{
-			terrain = entity;
 			map = terr->hmptr;
 		}
 		entityx::ComponentHandle<FlightComponent> flight;
