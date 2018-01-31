@@ -64,6 +64,7 @@ void PlayingState::init()
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(1000.f, 2.f);
+		entity.assign <CollisionComponent>();
 		entity.assign<AIComponent>();
 	}
 
@@ -77,7 +78,7 @@ void PlayingState::init()
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
-
+	entity.assign <CollisionComponent>();
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
