@@ -81,11 +81,11 @@ void PlayingState::init()
 	GAU.load("assets/GAU-15.fbx");
 	missile.load("assets/Weapons/Missiles/Fishrod/fishrod.fbx");
 
-	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
+	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, true);
 	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, false);
 
-	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-0.9, -0.25, -1.5), glm::vec3(10.0), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(0.9, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);

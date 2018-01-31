@@ -82,7 +82,7 @@ struct FlightSystem : public entityx::System<FlightSystem> {
 			transform->orientation = normalize(transform->orientation);
 
 			float boost = 100;
-			float breakForce = 50;
+			float breakForce = 100;
 			float normalSpeed = 100;
 
 			float maxDrift = 0.002;
