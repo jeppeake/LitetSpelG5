@@ -37,16 +37,25 @@ struct Vertex {
 	}
 };
 
+struct BoundingBox {
+	glm::vec3 sides[3];
+	glm::vec3 center;
+};
+
 class Model {
 	class Mesh
 	{
-		std::vector<GLuint> indices;
-		std::vector<Vertex> vertices;
+		
 		GLuint ebo = 0;
 		GLuint vbo = 0;
 		GLuint vao = 0;
 		unsigned int material_index;
 	public:
+		std::vector<GLuint> indices;
+		std::vector<Vertex> vertices;
+
+		bool is_bb = false;
+
 		std::string name = "";
 
 		Mesh(aiMesh* mesh);
@@ -83,10 +92,14 @@ class Model {
 	void recursiveFlatten(Node* node, glm::mat4 transform);
 	void recursiveDeleteNodes(Node* node);
 
+
+	void buildBoundingBoxes(Mesh* mesh, glm::mat4 transform);
+
 	std::vector<Mesh> meshes;
 
+	float bounding_radius;
 	
-
+	std::vector<BoundingBox> bounding_boxes;
 
 public:
 	Texture texture;
@@ -94,6 +107,9 @@ public:
 	std::vector<std::pair<Mesh*, glm::mat4>> model_meshes;
 	void load(const std::string& file);
 
-
+	std::vector<BoundingBox>* getBoundingBoxes();
+	inline float getBoundingRadius() {
+		return bounding_radius;
+	}
 
 };

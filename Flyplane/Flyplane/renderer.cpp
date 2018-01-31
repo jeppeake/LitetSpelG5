@@ -9,12 +9,9 @@
 using namespace std;
 
 Renderer::Renderer() {
-	//glEnable(GL_TEXTURE_2D);
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
-	//this->shader.uniform("shadowMap", 1);
-	//this->terrain_shader.uniform("shadowMap", 1);
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -24,7 +21,7 @@ Renderer::Renderer() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 4*1024, 4*1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);//GL_CLAMP_TO_BORDER?
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
 	
@@ -35,8 +32,8 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
-	glm::mat4 proj = glm::ortho<float>(-1000.f, 1000.f, -1000.f, 1000.f, -1000.f, 200.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+	glm::mat4 proj = glm::ortho<float>(-3000.f, 3000.f, -3000.f, 3000.f, -1000.f, 200.f);
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
@@ -45,10 +42,6 @@ Renderer::Renderer() {
 	);
 	this->shadowMatrix = proj * view;
 	
-	//view = glm::lookAt(glm::vec3(0, 1, 0), glm::vec3(0), glm::vec3(1, 0, 0));
-	//proj = glm::ortho<float>(-1000, 1000, -100, 100, 0, 1500);
-	//debugMVP = proj * view;
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -66,18 +59,11 @@ void Renderer::addToList(Heightmap* map) {
 
 void Renderer::Render(Model &model, Transform &trans) {
 	glm::mat4 modelMatrix = glm::translate(trans.pos) * glm::toMat4(trans.orientation) * glm::scale(trans.scale);
-
-	//this->shader.use();
-
-	//shader.uniform("texSampler", 0);
 	model.texture.bind(0);
-
-	//this->shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 
 	for (int i = 0; i < model.model_meshes.size(); i++) {
 		model.model_meshes[i].first->bind();
 		this->shader.uniform("modelMatrix", modelMatrix*model.model_meshes[i].second);
-		//shader.uniform("shadowMatrix", shadowMatrix);
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
@@ -122,7 +108,6 @@ void Renderer::RenderScene() {
 
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
-			//shadow.uniform("MVP", this->camera.getProjMatrix() * this->camera.getViewMatrix() * modelMatrix * list[i].model->model_meshes[j].second);
 			shadow.uniform("MVP", shadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
@@ -131,7 +116,6 @@ void Renderer::RenderScene() {
 		mapList[i]->bind();
 		glm::mat4 trans = glm::translate(mapList[i]->pos);
 		this->shadow.uniform("MVP", shadowMatrix*trans);
-		//this->shadow.uniform("MVP", this->camera.getProjMatrix() * this->camera.getViewMatrix()*trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
@@ -139,7 +123,7 @@ void Renderer::RenderScene() {
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	auto s = Window::getWindow().size();
-	glViewport(0, 0, s.x, s.y); //size of viewport?
+	glViewport(0, 0, s.x, s.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shader.use();
 	shader.uniform("texSampler", 0);
@@ -148,24 +132,8 @@ void Renderer::RenderScene() {
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	shader.uniform("shadowMatrix", shadowMatrix);
-	//shader.uniform("ViewProjMatrix", debugMVP);
-
 	
 	for (int i = 0; i < list.size(); i++) {
-		/*
-		glm::mat4 modelMatrix = glm::translate(list[i].trans->pos) * glm::toMat4(list[i].trans->orientation);
-		list[i].model->texture.bind(0);
-		this->shader.uniform("modelMatrix", modelMatrix);
-		shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
-
-		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
-			auto m = list[i].model->model_meshes[j];
-			m.first->bind();
-			this->shader.uniform("modelMatrix", modelMatrix*m.second);
-			//shader.uniform("shadowMatrix", shadowMatrix * modelMatrix);
-			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
-		}
-		*/
 		Render(list[i]);
 	}
 	//Render terrain

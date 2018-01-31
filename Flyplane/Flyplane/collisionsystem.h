@@ -27,17 +27,24 @@ public:
 		entityx::ComponentHandle<ModelComponent> model;
 		for(entityx::Entity entity : es.entities_with_components(flight, transform, model))
 		{
+			auto boxes = model->mptr->getBoundingBoxes();
 			glm::vec3 pos = transform.get()->pos;
 			double height = map->heightAt(pos);
-			if (entity.has_component<PlayerComponent>())
+			if (boxes->empty())
 			{
-				//std::cout << "Entity: " << pos.y << " : Terrain : " << height << std::endl;
-				//std::cout << "Height over terrain: " << pos.y - height << "\n";
+				if (pos.y <= height)
+				{
+					events.emit<CollisionEvent>(entity, terrain);
+					entity.destroy();
+				}
 			}
-			if (pos.y <= height)
+			else
 			{
-				events.emit<CollisionEvent>(entity, terrain);
-				entity.destroy();
+				if (pos.y - height < model->mptr->getBoundingRadius())
+				{
+					events.emit<CollisionEvent>(entity, terrain);
+					entity.destroy();
+				}
 			}
 		}
 	}
