@@ -85,7 +85,7 @@
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
     <ClCompile Include="boundingbox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +181,15 @@
     </ClInclude>
     <ClInclude Include="collisioncomponent.h">
       <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="aisystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="behaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_turn.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
