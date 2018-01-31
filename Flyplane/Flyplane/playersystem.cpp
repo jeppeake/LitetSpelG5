@@ -45,8 +45,9 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		float brake = control1(GLFW_KEY_S);
 
 		if (Input::gamepad_present()) {
-			roll = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X);
+			roll = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_X);
 			pitch = Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_Y);
+			yaw = -Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_X);
 			throttle = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER) + 1) / 2.f);
 			brake = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f);
 		}

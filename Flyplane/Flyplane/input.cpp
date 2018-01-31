@@ -88,8 +88,9 @@ float Input::gamepad_axis(int axis) {
 		if ((ret > 0 && ret < axis_threshold) || (ret < 0 && ret > -axis_threshold)) {
 			ret = 0.f;
 		}
-		return ret;
+		return glm::pow(ret, 3);
 	}
+	return 0;
 }
 
 bool Input::gamepad_button_pressed(int button) {
@@ -99,4 +100,5 @@ bool Input::gamepad_button_pressed(int button) {
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad_state)) {
 		return gamepad_state.buttons[button];
 	}
+	return 0;
 }

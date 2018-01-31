@@ -10,6 +10,7 @@
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
 #include "texture.h"
+#include "boundingbox.h"
 
 struct Vertex {
 	glm::vec3 position;
@@ -37,10 +38,7 @@ struct Vertex {
 	}
 };
 
-struct BoundingBox {
-	glm::vec3 sides[3];
-	glm::vec3 center;
-};
+
 
 class Model {
 	class Mesh

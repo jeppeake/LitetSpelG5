@@ -5,6 +5,12 @@ struct FlightComponent {
 
 	FlightComponent(float engine_power, float turnrate) : engine_power(engine_power), turnrate(turnrate) {}
 
+	void setInput(glm::vec3 input) {
+		i_roll = input.x;
+		i_pitch = input.y;
+		i_yaw = input.z;
+	}
+
 	float yaw = 0.f, pitch = 0.f, roll = 0.f;
 	float i_yaw = 0.f, i_pitch = 0.f, i_roll = 0.f;
 	float throttle = 0.f, airBrake = 0.f;

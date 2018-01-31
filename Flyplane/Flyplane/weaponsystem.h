@@ -11,6 +11,7 @@
 #include "playercomponent.h"
 #include "projectilecomponent.h"
 #include "missilecomponent.h"
+#include <glm/gtx/vector_angle.hpp>
 #include <ctime>
 
 
@@ -33,7 +34,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed, glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime);
-		missile.assign<Missile>(glm::vec3(0, 0, 0));
+		missile.assign<Missile>(trans);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -114,21 +115,33 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 
 		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
+			missile = entity.component<Missile>();
+			trans = entity.component<Transform>();
+			physics = entity.component<Physics>();
+			projectile = entity.component<Projectile>();
 			if (projectile->timer.elapsed() > 1) {
 				glm::quat q;
-				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 1.0) - trans->pos;
-				glm::vec3 u = missile->target - trans->pos;
 
-				glm::vec3 cross = glm::cross(glm::normalize(v), glm::normalize(u));
+				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
+				glm::vec3 u = missile->target->pos - trans->pos;
+				glm::vec3 vn = glm::normalize(v);
+				glm::vec3 un = glm::normalize(u);
+				glm::vec3 cross = glm::cross(vn, un);
 
-				float turnRate = 10000.0f;
+
+				float turnRate = 2.f;
+
 				
-				q = glm::angleAxis((float)(turnRate*dt),cross);
-				trans->orientation = q;
 
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,30);
+				q = glm::angleAxis((float)(turnRate * dt), glm::normalize(cross));
+				trans->orientation = q * trans->orientation;
+				trans->orientation = glm::normalize(trans->orientation);
+				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,200);
 
-				std::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "\n";
+				if (glm::length(u) < 10.0) {
+					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
+				}
 			}
 				
 		}

@@ -6,6 +6,7 @@
 #include "collisionevents.h"
 #include "terraincomponent.h"
 #include "transform.h"
+#include "collisioncomponent.h"
 #include <entityx/entityx.h>
 class CollisionSystem : public entityx::System<CollisionSystem>
 {
@@ -19,13 +20,12 @@ public:
 		entityx::Entity terrain;
 		for (entityx::Entity entity : es.entities_with_components(terr))
 		{
-			terrain = entity;
 			map = terr->hmptr;
 		}
-		entityx::ComponentHandle<FlightComponent> flight;
+		entityx::ComponentHandle<CollisionComponent> collision;
 		entityx::ComponentHandle<Transform> transform;
 		entityx::ComponentHandle<ModelComponent> model;
-		for(entityx::Entity entity : es.entities_with_components(flight, transform, model))
+		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
 		{
 			auto boxes = model->mptr->getBoundingBoxes();
 			glm::vec3 pos = transform.get()->pos;
