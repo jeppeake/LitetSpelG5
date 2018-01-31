@@ -18,6 +18,7 @@ Model::Mesh::Mesh(aiMesh * mesh)
 	bool is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
 		std::cout << name << " IS BOUNDING BOX\n";
+		std::cout << mesh->mNumVertices << "\n";
 		is_bb = true;
 	}
 
@@ -41,9 +42,12 @@ Model::Mesh::Mesh(aiMesh * mesh)
 		auto pos = mesh->mVertices[i];
 		aiVector3D new_pos(pos.x, pos.z, -pos.y);
 
-		if (is_bb) 
+		if (is_bb)
 		{
-			//std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+			if (i % 24 == 0)
+				std::cout << "New BB\n";
+			std::cout << "\t" << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+			
 		}
 
 		vertices.emplace_back(pos,
