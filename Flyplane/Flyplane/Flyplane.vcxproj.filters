@@ -179,6 +179,9 @@
     <ClInclude Include="boundingbox.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="collisioncomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
