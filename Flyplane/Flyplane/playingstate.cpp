@@ -71,8 +71,7 @@ void PlayingState::init()
 		std::vector<Behaviour*> behaviours;
 		behaviours.push_back(new Constant_Turn(0));
 		entity.assign<AIComponent>(behaviours);
-		entity.assign <CollisionComponent>();
-		entity.assign<AIComponent>();
+		entity.assign<CollisionComponent>();
 	}
 
 	entity = ex.entities.create();
