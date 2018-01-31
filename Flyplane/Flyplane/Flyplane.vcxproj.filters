@@ -40,9 +40,6 @@
     <Filter Include="Source Files\ecs\events">
       <UniqueIdentifier>{4f050f0e-48ab-4063-9dac-945aaf97cf35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ecs\behviours">
-      <UniqueIdentifier>{99ecad45-3462-4b1d-846b-e7b25e96088f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -182,14 +179,8 @@
     <ClInclude Include="boundingbox.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="aisystem.h">
-      <Filter>Source Files\ecs\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="behaviour.h">
-      <Filter>Source Files\ecs\behviours</Filter>
-    </ClInclude>
-    <ClInclude Include="constant_turn.h">
-      <Filter>Source Files\ecs\behviours</Filter>
+    <ClInclude Include="collisioncomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

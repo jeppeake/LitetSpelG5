@@ -146,6 +146,7 @@
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="constant_turn.h" />

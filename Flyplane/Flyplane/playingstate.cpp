@@ -71,6 +71,8 @@ void PlayingState::init()
 		std::vector<Behaviour*> behaviours;
 		behaviours.push_back(new Constant_Turn(0));
 		entity.assign<AIComponent>(behaviours);
+		entity.assign <CollisionComponent>();
+		entity.assign<AIComponent>();
 	}
 
 	entity = ex.entities.create();
@@ -83,7 +85,7 @@ void PlayingState::init()
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
-
+	entity.assign <CollisionComponent>();
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
