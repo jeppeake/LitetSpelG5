@@ -84,6 +84,7 @@ void PlayingState::init()
 		behaviours.push_back(new Constant_Turn(0));
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
+		entity.assign<SoundComponent>(flyingSB);
 	}
 
 	//entity = ex.entities.create();
