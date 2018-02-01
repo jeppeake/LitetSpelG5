@@ -99,12 +99,12 @@ void PlayingState::init()
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
-		entity.assign<SoundComponent>(flyingSB, true);
+		entity.assign<SoundComponent>(flyingSB);
 	}
 
 	//entity = ex.entities.create();
 	//entity.assign<SoundComponent>(soundBuffer);
-
+	
 	entity = ex.entities.create();
 	float x = 500;
 	float z = 500;
@@ -116,7 +116,8 @@ void PlayingState::init()
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
 	entity.assign <CollisionComponent>();
-	entity.assign<SoundComponent>(flyingSB, true);
+	entity.assign<SoundComponent>(flyingSB);
+	entity.assign<BurstSoundComponent>(machinegunSB);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
