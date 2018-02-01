@@ -75,14 +75,14 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 1; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, 1500, rand() % 100);
+		glm::vec3 pos(rand() % 150, 1500, rand() % 150);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-		entity.assign <ModelComponent>(&m);
-		entity.assign <FlightComponent>(1000.f, 2.f);
+		//entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign<ModelComponent>(&m);
+		//entity.assign<FlightComponent>(1000.f, 2.f);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
