@@ -19,6 +19,7 @@
 #include "aisystem.h"
 #include "behaviour.h"
 #include "constant_turn.h"
+#include "soundbuffers.h"
 #include "fly_to.h"
 
 Model m;
@@ -28,12 +29,18 @@ Model weaponmodel;
 Model GAU;
 Model gunpod;
 Heightmap* hm;
-sf::SoundBuffer soundBuffer;
+sf::SoundBuffer flyingSB;
+sf::SoundBuffer missileSB;
+sf::SoundBuffer bulletSB;
 
 entityx::Entity entity;
 void PlayingState::init()
 {
-	if (!soundBuffer.loadFromFile("assets/Sound/airplane-takeoff.wav"))
+	if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
+		std::cout << "sound coludnt load" << std::endl;
+	if (!missileSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
+		std::cout << "sound coludnt load" << std::endl;
+	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
 	/*
@@ -88,10 +95,11 @@ void PlayingState::init()
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
+		entity.assign<SoundComponent>(flyingSB);
 	}
 
-	entity = ex.entities.create();
-	entity.assign<SoundComponent>(soundBuffer);
+	//entity = ex.entities.create();
+	//entity.assign<SoundComponent>(soundBuffer);
 
 	entity = ex.entities.create();
 	float x = rand() % 100;
@@ -104,6 +112,7 @@ void PlayingState::init()
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
 	entity.assign <CollisionComponent>();
+	entity.assign<SoundComponent>(flyingSB);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -132,7 +141,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
-	hm = new Heightmap("assets/textures/race.png", "assets/textures/bog.png");
+	hm = new Heightmap("assets/textures/racesmall.png", "assets/textures/bog.png");
 	hm->pos.x -= 2560;
 	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
@@ -166,6 +175,7 @@ void PlayingState::update(double dt)
 	ex.systems.update<PhysicsSystem>(dt);
 	ex.systems.update<CollisionSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
+	ex.systems.update<SoundSystem>(dt);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());

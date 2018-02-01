@@ -3,7 +3,6 @@ layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 Pos[];
-in vec3 Normal[];
 in vec2 Tex[];
 
 out vec3 vPos;

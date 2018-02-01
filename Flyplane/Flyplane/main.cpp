@@ -10,7 +10,7 @@
 #include <sfml\Audio.hpp>
 int main(void)
 {	
-	//sf::Listener::setGlobalVolume(100);
+	sf::Listener::setGlobalVolume(30);
 	//sf::Listener::setPosition(0,1,0);
 	//sf::Listener::setDirection(1, 0, 0);
 

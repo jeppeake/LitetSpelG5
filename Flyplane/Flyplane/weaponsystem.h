@@ -13,8 +13,10 @@
 #include "missilecomponent.h"
 #include "collisioncomponent.h"
 #include "aicomponent.h"
+#include "soundcomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
+#include "soundbuffers.h"
 
 
 using namespace entityx;
@@ -29,6 +31,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime);
 		projectile.assign<CollisionComponent>();
+		projectile.assign<SoundComponent>(bulletSB);
 	}
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
@@ -39,6 +42,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
 		missile.assign<CollisionComponent>();
+		missile.assign<SoundComponent>(missileSB);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -160,7 +164,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					cure.destroy();
+					if (cure.valid()) {
+						cure.destroy();
+					}
 					entity.destroy();
 				}
 			}

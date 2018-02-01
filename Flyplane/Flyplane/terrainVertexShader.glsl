@@ -5,7 +5,6 @@ layout(location = 2) in vec2 tex;
 uniform mat4 modelMatrix;
 uniform mat4 ViewProjMatrix;
 out vec3 Pos;
-out vec3 Normal;
 out vec2 Tex;
 
 void main() {
