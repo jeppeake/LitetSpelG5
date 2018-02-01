@@ -12,7 +12,7 @@ void main() {
 	float depth = texture(shadowMap, shadowCoord.xy).r;
 	float visibility = 1.0;
 	if(depth < shadowCoord.z - 0.01) {
-		visibility = 0.5;
+		visibility = 0.0;
 	}
 
 	vec3 sun = vec3(0, 1, 1);

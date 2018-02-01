@@ -164,7 +164,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					cure.destroy();
+					if (cure.valid()) {
+						cure.destroy();
+					}
 					entity.destroy();
 				}
 			}
