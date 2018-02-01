@@ -32,8 +32,8 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
-	glm::mat4 proj = glm::ortho<float>(-3000.f, 3000.f, -3000.f, 3000.f, -1000.f, 200.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+	glm::mat4 proj = glm::ortho<float>(-3000.f, 3000.f, -5000.f, 5000.f, -3000.f, 2000.f);
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
