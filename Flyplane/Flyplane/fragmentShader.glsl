@@ -11,7 +11,7 @@ void main() {
 	vec3 shadowCoord = (shadowMatrix * vec4(Pos, 1)).xyz;
 	float depth = texture(shadowMap, shadowCoord.xy).r;
 	float visibility = 1.0;
-	if(depth < shadowCoord.z - 0.00001) {
+	if(depth < shadowCoord.z - 0.001) {
 		visibility = 0.0;
 	}
 
