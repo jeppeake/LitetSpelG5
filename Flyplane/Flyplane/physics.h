@@ -11,6 +11,7 @@ struct Physics {
 		return 0.5 * density * dragCoeff * glm::length(velocity);
 	}
 	double mass, dragCoeff;
-	glm::vec3 acceleration, added_forces, velocity;
+	glm::vec3 acceleration, velocity;
+	glm::vec3 rotation = glm::vec3(0.0, 0.0, 0.0);
 	float drift = 0;
 };
