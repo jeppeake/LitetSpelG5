@@ -1,5 +1,6 @@
 #include <glm/glm.hpp>
 #include "boundingbox.h"
+#include "heightmap.h"
 void SATtest(const glm::vec3 &axis, const glm::vec3 *corners, float& minAlong, float& maxAlong)
 {
 	minAlong = std::numeric_limits<float>::max(), maxAlong = -std::numeric_limits<float>::max();
@@ -125,6 +126,52 @@ bool BoundingBox::intersect(const glm::vec3 & point)
 		}
 	}
 	return true;
+}
+
+bool BoundingBox::intersect(Heightmap *map)
+{
+	glm::vec3 sides[3];
+	for (int i = 0; i < 3; i++)
+		sides[i] = glm::toMat3(transform.orientation)*this->sides[i];
+	
+	glm::vec3 normals[3];
+	glm::vec3 corners[8];
+	normals[0] = glm::normalize(sides[0]);
+	normals[1] = glm::normalize(sides[1]);
+	normals[2] = glm::normalize(sides[2]);
+	int i = 0;
+	for (float x = -1; x <= 1; x += 2)
+	{
+		for (float y = -1; y <= 1; y += 2)
+		{
+			for (float z = -1; z <= 1; z += 2)
+			{
+				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + center + transform.pos;
+				i++;
+			}
+		}
+	}
+	for (int index = 0; index < 8; index++)
+	{
+		bool collision = true;
+		for (int i = 0; i < 3; i++)
+		{
+			float height = map->heightAt(corners[index]);
+			glm::vec3 point = glm::vec3(corners[index].x, corners[index].y - height, corners[index].z);
+			float min, max;
+			SATtest(normals[i], corners, min, max);
+			float pdot = dot(normals[i], point);
+			if (pdot <= min && pdot >= max)
+			{
+				collision = true;
+			}
+		}
+		if (collision)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void BoundingBox::setTransform(const Transform & transform)

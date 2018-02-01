@@ -9,7 +9,7 @@ public:
 		return priority;
 	}
 
-	virtual glm::vec3 act() = 0;
+	virtual glm::vec3 act() = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
 
 	int priority = 0;
 };

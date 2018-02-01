@@ -40,7 +40,7 @@
     <Filter Include="Source Files\ecs\events">
       <UniqueIdentifier>{4f050f0e-48ab-4063-9dac-945aaf97cf35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ecs\behaviours">
+    <Filter Include="Source Files\behaviours">
       <UniqueIdentifier>{1eccaa47-4f78-41cf-8d3f-06e856162e43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -186,10 +186,10 @@
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
     <ClInclude Include="behaviour.h">
-      <Filter>Source Files\ecs\behaviours</Filter>
+      <Filter>Source Files\behaviours</Filter>
     </ClInclude>
     <ClInclude Include="constant_turn.h">
-      <Filter>Source Files\ecs\behaviours</Filter>
+      <Filter>Source Files\behaviours</Filter>
     </ClInclude>
     <ClInclude Include="soundcomponent.h">
       <Filter>Source Files\ecs\components</Filter>
