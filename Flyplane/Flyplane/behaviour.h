@@ -2,6 +2,7 @@
 
 #include "transform.h"
 #include "flightcomponent.h"
+#include "SAIB.h"
 
 class Behaviour {
 public:

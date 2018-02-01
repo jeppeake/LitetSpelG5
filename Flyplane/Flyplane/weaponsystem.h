@@ -177,7 +177,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 				
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,200);
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,210);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";

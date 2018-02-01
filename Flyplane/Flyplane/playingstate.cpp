@@ -20,7 +20,7 @@
 #include "behaviour.h"
 #include "constant_turn.h"
 #include "soundbuffers.h"
-#include "fly_to.h"
+#include "follow_path.h"
 
 Model m;
 Model projectile;
@@ -35,6 +35,7 @@ sf::SoundBuffer bulletSB;
 sf::SoundBuffer machinegunSB;
 
 entityx::Entity entity;
+
 void PlayingState::init()
 {
 	if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
@@ -94,7 +95,7 @@ void PlayingState::init()
 		plotter.push_back(glm::vec3(0, 1500, 0));
 
 		behaviours.push_back(new Constant_Turn(0));
-		behaviours.push_back(new Fly_To(1, plotter, true));
+		behaviours.push_back(new Follow_Path(1, plotter, true));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
@@ -105,8 +106,8 @@ void PlayingState::init()
 	//entity.assign<SoundComponent>(soundBuffer);
 
 	entity = ex.entities.create();
-	float x = rand() % 100;
-	float z = rand() % 100;
+	float x = 500;
+	float z = 500;
 	glm::vec3 pos(x, 1500, z);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));

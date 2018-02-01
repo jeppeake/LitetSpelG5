@@ -90,6 +90,9 @@
     <ClCompile Include="boundingbox.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="flightsystem.cpp">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -197,11 +200,14 @@
     <ClInclude Include="soundsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
-    <ClInclude Include="fly_to.h">
-      <Filter>Source Files\behaviours</Filter>
-    </ClInclude>
     <ClInclude Include="soundbuffers.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SAIB.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="follow_path.h">
+      <Filter>Source Files\behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
