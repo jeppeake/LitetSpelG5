@@ -2,10 +2,10 @@
 #include <sfml\Audio.hpp>
 
 struct SoundComponent {
-	SoundComponent(sf::SoundBuffer& buffer) {
+	SoundComponent(sf::SoundBuffer& buffer, bool shouldLoop) {
 		sound.setBuffer(buffer);
 		sound.play();
-		sound.setLoop(true);
+		sound.setLoop(shouldLoop);
 		sound.setMinDistance(100);
 		sound.setAttenuation(1);
 	}

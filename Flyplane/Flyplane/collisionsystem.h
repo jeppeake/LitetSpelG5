@@ -55,7 +55,7 @@ public:
 					for (int i = 0; i < boxes.size(); i++) {
 						for (int j = 0; j < oboxes->size(); j++) {
 							if ((*oboxes)[j].intersect(boxes[i])) {
-								if(entity.has_component<FlightComponent>())
+								if(entity.has_component<FlightComponent>() && !entity.has_component<PlayerComponent>())
 									entity.remove<FlightComponent>();
 								//other.remove<FlightComponent>();
 							}
@@ -78,7 +78,7 @@ public:
 			{
 				if (pos.y - height < model->mptr->getBoundingRadius() + 20)
 				{
-					std::cout << "Checking collision with terrain!!!\n";
+					//std::cout << "Checking collision with terrain!!!\n";
 					for (size_t i = 0; i < boxes.size(); i++)
 					{
 						boxes[i].setTransform(*transform.get());

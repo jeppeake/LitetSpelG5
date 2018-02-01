@@ -32,6 +32,7 @@ Heightmap* hm;
 sf::SoundBuffer flyingSB;
 sf::SoundBuffer missileSB;
 sf::SoundBuffer bulletSB;
+sf::SoundBuffer machinegunSB;
 
 entityx::Entity entity;
 
@@ -41,7 +42,9 @@ void PlayingState::init()
 		std::cout << "sound coludnt load" << std::endl;
 	if (!missileSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
 		std::cout << "sound coludnt load" << std::endl;
-	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle.wav"))
+	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle_short.wav"))
+		std::cout << "sound coludnt load" << std::endl;
+	if (!machinegunSB.loadFromFile("assets/Sound/Machine_gun.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
 	/*
@@ -96,7 +99,7 @@ void PlayingState::init()
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
-		entity.assign<SoundComponent>(flyingSB);
+		entity.assign<SoundComponent>(flyingSB, true);
 	}
 
 	//entity = ex.entities.create();
@@ -113,7 +116,7 @@ void PlayingState::init()
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
 	entity.assign <CollisionComponent>();
-	entity.assign<SoundComponent>(flyingSB);
+	entity.assign<SoundComponent>(flyingSB, true);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
