@@ -14,6 +14,7 @@
 #include "collisioncomponent.h"
 #include "aicomponent.h"
 #include "soundcomponent.h"
+#include "flightcomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
 #include "soundbuffers.h"
@@ -31,7 +32,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime);
 		projectile.assign<CollisionComponent>();
-		projectile.assign<SoundComponent>(bulletSB);
+		projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
@@ -42,7 +43,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
 		missile.assign<CollisionComponent>();
-		missile.assign<SoundComponent>(missileSB);
+		missile.assign<SoundComponent>(missileSB, true);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -124,6 +125,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 		entityx::ComponentHandle<AIComponent> ai;
 		entityx::ComponentHandle<Transform> aitrans;
+		entityx::ComponentHandle<FlightComponent> aiflight;
 		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
 			missile = entity.component<Missile>();
 			trans = entity.component<Transform>();
@@ -135,7 +137,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity cure;
 				for (Entity enemy : es.entities_with_components(ai, aitrans)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
-					float dot = glm::dot(dir, v);
+					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai->is_targeted = false;
 					if (dot > bestDot) {
 						bestDot = dot;
@@ -149,7 +151,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Transform newTrans;
 				newTrans.pos = forward;
 
-				if (bestDot == -1 || bestDot < 0.5) {
+				if (bestDot == -1 || bestDot < 0.2) {
 					missile->target = &newTrans;
 					noTarget = true;
 				}
@@ -167,7 +169,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				glm::vec3 cross = glm::cross(vn, un);
 
 
-				float turnRate = 2.f;
+				float turnRate = 3.f;
 
 				
 				if (!noTarget) {
@@ -177,7 +179,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 				
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,210);
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,300);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";

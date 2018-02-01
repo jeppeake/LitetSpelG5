@@ -72,11 +72,11 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		transform->orientation += spin * float(dt);
 		transform->orientation = normalize(transform->orientation);
 
-		float boost = 100;
-		float breakForce = 50;
-		float normalSpeed = 100;
+		float boost = 200;
+		float breakForce = 100;
+		float normalSpeed = 200;
 
-		float maxDrift = 0.002;
+		float maxDrift = 0.005;
 
 		float drift = glm::pow(flight->drift, 0.005);
 		float driftFactor = (1.00000000001f + maxDrift - drift);

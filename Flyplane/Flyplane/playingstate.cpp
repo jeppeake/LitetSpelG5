@@ -20,7 +20,7 @@
 #include "behaviour.h"
 #include "constant_turn.h"
 #include "soundbuffers.h"
-#include "fly_to.h"
+#include "follow_path.h"
 
 Model m;
 Model projectile;
@@ -32,6 +32,7 @@ Heightmap* hm;
 sf::SoundBuffer flyingSB;
 sf::SoundBuffer missileSB;
 sf::SoundBuffer bulletSB;
+sf::SoundBuffer machinegunSB;
 
 entityx::Entity entity;
 
@@ -41,7 +42,9 @@ void PlayingState::init()
 		std::cout << "sound coludnt load" << std::endl;
 	if (!missileSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
 		std::cout << "sound coludnt load" << std::endl;
-	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle.wav"))
+	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle_short.wav"))
+		std::cout << "sound coludnt load" << std::endl;
+	if (!machinegunSB.loadFromFile("assets/Sound/Machine_gun.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
 	/*
@@ -77,26 +80,26 @@ void PlayingState::init()
 
 	for (int i = 0; i < 1; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 150, 1500, rand() % 150);
+		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		//entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-		entity.assign<ModelComponent>(&m);
-		//entity.assign<FlightComponent>(1000.f, 2.f);
+		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign <ModelComponent>(&m);
+		entity.assign <FlightComponent>(1000.f, 1.f);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
-		plotter.push_back(glm::vec3(500, 1500, 0));
-		plotter.push_back(glm::vec3(500, 1500, 500));
-		plotter.push_back(glm::vec3(0, 1500, 500));
-		plotter.push_back(glm::vec3(0, 1500, 0));
+		plotter.push_back(glm::vec3(500, 2500, 0));
+		plotter.push_back(glm::vec3(500, 2500, 500));
+		plotter.push_back(glm::vec3(0, 2500, 500));
+		plotter.push_back(glm::vec3(0, 2500, 0));
 
 		behaviours.push_back(new Constant_Turn(0));
-		behaviours.push_back(new Fly_To(1, plotter, true));
+		behaviours.push_back(new Follow_Path(1, plotter, true));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
-		entity.assign<SoundComponent>(flyingSB);
+		entity.assign<SoundComponent>(flyingSB, true);
 	}
 
 	//entity = ex.entities.create();
@@ -105,7 +108,7 @@ void PlayingState::init()
 	entity = ex.entities.create();
 	float x = 500;
 	float z = 500;
-	glm::vec3 pos(x, 1500, z);
+	glm::vec3 pos(x, 2500, z);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
@@ -113,7 +116,7 @@ void PlayingState::init()
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
 	entity.assign <CollisionComponent>();
-	entity.assign<SoundComponent>(flyingSB);
+	entity.assign<SoundComponent>(flyingSB, true);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -142,7 +145,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
-	hm = new Heightmap("assets/textures/racesmall.png", "assets/textures/bog.png");
+	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/bog.png");
 	hm->pos.x -= 2560;
 	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);

@@ -33,7 +33,7 @@ struct SoundSystem : public System<SoundSystem> {
 			Transform t = *transform.get();
 
 			s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
-			sf::Listener::setPosition(t.pos.x, t.pos.y, t.pos.z);
+			//sf::Listener::setPosition(t.pos.x, t.pos.y, t.pos.z);
 			glm::vec3 vec = glm::toMat3(t.orientation) * glm::vec3(0.0, 0.0, 1.0);
 			sf::Listener::setDirection(vec.x, vec.y, vec.z);
 			vec = glm::toMat3(t.orientation) * glm::vec3(0.0, 1.0, 0.0);

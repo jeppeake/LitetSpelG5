@@ -153,7 +153,7 @@
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
-    <ClInclude Include="fly_to.h" />
+    <ClInclude Include="follow_path.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
@@ -167,6 +167,7 @@
     <ClInclude Include="playingstate.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
+    <ClInclude Include="SAIB.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="physicssystem.h" />
     <ClInclude Include="soundbuffers.h" />
