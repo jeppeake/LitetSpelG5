@@ -72,7 +72,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		transform->orientation += spin * float(dt);
 		transform->orientation = normalize(transform->orientation);
 
-		float boost = 800;
+		float boost = 200;
 		float breakForce = 100;
 		float normalSpeed = 200;
 

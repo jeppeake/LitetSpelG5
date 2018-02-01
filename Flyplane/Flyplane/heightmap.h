@@ -7,7 +7,7 @@ private:
 	std::vector<unsigned char> heightmap;
 	Texture tex;
 	unsigned int width, height;
-	float hScale = 1.0f;
+	float hScale = 2.0f;
 	float spread = 20.0f;
 	GLuint ebo = 0;
 	GLuint vbo = 0;
