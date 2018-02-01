@@ -31,7 +31,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime);
 		projectile.assign<CollisionComponent>();
-		projectile.assign<SoundComponent>(bulletSB);
+		projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
@@ -42,7 +42,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
 		missile.assign<CollisionComponent>();
-		missile.assign<SoundComponent>(missileSB);
+		missile.assign<SoundComponent>(missileSB, true);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
