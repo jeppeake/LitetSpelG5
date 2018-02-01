@@ -1,6 +1,8 @@
 #include <glm/glm.hpp>
 #include "boundingbox.h"
 #include "heightmap.h"
+#include <iostream>
+
 void SATtest(const glm::vec3 &axis, const glm::vec3 *corners, float& minAlong, float& maxAlong)
 {
 	minAlong = std::numeric_limits<float>::max(), maxAlong = -std::numeric_limits<float>::max();
@@ -26,8 +28,9 @@ bool overlaps(float min1, float max1, float min2, float max2)
 
 bool BoundingBox::intersect(BoundingBox & box)
 {
+	//std::cout << "Start OBB-OBB intersection test\n";
 	glm::vec3 sides[3];
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++) // maybe add scale in calculation
 		sides[i] = glm::toMat3(transform.orientation)*this->sides[i];
 
 	glm::vec3 normals[3];
@@ -51,6 +54,7 @@ bool BoundingBox::intersect(BoundingBox & box)
 	glm::vec3 bsides[3];
 	for (int i = 0; i < 3; i++)
 		bsides[i] = glm::toMat3(box.transform.orientation)*box.sides[i];
+		
 	glm::vec3 bnormals[3];
 	glm::vec3 bcorners[8];
 	bnormals[0] = glm::normalize(bsides[0]);
@@ -110,7 +114,7 @@ bool BoundingBox::intersect(const glm::vec3 & point)
 		{
 			for (float z = -1; z <= 1; z += 2)
 			{
-				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + center + transform.pos;
+				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + glm::toMat3(transform.orientation)*center + transform.pos;
 				i++;
 			}
 		}
@@ -146,28 +150,15 @@ bool BoundingBox::intersect(Heightmap *map)
 		{
 			for (float z = -1; z <= 1; z += 2)
 			{
-				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + center + transform.pos;
+				corners[i] = x * sides[0] + y * sides[1] + z * sides[2] + glm::toMat3(transform.orientation)*center + transform.pos;
 				i++;
 			}
 		}
 	}
 	for (int index = 0; index < 8; index++)
 	{
-		bool collision = true;
-		for (int i = 0; i < 3; i++)
-		{
-			float height = map->heightAt(corners[index]);
-			glm::vec3 point = glm::vec3(corners[index].x, corners[index].y - height, corners[index].z);
-			float min, max;
-			SATtest(normals[i], corners, min, max);
-			float pdot = dot(normals[i], point);
-			if (pdot <= min && pdot >= max)
-			{
-				collision = true;
-			}
-		}
-		if (collision)
-		{
+		float height = map->heightAt(corners[index]);
+		if (corners[index].y < height) {
 			return true;
 		}
 	}

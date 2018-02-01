@@ -11,4 +11,8 @@ struct BoundingBox {
 	bool intersect(const glm::vec3& point);
 	bool intersect(Heightmap *map);
 	void setTransform(const Transform& transform);
+
+	glm::vec3 getWorldCenter() {
+		return glm::toMat3(transform.orientation)*(transform.scale*center) + transform.pos;
+	}
 };

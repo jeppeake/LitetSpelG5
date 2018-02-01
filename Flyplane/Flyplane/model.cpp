@@ -250,9 +250,9 @@ void Model::buildBoundingBoxes(Mesh * m, glm::mat4 transform)
 		if (i % 24 == 23)
 		{
 			BoundingBox result;
-			result.center.x = (bmax.sides[0].x - bmin.sides[0].x)*0.5f;
-			result.center.y = (bmax.sides[1].y - bmin.sides[1].y)*0.5f;
-			result.center.z = (bmax.sides[2].z - bmin.sides[2].z)*0.5f;
+			result.center.x = (bmax.sides[0].x + bmin.sides[0].x)*0.5f;
+			result.center.y = (bmax.sides[1].y + bmin.sides[1].y)*0.5f;
+			result.center.z = (bmax.sides[2].z + bmin.sides[2].z)*0.5f;
 
 			result.sides[0].x = bmax.sides[0].x - result.center.x;
 			result.sides[1].y = bmax.sides[1].y - result.center.y;
