@@ -29,13 +29,16 @@ Model gunpod;
 Heightmap* hm;
 sf::SoundBuffer flyingSB;
 sf::SoundBuffer missileSB;
+sf::SoundBuffer bulletSB;
 
 entityx::Entity entity;
 void PlayingState::init()
 {
 	if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
 		std::cout << "sound coludnt load" << std::endl;
-	if (!flyingSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
+	if (!missileSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
+		std::cout << "sound coludnt load" << std::endl;
+	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
 	/*
