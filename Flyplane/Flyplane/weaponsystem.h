@@ -136,12 +136,27 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				for (Entity enemy : es.entities_with_components(ai, aitrans)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(dir, v);
+					ai->is_targeted = false;
 					if (dot > bestDot) {
 						bestDot = dot;
 						missile->target = aitrans.get();
 						cure = enemy;
 					}
 				}
+
+				bool noTarget = false;
+				glm::vec3 forward = v;
+				Transform newTrans;
+				newTrans.pos = forward;
+
+				if (bestDot == -1 || bestDot < 0.5) {
+					missile->target = &newTrans;
+					noTarget = true;
+				}
+
+				if (cure.valid() && !noTarget)
+					cure.component<AIComponent>()->is_targeted = true;
+					
 
 				glm::quat q;
 
@@ -155,19 +170,23 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				float turnRate = 2.f;
 
 				
-
-				q = glm::angleAxis((float)(turnRate * dt), glm::normalize(cross));
-				trans->orientation = q * trans->orientation;
-				trans->orientation = glm::normalize(trans->orientation);
+				if (!noTarget) {
+					q = glm::angleAxis((float)(turnRate * dt), glm::normalize(cross));
+					trans->orientation = q * trans->orientation;
+					trans->orientation = glm::normalize(trans->orientation);
+				}
+				
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,200);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					if (cure.valid()) {
-						cure.destroy();
+					if (!noTarget) {
+						if (cure.valid()) {
+							cure.destroy();
+						}
+						entity.destroy();
 					}
-					entity.destroy();
 				}
 			}
 				
