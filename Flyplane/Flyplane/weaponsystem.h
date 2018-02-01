@@ -13,8 +13,10 @@
 #include "missilecomponent.h"
 #include "collisioncomponent.h"
 #include "aicomponent.h"
+#include "soundcomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
+#include "soundbuffers.h"
 
 
 using namespace entityx;
@@ -39,6 +41,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
 		missile.assign<CollisionComponent>();
+		missile.assign<SoundComponent>(missileSB);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {

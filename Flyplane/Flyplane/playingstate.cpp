@@ -19,6 +19,7 @@
 #include "aisystem.h"
 #include "behaviour.h"
 #include "constant_turn.h"
+#include "soundbuffers.h"
 Model m;
 Model projectile;
 Model missile;
@@ -26,12 +27,15 @@ Model weaponmodel;
 Model GAU;
 Model gunpod;
 Heightmap* hm;
-sf::SoundBuffer soundBuffer;
+sf::SoundBuffer flyingSB;
+sf::SoundBuffer missileSB;
 
 entityx::Entity entity;
 void PlayingState::init()
 {
-	if (!soundBuffer.loadFromFile("assets/Sound/airplane-takeoff.wav"))
+	if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
+		std::cout << "sound coludnt load" << std::endl;
+	if (!flyingSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
 	/*
@@ -79,8 +83,8 @@ void PlayingState::init()
 		entity.assign<CollisionComponent>();
 	}
 
-	entity = ex.entities.create();
-	entity.assign<SoundComponent>(soundBuffer);
+	//entity = ex.entities.create();
+	//entity.assign<SoundComponent>(soundBuffer);
 
 	entity = ex.entities.create();
 	float x = rand() % 100;
@@ -93,6 +97,7 @@ void PlayingState::init()
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(1000.f, 2.f);
 	entity.assign <CollisionComponent>();
+	entity.assign<SoundComponent>(flyingSB);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -155,6 +160,7 @@ void PlayingState::update(double dt)
 	ex.systems.update<PhysicsSystem>(dt);
 	ex.systems.update<CollisionSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
+	ex.systems.update<SoundSystem>(dt);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());
