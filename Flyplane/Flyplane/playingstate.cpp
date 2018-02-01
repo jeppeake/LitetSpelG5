@@ -20,7 +20,7 @@
 #include "behaviour.h"
 #include "constant_turn.h"
 #include "soundbuffers.h"
-#include "fly_to.h"
+#include "follow_path.h"
 
 Model m;
 Model projectile;
@@ -75,7 +75,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 1; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 1500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -92,7 +92,7 @@ void PlayingState::init()
 		plotter.push_back(glm::vec3(0, 1500, 0));
 
 		behaviours.push_back(new Constant_Turn(0));
-		behaviours.push_back(new Fly_To(1, plotter, true));
+		behaviours.push_back(new Follow_Path(1, plotter, true));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
