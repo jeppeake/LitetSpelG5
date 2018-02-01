@@ -82,7 +82,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
-		entity.assign <FlightComponent>(1000.f, 2.f);
+		entity.assign <FlightComponent>(1000.f, 1.f);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
