@@ -18,7 +18,7 @@ public:
 		glm::vec3 t = plotter.at(target);
 
 		glm::vec3 pt = t - me_transform->pos;
-		std::cout << "Dist to waypoint: " << glm::length(pt) << " dist to player: " << glm::length(me_transform->pos - p_transform->pos) << "\n";
+		//std::cout << "Dist to waypoint: " << glm::length(pt) << " dist to player: " << glm::length(me_transform->pos - p_transform->pos) << "\n";
 		if (glm::length(pt) < 100) {
 			target++;
 			std::cout << "Target " << target << " reached.\n";
