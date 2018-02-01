@@ -47,6 +47,7 @@ void PlayingState::init()
 	if (!machinegunSB.loadFromFile("assets/Sound/Machine_gun.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
+	//m.load("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx");
 	/*
 	* add systems
 	* 
