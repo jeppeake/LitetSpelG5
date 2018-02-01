@@ -90,6 +90,9 @@
     <ClCompile Include="boundingbox.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="flightsystem.cpp">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">

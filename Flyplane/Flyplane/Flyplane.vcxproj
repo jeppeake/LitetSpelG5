@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="lodepng.cpp" />

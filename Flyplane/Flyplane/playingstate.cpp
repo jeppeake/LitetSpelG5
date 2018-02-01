@@ -34,6 +34,7 @@ sf::SoundBuffer missileSB;
 sf::SoundBuffer bulletSB;
 
 entityx::Entity entity;
+
 void PlayingState::init()
 {
 	if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
@@ -74,7 +75,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 100; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 1500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -102,8 +103,8 @@ void PlayingState::init()
 	//entity.assign<SoundComponent>(soundBuffer);
 
 	entity = ex.entities.create();
-	float x = rand() % 100;
-	float z = rand() % 100;
+	float x = 500;
+	float z = 500;
 	glm::vec3 pos(x, 1500, z);
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
