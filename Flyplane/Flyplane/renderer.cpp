@@ -32,15 +32,14 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
-	glm::mat4 proj = glm::ortho<float>(-8000.f, 8000.f, -8000.f, 8000.f, -2000.f, 1000.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+	
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1
 	);
-	this->shadowMatrix = proj * view;
+	
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -161,6 +160,11 @@ void Renderer::RenderScene() {
 void Renderer::setCamera(const Camera & camera)
 {
 	this->camera = camera;
+	auto pos = camera.getTransform().pos;
+	pos += glm::toMat3(camera.getTransform().orientation)*glm::vec3(0,0, 1000.f);
+	glm::mat4 proj = glm::ortho<float>(-2000.f, 2000.f, -2000.f, 2000.f, 0.f, 4000.f);
+	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 2000.0f, 2000.0f + pos.z), glm::vec3(pos.x, 0, pos.z), glm::vec3(0, 1, 0));
+	this->shadowMatrix = proj * view;
 }
 
 void Renderer::update(float dt)
