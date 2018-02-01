@@ -169,7 +169,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				glm::vec3 cross = glm::cross(vn, un);
 
 
-				float turnRate = 10.f;
+				float turnRate = 3.f;
 
 				
 				if (!noTarget) {
