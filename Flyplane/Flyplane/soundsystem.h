@@ -25,8 +25,15 @@ struct SoundSystem : public System<SoundSystem> {
 		}
 		
 		ComponentHandle<PlayerComponent> player;
-		for (Entity entity : es.entities_with_components(player)) {
-			
+		for (Entity entity : es.entities_with_components(player, sound, transform)) {
+			sound = entity.component<SoundComponent>();
+			transform = entity.component<Transform>();
+
+			SoundComponent s = *sound.get();
+			Transform t = *transform.get();
+
+			s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
+			sf::Listener::setPosition(t.pos.x, t.pos.y, t.pos.z);
 		}
 	}
 };
