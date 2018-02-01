@@ -13,8 +13,10 @@
 #include "missilecomponent.h"
 #include "collisioncomponent.h"
 #include "aicomponent.h"
+#include "soundcomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
+#include "soundbuffers.h"
 
 
 using namespace entityx;
@@ -29,6 +31,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime);
 		projectile.assign<CollisionComponent>();
+		projectile.assign<SoundComponent>(bulletSB);
 	}
 
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
@@ -39,6 +42,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime);
 		missile.assign<Missile>(trans);
 		missile.assign<CollisionComponent>();
+		missile.assign<SoundComponent>(missileSB);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -132,12 +136,27 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				for (Entity enemy : es.entities_with_components(ai, aitrans)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(dir, v);
+					ai->is_targeted = false;
 					if (dot > bestDot) {
 						bestDot = dot;
 						missile->target = aitrans.get();
 						cure = enemy;
 					}
 				}
+
+				bool noTarget = false;
+				glm::vec3 forward = v;
+				Transform newTrans;
+				newTrans.pos = forward;
+
+				if (bestDot == -1 || bestDot < 0.5) {
+					missile->target = &newTrans;
+					noTarget = true;
+				}
+
+				if (cure.valid() && !noTarget)
+					cure.component<AIComponent>()->is_targeted = true;
+					
 
 				glm::quat q;
 
@@ -151,17 +170,23 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				float turnRate = 2.f;
 
 				
-
-				q = glm::angleAxis((float)(turnRate * dt), glm::normalize(cross));
-				trans->orientation = q * trans->orientation;
-				trans->orientation = glm::normalize(trans->orientation);
+				if (!noTarget) {
+					q = glm::angleAxis((float)(turnRate * dt), glm::normalize(cross));
+					trans->orientation = q * trans->orientation;
+					trans->orientation = glm::normalize(trans->orientation);
+				}
+				
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,200);
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,210);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					cure.destroy();
-					entity.destroy();
+					if (!noTarget) {
+						if (cure.valid()) {
+							cure.destroy();
+						}
+						entity.destroy();
+					}
 				}
 			}
 				
