@@ -197,6 +197,9 @@
     <ClInclude Include="soundsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
+    <ClInclude Include="fly_to.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">

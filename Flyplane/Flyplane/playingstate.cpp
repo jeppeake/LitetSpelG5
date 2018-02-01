@@ -19,6 +19,8 @@
 #include "aisystem.h"
 #include "behaviour.h"
 #include "constant_turn.h"
+#include "fly_to.h"
+
 Model m;
 Model projectile;
 Model missile;
@@ -65,7 +67,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 1; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 1500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -74,7 +76,16 @@ void PlayingState::init()
 		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(1000.f, 2.f);
 		std::vector<Behaviour*> behaviours;
+
+		std::vector<glm::vec3> plotter;
+		plotter.push_back(glm::vec3(500, 1500, 0));
+		plotter.push_back(glm::vec3(500, 1500, 500));
+		plotter.push_back(glm::vec3(0, 1500, 500));
+		plotter.push_back(glm::vec3(0, 1500, 0));
+
 		behaviours.push_back(new Constant_Turn(0));
+		behaviours.push_back(new Fly_To(1, plotter, true));
+
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
 	}
