@@ -32,7 +32,7 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
-	glm::mat4 proj = glm::ortho<float>(-3000.f, 3000.f, -3000.f, 3000.f, -1000.f, 200.f);
+	glm::mat4 proj = glm::ortho<float>(-3000.f, 3000.f, -5000.f, 5000.f, -3000.f, 2000.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
@@ -131,14 +131,15 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
-	shader.uniform("shadowMatrix", shadowMatrix);
+	shader.uniform("shadowMatrix", m * shadowMatrix);
 	
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
 	}
 	//Render terrain
 	terrain_shader.use();
-	terrain_shader.uniform("shadowMatrix",m * shadowMatrix);
+	terrain_shader.uniform("shadowMatrix", m * shadowMatrix);
+	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
 	terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 
 	terrain_shader.uniform("texSampler", 0);

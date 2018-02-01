@@ -4,3 +4,4 @@
 
 extern sf::SoundBuffer flyingSB;
 extern sf::SoundBuffer missileSB;
+extern sf::SoundBuffer bulletSB;

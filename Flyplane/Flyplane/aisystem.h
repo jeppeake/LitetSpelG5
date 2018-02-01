@@ -31,12 +31,16 @@ struct AISystem : public entityx::System<AISystem> {
 			flight = entity.component<FlightComponent>();
 			transform = entity.component<Transform>();
 
-			for (int i = 0; i < ai->behaviours.size(); i++) {
-				flight->setInput(ai->behaviours.at(i)->act());
+			Behaviour* b = ai->behaviours.at(0);
+			for (int i = 1; i < ai->behaviours.size(); i++) {
+				if (b->getPriority() < ai->behaviours.at(i)->getPriority()) {
+					b = ai->behaviours.at(i);
+				}
 			}
+			glm::vec3 input = b->act(p_transform, p_flight, transform, flight, ai->is_targeted);
 
 			//ai->prioritize();
-			//flight->setInput(ai->act());
+			flight->setInput(input);
 		}
 	};
 };
