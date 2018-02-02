@@ -87,7 +87,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m2);
-		entity.assign <FlightComponent>(1000.f, 1.f);
+		entity.assign <FlightComponent>(300.f, 1.f);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -116,7 +116,7 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(1000.f, 2.f);
+	entity.assign <FlightComponent>(200.f, 2.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(flyingSB);
 	entity.assign<BurstSoundComponent>(machinegunSB);
@@ -148,7 +148,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
-	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/bog.png");
+	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/grass.png");
 	hm->pos.x -= 2560;
 	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
