@@ -11,7 +11,7 @@ namespace SAIB {//STANDARD ARTIFICIAL INTELLIGENCE BEHAVIOURS
 		glm::vec3 t = target;
 
 		glm::vec3 pt = t - position;
-		std::cout << "Dist to waypoint: " << glm::length(pt) << " dist to player: \n";
+		//std::cout << "Dist to waypoint: " << glm::length(pt) << " dist to player: \n";
 		pt = glm::normalize(pt);
 
 		glm::vec3 pt_proj_on_front = glm::proj(pt, front);
