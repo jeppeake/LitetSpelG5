@@ -3,7 +3,7 @@
 struct FlightComponent {
 	const float density = 1.2466;
 
-	FlightComponent(float engine_power, float turnrate) : engine_power(engine_power), turnrate(turnrate) {}
+	FlightComponent(float base_speed, float turnrate) : base_speed(base_speed), turnrate(turnrate) {}
 
 	void setInput(glm::vec3 input) {
 		i_roll = input.x;
@@ -18,5 +18,6 @@ struct FlightComponent {
 	float drift = 0.f, i_drift = 0.f;
 	float engine_power = 0.f;
 	float turnrate = 0.f;
+	float base_speed = 0.f;
 	//float liftCoeff = 0.f, wingArea = 0.f;
 };
