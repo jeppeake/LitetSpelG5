@@ -79,7 +79,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 20; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
