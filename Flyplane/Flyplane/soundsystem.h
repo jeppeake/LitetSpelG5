@@ -50,7 +50,7 @@ struct SoundSystem : public System<SoundSystem> {
 			//sound = entity.component<SoundComponent>();
 			transform = entity.component<Transform>();
 
-			//SoundComponent s = *sound.get();
+			//SoundComponent* s = sound.get();
 			Transform t = *transform.get();
 
 			//s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
