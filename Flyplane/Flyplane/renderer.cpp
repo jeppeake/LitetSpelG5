@@ -161,8 +161,9 @@ void Renderer::setCamera(const Camera & camera)
 {
 	this->camera = camera;
 	auto pos = camera.getTransform().pos;
-	glm::mat4 proj = glm::ortho<float>(-1000.f, 1000.f, -1000.f, 1000.f, 0.f, 4000.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 1500.0f, 1500.0f + pos.z), glm::vec3(pos.x, 0, pos.z), glm::vec3(0, 1, 0));
+	pos += glm::toMat3(camera.getTransform().orientation)*glm::vec3(0,0, 1000.f);
+	glm::mat4 proj = glm::ortho<float>(-2000.f, 2000.f, -2000.f, 2000.f, 0.f, 4000.f);
+	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 2000.0f, 2000.0f + pos.z), glm::vec3(pos.x, 0, pos.z), glm::vec3(0, 1, 0));
 	this->shadowMatrix = proj * view;
 }
 
