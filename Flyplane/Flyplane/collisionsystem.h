@@ -7,6 +7,7 @@
 #include "terraincomponent.h"
 #include "transform.h"
 #include "collisioncomponent.h"
+
 #include <entityx/entityx.h>
 #include <map>
 
@@ -130,7 +131,8 @@ public:
 			// Collision with other entitites 
 			for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent>())
 			{
-				checkCollision(entity, other);
+				if(!entity.has_component<PlayerComponent>() && !other.has_component<PlayerComponent>())
+					checkCollision(entity, other);
 			}
 			
 			auto boxes = *model->mptr->getBoundingBoxes();
