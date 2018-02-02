@@ -14,8 +14,8 @@ public:
 				target = 0;
 			}
 		}
-		//glm::vec3 input = SAIB::fly_to(me_transform->pos, me_transform->orientation, plotter.at(target));
-		glm::vec3 input = SAIB::fly_to(me_transform->pos, me_transform->orientation, p_transform->pos);
+		glm::vec3 input = SAIB::fly_to(me_transform->pos, me_transform->orientation, plotter.at(target));
+		//glm::vec3 input = SAIB::fly_to(me_transform->pos, me_transform->orientation, p_transform->pos);
 		return input;
 	}
 	std::vector<glm::vec3> plotter;
