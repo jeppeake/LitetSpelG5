@@ -23,6 +23,7 @@
 #include "follow_path.h"
 
 Model m;
+Model m2;
 Model projectile;
 Model missile;
 Model weaponmodel;
@@ -47,7 +48,7 @@ void PlayingState::init()
 	if (!machinegunSB.loadFromFile("assets/Sound/Machine_gun.wav"))
 		std::cout << "sound coludnt load" << std::endl;
 	m.load("assets/MIG-212A.fbx");
-	//m.load("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx");
+	m2.load("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx");
 	/*
 	* add systems
 	* 
@@ -79,13 +80,13 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 10; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-		entity.assign <ModelComponent>(&m);
+		entity.assign <ModelComponent>(&m2);
 		entity.assign <FlightComponent>(1000.f, 1.f);
 		std::vector<Behaviour*> behaviours;
 
