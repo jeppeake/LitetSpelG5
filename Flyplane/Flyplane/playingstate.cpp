@@ -93,9 +93,9 @@ void PlayingState::init()
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
-		plotter.push_back(glm::vec3(500, 2500, 0));
-		plotter.push_back(glm::vec3(500, 2500, 500));
-		plotter.push_back(glm::vec3(0, 2500, 500));
+		plotter.push_back(glm::vec3(2500, 2500, 0));
+		plotter.push_back(glm::vec3(2500, 2500, 2500));
+		plotter.push_back(glm::vec3(0, 2500, 2500));
 		plotter.push_back(glm::vec3(0, 2500, 0));
 
 		behaviours.push_back(new Constant_Turn(0));
