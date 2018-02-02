@@ -33,10 +33,15 @@ struct SoundSystem : public System<SoundSystem> {
 			Transform* t = transform.get();
 
 			s->sound.setPosition(t->pos.x, t->pos.y, t->pos.z);
-			if (burstSound && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
+			if ((Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
 				//s->sound.stop();
-				if (s->sound.getStatus() != s->sound.Playing)
+				if (s->sound.getStatus() != s->sound.Playing) {
 					s->sound.play();
+					//s->sound.setLoop(true);
+				}
+			}
+			else if (!(Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
+				s->sound.stop();
 			}
 		}
 		
