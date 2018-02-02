@@ -148,7 +148,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
 
 
-	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/bog.png");
+	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/grass.png");
 	hm->pos.x -= 2560;
 	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
