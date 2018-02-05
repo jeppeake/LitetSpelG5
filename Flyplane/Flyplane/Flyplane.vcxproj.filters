@@ -100,7 +100,7 @@
       <Filter>Source Files\enginestate</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

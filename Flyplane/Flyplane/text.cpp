@@ -22,13 +22,11 @@ Text::Text(const std::string &path, unsigned size) {
 	}
 	FT_Set_Pixel_Sizes(face, 0, size);
 	for (unsigned char c = 0; c < 128; c++) {
-		// Load character glyph
 		if (FT_Error Error = FT_Load_Char(face, c, FT_LOAD_RENDER))
 		{
 			std::cout << "Failed to load Glyph: " << (unsigned)c << " Error: " << Error << "\n";
 			continue;
 		}
-		// Generate texture
 		GLuint texture;
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -43,12 +41,10 @@ Text::Text(const std::string &path, unsigned size) {
 			GL_UNSIGNED_BYTE,
 			face->glyph->bitmap.buffer
 		);
-		// Set texture options
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// Now store character for later use
 		Character character = {
 			texture,
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
@@ -88,7 +84,6 @@ void Text::drawText(const std::string & text, glm::vec2 pos, glm::vec3 col, GLfl
 
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;
-		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
 		{ xpos,     ypos,       0.0, 1.0 },
@@ -98,20 +93,20 @@ void Text::drawText(const std::string & text, glm::vec2 pos, glm::vec3 col, GLfl
 		{ xpos + w, ypos,       1.0, 1.0 },
 		{ xpos + w, ypos + h,   1.0, 0.0 }
 		};
-		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-		// Update content of VBO memory
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		// Render quad
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		pos.x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+		
+		pos.x += (ch.Advance >> 6) * scale; 
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 Text::~Text() {
-
+	for (auto &character : Characters)
+	{
+		glDeleteTextures(1, &character.second.TextureID);
+	}
 }
