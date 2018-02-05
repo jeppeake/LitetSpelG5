@@ -227,12 +227,6 @@
     <ClInclude Include="targetcomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
-    <ClInclude Include="gameoversystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="menustate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="condition.h">
       <Filter>Source Files\behaviours\conditions</Filter>
     </ClInclude>
@@ -253,6 +247,12 @@
     </ClInclude>
     <ClInclude Include="soundbuffers.h">
       <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
