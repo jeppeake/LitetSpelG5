@@ -6,9 +6,9 @@
 struct WeaponStats {
 	//projectile model, sound, range?, ammo, speed, 
 	WeaponStats(unsigned int ammo, unsigned int lifetime, float speed, float mass, float cooldown, bool infAmmo) : ammo(ammo), lifetime(lifetime), speed(speed), mass(mass), cooldown(cooldown), infAmmo(infAmmo) {}
-
+	WeaponStats(unsigned int ammo, unsigned int lifetime, float speed, float mass, float cooldown, bool infAmmo, float turnRate) : ammo(ammo), lifetime(lifetime), speed(speed), mass(mass), cooldown(cooldown), infAmmo(infAmmo), turnRate(turnRate) {}
 	unsigned int ammo, lifetime;
-	float speed, mass, cooldown;
+	float speed, mass, cooldown, turnRate;
 	bool infAmmo;
 };
 
@@ -28,4 +28,5 @@ struct Weapon {
 	glm::vec3 projScale = glm::vec3(1);
 	glm::vec3 scale = glm::vec3(1);
 	glm::quat rot = glm::quat();
+	unsigned int group = 0;
 };
