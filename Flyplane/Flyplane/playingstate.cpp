@@ -14,6 +14,7 @@
 #include "flightcomponent.h"
 #include "collisionsystem.h"
 #include "soundsystem.h"
+#include "gameoversystem.h"
 
 #include "aicomponent.h"
 #include "aisystem.h"
@@ -85,6 +86,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(assetLoader.getHeightmap("testmap"));
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
+	ex.systems.add<GameOver>();
 	ex.systems.configure();
 
 	/*
@@ -101,7 +103,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 1; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
