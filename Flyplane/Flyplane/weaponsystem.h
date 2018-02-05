@@ -91,7 +91,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			}
 
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
+				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
+				while (equip->special[equip->selected].model == lastWep.model) {
+					equip->selected = (equip->selected + 1) % equip->special.size();
+				}
 				switchT.restart();
 			}
 
@@ -187,7 +191,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 				
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,300);
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,400);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";

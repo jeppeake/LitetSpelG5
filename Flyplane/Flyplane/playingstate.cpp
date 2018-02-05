@@ -88,7 +88,7 @@ void PlayingState::init()
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-		entity.assign <ModelComponent>(&m2);
+		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(300.f, 1.f);
 		std::vector<Behaviour*> behaviours;
 
@@ -150,7 +150,7 @@ void PlayingState::init()
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	pweapons.emplace_back(stats2, &gunpod, &projectile, glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f,glm::vec3(0,0,1)));
-	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
+	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 
 	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/grass.png");
