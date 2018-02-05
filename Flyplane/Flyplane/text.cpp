@@ -56,14 +56,22 @@ Text::Text(const std::string &path, unsigned size) {
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
 	projection = glm::ortho(0.0, (double)Window::getWindow().size().x, 0.0, (double)Window::getWindow().size().y);
-	GLuint VAO, VBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	GLfloat vertices[6][4] = {
+		{ 1.0,     0.5,   0.0, 0.0 },
+	{ 1.0,     0.5,       0.0, 1.0 },
+	{ 1.0,     0.5,       1.0, 1.0 },
+
+	{ 1.0,     0.5,   0.0, 0.0 },
+	{ 1.0,     0.5,       1.0, 1.0 },
+	{ 1.0,     0.5,   1.0, 0.0 }
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, vertices, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(glGetAttribLocation(p.getId(), "vertex"));
+	glVertexAttribPointer(glGetAttribLocation(p.getId(), "vertex"), 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -72,6 +80,7 @@ void Text::drawText(const std::string & text, glm::vec2 pos, glm::vec3 col, GLfl
 	p.use();
 	p.uniform("textColor", col);
 	p.uniform("projection", projection);
+	p.uniform("text", 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 	std::string::const_iterator c;
@@ -96,8 +105,8 @@ void Text::drawText(const std::string & text, glm::vec2 pos, glm::vec3 col, GLfl
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
 		pos.x += (ch.Advance >> 6) * scale; 
 	}
