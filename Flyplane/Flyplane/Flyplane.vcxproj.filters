@@ -93,6 +93,9 @@
     <ClCompile Include="flightsystem.cpp">
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
+    <ClCompile Include="SAIB.cpp">
+      <Filter>Source Files\behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
