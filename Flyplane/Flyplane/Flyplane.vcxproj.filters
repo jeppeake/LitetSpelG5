@@ -43,6 +43,9 @@
     <Filter Include="Source Files\behaviours">
       <UniqueIdentifier>{1eccaa47-4f78-41cf-8d3f-06e856162e43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\behaviours\conditions">
+      <UniqueIdentifier>{c4460054-8e8e-47a7-b82c-4eb23029ba05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -93,11 +96,17 @@
     <ClCompile Include="flightsystem.cpp">
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
+    <ClCompile Include="assetloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="SAIB.cpp">
       <Filter>Source Files\behaviours</Filter>
     </ClCompile>
     <ClCompile Include="menustate.cpp">
       <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
+    <ClCompile Include="aisystem.cpp">
+      <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
       <Filter>Source Files\graphics</Filter>
@@ -218,6 +227,15 @@
     <ClInclude Include="targetcomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
+    <ClInclude Include="condition.h">
+      <Filter>Source Files\behaviours\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="always_true.h">
+      <Filter>Source Files\behaviours\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="assetloader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="text.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -229,6 +247,12 @@
     </ClInclude>
     <ClInclude Include="soundbuffers.h">
       <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@ private:
 	GLuint vbo = 0;
 	GLuint vao = 0;
 public:
+	Heightmap() {}
 	Heightmap(const std::string &file);
 	Heightmap(const std::string &file, const std::string &texFile);
 	void loadMap(const std::string &file);

@@ -44,7 +44,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
 		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate);
 		missile.assign<CollisionComponent>();
-		missile.assign<SoundComponent>(missileSB);
+		//missile.assign<SoundComponent>(missileSB);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {

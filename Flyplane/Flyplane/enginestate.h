@@ -3,10 +3,12 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "timer.h"
+#include "assetloader.h"
 
 class EngineState {
 
 	EngineState* new_state = nullptr;
+	
 protected:
 	void changeState(EngineState* _new_state) {
 		this->new_state = _new_state;
