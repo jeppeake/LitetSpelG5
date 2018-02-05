@@ -21,6 +21,7 @@
 #include "constant_turn.h"
 #include "soundbuffers.h"
 #include "follow_path.h"
+#include "targetcomponent.h"
 
 Model m;
 Model m2;
@@ -90,6 +91,7 @@ void PlayingState::init()
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(300.f, 1.f);
+		entity.assign<Target>(10.0);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -136,7 +138,7 @@ void PlayingState::init()
 
 	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
 	WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
-	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
+	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 
 	weapons.emplace_back(rocketpodstat, &rocketpod, &stinger, glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);

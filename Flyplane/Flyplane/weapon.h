@@ -27,4 +27,5 @@ struct Weapon {
 	glm::vec3 projScale = glm::vec3(1);
 	glm::vec3 scale = glm::vec3(1);
 	glm::quat rot = glm::quat();
+	unsigned int group = 0;
 };

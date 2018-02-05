@@ -209,6 +209,9 @@
     <ClInclude Include="follow_path.h">
       <Filter>Source Files\behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="targetcomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">

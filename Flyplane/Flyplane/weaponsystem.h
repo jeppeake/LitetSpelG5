@@ -18,6 +18,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
 #include "soundbuffers.h"
+#include "targetcomponent.h"
 
 
 using namespace entityx;
@@ -138,7 +139,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 
 		entityx::ComponentHandle<AIComponent> ai;
-		entityx::ComponentHandle<Transform> aitrans;
+		
 		entityx::ComponentHandle<FlightComponent> aiflight;
 		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
 			missile = entity.component<Missile>();
@@ -148,13 +149,20 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			if (projectile->timer.elapsed() > 1) {
 				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
 				float bestDot = -1;
+				double bestScore = -1;
 				Entity cure;
-				for (Entity enemy : es.entities_with_components(ai, aitrans)) {
+				entityx::ComponentHandle<Target> target;
+				entityx::ComponentHandle<Transform> aitrans;
+				for (Entity enemy : es.entities_with_components(aitrans, target)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
-					ai->is_targeted = false;
-					if (dot > bestDot) {
+					ai = enemy.component<AIComponent>();
+					if(ai)
+						ai->is_targeted = false;
+					double score = (dot * target->heat) / glm::length(dir);
+					if (score > bestScore) {
 						bestDot = dot;
+						bestScore = score;
 						missile->target = aitrans.get();
 						cure = enemy;
 					}
