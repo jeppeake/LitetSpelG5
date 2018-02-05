@@ -91,7 +91,7 @@ void PlayingState::init()
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
 		entity.assign <FlightComponent>(300.f, 1.f);
-		entity.assign<Target>(10.0);
+		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -111,6 +111,7 @@ void PlayingState::init()
 	//entity = ex.entities.create();
 	//entity.assign<SoundComponent>(soundBuffer);
 	
+	// ---	PLAYER	---
 	entity = ex.entities.create();
 	float x = 500;
 	float z = 500;
@@ -124,6 +125,7 @@ void PlayingState::init()
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(flyingSB);
 	entity.assign<BurstSoundComponent>(machinegunSB);
+	entity.assign<Target>(10.0, FACTION_PLAYER);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -136,7 +138,7 @@ void PlayingState::init()
 	rocketpod.load("assets/Weapons/Rocketpod/rocketpod.fbx");
 	stinger.load("assets/Weapons/Missiles/Stinger/stinger.fbx");
 
-	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
+	WeaponStats stats = WeaponStats(1, 1000, 400, 0.2, 1.0f, false, 2.f);
 	WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);

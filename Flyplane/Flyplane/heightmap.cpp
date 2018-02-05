@@ -105,7 +105,7 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 	int x = (int)(_pos.x / spread);
 	int z = (int)(_pos.z / spread);
 
-	if (x < 0 || x >= width || z < 0 || z >= this->height)
+	if (x < 0 || x >= width-1 || z < 0 || z >= this->height-1)
 		return height;
 
 	glm::vec3 v1 = vertices[index(x, z, width)].position;
