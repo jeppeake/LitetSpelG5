@@ -7,7 +7,7 @@
 #include "camera.h"
 #include "heightmap.h"
 #include "transform.h"
-
+#include "text.hpp"
 struct RenderObject {
 	Model* model;
 	Transform trans;
@@ -26,7 +26,7 @@ private:
 	std::vector<RenderObject> list;
 	std::vector<Heightmap*> mapList;
 	glm::mat4 m;
-
+	Text *t;
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()

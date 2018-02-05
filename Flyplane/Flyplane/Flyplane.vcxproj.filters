@@ -93,6 +93,9 @@
     <ClCompile Include="flightsystem.cpp">
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
+    <ClCompile Include="text.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -209,6 +212,9 @@
     <ClInclude Include="follow_path.h">
       <Filter>Source Files\behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="text.hpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
@@ -241,6 +247,12 @@
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
     <None Include="shadowFragmentShader.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="textVert.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="textFrag.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
   </ItemGroup>
