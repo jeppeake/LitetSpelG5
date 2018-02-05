@@ -215,6 +215,12 @@
     <ClInclude Include="targetcomponent.h">
       <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
