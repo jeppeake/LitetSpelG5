@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="assetloader.cpp" />
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
@@ -143,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="aicomponent.h" />
     <ClInclude Include="aisystem.h" />
+    <ClInclude Include="assetloader.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
     <ClInclude Include="camera.h" />
