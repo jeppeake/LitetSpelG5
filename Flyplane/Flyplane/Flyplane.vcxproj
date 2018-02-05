@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aisystem.cpp" />
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
@@ -145,12 +146,14 @@
   <ItemGroup>
     <ClInclude Include="aicomponent.h" />
     <ClInclude Include="aisystem.h" />
+    <ClInclude Include="always_true.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
+    <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />

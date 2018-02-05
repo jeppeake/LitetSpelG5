@@ -33,43 +33,18 @@ glm::vec3 SAIB::fly_to(glm::vec3 position, glm::quat orientation, glm::vec3 targ
 	glm::vec3 input = glm::vec3(0.0, 0.0, 0.0);
 	float tolerance = 0.2;
 	if (glm::length(front - pt) > tolerance) {//fast mode
-		std::cout << "FAST ";
 		if (glm::length(up - pt_adjusted_for_roll_towards_target) > tolerance) {//roll mode
-			std::cout << "ROLL ";
 			input += glm::vec3(-testAxis(position, orientation, target, front), 0.0, 0.0);
 		} else {//pitch mode
-			std::cout << "PITCH ";
 			input += glm::vec3(0.0, testAxis(position, orientation, target, left), 0.0);
 		}
 	} else {//precision mode
-		std::cout << "PREC ";
-		float adjust = 5.0;
+		float adjust = 50.0;
 		float roll = -testAxis(position, orientation, position + glm::vec3(0.0, 1.0, 0.0), front);
 		float pitch = testAxis(position, orientation, target, left) / adjust;
 		float yaw = testAxis(position, orientation, target, up) / adjust;
 		input += glm::vec3(roll, pitch, yaw);
 	}
-	std::cout << "\n";
-
-	/*if (glm::length(up - pt_adjusted_for_roll_towards_target) < 0.4) {//engage pitch mode
-		std::cout << "Pitch \n";
-		if (glm::length(front - pt) < 0.2) {
-			roll = -testAxis(position, orientation, target, glm::vec3(0.0, 1.0, 0.0));
-			float pitch = testAxis(position, orientation, target, left);
-			float yaw = -testAxis(position, orientation, target, up);
-			std::cout << roll << "\n";
-			//input += glm::vec3(roll, pitch, yaw);
-			input += glm::vec3(0.0, pitch, 0.0);//no adjust
-		}
-		else {
-			input += glm::vec3(0.0, testAxis(position, orientation, target, left), 0.0);//pitch towards target
-		}
-	}
-	else {//continue roll
-		std::cout << "Roll \n";
-		input += glm::vec3(roll, 0.0, 0.0);
-	}*/
-
 	return input;
 }
 
@@ -152,6 +127,5 @@ float SAIB::testTowards(glm::vec3 v1, glm::vec3 v2, glm::vec3 t) {
 	if (length(v1 - t) < length(v2 - t)) {
 		ret = -1.f;
 	}
-
 	return ret;
 }

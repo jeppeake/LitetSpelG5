@@ -23,6 +23,8 @@
 #include "soundbuffers.h"
 #include "follow_path.h"
 #include "targetcomponent.h"
+#include "condition.h"
+#include "always_true.h"
 
 Model m;
 Model m2;
@@ -92,7 +94,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
-		entity.assign <FlightComponent>(300.f, 1.f);
+		entity.assign <FlightComponent>(200.f, 1.f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
@@ -102,8 +104,8 @@ void PlayingState::init()
 		plotter.push_back(glm::vec3(0, 2500, 2500));
 		plotter.push_back(glm::vec3(0, 2500, 0));
 
-		behaviours.push_back(new Constant_Turn(0));
-		behaviours.push_back(new Follow_Path(1, plotter, true));
+		//behaviours.push_back(new Constant_Turn(0));
+		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();

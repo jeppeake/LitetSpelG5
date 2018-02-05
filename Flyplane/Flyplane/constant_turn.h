@@ -2,7 +2,7 @@
 #include "behaviour.h"
 class Constant_Turn : public Behaviour {
 public:
-	Constant_Turn(int priority) : Behaviour(priority) {
+	Constant_Turn(int priority, Condition* condition) : Behaviour(priority, condition) {
 
 	}
 	glm::vec3 act(ComponentHandle<Transform> p_transform, ComponentHandle<FlightComponent> p_flight, ComponentHandle<Transform> me_transform, ComponentHandle<FlightComponent> me_flight, bool is_targeted) {
