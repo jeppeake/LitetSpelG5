@@ -93,8 +93,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
-				while (equip->special[equip->selected].model == lastWep.model) {
+				unsigned int count = 0;
+				while (equip->special[equip->selected].model == lastWep.model && count < equip->special.size()) {
 					equip->selected = (equip->selected + 1) % equip->special.size();
+					count++;
 				}
 				switchT.restart();
 			}
