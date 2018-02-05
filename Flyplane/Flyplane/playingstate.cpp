@@ -14,6 +14,7 @@
 #include "flightcomponent.h"
 #include "collisionsystem.h"
 #include "soundsystem.h"
+#include "gameoversystem.h"
 
 #include "aicomponent.h"
 #include "aisystem.h"
@@ -21,6 +22,7 @@
 #include "constant_turn.h"
 #include "soundbuffers.h"
 #include "follow_path.h"
+#include "targetcomponent.h"
 
 Model m;
 Model m2;
@@ -66,6 +68,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(hm);
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
+	ex.systems.add<GameOver>();
 	ex.systems.configure();
 
 	/*
@@ -89,7 +92,8 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(&m);
-		entity.assign <FlightComponent>(200.f, 1.f);
+		entity.assign <FlightComponent>(300.f, 1.f);
+		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -109,6 +113,7 @@ void PlayingState::init()
 	//entity = ex.entities.create();
 	//entity.assign<SoundComponent>(soundBuffer);
 	
+	// ---	PLAYER	---
 	entity = ex.entities.create();
 	float x = 500;
 	float z = 500;
@@ -122,6 +127,7 @@ void PlayingState::init()
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(flyingSB);
 	entity.assign<BurstSoundComponent>(machinegunSB);
+	entity.assign<Target>(10.0, FACTION_PLAYER);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -134,9 +140,9 @@ void PlayingState::init()
 	rocketpod.load("assets/Weapons/Rocketpod/rocketpod.fbx");
 	stinger.load("assets/Weapons/Missiles/Stinger/stinger.fbx");
 
-	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
+	WeaponStats stats = WeaponStats(1, 1000, 400, 0.2, 1.0f, false, 2.f);
 	WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
-	WeaponStats stats2 = WeaponStats(10000, 10, 500, 0.2, 0.02f, true);
+	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 
 	weapons.emplace_back(rocketpodstat, &rocketpod, &stinger, glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
@@ -150,7 +156,7 @@ void PlayingState::init()
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, &missile, &missile, glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	pweapons.emplace_back(stats2, &gunpod, &projectile, glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f,glm::vec3(0,0,1)));
-	weapons.emplace_back(bomb, &weaponmodel, &missile, glm::vec3(0, -0.3, -0.1));
+	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
 
 	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/grass.png");

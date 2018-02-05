@@ -96,6 +96,9 @@
     <ClCompile Include="SAIB.cpp">
       <Filter>Source Files\behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="menustate.cpp">
+      <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="follow_path.h">
       <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="targetcomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
 #include "soundbuffers.h"
+#include "targetcomponent.h"
 
 
 using namespace entityx;
@@ -25,23 +26,23 @@ using namespace entityx;
 struct WeaponSystem : public entityx::System<WeaponSystem> {
 	Timer switchT;
 
-	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
+	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
 		entityx::Entity projectile = es.create();
 		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
 		projectile.assign<Physics>(weapon->stats.mass, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats.speed) + planeSpeed, glm::vec3());
 		projectile.assign<ModelComponent>(weapon->projectileModel);
-		projectile.assign<Projectile>(weapon->stats.lifetime);
+		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
 		projectile.assign<CollisionComponent>();
 		//projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
-	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es) {
+	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
 		entityx::Entity missile = es.create();
 		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->scale);
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
-		missile.assign<Projectile>(weapon->stats.lifetime);
-		missile.assign<Missile>(trans);
+		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
+		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(missileSB);
 	}
@@ -49,6 +50,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		ComponentHandle<WeaponStats> stats;
 		ComponentHandle<Equipment> equip;
+		ComponentHandle<Target> target;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Weapon> weapon;
 		ComponentHandle<Transform> trans;
@@ -61,6 +63,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			trans = entity.component<Transform>();
 			ComponentHandle<Physics> physics;
 			physics = entity.component<Physics>();
+			target = entity.component<Target>();
 
 			glm::vec3 planeSpeed;
 			if (physics) {
@@ -83,15 +86,27 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				if (pweapon->shouldFire) {
 					pweapon->shouldFire = false;
 					pweapon->timer.restart();
+
+					unsigned int parentfaction = FACTION_PLAYER;
+
+					if (target)
+						parentfaction = target->faction;
+
 					if(pweapon->isMissile)
-						spawnMissile(trans.get(), pweapon, planeSpeed, es);
+						spawnMissile(trans.get(), pweapon, planeSpeed, es, parentfaction);
 					else
-						spawnBullet(trans.get(), pweapon, planeSpeed, es);
+						spawnBullet(trans.get(), pweapon, planeSpeed, es, parentfaction);
 				}
 			}
 
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
+				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
+				unsigned int count = 0;
+				while (equip->special[equip->selected].model == lastWep.model && count < equip->special.size()) {
+					equip->selected = (equip->selected + 1) % equip->special.size();
+					count++;
+				}
 				switchT.restart();
 			}
 
@@ -99,10 +114,14 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				weapon->shouldFire = false;
 				weapon->timer.restart();
 
+				unsigned int parentfaction = FACTION_PLAYER;
+				if (target)
+					parentfaction = target->faction;
+
 				if (weapon->isMissile)
-					spawnMissile(trans.get(), weapon, planeSpeed, es);
+					spawnMissile(trans.get(), weapon, planeSpeed, es, parentfaction);
 				else
-					spawnBullet(trans.get(), weapon, planeSpeed, es);
+					spawnBullet(trans.get(), weapon, planeSpeed, es, parentfaction);
 
 				if (!weapon->stats.infAmmo)
 					weapon->stats.ammo--;
@@ -132,7 +151,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 
 		entityx::ComponentHandle<AIComponent> ai;
-		entityx::ComponentHandle<Transform> aitrans;
+		
 		entityx::ComponentHandle<FlightComponent> aiflight;
 		for (Entity entity : es.entities_with_components(missile, trans, physics, projectile)) {
 			missile = entity.component<Missile>();
@@ -142,13 +161,19 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			if (projectile->timer.elapsed() > 1) {
 				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
 				float bestDot = -1;
+				double bestScore = -1;
 				Entity cure;
-				for (Entity enemy : es.entities_with_components(ai, aitrans)) {
+				entityx::ComponentHandle<Target> target;
+				entityx::ComponentHandle<Transform> aitrans;
+				for (Entity enemy : es.entities_with_components(aitrans, target)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
-					ai->is_targeted = false;
-					if (dot > bestDot) {
+					ai = enemy.component<AIComponent>();
+					target->is_targeted = false;
+					double score = (dot * target->heat) / glm::length(dir);
+					if (score > bestScore && projectile->parentFaction != target->faction) {
 						bestDot = dot;
+						bestScore = score;
 						missile->target = aitrans.get();
 						cure = enemy;
 					}
@@ -165,7 +190,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 
 				if (cure.valid() && !noTarget)
-					cure.component<AIComponent>()->is_targeted = true;
+					cure.component<Target>()->is_targeted = true;
 					
 
 				glm::quat q;
@@ -177,7 +202,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				glm::vec3 cross = glm::cross(vn, un);
 
 
-				float turnRate = 3.f;
+				float turnRate = missile->turnRate;
 
 				
 				if (!noTarget) {
@@ -187,7 +212,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 				
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
-				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,300);
+				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
 				if (glm::length(u) < 10.0) {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
