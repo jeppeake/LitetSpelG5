@@ -138,10 +138,12 @@
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="menustate.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="SAIB.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -162,10 +164,12 @@
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
     <ClInclude Include="follow_path.h" />
+    <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="menustate.h" />
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
@@ -181,6 +185,7 @@
     <ClInclude Include="soundbuffers.h" />
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
+    <ClInclude Include="targetcomponent.h" />
     <ClInclude Include="terraincomponent.h" />
     <ClInclude Include="text.hpp" />
     <ClInclude Include="texture.h" />
