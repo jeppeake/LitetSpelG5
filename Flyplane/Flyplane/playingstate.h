@@ -6,9 +6,8 @@
 
 class PlayingState : public EngineState {
 	Timer deltatime, t;
-
-
 	entityx::EntityX ex;
+	AssetLoader assetLoader;
 
 public:
 

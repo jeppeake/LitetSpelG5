@@ -69,7 +69,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>..\lib\freetype-2.9\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib\freetype-2.9\lib\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>..\lib\freetype-2.9\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib\freetype-2.9\lib\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -88,7 +95,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib\debug;$(SolutionDir)lib\entityx\lib\Debug;$(SolutionDir)lib\sfml\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,10 +126,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib\release;$(SolutionDir)lib\entityx\lib\Release;$(SolutionDir)lib\sfml\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aisystem.cpp" />
+    <ClCompile Include="assetloader.cpp" />
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
@@ -136,7 +145,9 @@
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="SAIB.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="window.cpp" />
@@ -144,12 +155,15 @@
   <ItemGroup>
     <ClInclude Include="aicomponent.h" />
     <ClInclude Include="aisystem.h" />
+    <ClInclude Include="always_true.h" />
+    <ClInclude Include="assetloader.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
+    <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
@@ -178,6 +192,7 @@
     <ClInclude Include="soundsystem.h" />
     <ClInclude Include="targetcomponent.h" />
     <ClInclude Include="terraincomponent.h" />
+    <ClInclude Include="text.hpp" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="renderer.h" />
@@ -192,6 +207,8 @@
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
+    <None Include="textFrag.glsl" />
+    <None Include="textVert.glsl" />
     <None Include="vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

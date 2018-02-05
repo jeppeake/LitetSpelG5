@@ -42,6 +42,7 @@ Renderer::Renderer() {
 	
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	t = new Text("assets/fonts/arial.ttf", 48);
 }
 
 Renderer::~Renderer() {
@@ -152,7 +153,7 @@ void Renderer::RenderScene() {
 		this->terrain_shader.uniform("modelMatrix", trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
-
+	t->drawText("Hej", glm::vec2(500, 600), glm::vec3(1.0, 0.0, 0.0), 1.5);
 	list.clear();
 	mapList.clear();
 }

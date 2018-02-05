@@ -23,7 +23,6 @@ int main(void)
 	engine->init();
 
 	Timer deltatime;
-
 	while (!Window::getWindow().shouldClose()) {
 		double dt = deltatime.restart();
 

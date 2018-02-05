@@ -2,7 +2,7 @@
 #include "behaviour.h"
 class Follow_Path : public Behaviour {
 public:
-	Follow_Path(int priority, std::vector<glm::vec3> plotter, bool loop_mode) : Behaviour(priority) {
+	Follow_Path(int priority, Condition* condition, std::vector<glm::vec3> plotter, bool loop_mode) : Behaviour(priority, condition) {
 		this->plotter = plotter;
 		this->loop_mode = loop_mode;
 	}
