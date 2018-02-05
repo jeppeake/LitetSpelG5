@@ -14,6 +14,7 @@
 #include "flightcomponent.h"
 #include "collisionsystem.h"
 #include "soundsystem.h"
+#include "gameoversystem.h"
 
 #include "aicomponent.h"
 #include "aisystem.h"
@@ -66,6 +67,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(hm);
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
+	ex.systems.add<GameOver>();
 	ex.systems.configure();
 
 	/*

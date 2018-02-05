@@ -93,6 +93,9 @@
     <ClCompile Include="flightsystem.cpp">
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
+    <ClCompile Include="menustate.cpp">
+      <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -208,6 +211,12 @@
     </ClInclude>
     <ClInclude Include="follow_path.h">
       <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
