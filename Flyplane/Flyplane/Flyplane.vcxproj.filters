@@ -99,6 +99,9 @@
     <ClCompile Include="menustate.cpp">
       <Filter>Source Files\enginestate</Filter>
     </ClCompile>
+    <ClCompile Include="text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -206,9 +209,6 @@
     <ClInclude Include="soundsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
-    <ClInclude Include="soundbuffers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SAIB.h">
       <Filter>Source Files\behaviours</Filter>
     </ClInclude>
@@ -217,6 +217,18 @@
     </ClInclude>
     <ClInclude Include="targetcomponent.h">
       <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="text.hpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="soundbuffers.h">
+      <Filter>Source Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +262,12 @@
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
     <None Include="shadowFragmentShader.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="textVert.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="textFrag.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
   </ItemGroup>
