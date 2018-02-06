@@ -28,6 +28,8 @@
 #include "enemy_close.h"
 #include "follow_player.h"
 
+#include "menustate.h"
+
 
 
 entityx::Entity entity;
@@ -51,29 +53,29 @@ void PlayingState::init()
 		std::cout << "sound coludnt load" << std::endl;*/
 
 	//load all assets, all assets are given a reference name to used when retreiving it
-	assetLoader.loadModel("assets/bullet.fbx", "bullet");
-	assetLoader.loadModel("assets/basicgun.fbx", "basicgun");
-	assetLoader.loadModel("assets/GAU-15.fbx", "GAU-15");
-	assetLoader.loadModel("assets/Weapons/Guns/37mm_gunpod/37mm_gunpod.fbx", "gunpod");
-	assetLoader.loadModel("assets/Weapons/Missiles/Fishrod/fishrod.fbx", "fishrod");
-	assetLoader.loadModel("assets/Weapons/Rocketpod/rocketpod.fbx", "rocketpod");
-	assetLoader.loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
-	assetLoader.loadModel("assets/MIG-212A.fbx", "MIG-212A");
-	assetLoader.loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
+	AssetLoader::getLoader().loadModel("assets/bullet.fbx", "bullet");
+	AssetLoader::getLoader().loadModel("assets/basicgun.fbx", "basicgun");
+	AssetLoader::getLoader().loadModel("assets/GAU-15.fbx", "GAU-15");
+	AssetLoader::getLoader().loadModel("assets/Weapons/Guns/37mm_gunpod/37mm_gunpod.fbx", "gunpod");
+	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Fishrod/fishrod.fbx", "fishrod");
+	AssetLoader::getLoader().loadModel("assets/Weapons/Rocketpod/rocketpod.fbx", "rocketpod");
+	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
+	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
+	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 
-	assetLoader.loadHeightmap("assets/textures/slojp.png", "assets/textures/grass.png", "testmap");
+	AssetLoader::getLoader().loadHeightmap("assets/textures/slojp.png", "assets/textures/grass.png", "testmap");
 
-	assetLoader.loadSound("assets/Sound/airplane-takeoff.wav", "takeoff");
-	assetLoader.loadSound("assets/Sound/Missle_Launch.wav", "missile");
-	assetLoader.loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
-	assetLoader.loadSound("assets/Sound/Machine_gun.wav", "machinegun");
+	AssetLoader::getLoader().loadSound("assets/Sound/airplane-takeoff.wav", "takeoff");
+	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
+	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
+	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
 
 
 	//get all assets (not really needed, can be used inline)
-	flyingSB = assetLoader.getSoundBuffer("takeoff");
-	missileSB = assetLoader.getSoundBuffer("missile");
-	bulletSB = assetLoader.getSoundBuffer("sniperrifle");
-	machinegunSB = assetLoader.getSoundBuffer("machinegun");
+	flyingSB = AssetLoader::getLoader().getSoundBuffer("takeoff");
+	missileSB = AssetLoader::getLoader().getSoundBuffer("missile");
+	bulletSB = AssetLoader::getLoader().getSoundBuffer("sniperrifle");
+	machinegunSB = AssetLoader::getLoader().getSoundBuffer("machinegun");
 
 	/*
 	* add systems
@@ -87,10 +89,10 @@ void PlayingState::init()
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
-	ex.systems.add<CollisionSystem>(assetLoader.getHeightmap("testmap"));
+	ex.systems.add<CollisionSystem>(AssetLoader::getLoader().getHeightmap("testmap"));
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
-	ex.systems.add<GameOver>();
+	ex.systems.add<GameOver>(this);
 	ex.systems.configure();
 
 	/*
@@ -146,7 +148,7 @@ void PlayingState::init()
 	glm::quat orien(1,0,0,0);
 	entity.assign<Transform>(pos, normalize(orien));
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
-	entity.assign <ModelComponent>(assetLoader.getModel("MIG-212A"));
+	entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 	entity.assign <PlayerComponent>();
 	entity.assign <FlightComponent>(200.f, 2.f);
 	entity.assign <CollisionComponent>();
@@ -166,26 +168,26 @@ void PlayingState::init()
 	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 
-	weapons.emplace_back(rocketpodstat, assetLoader.getModel("rocketpod"), assetLoader.getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
-	weapons.emplace_back(rocketpodstat, assetLoader.getModel("rocketpod"), assetLoader.getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(-1.7, -0.25, -1.5),glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(1.7, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(-2.1, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(2.1, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, assetLoader.getModel("fishrod"), assetLoader.getModel("fishrod"), glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	pweapons.emplace_back(stats2, assetLoader.getModel("gunpod"), assetLoader.getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f,glm::vec3(0,0,1)));
-	weapons.emplace_back(bomb, assetLoader.getModel("bullet"), assetLoader.getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
+	weapons.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+	weapons.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-1.7, -0.25, -1.5),glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(1.7, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-2.1, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(2.1, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f,glm::vec3(0,0,1)));
+	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 
-	assetLoader.getHeightmap("testmap")->pos.x -= 2560;
-	assetLoader.getHeightmap("testmap")->pos.z -= 2560;
+	AssetLoader::getLoader().getHeightmap("testmap")->pos.x -= 2560;
+	AssetLoader::getLoader().getHeightmap("testmap")->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();
-	terrain.assign<Terrain>(assetLoader.getHeightmap("testmap"));
+	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 }
 
 void PlayingState::update(double dt)
@@ -205,7 +207,6 @@ void PlayingState::update(double dt)
 	if(Input::isKeyDown(GLFW_KEY_SPACE))
 		std::cout << ex.entities.size() << "\n";
 
-
 	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<AISystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
@@ -218,4 +219,8 @@ void PlayingState::update(double dt)
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());
 	}
+}
+
+void PlayingState::gameOver() {
+	//this->changeState(new MenuState());
 }

@@ -17,4 +17,5 @@ public:
 
 	virtual void update(double dt);
 
+	void gameOver();
 };
