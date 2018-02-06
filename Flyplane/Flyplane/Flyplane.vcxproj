@@ -133,6 +133,8 @@
     <ClCompile Include="aisystem.cpp" />
     <ClCompile Include="assetloader.cpp" />
     <ClCompile Include="boundingbox.cpp" />
+    <ClCompile Include="button.cpp" />
+    <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="gameoverstate.cpp" />
@@ -144,6 +146,8 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menustate.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="optionsstate.cpp" />
+    <ClCompile Include="particlesystem.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -159,8 +163,12 @@
     <ClInclude Include="aisystem.h" />
     <ClInclude Include="always_true.h" />
     <ClInclude Include="assetloader.h" />
+    <ClInclude Include="backtomenuaction.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
+    <ClInclude Include="button.h" />
+    <ClInclude Include="ButtonAction.h" />
+    <ClInclude Include="buttonhandler.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />
@@ -187,6 +195,9 @@
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
+    <ClInclude Include="particlesystem.h" />
+    <ClInclude Include="optionsaction.h" />
+    <ClInclude Include="optionsstate.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="playercomponent.h" />
     <ClInclude Include="playersystem.h" />
@@ -194,12 +205,14 @@
     <ClInclude Include="pointcomponent.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
+    <ClInclude Include="restartaction.h" />
     <ClInclude Include="SAIB.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="physicssystem.h" />
     <ClInclude Include="soundbuffers.h" />
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
+    <ClInclude Include="startgameaction.h" />
     <ClInclude Include="targetcomponent.h" />
     <ClInclude Include="terraincomponent.h" />
     <ClInclude Include="text.hpp" />
@@ -213,10 +226,13 @@
   <ItemGroup>
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
+    <None Include="partFrag.glsl" />
+    <None Include="partVert.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
+    <None Include="partCompute.glsl" />
     <None Include="textFrag.glsl" />
     <None Include="textVert.glsl" />
     <None Include="vertexShader.glsl" />

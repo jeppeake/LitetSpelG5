@@ -46,6 +46,12 @@
     <Filter Include="Source Files\behaviours\conditions">
       <UniqueIdentifier>{c4460054-8e8e-47a7-b82c-4eb23029ba05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphics\GUI">
+      <UniqueIdentifier>{c5c349f1-e6fc-49c5-9c6d-ca1a8ab464a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics\GUI\Actions">
+      <UniqueIdentifier>{60065aaa-49c2-4236-8822-8cba7e3317a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -109,13 +115,25 @@
       <Filter>Source Files\ecs\systems</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
-      <Filter>Source Files\graphics</Filter>
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="buttonhandler.cpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="optionsstate.cpp">
+      <Filter>Source Files\enginestate</Filter>
     </ClCompile>
     <ClCompile Include="highscore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gameoverstate.cpp">
       <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
+    <ClCompile Include="particlesystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +260,7 @@
     <ClInclude Include="assetloader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="gameoversystem.h">
     <ClInclude Include="text.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -268,6 +287,8 @@
     </ClInclude>
     <ClInclude Include="highscore.h">
       <Filter>Source Files</Filter>
+    <ClInclude Include="soundbuffers.h">
+      <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="gameoversystem.h">
       <Filter>Source Files\ecs\systems</Filter>
@@ -277,6 +298,39 @@
     </ClInclude>
     <ClInclude Include="gameoverstate.h">
       <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="text.hpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="buttonhandler.h">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="startgameaction.h">
+      <Filter>Source Files\graphics\GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonAction.h">
+      <Filter>Source Files\graphics\GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="optionsaction.h">
+      <Filter>Source Files\graphics\GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="optionsstate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="backtomenuaction.h">
+      <Filter>Source Files\graphics\GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="restartaction.h">
+      <Filter>Source Files\graphics\GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="particlesystem.h">
+      <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="fly_up.h">
       <Filter>Source Files\behaviours</Filter>
@@ -322,6 +376,15 @@
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
     <None Include="textFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partVert.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partCompute.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
   </ItemGroup>

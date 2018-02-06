@@ -45,7 +45,7 @@ void Window::open(int width, int height)
 	//glfwWindowHint(GLFW_DEPTH_BITS, 16);
 	//glfwWindowHint(GLFW_STENCIL_BITS, 0);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -66,11 +66,18 @@ void Window::open(int width, int height)
 	scrolls[window] = glm::vec2(0, 0);
 	glfwSetScrollCallback(window, scrollCallback);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
+}
+
+void Window::showCursor(bool val) {
+	if(val)
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	else
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Window::open()
@@ -97,7 +104,7 @@ void Window::open()
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	window = glfwCreateWindow(mode->width, mode->height, title.c_str(), display, NULL);
 	if (!window)
@@ -117,6 +124,8 @@ void Window::open()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+
+	
 }
 
 void Window::close()
@@ -152,6 +161,8 @@ void Window::update()
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 	auto _size = size();
+	_size.y = _size.x*9.0 / 16.0;
+	glfwSetWindowSize(window, _size.x, _size.y);
 	glViewport(0, 0, (GLsizei)_size.x, (GLsizei)_size.y);
 }
 
@@ -186,6 +197,6 @@ glm::vec2 Window::mousePosition()
 glm::vec2 Window::size()
 {
 	int width = 0, height = 0;
-	glfwGetWindowSize(window, &width, &height);
+	glfwGetFramebufferSize(window, &width, &height);
 	return glm::vec2(width, height);
 }

@@ -8,6 +8,9 @@ namespace
 	static std::unordered_map<int, int> keys;
 	static std::unordered_map<int, int> pre_keys;
 
+	static std::unordered_map<int, int> buttons;
+	static std::unordered_map<int, int> pre_buttons;
+
 	float axis_threshold = 0.2;
 
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -16,6 +19,13 @@ namespace
 		{
 			pre_keys[key]++;
 		}
+	}
+	void mouseCallback(GLFWwindow* window, int button, int action, int mods)
+	{
+		if (action == GLFW_PRESS) {
+			pre_buttons[button]++;
+		}
+
 	}
 }
 bool Input::initialize()
@@ -26,6 +36,7 @@ bool Input::initialize()
 	}
 
 	glfwSetKeyCallback(Window::getWindow().getGLFWWindow(), key_callback);
+	glfwSetMouseButtonCallback(Window::getWindow().getGLFWWindow(), mouseCallback);
 	inititalized = true;
 	return true;
 }
@@ -38,6 +49,18 @@ bool Input::isKeyDown(int key)
 bool Input::isMouseButtonDown(int key)
 {
 	return Window::getWindow().mouseButtonDown(key);
+}
+
+bool Input::isButtonPressed(int button)
+{
+	if (buttons[button] > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool Input::isKeyPressed(int key)
@@ -56,6 +79,8 @@ void Input::reset()
 {
 	keys = pre_keys;
 	pre_keys.clear();
+	buttons = pre_buttons;
+	pre_buttons.clear();
 }
 
 glm::vec2 Input::mouseMov()
