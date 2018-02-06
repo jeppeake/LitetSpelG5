@@ -13,13 +13,17 @@ class PlayingState : public EngineState {
 	sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
 	sf::SoundBuffer* machinegunSB;
+	sf::SoundBuffer* missileSB;
 
 	void spawnEnemies(int nr);
 
 	std::string name;
 
 public:
-
+	PlayingState() {};
+	PlayingState(std::string name) {
+		name = name;
+	};
 	virtual ~PlayingState() {}
 
 	virtual void init();
