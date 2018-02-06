@@ -224,7 +224,7 @@ void PlayingState::update(double dt)
 
 	points += 10 * dt;
 	glm::vec2 pos = glm::vec2(10, Window::getWindow().size().y - 20);
-	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)), pos, glm::vec3(1, 0, 0), 0.4);
+	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)) + "\nHEHEHEHEEH", pos, glm::vec3(1, 0, 0), 0.4);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());
