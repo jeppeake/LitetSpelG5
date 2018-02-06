@@ -2,14 +2,24 @@
 
 #include<fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
+struct HighscoreElement {
+	int score;
+	string name;
+};
+
+
 class Highscore {
 private:
-	string list[5];
+	vector<HighscoreElement> list;
+	string highscoreList[10];
+	void convertListToString();
 public:
 	Highscore();
 	~Highscore();
 	string* getHighscoreList();
+	void addScore(int score, string name);
 }; 

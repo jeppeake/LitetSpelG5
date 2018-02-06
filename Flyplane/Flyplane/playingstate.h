@@ -16,6 +16,8 @@ class PlayingState : public EngineState {
 
 	void spawnEnemies(int nr);
 
+	std::string name;
+
 public:
 
 	virtual ~PlayingState() {}
