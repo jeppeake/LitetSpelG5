@@ -38,6 +38,8 @@ public:
 	bool mouseButtonDown(int button);
 	bool keyDown(int key);
 
+	void showCursor(bool val);
+
 	glm::vec2 mouseMovement();
 	glm::vec2 mousePosition();
 	glm::vec2 size();

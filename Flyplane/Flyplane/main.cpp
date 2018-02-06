@@ -22,7 +22,6 @@ int main(void)
 	//w.open();
 	Input::initialize();
 
-	//EngineState* engine = new PlayingState();
 	EngineState* engine = new MenuState();
 	engine->init();
 

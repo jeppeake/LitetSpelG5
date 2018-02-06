@@ -30,13 +30,16 @@
 #include "ground_close_front.h"
 #include "fly_up.h"
 #include "follow_target.h"
+#include "window.h"
+#include "menustate.h"
 
 #include "menustate.h"
 #include "pointcomponent.h"
 #include <string>
 #include "window.h"
 #include "highscore.h"
-#include "gameoverstate.h"
+#include "backtomenuaction.h"
+#include "restartaction.h"
 
 entityx::Entity entity;
 entityx::Entity entity2;
@@ -52,7 +55,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(200.f, 2.f);
+		entity.assign <FlightComponent>(200.f, 1.f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
@@ -64,7 +67,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
-		behaviours.push_back(new Follow_Player(2, new Enemy_Close(200.f)));
+		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
@@ -75,8 +78,28 @@ void PlayingState::spawnEnemies(int nr) {
 	}
 }
 
-void PlayingState::init()
+void PlayingState::startMenu() {
+	this->changeState(new MenuState());
+}
+
+void PlayingState::restart() {
+	this->changeState(new PlayingState());
+}
+
+
+void PlayingState::init() 
 {
+
+	Window::getWindow().showCursor(true);
+
+	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this)));
+	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this)));
+
+
+	/*sf::SoundBuffer* flyingSB;
+	sf::SoundBuffer* bulletSB;
+	sf::SoundBuffer* machinegunSB;*/
+
 	//load all assets, all assets are given a reference name to used when retreiving it
 	AssetLoader::getLoader().loadModel("assets/bullet.fbx", "bullet");
 	AssetLoader::getLoader().loadModel("assets/basicgun.fbx", "basicgun");
@@ -136,7 +159,7 @@ void PlayingState::init()
 	entity2 = ex.entities.create();
 	float x = 400;
 	float z = 500;
-	glm::vec3 pos(x, 2500, z);
+	glm::vec3 pos(x, 4500, z);
 	glm::quat orien(1, 0, 0, 0);
 	entity2.assign<Transform>(pos, normalize(orien));
 	entity2.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
@@ -151,7 +174,7 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 2500, 2500));
 	plotter.push_back(glm::vec3(0, 2500, 0));
 
-	spawnEnemies(20);
+	//spawnEnemies(20);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
@@ -179,7 +202,7 @@ void PlayingState::init()
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
+		//behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 
 		entity.assign<AIComponent>(behaviours);
@@ -212,8 +235,6 @@ void PlayingState::init()
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
-	
-
 
 
 	WeaponStats stats = WeaponStats(1, 1000, 400, 0.2, 1.0f, false, 2.f);
@@ -235,8 +256,6 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 
-	AssetLoader::getLoader().getHeightmap("testmap")->pos.x -= 2560;
-	AssetLoader::getLoader().getHeightmap("testmap")->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();
@@ -256,17 +275,47 @@ void PlayingState::update(double dt)
 	ex.systems.update<System class here>(dt);
 	*/
 	
+	if (Input::isKeyPressed(GLFW_KEY_ESCAPE))
+		this->menuOpen = !this->menuOpen;
+	
+	
 	if(Input::isKeyDown(GLFW_KEY_SPACE))
 		std::cout << ex.entities.size() << "\n";
 
-	ex.systems.update<PlayerSystem>(dt);
-	ex.systems.update<AISystem>(dt);
-	ex.systems.update<WeaponSystem>(dt);
-	ex.systems.update<FlightSystem>(dt);
-	ex.systems.update<PhysicsSystem>(dt);
-	ex.systems.update<CollisionSystem>(dt);
-	ex.systems.update<RenderSystem>(dt);
-	ex.systems.update<SoundSystem>(dt);
+
+	
+
+	bool playerAlive = false;
+
+	ComponentHandle<PlayerComponent> p_player;
+	for (entityx::Entity entity : ex.entities.entities_with_components(p_player)) {
+		playerAlive = true;
+	}
+
+	
+
+	if (playerAlive && !menuOpen) {
+		Window::getWindow().showCursor(false);
+		ex.systems.update<PlayerSystem>(dt);
+		ex.systems.update<AISystem>(dt);
+		ex.systems.update<WeaponSystem>(dt);
+		ex.systems.update<FlightSystem>(dt);
+		ex.systems.update<PhysicsSystem>(dt);
+		ex.systems.update<CollisionSystem>(dt);
+		ex.systems.update<SoundSystem>(dt);
+		ex.systems.update<RenderSystem>(dt);
+	}
+	else {
+		ex.systems.update<RenderSystem>(dt);
+		if (!playerAlive) {
+			AssetLoader::getLoader().getMenutext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 3);
+		}
+		Window::getWindow().showCursor(true);
+		bHandler.drawButtons();
+		bHandler.handleButtonClicks();
+	}
+	
+	
 
 	points += 10 * dt;
 	glm::vec2 pos = glm::vec2(10, Window::getWindow().size().y - 20);
