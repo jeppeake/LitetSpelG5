@@ -332,5 +332,5 @@ void PlayingState::gameOver() {
 	pos.x = pos.x / 2 - 20;
 	pos.y -= 50;
 	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);*/
-	this->changeState(new GameOverState(name, points));
+	//this->changeState(new GameOverState(name, points));
 }
