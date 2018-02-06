@@ -152,7 +152,6 @@ void Renderer::RenderScene() {
 		this->terrain_shader.uniform("modelMatrix", trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
-
 	list.clear();
 	mapList.clear();
 }

@@ -5,6 +5,7 @@
 #include "soundcomponent.h"
 #include "transform.h"
 #include "playercomponent.h"
+#include "input.h"
 
 using namespace entityx;
 

@@ -3,6 +3,7 @@
 #include "window.h"
 #include "enginestate.h"
 #include "playingstate.h"
+#include "menustate.h"
 #include "renderer.h"
 #include "model.h"
 #include "input.h"
@@ -21,11 +22,11 @@ int main(void)
 	//w.open();
 	Input::initialize();
 
-	EngineState* engine = new PlayingState();//EndlessMode();
+	EngineState* engine = new PlayingState();
+	//EngineState* engine = new MenuState();
 	engine->init();
 
 	Timer deltatime;
-
 	while (!Window::getWindow().shouldClose()) {
 		double dt = deltatime.restart();
 

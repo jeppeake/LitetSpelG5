@@ -6,9 +6,8 @@
 
 class PlayingState : public EngineState {
 	Timer deltatime, t;
-
-
 	entityx::EntityX ex;
+	AssetLoader assetLoader;
 
 public:
 
@@ -18,4 +17,5 @@ public:
 
 	virtual void update(double dt);
 
+	void gameOver();
 };
