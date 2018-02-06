@@ -78,6 +78,13 @@ void PlayingState::spawnEnemies(int nr) {
 	}
 }
 
+void PlayingState::drawHighscore() {
+	glm::vec2 pos;
+	pos.x = 800;
+	pos.y = 300;
+	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.8);
+}
+
 void PlayingState::startMenu() {
 	this->changeState(new MenuState());
 }
@@ -295,6 +302,7 @@ void PlayingState::update(double dt)
 	
 
 	if (playerAlive && !menuOpen) {
+		points += 10 * dt;
 		Window::getWindow().showCursor(false);
 		ex.systems.update<PlayerSystem>(dt);
 		ex.systems.update<AISystem>(dt);
@@ -309,6 +317,7 @@ void PlayingState::update(double dt)
 		ex.systems.update<RenderSystem>(dt);
 		if (!playerAlive) {
 			AssetLoader::getLoader().getMenutext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 3);
+			drawHighscore();
 		}
 		Window::getWindow().showCursor(true);
 		bHandler.drawButtons();
@@ -317,7 +326,6 @@ void PlayingState::update(double dt)
 	
 	
 
-	points += 10 * dt;
 	glm::vec2 pos = glm::vec2(10, Window::getWindow().size().y - 20);
 	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)), pos, glm::vec3(1, 0, 0), 0.4);
 
@@ -327,6 +335,7 @@ void PlayingState::update(double dt)
 }
 
 void PlayingState::gameOver() {
+	highscore.addScore(name, points);
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();
 	pos.x = pos.x / 2 - 20;
