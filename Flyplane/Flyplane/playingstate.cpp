@@ -36,6 +36,7 @@
 #include <string>
 #include "window.h"
 #include "highscore.h"
+#include "gameoverstate.h"
 
 entityx::Entity entity;
 entityx::Entity entity2;
@@ -277,10 +278,10 @@ void PlayingState::update(double dt)
 }
 
 void PlayingState::gameOver() {
-	Highscore list;
+	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();
 	pos.x = pos.x / 2 - 20;
 	pos.y -= 50;
-	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);
-	//this->changeState(new MenuState());
+	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);*/
+	this->changeState(new GameOverState(name, points));
 }
