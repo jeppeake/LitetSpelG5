@@ -18,7 +18,7 @@ struct GameOver : public entityx::System<GameOver>, public entityx::Receiver<Gam
 			state->gameOver();
 		}
 		else {
-			std::cout << "crash" << std::endl;
+			//std::cout << "crash" << std::endl;
 		}
 	}
 
