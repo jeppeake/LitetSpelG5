@@ -9,11 +9,13 @@
 #include "input.h"
 #include "transform.h"
 #include <sfml\Audio.hpp>
+
+#include "highscore.h"
+
 int main(void)
 {	
+	Highscore h;
 	sf::Listener::setGlobalVolume(30);
-	//sf::Listener::setPosition(0,1,0);
-	//sf::Listener::setDirection(1, 0, 0);
 
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);

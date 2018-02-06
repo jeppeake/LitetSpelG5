@@ -126,6 +126,15 @@
     <ClCompile Include="optionsstate.cpp">
       <Filter>Source Files\enginestate</Filter>
     </ClCompile>
+    <ClCompile Include="highscore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameoverstate.cpp">
+      <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
+    <ClCompile Include="particlesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -252,8 +261,32 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="gameoversystem.h">
+    <ClInclude Include="text.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="soundbuffers.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_close.h">
+      <Filter>Source Files\behaviours\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="follow_player.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="ground_close_front.h">
+      <Filter>Source Files\behaviours\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="pointcomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="highscore.h">
+      <Filter>Source Files</Filter>
     <ClInclude Include="soundbuffers.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -261,6 +294,9 @@
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
     <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoverstate.h">
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
     <ClInclude Include="text.hpp">
@@ -292,6 +328,15 @@
     </ClInclude>
     <ClInclude Include="restartaction.h">
       <Filter>Source Files\graphics\GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="particlesystem.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="fly_up.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="follow_target.h">
+      <Filter>Source Files\behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +376,15 @@
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
     <None Include="textFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partVert.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partCompute.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
   </ItemGroup>

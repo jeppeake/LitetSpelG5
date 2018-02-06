@@ -137,7 +137,9 @@
     <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
+    <ClCompile Include="gameoverstate.cpp" />
     <ClCompile Include="heightmap.cpp" />
+    <ClCompile Include="highscore.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,6 +147,7 @@
     <ClCompile Include="menustate.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="optionsstate.cpp" />
+    <ClCompile Include="particlesystem.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -172,12 +175,19 @@
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
+    <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
+    <ClInclude Include="fly_up.h" />
     <ClInclude Include="follow_path.h" />
+    <ClInclude Include="gameoverstate.h" />
+    <ClInclude Include="follow_target.h" />
     <ClInclude Include="gameoversystem.h" />
+    <ClInclude Include="follow_player.h" />
+    <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="heightmap.h" />
+    <ClInclude Include="highscore.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />
@@ -185,12 +195,14 @@
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
+    <ClInclude Include="particlesystem.h" />
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="playercomponent.h" />
     <ClInclude Include="playersystem.h" />
     <ClInclude Include="playingstate.h" />
+    <ClInclude Include="pointcomponent.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
@@ -214,10 +226,13 @@
   <ItemGroup>
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
+    <None Include="partFrag.glsl" />
+    <None Include="partVert.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
+    <None Include="partCompute.glsl" />
     <None Include="textFrag.glsl" />
     <None Include="textVert.glsl" />
     <None Include="vertexShader.glsl" />

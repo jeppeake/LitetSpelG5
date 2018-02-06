@@ -4,6 +4,7 @@
 #include "window.h"
 #include "startgameaction.h"
 #include "optionsaction.h"
+#include "assetloader.h"
 
 MenuState::~MenuState() {
 }
@@ -31,4 +32,5 @@ void MenuState::update(double dt) {
 	if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
 		this->changeState(new PlayingState());
 	}
+
 }

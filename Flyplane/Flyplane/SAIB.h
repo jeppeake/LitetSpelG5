@@ -19,6 +19,7 @@ namespace SAIB {//STANDARD ARTIFICIAL INTELLIGENCE BEHAVIOURS
 	float yawTowards(glm::vec3 position, glm::quat orientation, glm::vec3 target);
 
 	float testAxis(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 axis);
+	float test2Axis(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 rot_axis, glm::vec3 test_axis);
 
 	float testTowards(glm::vec3 v1, glm::vec3 v2, glm::vec3 t);
 }

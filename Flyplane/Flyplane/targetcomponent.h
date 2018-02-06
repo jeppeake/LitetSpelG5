@@ -2,6 +2,7 @@
 
 #define FACTION_PLAYER 0
 #define FACTION_AI 1
+#define FACTION_DUMMY 2
 
 struct Target {
 	Target() {};

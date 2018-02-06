@@ -14,9 +14,22 @@ class PlayingState : public EngineState {
 private:
 	ButtonHandler bHandler;
 	bool menuOpen = false;
+	float points = 0;
+
+	sf::SoundBuffer* flyingSB;
+	sf::SoundBuffer* bulletSB;
+	sf::SoundBuffer* machinegunSB;
+	sf::SoundBuffer* missileSB;
+
+	void spawnEnemies(int nr);
+
+	std::string name;
 
 public:
-
+	PlayingState() {};
+	PlayingState(std::string name) {
+		name = name;
+	};
 	virtual ~PlayingState() {}
 
 	virtual void init();
@@ -26,5 +39,11 @@ public:
 	void startMenu();
 
 	void restart();
+
+	void gameOver();
+
+	void addPoints(int p) {
+		points += p;
+	}
 
 };
