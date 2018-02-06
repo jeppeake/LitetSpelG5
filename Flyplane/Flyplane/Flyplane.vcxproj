@@ -142,6 +142,7 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menustate.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="particlesystem.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
+    <ClInclude Include="particlesystem.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="playercomponent.h" />
     <ClInclude Include="playersystem.h" />
@@ -203,10 +205,13 @@
   <ItemGroup>
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
+    <None Include="partFrag.glsl" />
+    <None Include="partVert.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
+    <None Include="partCompute.glsl" />
     <None Include="textFrag.glsl" />
     <None Include="textVert.glsl" />
     <None Include="vertexShader.glsl" />

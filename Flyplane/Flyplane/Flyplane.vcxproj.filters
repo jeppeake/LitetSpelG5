@@ -111,6 +111,9 @@
     <ClCompile Include="text.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="particlesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -254,6 +257,9 @@
     <ClInclude Include="menustate.h">
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
+    <ClInclude Include="particlesystem.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
@@ -292,6 +298,15 @@
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
     <None Include="textFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partVert.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partCompute.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
   </ItemGroup>
