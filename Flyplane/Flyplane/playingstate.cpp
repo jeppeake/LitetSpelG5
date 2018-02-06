@@ -68,6 +68,15 @@ void PlayingState::spawnEnemies(int nr) {
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(200.f)));
+		entity.assign<AIComponent>(behaviours);
+		entity.assign<CollisionComponent>();
+		entity.assign<SoundComponent>(*flyingSB);
+		entity.assign<PointComponent>(100);
+
+		//std::cout << "Enemy added\n";
+	}
+}
+
 void PlayingState::startMenu() {
 	this->changeState(new MenuState());
 }
@@ -86,20 +95,10 @@ void PlayingState::init()
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this)));
 
 
-	sf::SoundBuffer* flyingSB;
+	/*sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
-	sf::SoundBuffer* machinegunSB;
-		entity.assign<AIComponent>(behaviours);
-		entity.assign<CollisionComponent>();
-		entity.assign<SoundComponent>(*flyingSB);
-		entity.assign<PointComponent>(100);
+	sf::SoundBuffer* machinegunSB;*/
 
-		//std::cout << "Enemy added\n";
-	}
-}
-
-void PlayingState::init()
-{
 	//load all assets, all assets are given a reference name to used when retreiving it
 	AssetLoader::getLoader().loadModel("assets/bullet.fbx", "bullet");
 	AssetLoader::getLoader().loadModel("assets/basicgun.fbx", "basicgun");
@@ -202,7 +201,7 @@ void PlayingState::init()
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
+		//behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 
 		entity.assign<AIComponent>(behaviours);
