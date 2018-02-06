@@ -21,5 +21,5 @@ public:
 	Highscore();
 	~Highscore();
 	string* getHighscoreList();
-	void addScore(int score, string name);
+	void addScore(string name, int score);
 }; 
