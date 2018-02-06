@@ -32,20 +32,54 @@
 #include "follow_target.h"
 
 #include "menustate.h"
-
-
+#include "pointcomponent.h"
+#include <string>
+#include "window.h"
+#include "highscore.h"
 
 entityx::Entity entity;
 entityx::Entity entity2;
 
 sf::SoundBuffer* missileSB;
 
-void PlayingState::init() 
+void PlayingState::spawnEnemies(int nr) {
+
+	for (int i = 0; i < nr; i++) {
+		auto entity = ex.entities.create();
+		glm::vec3 pos(rand() % 100, rand() % 300 + 2000, rand() % 100);
+		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
+		entity.assign<Transform>(pos, normalize(orien));
+		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
+		entity.assign <FlightComponent>(200.f, 2.f);
+		entity.assign<Target>(10.0, FACTION_AI);
+		std::vector<Behaviour*> behaviours;
+
+		std::vector<glm::vec3> plotter;
+		plotter.push_back(glm::vec3(2500, 2500, 0));
+		plotter.push_back(glm::vec3(2500, 2500, 2500));
+		plotter.push_back(glm::vec3(0, 2500, 2500));
+		plotter.push_back(glm::vec3(0, 2500, 0));
+
+		//behaviours.push_back(new Constant_Turn(0));
+		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+		behaviours.push_back(new Follow_Player(2, new Enemy_Close(200.f)));
+
+		entity.assign<AIComponent>(behaviours);
+		entity.assign<CollisionComponent>();
+		entity.assign<SoundComponent>(*flyingSB);
+		entity.assign<PointComponent>(100);
+
+		//std::cout << "Enemy added\n";
+	}
+}
+
+void PlayingState::init()
 {
 
-	sf::SoundBuffer* flyingSB;
+	/*sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
-	sf::SoundBuffer* machinegunSB;
+	sf::SoundBuffer* machinegunSB;*/
 
 	/*if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
 		std::cout << "sound coludnt load" << std::endl;
@@ -93,7 +127,7 @@ void PlayingState::init()
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
-	ex.systems.add<CollisionSystem>(AssetLoader::getLoader().getHeightmap("testmap"));
+	ex.systems.add<CollisionSystem>(AssetLoader::getLoader().getHeightmap("testmap"), this);
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
 	ex.systems.add<GameOver>(this);
@@ -130,6 +164,7 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 2500, 2500));
 	plotter.push_back(glm::vec3(0, 2500, 0));
 
+	spawnEnemies(20);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
@@ -223,12 +258,11 @@ void PlayingState::init()
 
 void PlayingState::update(double dt)
 {
-	double time = t.elapsed();
+	if (deltatime.elapsed() > 30) {
+		deltatime.restart();
+		spawnEnemies(5);
+	}
 
-	/*double r = (1 + sin(time))*0.5;
-	double g = (1 + sin(time + glm::two_pi<double>() / 3.0))*0.5;
-	double b = (1 + sin(time + 2.0*glm::two_pi<double>() / 3.0))*0.5;*/
-	
 	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
 
 	/*
@@ -247,11 +281,20 @@ void PlayingState::update(double dt)
 	ex.systems.update<RenderSystem>(dt);
 	ex.systems.update<SoundSystem>(dt);
 
+	points += 10 * dt;
+	glm::vec2 pos = glm::vec2(10, Window::getWindow().size().y - 20);
+	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)), pos, glm::vec3(1, 0, 0), 0.4);
+
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());
 	}
 }
 
 void PlayingState::gameOver() {
+	Highscore list;
+	glm::vec2 pos = Window::getWindow().size();
+	pos.x = pos.x / 2 - 20;
+	pos.y -= 50;
+	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);
 	//this->changeState(new MenuState());
 }

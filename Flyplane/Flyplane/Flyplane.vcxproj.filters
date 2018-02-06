@@ -111,7 +111,10 @@
     <ClCompile Include="text.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="endlessmode.cpp">
+    <ClCompile Include="highscore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameoverstate.cpp">
       <Filter>Source Files\enginestate</Filter>
     </ClCompile>
   </ItemGroup>
@@ -242,12 +245,6 @@
     <ClInclude Include="text.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="gameoversystem.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="menustate.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="soundbuffers.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -266,11 +263,20 @@
     <ClInclude Include="menustate.h">
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
-    <ClInclude Include="endlessmode.h">
+    <ClInclude Include="pointcomponent.h">
+      <Filter>Source Files\ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="highscore.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
-    <ClInclude Include="endlesscollisionsystem.h">
-      <Filter>Source Files\ecs\systems</Filter>
+    <ClInclude Include="gameoverstate.h">
+      <Filter>Source Files\enginestate</Filter>
     </ClInclude>
     <ClInclude Include="fly_up.h">
       <Filter>Source Files\behaviours</Filter>

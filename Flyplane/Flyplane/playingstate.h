@@ -8,6 +8,15 @@ class PlayingState : public EngineState {
 	Timer deltatime, t;
 	entityx::EntityX ex;
 	AssetLoader assetLoader;
+	float points = 0;
+
+	sf::SoundBuffer* flyingSB;
+	sf::SoundBuffer* bulletSB;
+	sf::SoundBuffer* machinegunSB;
+
+	void spawnEnemies(int nr);
+
+	std::string name;
 
 public:
 
@@ -18,4 +27,9 @@ public:
 	virtual void update(double dt);
 
 	void gameOver();
+
+	void addPoints(int p) {
+		points += p;
+	}
+
 };

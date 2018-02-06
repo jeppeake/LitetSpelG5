@@ -17,6 +17,9 @@ struct GameOver : public entityx::System<GameOver>, public entityx::Receiver<Gam
 		if (entity.entity.has_component<PlayerComponent>()) {
 			state->gameOver();
 		}
+		else {
+			//std::cout << "crash" << std::endl;
+		}
 	}
 
 	PlayingState* state;
