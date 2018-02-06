@@ -7,6 +7,7 @@
 #include "terraincomponent.h"
 #include "transform.h"
 #include "collisioncomponent.h"
+#include "pointcomponent.h"
 
 #include <entityx/entityx.h>
 #include <map>
@@ -15,6 +16,7 @@ class CollisionSystem : public entityx::System<CollisionSystem>
 {
 private:
 	Heightmap *map;
+	PlayingState *state;
 
 	std::map <entityx::Entity::Id, entityx::Entity> to_remove;
 
@@ -41,6 +43,10 @@ private:
 			{
 				if (a_boxes[i].intersect(b_trans->pos))
 				{
+					if (a.has_component<PointComponent>())
+						state->addPoints(a.component<PointComponent>().get()->points);
+					if (b.has_component<PointComponent>())
+						state->addPoints(b.component<PointComponent>().get()->points);
 					to_remove[a.id()] = a;
 					to_remove[b.id()] = b;
 					return;
@@ -80,6 +86,10 @@ private:
 				{
 					if (a_boxes[i].intersect(b_boxes[j]))
 					{
+						if (a.has_component<PointComponent>())
+							state->addPoints(a.component<PointComponent>().get()->points);
+						if (b.has_component<PointComponent>())
+							state->addPoints(b.component<PointComponent>().get()->points);
 						to_remove[a.id()] = a;
 						to_remove[b.id()] = b;
 						return;
@@ -114,7 +124,8 @@ private:
 		}
 	}
 public:
-	CollisionSystem(Heightmap *map) : map(map) {};
+	CollisionSystem(Heightmap *map) : map(map)  {};
+	CollisionSystem(Heightmap *map, PlayingState *state) : map(map), state(state) {};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
 		entityx::ComponentHandle<Terrain> terr;

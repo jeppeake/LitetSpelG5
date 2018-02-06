@@ -3,23 +3,27 @@
 #include "window.h"
 #include "enginestate.h"
 #include "playingstate.h"
+#include "menustate.h"
 #include "renderer.h"
 #include "model.h"
 #include "input.h"
 #include "transform.h"
 #include <sfml\Audio.hpp>
+
+#include "highscore.h"
+
 int main(void)
 {	
+	Highscore h;
 	sf::Listener::setGlobalVolume(30);
-	//sf::Listener::setPosition(0,1,0);
-	//sf::Listener::setDirection(1, 0, 0);
 
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
 	//w.open();
 	Input::initialize();
 
-	EngineState* engine = new PlayingState();
+	//EngineState* engine = new PlayingState();
+	EngineState* engine = new MenuState();
 	engine->init();
 
 	Timer deltatime;

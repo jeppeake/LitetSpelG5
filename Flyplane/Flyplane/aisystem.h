@@ -6,6 +6,7 @@
 #include "transform.h"
 #include "flightcomponent.h"
 #include "playercomponent.h"
+#include "terraincomponent.h"
 #include <iostream>
 
 using namespace entityx;

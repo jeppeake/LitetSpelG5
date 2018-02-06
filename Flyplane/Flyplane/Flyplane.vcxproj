@@ -135,7 +135,9 @@
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
+    <ClCompile Include="gameoverstate.cpp" />
     <ClCompile Include="heightmap.cpp" />
+    <ClCompile Include="highscore.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,12 +168,19 @@
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
+    <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
+    <ClInclude Include="fly_up.h" />
     <ClInclude Include="follow_path.h" />
+    <ClInclude Include="gameoverstate.h" />
+    <ClInclude Include="follow_target.h" />
     <ClInclude Include="gameoversystem.h" />
+    <ClInclude Include="follow_player.h" />
+    <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="heightmap.h" />
+    <ClInclude Include="highscore.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />
@@ -184,6 +193,7 @@
     <ClInclude Include="playercomponent.h" />
     <ClInclude Include="playersystem.h" />
     <ClInclude Include="playingstate.h" />
+    <ClInclude Include="pointcomponent.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="SAIB.h" />
