@@ -25,15 +25,33 @@
 #include "targetcomponent.h"
 #include "condition.h"
 #include "always_true.h"
+#include "window.h"
+#include "menustate.h"
 
-
+#include "backtomenuaction.h"
+#include "restartaction.h"
 
 entityx::Entity entity;
 
 sf::SoundBuffer* missileSB;
 
+void PlayingState::startMenu() {
+	this->changeState(new MenuState());
+}
+
+void PlayingState::restart() {
+	this->changeState(new PlayingState());
+}
+
+
 void PlayingState::init() 
 {
+
+	Window::getWindow().showCursor(true);
+
+	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this)));
+	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this)));
+
 
 	sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
@@ -152,8 +170,6 @@ void PlayingState::init()
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
-	
-
 
 
 	WeaponStats stats = WeaponStats(1, 1000, 400, 0.2, 1.0f, false, 2.f);
@@ -175,8 +191,6 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 
-	AssetLoader::getLoader().getHeightmap("testmap")->pos.x -= 2560;
-	AssetLoader::getLoader().getHeightmap("testmap")->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
 
 	entityx::Entity terrain = ex.entities.create();
@@ -197,18 +211,47 @@ void PlayingState::update(double dt)
 	ex.systems.update<System class here>(dt);
 	*/
 	
+	if (Input::isKeyPressed(GLFW_KEY_ESCAPE))
+		this->menuOpen = !this->menuOpen;
+	
+	
 	if(Input::isKeyDown(GLFW_KEY_SPACE))
 		std::cout << ex.entities.size() << "\n";
 
 
-	ex.systems.update<PlayerSystem>(dt);
-	ex.systems.update<AISystem>(dt);
-	ex.systems.update<WeaponSystem>(dt);
-	ex.systems.update<FlightSystem>(dt);
-	ex.systems.update<PhysicsSystem>(dt);
-	ex.systems.update<CollisionSystem>(dt);
-	ex.systems.update<RenderSystem>(dt);
-	ex.systems.update<SoundSystem>(dt);
+	
+
+	bool playerAlive = false;
+
+	ComponentHandle<PlayerComponent> p_player;
+	for (entityx::Entity entity : ex.entities.entities_with_components(p_player)) {
+		playerAlive = true;
+	}
+
+	
+
+	if (playerAlive && !menuOpen) {
+		Window::getWindow().showCursor(false);
+		ex.systems.update<PlayerSystem>(dt);
+		ex.systems.update<AISystem>(dt);
+		ex.systems.update<WeaponSystem>(dt);
+		ex.systems.update<FlightSystem>(dt);
+		ex.systems.update<PhysicsSystem>(dt);
+		ex.systems.update<CollisionSystem>(dt);
+		ex.systems.update<SoundSystem>(dt);
+		ex.systems.update<RenderSystem>(dt);
+	}
+	else {
+		ex.systems.update<RenderSystem>(dt);
+		if (!playerAlive) {
+			AssetLoader::getLoader().getMenutext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 3);
+		}
+		Window::getWindow().showCursor(true);
+		bHandler.drawButtons();
+		bHandler.handleButtonClicks();
+	}
+	
+	
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());

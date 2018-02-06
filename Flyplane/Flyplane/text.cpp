@@ -69,6 +69,7 @@ Text::Text(const std::string &path, unsigned size) {
 
 void Text::drawText(const std::string & text, glm::vec2 pos, glm::vec3 col, GLfloat scale) {
 	p.use();
+	projection = glm::ortho(0.0, (double)Window::getWindow().size().x, 0.0, (double)Window::getWindow().size().y);
 	p.uniform("textColor", col);
 	p.uniform("projection", projection);
 	p.uniform("text", 0);
