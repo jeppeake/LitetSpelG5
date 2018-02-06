@@ -1,6 +1,11 @@
 #include "assetloader.h"
 
 
+Text * AssetLoader::getText() &
+{
+	return text;
+}
+
 void AssetLoader::loadModel(const std::string filename, const std::string name) {
 	Model model;
 	models[name] = model;
