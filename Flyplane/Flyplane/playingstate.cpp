@@ -51,7 +51,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(200.f, 2.f);
+		entity.assign <FlightComponent>(200.f, 1.f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
@@ -63,7 +63,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
-		behaviours.push_back(new Follow_Player(2, new Enemy_Close(200.f)));
+		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
@@ -149,7 +149,7 @@ void PlayingState::init()
 	entity2 = ex.entities.create();
 	float x = 400;
 	float z = 500;
-	glm::vec3 pos(x, 2500, z);
+	glm::vec3 pos(x, 4500, z);
 	glm::quat orien(1, 0, 0, 0);
 	entity2.assign<Transform>(pos, normalize(orien));
 	entity2.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
@@ -164,7 +164,7 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 2500, 2500));
 	plotter.push_back(glm::vec3(0, 2500, 0));
 
-	spawnEnemies(20);
+	//spawnEnemies(20);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
@@ -192,7 +192,7 @@ void PlayingState::init()
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
+		//behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 
 		entity.assign<AIComponent>(behaviours);
