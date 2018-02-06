@@ -292,12 +292,12 @@ void PlayingState::update(double dt)
 
 	
 
-	bool playerAlive = false;
+	/*bool playerAlive = false;
 
 	ComponentHandle<PlayerComponent> p_player;
 	for (entityx::Entity entity : ex.entities.entities_with_components(p_player)) {
 		playerAlive = true;
-	}
+	}*/
 
 	
 
@@ -335,6 +335,7 @@ void PlayingState::update(double dt)
 }
 
 void PlayingState::gameOver() {
+	playerAlive = false;
 	highscore.addScore(name, points);
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();

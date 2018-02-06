@@ -14,6 +14,7 @@ class PlayingState : public EngineState {
 private:
 	ButtonHandler bHandler;
 	bool menuOpen = false;
+	bool playerAlive = true;
 	float points = 0;
 	Highscore highscore;
 
