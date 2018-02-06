@@ -72,20 +72,6 @@ void PlayingState::spawnEnemies(int nr) {
 
 void PlayingState::init()
 {
-
-	/*sf::SoundBuffer* flyingSB;
-	sf::SoundBuffer* bulletSB;
-	sf::SoundBuffer* machinegunSB;*/
-
-	/*if (!flyingSB.loadFromFile("assets/Sound/airplane-takeoff.wav"))
-		std::cout << "sound coludnt load" << std::endl;
-	if (!missileSB.loadFromFile("assets/Sound/Missle_Launch.wav"))
-		std::cout << "sound coludnt load" << std::endl;
-	if (!bulletSB.loadFromFile("assets/Sound/Sniper_Rifle_short.wav"))
-		std::cout << "sound coludnt load" << std::endl;
-	if (!machinegunSB.loadFromFile("assets/Sound/Machine_gun.wav"))
-		std::cout << "sound coludnt load" << std::endl;*/
-
 	//load all assets, all assets are given a reference name to used when retreiving it
 	AssetLoader::getLoader().loadModel("assets/bullet.fbx", "bullet");
 	AssetLoader::getLoader().loadModel("assets/basicgun.fbx", "basicgun");
