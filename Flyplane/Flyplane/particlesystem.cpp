@@ -89,9 +89,10 @@ void ParticleSystem::update(float dt, glm::vec3 pos, glm::vec3 direction)
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, gCol);
 
 	glUseProgram(shaderID);
-	glProgramUniform3fv(shaderID, 0, 1, glm::value_ptr(pos));
-	glProgramUniform3fv(shaderID, 1, 1, glm::value_ptr(pos));
-	glProgramUniform1f(shaderID, 2, dt);
+	glProgramUniform3fv(shaderID, glGetUniformLocation(shaderID, "spawn"), 1, glm::value_ptr(pos));
+	glProgramUniform3fv(shaderID, glGetUniformLocation(shaderID, "direction"), 1, glm::value_ptr(direction));
+	glProgramUniform1f(shaderID, glGetUniformLocation(shaderID, "particleLife"), particleLife);
+	glProgramUniform1f(shaderID, glGetUniformLocation(shaderID, "dt"), dt);
 
 	glDispatchCompute((numParticles / 128) + 1, 1, 1);
 	glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
