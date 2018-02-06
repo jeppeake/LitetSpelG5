@@ -12,9 +12,11 @@ private:
 	std::unordered_map<std::string, Heightmap> heightmaps;
 	std::unordered_map<std::string, sf::SoundBuffer> sounds;
 	Text *text = nullptr;
+	Text *menutext = nullptr;
 public:
 	AssetLoader() {
 		text = new Text("assets/fonts/arial.ttf", 48);
+		menutext = new Text("assets/fonts/pricedown.ttf", 36);
 	}
 	~AssetLoader() {}
 	static AssetLoader &getLoader()
@@ -23,6 +25,7 @@ public:
 		return s;
 	}
 	Text *getText() &;
+	Text *getMenutext() &;
 	AssetLoader(const AssetLoader &other) = delete;
 	void operator=(const AssetLoader &other) = delete;
 	void loadModel(const std::string filename, const std::string name);
