@@ -14,9 +14,8 @@
 class CollisionSystem : public entityx::System<CollisionSystem>
 {
 private:
-	Heightmap *map;
 
-	std::map <entityx::Entity::Id, entityx::Entity> to_remove;
+	std::map<entityx::Entity::Id, entityx::Entity> to_remove;
 
 	void checkOBBvsPoint(entityx::Entity a, entityx::Entity b)
 	{
@@ -114,15 +113,19 @@ private:
 		}
 	}
 public:
-	CollisionSystem(Heightmap *map) : map(map) {};
+	CollisionSystem() {};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
+		Heightmap* map = nullptr;
 		entityx::ComponentHandle<Terrain> terr;
 		entityx::Entity terrain;
-		for (entityx::Entity entity : es.entities_with_components(terr))
-		{
+		for (entityx::Entity entity : es.entities_with_components(terr)) {
 			map = terr->hmptr;
 		}
+		if (!map) {
+			std::cout << "WARNING: could not find map in collision system\n";
+		}
+		
 		entityx::ComponentHandle<CollisionComponent> collision;
 		entityx::ComponentHandle<Transform> transform;
 		entityx::ComponentHandle<ModelComponent> model;
@@ -135,12 +138,15 @@ public:
 					checkCollision(entity, other);
 			}
 			
-			auto boxes = *model->mptr->getBoundingBoxes();
 
+			
+			if (!map) {
+				continue;
+			}
+			auto boxes = *model->mptr->getBoundingBoxes();
 			// Collision with terrain
 			glm::vec3 pos = transform.get()->pos;
 			double height = map->heightAt(pos);
-			
 			if (boxes.empty())
 			{
 				// Terrain point collision

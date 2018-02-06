@@ -31,7 +31,8 @@ Model GAU;
 Model gunpod;
 Model rocketpod;
 Model stinger;
-Heightmap* hm;
+Model house;
+
 sf::SoundBuffer flyingSB;
 sf::SoundBuffer missileSB;
 sf::SoundBuffer bulletSB;
@@ -63,7 +64,7 @@ void PlayingState::init()
 	ex.systems.add<RenderSystem>();
 	ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
-	ex.systems.add<CollisionSystem>(hm);
+	ex.systems.add<CollisionSystem>();
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
 	ex.systems.configure();
@@ -82,7 +83,7 @@ void PlayingState::init()
 	};
 
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -118,7 +119,7 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(&m);
 	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(200.f, 2.f);
+	entity.assign <FlightComponent>(300.f, 3.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(flyingSB);
 	entity.assign<BurstSoundComponent>(machinegunSB);
@@ -133,6 +134,7 @@ void PlayingState::init()
 	missile.load("assets/Weapons/Missiles/Fishrod/fishrod.fbx");
 	rocketpod.load("assets/Weapons/Rocketpod/rocketpod.fbx");
 	stinger.load("assets/Weapons/Missiles/Stinger/stinger.fbx");
+	house.load("assets/Terrain/kunkhus.fbx");
 
 	WeaponStats stats = WeaponStats(1, 1000, 1000, 0.2, 1.0f, false);
 	WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
@@ -152,14 +154,12 @@ void PlayingState::init()
 	pweapons.emplace_back(stats2, &gunpod, &projectile, glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f,glm::vec3(0,0,1)));
 	weapons.emplace_back(bomb, &weaponmodel, &projectile, glm::vec3(0, -0.3, -0.1));
 
-
-	hm = new Heightmap("assets/textures/slojp.png", "assets/textures/grass.png");
-	hm->pos.x -= 2560;
-	hm->pos.z -= 2560;
 	entity.assign <Equipment>(pweapons, weapons);
 
+
+	map.load("assets/Terrain/swiss2.png", "assets/Terrain/buildings.png", ex.entities);
 	entityx::Entity terrain = ex.entities.create();
-	terrain.assign<Terrain>(hm);
+	terrain.assign<Terrain>(map.getHeightmap());
 }
 
 void PlayingState::update(double dt)
@@ -193,3 +193,4 @@ void PlayingState::update(double dt)
 		this->changeState(new PlayingState());
 	}
 }
+

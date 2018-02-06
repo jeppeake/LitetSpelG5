@@ -73,7 +73,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		transform->orientation = normalize(transform->orientation);
 
 		float boost = flight->base_speed * 2;
-		float breakForce = flight->base_speed / 2;
+		float breakForce = flight->base_speed;
 		float normalSpeed = flight->base_speed;
 
 		float maxDrift = 0.005;

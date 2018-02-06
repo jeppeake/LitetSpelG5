@@ -5,7 +5,7 @@ uniform sampler2D shadowMap;
 uniform mat4 shadowMatrix;
 in vec3 vPos;
 in vec3 vNormal;
-in vec2 vTex;
+//in vec2 vTex;
 
 
 void main() {
@@ -27,7 +27,9 @@ void main() {
 	vec3 n = normalize(vNormal);
 	float result = dot(sun, n);
 	result = clamp(result, 0, 1);
-	vec3 color = texture(texSampler, vec2(vTex.x, 1 - vTex.y)).rgb;
+	//vec3 color = texture(texSampler, vec2(vTex.x, 1 - vTex.y)).rgb;
+	vec3 color = vec3(1);
 
 	gl_FragColor = vec4(color * result * visibility * 0.7 + color * 0.3, 1);
+	gl_FragColor = vec4(vNormal, 1.0);
 }
