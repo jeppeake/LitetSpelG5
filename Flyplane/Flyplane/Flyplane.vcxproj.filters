@@ -117,6 +117,9 @@
     <ClCompile Include="gameoverstate.cpp">
       <Filter>Source Files\enginestate</Filter>
     </ClCompile>
+    <ClCompile Include="particlesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -278,6 +281,15 @@
     <ClInclude Include="gameoverstate.h">
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
+    <ClInclude Include="particlesystem.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="fly_up.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="follow_target.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
@@ -316,6 +328,15 @@
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
     <None Include="textFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partVert.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partFrag.glsl">
+      <Filter>Source Files\graphics\shaders</Filter>
+    </None>
+    <None Include="partCompute.glsl">
       <Filter>Source Files\graphics\shaders</Filter>
     </None>
   </ItemGroup>

@@ -8,6 +8,7 @@
 #include "heightmap.h"
 #include "transform.h"
 #include "text.hpp"
+#include "particlesystem.h"
 struct RenderObject {
 	Model* model;
 	Transform trans;
@@ -42,7 +43,7 @@ public:
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
 	void RenderScene();
-
+	void RenderParticles(ParticleSystem *sys);
 	void setCamera(const Camera& camera);
 	// DEBUG
 	void update(float dt);

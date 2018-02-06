@@ -1,20 +1,28 @@
 #include "SAIB.h"
 
 glm::vec3 SAIB::flyTo(glm::vec3 position, glm::quat orientation, glm::vec3 target) {
-	//std::cout << "Dist to waypoint: " << glm::length(position - target) << " dist to player: \n";
-	glm::vec3 front = glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0);
-	glm::vec3 up = glm::toMat3(orientation) * glm::vec3(0.0, 1.0, 0.0);
-	glm::vec3 left = glm::toMat3(orientation) * glm::vec3(1.0, 0.0, 0.0);
+	glm::vec3 front = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0));
+	glm::vec3 up = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 1.0, 0.0));
+	glm::vec3 left = glm::normalize(glm::toMat3(orientation) * glm::vec3(1.0, 0.0, 0.0));
 
-	float roll = -testAxis(position, orientation, target, front);;
-	float pitch = testAxis(position, orientation, target, left);;
-	float yaw = yawTowards(position, orientation, target);
-	std::cout << roll << " : " << pitch << " : " << yaw << " : " << glm::length(position - target) <<"\n";
-	return glm::vec3(roll, pitch, 0.0);
+	glm::vec3 pt = glm::normalize(target - position);
+
+	float pow = length(pt - front) / 2;
+	float roll = 0.f;
+	if (pow > 0.2) {
+		roll = -test2Axis(position, orientation, target, front, up);
+	} else {
+		roll = -test2Axis(position, orientation, position + glm::vec3(0.0, 1.0, 0.0), front, up);
+	}
+	float pitch = test2Axis(position, orientation, target, left, front);
+	float yaw = -test2Axis(position, orientation, target, up, front);
+
+	//std::cout << roll << " : " << pitch << " : " << yaw << " : " << glm::length(position - target) << " : " << pow <<"\n";
+	return glm::vec3(roll, pitch, yaw);
 }
 
 glm::vec3 SAIB::fly_to(glm::vec3 position, glm::quat orientation, glm::vec3 target) {//fly to target, ignore orientation
-
+	//return flyTo(position, orientation, target);
 	//std::cout << glm::length(position - target) << "\n";
 
 	glm::vec3 front = glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0);
@@ -39,9 +47,9 @@ glm::vec3 SAIB::fly_to(glm::vec3 position, glm::quat orientation, glm::vec3 targ
 			input += glm::vec3(0.0, testAxis(position, orientation, target, left), 0.0);
 		}
 	} else {//precision mode
-		float adjust = 50.0;
+		float adjust = 2.0;
 		float roll = -testAxis(position, orientation, position + glm::vec3(0.0, 1.0, 0.0), front);
-		float pitch = testAxis(position, orientation, target, left) / adjust;
+		float pitch = -testAxis(position, orientation, target, left) / adjust;
 		float yaw = testAxis(position, orientation, target, up) / adjust;
 		input += glm::vec3(roll, pitch, yaw);
 	}
@@ -103,10 +111,11 @@ float SAIB::yawTowards(glm::vec3 position, glm::quat orientation, glm::vec3 targ
 	glm::vec3 yaw_left_t = glm::rotate(up, glm::radians(-5.f), front);
 	return testTowards(yaw_right_t, yaw_left_t, pt_adjusted_for_yaw);
 }
+
 float SAIB::testAxis(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 axis) {
-	glm::vec3 front = glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0);
-	glm::vec3 up = glm::toMat3(orientation) * glm::vec3(0.0, 1.0, 0.0);
-	glm::vec3 left = glm::toMat3(orientation) * glm::vec3(1.0, 0.0, 0.0);
+	glm::vec3 front = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0));
+	glm::vec3 up = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 1.0, 0.0));
+	glm::vec3 left = glm::normalize(glm::toMat3(orientation) * glm::vec3(1.0, 0.0, 0.0));
 
 	glm::vec3 t = target;
 
@@ -120,6 +129,16 @@ float SAIB::testAxis(glm::vec3 position, glm::quat orientation, glm::vec3 target
 	glm::vec3 axis_minus_t = glm::rotate(up, glm::radians(-5.f), front);
 
 	return testTowards(axis_plus_t, axis_minus_t, pt_adjusted_for_axis);
+}
+
+float SAIB::test2Axis(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 rot_axis, glm::vec3 test_axis) {
+	glm::vec3 pt = glm::normalize(target - position);
+	float pow = glm::length(pt - test_axis) / 2;
+
+	glm::vec3 axis_plus_t = glm::rotate(test_axis, glm::radians(5.f), rot_axis);
+	glm::vec3 axis_minus_t = glm::rotate(test_axis, glm::radians(-5.f), rot_axis);
+
+	return testTowards(axis_plus_t, axis_minus_t, pt) * glm::pow(pow, 0.9);
 }
 
 float SAIB::testTowards(glm::vec3 v1, glm::vec3 v2, glm::vec3 t) {

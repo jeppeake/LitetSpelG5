@@ -144,6 +144,7 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menustate.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="particlesystem.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -171,8 +172,10 @@
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
+    <ClInclude Include="fly_up.h" />
     <ClInclude Include="follow_path.h" />
     <ClInclude Include="gameoverstate.h" />
+    <ClInclude Include="follow_target.h" />
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
     <ClInclude Include="ground_close_front.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
+    <ClInclude Include="particlesystem.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="playercomponent.h" />
     <ClInclude Include="playersystem.h" />
@@ -211,10 +215,13 @@
   <ItemGroup>
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
+    <None Include="partFrag.glsl" />
+    <None Include="partVert.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
+    <None Include="partCompute.glsl" />
     <None Include="textFrag.glsl" />
     <None Include="textVert.glsl" />
     <None Include="vertexShader.glsl" />
