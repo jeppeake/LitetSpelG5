@@ -115,7 +115,7 @@ void PlayingState::init()
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-		entity.assign <ModelComponent>(assetLoader.getModel("MIG-212A"));
+		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 		entity.assign <FlightComponent>(200.f, 2.f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
@@ -134,7 +134,7 @@ void PlayingState::init()
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 
-		std::cout << "Enemy added\n";
+		//std::cout << "Enemy added\n";
 	}
 
 	//entity = ex.entities.create();
