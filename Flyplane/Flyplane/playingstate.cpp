@@ -26,6 +26,8 @@
 #include "condition.h"
 #include "always_true.h"
 
+#include "menustate.h"
+
 
 
 entityx::Entity entity;
@@ -88,7 +90,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(assetLoader.getHeightmap("testmap"));
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
-	ex.systems.add<GameOver>();
+	ex.systems.add<GameOver>(this);
 	ex.systems.configure();
 
 	/*
@@ -200,7 +202,6 @@ void PlayingState::update(double dt)
 	if(Input::isKeyDown(GLFW_KEY_SPACE))
 		std::cout << ex.entities.size() << "\n";
 
-
 	ex.systems.update<PlayerSystem>(dt);
 	ex.systems.update<AISystem>(dt);
 	ex.systems.update<WeaponSystem>(dt);
@@ -213,4 +214,8 @@ void PlayingState::update(double dt)
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState());
 	}
+}
+
+void PlayingState::gameOver() {
+	//this->changeState(new MenuState());
 }
