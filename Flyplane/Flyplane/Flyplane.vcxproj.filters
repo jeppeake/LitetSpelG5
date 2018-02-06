@@ -242,12 +242,6 @@
     <ClInclude Include="text.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="gameoversystem.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="menustate.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="soundbuffers.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -270,6 +264,12 @@
       <Filter>Source Files\enginestate</Filter>
     </ClInclude>
     <ClInclude Include="endlesscollisionsystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="menustate.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="gameoversystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
   </ItemGroup>
