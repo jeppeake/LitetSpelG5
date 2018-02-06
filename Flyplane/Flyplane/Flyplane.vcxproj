@@ -166,6 +166,8 @@
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
+    <ClInclude Include="endlesscollisionsystem.h" />
+    <ClInclude Include="endlessmode.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />

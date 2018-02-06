@@ -111,6 +111,9 @@
     <ClCompile Include="text.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="endlessmode.cpp">
+      <Filter>Source Files\enginestate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -262,6 +265,12 @@
     </ClInclude>
     <ClInclude Include="menustate.h">
       <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="endlessmode.h">
+      <Filter>Source Files\enginestate</Filter>
+    </ClInclude>
+    <ClInclude Include="endlesscollisionsystem.h">
+      <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
