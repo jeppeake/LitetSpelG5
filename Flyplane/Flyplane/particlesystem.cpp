@@ -11,10 +11,14 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float spread, glm
 	particleColor = col;
 	program.create("partVert.glsl", "partFrag.glsl");
 	{
-		std::ifstream file("testCompute.glsl");
+		std::ifstream file("partCompute.glsl");
 		std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 		const char *code = c.c_str();
 		shaderID = glCreateShaderProgramv(GL_COMPUTE_SHADER, 1, &code);
+		if (!shaderID)
+		{
+			std::cerr << "Failed to load computeshader \n";
+		}
 	}
 	glGenBuffers(1, &gPos);
 	glGenBuffers(1, &gVel);
@@ -29,7 +33,7 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float spread, glm
 	//Buffer the initial positions
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		p[i] = glm::vec4(0.0,0.0,0.0, 1.0);
+		p[i] = glm::vec4(0.2,1.0,5.0, 1.0);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gVel);
@@ -78,11 +82,13 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float spread, glm
 
 void ParticleSystem::update(float dt, glm::vec3 pos, glm::vec3 direction)
 {
-	glUseProgram(shaderID);
+
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, gPos);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, gVel);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, gLife);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, gCol);
+
+	glUseProgram(shaderID);
 	glProgramUniform3fv(shaderID, 0, 1, glm::value_ptr(pos));
 	glProgramUniform3fv(shaderID, 1, 1, glm::value_ptr(pos));
 	glProgramUniform1f(shaderID, 2, dt);
