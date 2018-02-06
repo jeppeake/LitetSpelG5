@@ -135,6 +135,7 @@
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
+    <ClCompile Include="gameoverstate.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="input.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
     <ClInclude Include="follow_path.h" />
+    <ClInclude Include="gameoverstate.h" />
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
     <ClInclude Include="ground_close_front.h" />
