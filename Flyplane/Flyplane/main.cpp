@@ -9,7 +9,6 @@
 #include "input.h"
 #include "transform.h"
 #include <sfml\Audio.hpp>
-#include "endlessmode.h"
 
 int main(void)
 {	
