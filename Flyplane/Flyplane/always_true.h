@@ -5,7 +5,7 @@ public:
 	Always_True() : Condition() {
 
 	}
-	bool test(ComponentHandle<Transform> p_transform, ComponentHandle<FlightComponent> p_flight, ComponentHandle<Transform> me_transform, ComponentHandle<FlightComponent> me_flight, bool is_targeted) {
+	bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) {
 		return true;
 	}
 };

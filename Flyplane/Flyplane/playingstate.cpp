@@ -25,6 +25,8 @@
 #include "targetcomponent.h"
 #include "condition.h"
 #include "always_true.h"
+#include "enemy_close.h"
+#include "follow_player.h"
 
 
 
@@ -112,7 +114,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(assetLoader.getModel("MIG-212A"));
-		entity.assign <FlightComponent>(300.f, 1.f);
+		entity.assign <FlightComponent>(200.f, 2.f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
@@ -124,10 +126,13 @@ void PlayingState::init()
 
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+		behaviours.push_back(new Follow_Player(2, new Enemy_Close(200.f)));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
+
+		std::cout << "Enemy added\n";
 	}
 
 	//entity = ex.entities.create();

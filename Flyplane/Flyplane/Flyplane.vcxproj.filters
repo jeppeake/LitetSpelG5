@@ -254,6 +254,15 @@
     <ClInclude Include="soundbuffers.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="enemy_close.h">
+      <Filter>Source Files\behaviours\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="follow_player.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="ground_close_front.h">
+      <Filter>Source Files\behaviours\conditions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">

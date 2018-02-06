@@ -13,6 +13,7 @@ class Behaviour {
 public:
 	Behaviour(int priority, Condition* condition) {
 		this->priority = priority;
+		this->condition = condition;
 	}
 	~Behaviour() {
 		delete condition;
@@ -20,8 +21,14 @@ public:
 	virtual int getPriority() {
 		return priority;
 	}
+	void setActive(bool active) {
+		this->active = active;
+	}
+	bool getActive() {
+		return active;
+	}
 
-	virtual glm::vec3 act(ComponentHandle<Transform> p_transform, ComponentHandle<FlightComponent> p_flight, ComponentHandle<Transform> me_transform, ComponentHandle<FlightComponent> me_flight, bool is_targeted) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
+	virtual glm::vec3 act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
 
 	int priority = 0;
 	bool active = false;

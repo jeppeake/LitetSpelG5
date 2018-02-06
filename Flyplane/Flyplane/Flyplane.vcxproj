@@ -165,11 +165,14 @@
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
+    <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
     <ClInclude Include="follow_path.h" />
     <ClInclude Include="gameoversystem.h" />
+    <ClInclude Include="follow_player.h" />
+    <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
