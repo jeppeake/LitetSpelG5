@@ -26,13 +26,5 @@ void main()
 	vec3 vel = Velocities[gid].xyz;
 	vec4 color = Colors[gid];
 	float life = Lives[gid];
-	life -= dt;
-	if(life <= 0)
-	{
-		Positions[gid] = vec4(1.0,2.0,2.0,1.0); 
-	}
-	else
-	{
-		Positions[gid] = vec4(1.0,2.0,2.0,1.0); 
-	}
+	Positions[gid] *= 1.0 / 60.0;
 }
