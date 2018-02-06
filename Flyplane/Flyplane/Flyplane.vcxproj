@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="endlessmode.cpp" />
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="input.cpp" />
@@ -150,6 +151,8 @@
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
     <ClInclude Include="constant_turn.h" />
+    <ClInclude Include="endlesscollisionsystem.h" />
+    <ClInclude Include="endlessmode.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />

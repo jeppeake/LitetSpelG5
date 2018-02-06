@@ -8,6 +8,8 @@
 #include "input.h"
 #include "transform.h"
 #include <sfml\Audio.hpp>
+#include "endlessmode.h"
+
 int main(void)
 {	
 	sf::Listener::setGlobalVolume(30);
@@ -19,7 +21,7 @@ int main(void)
 	//w.open();
 	Input::initialize();
 
-	EngineState* engine = new PlayingState();
+	EngineState* engine = new PlayingState();//EndlessMode();
 	engine->init();
 
 	Timer deltatime;
