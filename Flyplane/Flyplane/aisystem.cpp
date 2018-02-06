@@ -11,27 +11,28 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 			ComponentHandle<FlightComponent> flight;
 			ComponentHandle<Transform> transform;
 			for (Entity entity_ai : es.entities_with_components(ai, flight, transform)) {
-
-				for (int i = 0; i < ai->behaviours.size(); i++) {
-					ai->behaviours.at(i)->setActive(ai->behaviours.at(i)->condition->test(entity_player, entity_ai, entity_terrain));
-				}
-
-				Behaviour* b = ai->behaviours.at(0);
-				for (int i = 1; i < ai->behaviours.size(); i++) {
-					if (b->getPriority() < ai->behaviours.at(i)->getPriority() && ai->behaviours.at(i)->getActive()) {
-						b = ai->behaviours.at(i);
+				if (ai->behaviours.size() != 0) {
+					for (int i = 0; i < ai->behaviours.size(); i++) {
+						ai->behaviours.at(i)->setActive(ai->behaviours.at(i)->condition->test(entity_player, entity_ai, entity_terrain));
 					}
-				}
 
-				glm::vec3 input;
-				if (b->getActive()) {
-					input = b->act(entity_player, entity_ai, entity_terrain);
-				}
-				else {
-					input = glm::vec3(0.0, 0.0, 0.0);
-				}
+					Behaviour* b = ai->behaviours.at(0);
+					for (int i = 1; i < ai->behaviours.size(); i++) {
+						if (b->getPriority() < ai->behaviours.at(i)->getPriority() && ai->behaviours.at(i)->getActive()) {
+							b = ai->behaviours.at(i);
+						}
+					}
 
-				flight->setInput(input);
+					glm::vec3 input;
+					if (b->getActive()) {
+						input = b->act(entity_player, entity_ai, entity_terrain);
+					}
+					else {
+						input = glm::vec3(0.0, 0.0, 0.0);
+					}
+
+					flight->setInput(input);
+				}
 			}
 		}
 	}

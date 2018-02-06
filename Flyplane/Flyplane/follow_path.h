@@ -14,7 +14,7 @@ public:
 				target = 0;
 			}
 		}
-		glm::vec3 input = SAIB::fly_to(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, plotter.at(target));
+		glm::vec3 input = SAIB::flyTo(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, plotter.at(target));
 		//glm::vec3 input = SAIB::fly_to(me_transform->pos, me_transform->orientation, p_transform->pos);
 		return input;
 	}

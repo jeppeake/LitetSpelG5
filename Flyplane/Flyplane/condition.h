@@ -2,6 +2,7 @@
 
 #include "transform.h"
 #include "flightcomponent.h"
+#include "terraincomponent.h"
 #include "SAIB.h"
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>

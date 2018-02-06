@@ -272,6 +272,12 @@
     <ClInclude Include="endlesscollisionsystem.h">
       <Filter>Source Files\ecs\systems</Filter>
     </ClInclude>
+    <ClInclude Include="fly_up.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="follow_target.h">
+      <Filter>Source Files\behaviours</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="weapon.h">
