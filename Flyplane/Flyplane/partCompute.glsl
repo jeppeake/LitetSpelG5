@@ -5,7 +5,7 @@ layout(std430, binding=7) buffer Pos
 };
 layout(std430, binding=8) buffer Vel
 {
-	vec4 Velocities[];
+	float Velocities[];
 };
 layout(std430, binding=9) buffer Life
 {
@@ -15,8 +15,13 @@ layout(std430, binding=10) buffer Col
 {
 	vec4 Colors[];
 };
+uniform float dt;
+uniform float life;
+uniform vec3 spawn;
+uniform vec3 direction;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 void main()
 {
-
+	uint gid = gl_GlobalInvocationID.x;
+	Positions[gid] = vec4(spawn, 1.0);
 }

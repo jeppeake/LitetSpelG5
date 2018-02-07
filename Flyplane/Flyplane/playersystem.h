@@ -17,7 +17,7 @@
 using namespace entityx;
 
 struct PlayerSystem : public System<PlayerSystem> {
-	ParticleSystem *sys;
+	ParticleSystem *S;
 	PlayerSystem();
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override;
 
