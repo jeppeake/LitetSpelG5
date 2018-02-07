@@ -288,8 +288,40 @@ void PlayingState::update(double dt)
 	ex.systems.update<System class here>(dt);
 	*/
 	
-	if (Input::isKeyPressed(GLFW_KEY_ESCAPE))
+	if (Input::isKeyPressed(GLFW_KEY_ESCAPE)) {
 		this->menuOpen = !this->menuOpen;
+
+		if (this->menuOpen) {
+			ComponentHandle<SoundComponent> sound;
+			for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
+				sound = entity.component<SoundComponent>();
+				SoundComponent* s = sound.get();
+
+				s->sound.pause();
+			}
+
+			ComponentHandle<BurstSoundComponent> burstSound;
+			for (Entity entity : ex.entities.entities_with_components(burstSound)) {
+				burstSound = entity.component<BurstSoundComponent>();
+
+				BurstSoundComponent* s = burstSound.get();
+
+				s->sound.stop();
+			}
+		}
+		else {
+			ComponentHandle<SoundComponent> sound;
+			for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
+				sound = entity.component<SoundComponent>();
+				SoundComponent* s = sound.get();
+
+				if (s->sound.getStatus() == s->sound.Paused) {
+					s->sound.play();
+					//s->sound.setLoop(true);
+				}
+			}
+		}
+	}
 	
 	
 	if(Input::isKeyDown(GLFW_KEY_SPACE))
@@ -344,6 +376,14 @@ void PlayingState::gameOver() {
 	playerAlive = false;
 	Highscore::getHighscore().addScore(name, points);
 	Highscore::getHighscore().writeToFile();
+
+	ComponentHandle<SoundComponent> sound;
+	for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
+		sound = entity.component<SoundComponent>();
+		SoundComponent* s = sound.get();
+
+		s->sound.pause();
+	}
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();
 	pos.x = pos.x / 2 - 20;
