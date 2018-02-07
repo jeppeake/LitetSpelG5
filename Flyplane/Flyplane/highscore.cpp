@@ -30,7 +30,7 @@ Highscore::Highscore() {
 		list[nrOfElements] = {score, name};
 		nrOfElements++;
 	}
-		
+	convertListToString();
 }
 
 Highscore::~Highscore() {
@@ -63,8 +63,6 @@ void Highscore::writeToFile() const {
 	file.open("highscorelist.txt");
 
 	if (file.is_open()) {
-		cout << "file is open" << endl;
-		cout << nrOfElements << endl;
 		for (int i = 0; i < nrOfElements; i++) {
 			file << list[i].score << endl;
 			file << list[i].name << endl;

@@ -1,5 +1,10 @@
 #include "flightsystem.h"
 
+FlightSystem::FlightSystem()
+{
+
+}
+
 void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) {
 	ComponentHandle<Physics> physics;
 	ComponentHandle<Transform> transform;

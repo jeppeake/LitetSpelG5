@@ -1,12 +1,10 @@
 #version 430
-in vec4 vertexPos;
-in vec4 inColor;
-uniform mat4 view;
-uniform mat4 projection;
-out vec4 vertColor;
+layout (location = 0) in vec4 position;
+layout (location = 1) in vec4 color;
+
+out vec4 passCol;
 void main()
 {
-	gl_Position = projection * view * vertexPos;
-	gl_PointSize = 5.0;
-	vertColor = inColor;
+   passCol = color;
+   gl_Position = vec4(position.xyz, 1.0f);
 }

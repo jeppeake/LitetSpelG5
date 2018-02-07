@@ -1,12 +1,13 @@
 #pragma once
 #include "ButtonAction.h"
 #include "menustate.h"
+#include "loadingstate.h"
 
 class StartGameAction : public ButtonAction {
 private:
-	MenuState * menuS;
+	 LoadingState * menuS;
 public:
-	StartGameAction(MenuState* ms) {
+	StartGameAction(LoadingState* ms) {
 		menuS = ms;
 	}
 	inline void action() {

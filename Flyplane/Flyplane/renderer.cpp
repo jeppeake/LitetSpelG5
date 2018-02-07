@@ -156,11 +156,10 @@ void Renderer::RenderScene() {
 	mapList.clear();
 }
 
-void Renderer::RenderParticles(ParticleSystem * sys)
+Camera Renderer::getCamera() &
 {
-	sys->render(camera.getViewMatrix(), camera.getProjMatrix());
+	return camera;
 }
-
 void Renderer::setCamera(const Camera & camera)
 {
 	this->camera = camera;

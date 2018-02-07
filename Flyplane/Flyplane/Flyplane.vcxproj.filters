@@ -15,9 +15,6 @@
     <ClCompile Include="playersystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="gameoverstate.cpp">
-      <Filter>States</Filter>
-    </ClCompile>
     <ClCompile Include="menustate.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -77,6 +74,15 @@
     </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="loadoutstate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="loadingstate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="highscorestate.cpp">
+      <Filter>States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +183,6 @@
     <ClInclude Include="enginestate.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="gameoverstate.h">
-      <Filter>States</Filter>
-    </ClInclude>
     <ClInclude Include="menustate.h">
       <Filter>States</Filter>
     </ClInclude>
@@ -273,6 +276,24 @@
     <ClInclude Include="model.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="loadoutstate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="loadoutaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="loadingstate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="startloadingaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="highscoreaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="highscorestate.h">
+      <Filter>States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -309,6 +330,9 @@
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="vertexShader.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="partGeom.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>
