@@ -43,7 +43,7 @@ public:
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
 	void RenderScene();
-	void RenderParticles(ParticleSystem *sys);
+	Camera getCamera() &;
 	void setCamera(const Camera& camera);
 	// DEBUG
 	void update(float dt);

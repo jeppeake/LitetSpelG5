@@ -1,7 +1,7 @@
 #version 430
-in vec4 vertColor;
-out vec4 fColor;
+layout(location = 0) out vec4 color;
+in vec4 fragCol;
 void main()
 {
-	fColor = vertColor;
+	color = fragCol;
 }

@@ -1,7 +1,7 @@
 #include "playersystem.h"
 PlayerSystem::PlayerSystem()
 {
-	sys = new ParticleSystem(10000, 15, 5, glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(-1));
+	
 }
 void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta dt)
 {
@@ -79,7 +79,5 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		flight->i_throttle = throttle;
 		flight->i_airBrake = brake;
-		sys->update(dt, transform->pos, glm::toMat3(transform->orientation) * glm::vec3(0.0,0.0,-1.0));
-		Renderer::getRenderer().RenderParticles(sys);
 	}
 }

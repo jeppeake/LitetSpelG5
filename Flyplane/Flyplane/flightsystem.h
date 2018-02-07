@@ -12,6 +12,6 @@
 using namespace entityx;
 
 struct FlightSystem : public entityx::System<FlightSystem> {
-
+	FlightSystem();
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override;
 };
