@@ -376,7 +376,6 @@ void PlayingState::gameOver() {
 	playerAlive = false;
 	Highscore::getHighscore().addScore(name, points);
 	Highscore::getHighscore().writeToFile();
-	highscore.addScore(name, points);
 
 	ComponentHandle<SoundComponent> sound;
 	for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
