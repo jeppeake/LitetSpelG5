@@ -7,7 +7,7 @@ void Highscore::convertListToString() {
 	for (int i = 0; i < nrOfElements; i++) {
 		highscoreList[i] = list[i].name;
 		string temp = to_string(list[i].score);
-		for (int k = 0; k < 40 - list[i].name.size() - temp.size(); k++) {
+		for (int k = 0; k < 25 - list[i].name.size() - temp.size(); k++) {
 			highscoreList[i] += " ";
 		}
 		highscoreList[i] += temp;

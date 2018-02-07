@@ -83,11 +83,11 @@ void PlayingState::drawHighscore() {
 	pos.x = 800;
 	pos.y = 400;
 	string* p = Highscore::getHighscore().getHighscoreList();
-	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
-	pos.x = 720;
+	AssetLoader::getLoader().getHighscoreText()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
+	pos.x = 650;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
-		AssetLoader::getLoader().getText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
+		AssetLoader::getLoader().getHighscoreText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
 	}
 }
 

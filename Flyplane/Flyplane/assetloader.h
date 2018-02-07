@@ -14,11 +14,13 @@ private:
 	Text *text = nullptr;
 	Text *menutext = nullptr;
 	Text *bigtext = nullptr;
+	Text *highscoreText = nullptr;
 public:
 	AssetLoader() {
 		text = new Text("assets/fonts/arial.ttf", 48);
 		menutext = new Text("assets/fonts/pricedown.ttf", 36);
 		bigtext = new Text("assets/fonts/pricedown.ttf", 48);
+		highscoreText = new Text("assets/fonts/consola.ttf", 36);
 	}
 	~AssetLoader() {}
 	static AssetLoader &getLoader()
@@ -29,6 +31,7 @@ public:
 	Text *getText() &;
 	Text *getMenutext() &;
 	Text *getBigtext() &;
+	Text *getHighscoreText() &;
 	AssetLoader(const AssetLoader &other) = delete;
 	void operator=(const AssetLoader &other) = delete;
 	void loadModel(const std::string filename, const std::string name);

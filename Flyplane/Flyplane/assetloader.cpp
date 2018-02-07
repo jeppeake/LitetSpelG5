@@ -16,6 +16,11 @@ Text * AssetLoader::getBigtext() &
 	return bigtext;
 }
 
+Text * AssetLoader::getHighscoreText() &
+{
+	return highscoreText;
+}
+
 void AssetLoader::loadModel(const std::string filename, const std::string name) {
 	auto find = models.find(name);
 	if (find == models.end()) {

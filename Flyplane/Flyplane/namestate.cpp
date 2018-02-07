@@ -8,11 +8,11 @@ void NameState::checkForInput() {
 		offset = 0;
 	}
 	for (int i = 0; i < 25; i++) {
-		if (Input::isKeyPressed(GLFW_KEY_A + i)) {
+		if (Input::isKeyPressed(GLFW_KEY_A + i) && name.size() < 17) {
 			name += GLFW_KEY_A + i + offset;
 		}
 	}
-	if (Input::isKeyPressed(GLFW_KEY_BACKSPACE))
+	if (Input::isKeyPressed(GLFW_KEY_BACKSPACE) && name.size() > 0)
 		name.pop_back();
 }
 
