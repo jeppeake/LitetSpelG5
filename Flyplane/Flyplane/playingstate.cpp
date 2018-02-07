@@ -130,6 +130,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
+	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
 
 
 	//get all assets (not really needed, can be used inline)
@@ -137,6 +138,7 @@ void PlayingState::init()
 	missileSB = AssetLoader::getLoader().getSoundBuffer("missile");
 	bulletSB = AssetLoader::getLoader().getSoundBuffer("sniperrifle");
 	machinegunSB = AssetLoader::getLoader().getSoundBuffer("machinegun");
+	machinegunShortSB = AssetLoader::getLoader().getSoundBuffer("machinegunShort");
 
 	/*
 	* add systems
@@ -242,7 +244,7 @@ void PlayingState::init()
 	entity.assign <FlightComponent>(200.f, 2.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(*flyingSB);
-	entity.assign<BurstSoundComponent>(*machinegunSB);
+	entity.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity.assign<Target>(10.0, FACTION_PLAYER);
 
 	std::vector<Weapon> weapons;

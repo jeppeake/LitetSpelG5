@@ -57,6 +57,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		ComponentHandle<Projectile> projectile;
 		ComponentHandle<Missile> missile;
 		ComponentHandle<Physics> physics;
+		ComponentHandle<BurstSoundComponent> burstSound;
 
 		for (Entity entity : es.entities_with_components(equip, trans)) {
 			equip = entity.component<Equipment>();
@@ -94,11 +95,21 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 					if(pweapon->isMissile)
 						spawnMissile(trans.get(), pweapon, planeSpeed, es, parentfaction);
-					else
+					else {
 						spawnBullet(trans.get(), pweapon, planeSpeed, es, parentfaction);
+
+						burstSound = entity.component<BurstSoundComponent>();
+						if (burstSound) {
+							BurstSoundComponent* s = burstSound.get();
+							
+							if (s->sound.getStatus() != s->sound.Playing) {
+								s->sound.play();
+							}
+						}
+					}
 				}
 			}
-
+			
 			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
