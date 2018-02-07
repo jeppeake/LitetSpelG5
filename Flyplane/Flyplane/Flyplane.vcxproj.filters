@@ -84,6 +84,9 @@
     <ClCompile Include="highscorestate.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="fullscreenimage.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
     <ClCompile Include="namestate.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -297,6 +300,9 @@
     <ClInclude Include="highscorestate.h">
       <Filter>States</Filter>
     </ClInclude>
+    <ClInclude Include="fullscreenimage.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
     <ClInclude Include="namestate.h">
       <Filter>States</Filter>
     </ClInclude>
@@ -339,6 +345,12 @@
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="partGeom.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="fcimageFrag.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="fcimageVertex.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>

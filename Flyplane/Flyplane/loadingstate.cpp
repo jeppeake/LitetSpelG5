@@ -7,6 +7,8 @@
 
 void LoadingState::init() {
 	bHandler.addButton(new Button("Start", glm::vec2(Window::getWindow().size().x - 200, Window::getWindow().size().y - 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new StartGameAction(this), "buttonforward"));
+	fi.load("assets/textures/loadingscreen.png");
+
 
 	music.setBuffer(*AssetLoader::getLoader().getSoundBuffer("loadingmusic"));
 	music.play();
@@ -50,6 +52,9 @@ void LoadingState::startGame() {
 void LoadingState::update(double dt) {
 	glClearColor(33.0 / 255, 33.0 / 255, 33.0 / 255, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	fi.bind();
+	fi.draw();
+	glClear(GL_DEPTH_BUFFER_BIT);
 	if (!done)
 		AssetLoader::getLoader().getBigtext()->drawText("Loading " + current + "...", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
 	else
