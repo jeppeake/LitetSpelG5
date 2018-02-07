@@ -9,8 +9,15 @@
 #include "condition.h"
 
 using namespace entityx;
+struct Commands {
+	bool fire_secondary = false;
+	bool fire_primary = false;
+	glm::vec3 steering = glm::vec3(0.0, 0.0, 0.0);
+	glm::vec2 throttle = glm::vec2(0.0, 0.0);
+};
 class Behaviour {
 public:
+
 	Behaviour(int priority, Condition* condition) {
 		this->priority = priority;
 		this->condition = condition;
@@ -28,9 +35,9 @@ public:
 		return active;
 	}
 
-	virtual glm::vec3 act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
-
+	virtual Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
 	int priority = 0;
 	bool active = false;
+	bool terminated = false;
 	Condition* condition;
 };
