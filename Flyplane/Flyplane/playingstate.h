@@ -25,13 +25,10 @@ private:
 	void spawnEnemies(int nr);
 	void drawHighscore();
 
-	std::string name = "name";
+	std::string name;
 
 public:
-	PlayingState() {};
-	PlayingState(std::string name) {
-		name = name;
-	};
+	PlayingState(std::string name = "name") : name(name) {}
 	virtual ~PlayingState() {}
 
 	virtual void init();

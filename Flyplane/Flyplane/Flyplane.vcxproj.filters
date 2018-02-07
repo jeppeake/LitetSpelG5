@@ -78,6 +78,9 @@
     <ClCompile Include="highscorestate.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="namestate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -274,6 +277,9 @@
       <Filter>GUI\Actions</Filter>
     </ClInclude>
     <ClInclude Include="highscorestate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="namestate.h">
       <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>

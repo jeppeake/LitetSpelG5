@@ -87,7 +87,7 @@ void PlayingState::drawHighscore() {
 	pos.x = 720;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
-		AssetLoader::getLoader().getMenutext()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
+		AssetLoader::getLoader().getText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
 	}
 }
 
@@ -96,7 +96,7 @@ void PlayingState::startMenu() {
 }
 
 void PlayingState::restart() {
-	this->changeState(new PlayingState());
+	this->changeState(new PlayingState(name));
 }
 
 
@@ -368,7 +368,7 @@ void PlayingState::update(double dt)
 	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)), pos, glm::vec3(1, 0, 0), 0.4);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
-		this->changeState(new PlayingState());
+		this->changeState(new PlayingState(name));
 	}
 }
 

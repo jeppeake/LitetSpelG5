@@ -7,6 +7,7 @@
 #include "assetloader.h"
 #include "highscoreaction.h"
 #include "highscorestate.h"
+#include "namestate.h"
 
 MenuState::~MenuState() {
 }
@@ -28,7 +29,7 @@ void MenuState::startHighscore() {
 }
 
 void MenuState::startGame() {
-	this->changeState(new PlayingState());
+	this->changeState(new NameState());
 }
 
 void MenuState::update(double dt) {
