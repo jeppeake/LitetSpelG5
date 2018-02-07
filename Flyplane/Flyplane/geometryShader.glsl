@@ -3,6 +3,7 @@ layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 Pos[];
+in vec3 Normal[];
 in vec2 Tex[];
 
 out vec3 vPos;
@@ -15,6 +16,7 @@ void main() {
 	vNormal = cross(v1, v2);
 	for(int i = 0; i < 3; i++) {
 		vPos = Pos[i];
+		vNormal = Normal[i];
 		vTex = Tex[i];
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();

@@ -14,10 +14,10 @@ void checkLinkError(GLuint id, const std::string& paths)
 		GLint log_size = 0;
 		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_size);
 		std::vector<GLchar> error(log_size);
-		glGetShaderInfoLog(id, log_size, &log_size, &error[0]);
+		glGetProgramInfoLog(id, log_size, &log_size, &error[0]);
 		std::string errorstr{ &error[0] };
 
-		std::cout << "Error in:\n" << paths << "\n" <<  errorstr << "\n";
+		std::cout << "Error in:\n" << paths << "\n" << errorstr << "\n";
 
 		glDeleteProgram(id);
 		system("pause");

@@ -241,7 +241,7 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(200.f, 2.f);
+	entity.assign <FlightComponent>(300.f, 3.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(*flyingSB);
 	entity.assign<BurstSoundComponent>(*machinegunShortSB);
@@ -273,6 +273,8 @@ void PlayingState::init()
 
 	entity.assign <Equipment>(pweapons, weapons);
 
+
+	map.load("assets/Terrain/swiss2.png", "assets/Terrain/buildings.png", ex.entities);
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 }
@@ -393,3 +395,4 @@ void PlayingState::gameOver() {
 	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);*/
 	//this->changeState(new GameOverState(name, points));
 }
+

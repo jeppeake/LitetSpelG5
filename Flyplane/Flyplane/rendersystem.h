@@ -6,6 +6,7 @@
 
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
@@ -18,6 +19,8 @@ using namespace entityx;
 struct RenderSystem : public System<RenderSystem> {
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
+
+		glm::vec3 playerPos;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
 		for (Entity entity : es.entities_with_components(player, transform)) {
@@ -39,6 +42,8 @@ struct RenderSystem : public System<RenderSystem> {
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
+			p_cam.orientation =  p_cam.orientation * glm::rotate(glm::quat(), glm::radians(0.f), glm::vec3(1,0,0));
+
 			player->camera.setTransform(p_cam);
 
 			p_cam.pos += offset;
@@ -46,6 +51,9 @@ struct RenderSystem : public System<RenderSystem> {
 			c.setTransform(p_cam);
 
 			Renderer::getRenderer().setCamera(c);
+
+
+			playerPos = transform->pos + glm::toMat3(p_cam.orientation)*glm::vec3(0,0,4000);
 		}
 
 
@@ -55,15 +63,14 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
-			//Renderer::getRenderer().Render(*model->mptr, *transform.get());
 			Renderer::getRenderer().addToList(model->mptr, *transform.get());
 		}
 
 		ComponentHandle<Terrain> terrain;
 		for (Entity entity : es.entities_with_components(terrain)) {
 			terrain = entity.component<Terrain>();
-			//Renderer::getRenderer().Render(*terrain->hmptr);
-			Renderer::getRenderer().addToList(terrain->hmptr);
+			Renderer::getRenderer().setHeightmap(terrain->hmptr);
+			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(playerPos));
 		}
 		
 
