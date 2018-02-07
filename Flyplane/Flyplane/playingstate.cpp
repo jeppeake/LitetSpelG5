@@ -81,8 +81,14 @@ void PlayingState::spawnEnemies(int nr) {
 void PlayingState::drawHighscore() {
 	glm::vec2 pos;
 	pos.x = 800;
-	pos.y = 300;
-	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.8);
+	pos.y = 400;
+	string* p = Highscore::getHighscore().getHighscoreList();
+	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
+	pos.x = 720;
+	for (int i = 0; i < 5; i++) {
+		pos.y -= 40;
+		AssetLoader::getLoader().getMenutext()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
+	}
 }
 
 void PlayingState::startMenu() {
@@ -335,7 +341,8 @@ void PlayingState::update(double dt)
 }
 
 void PlayingState::gameOver() {
-	highscore.addScore(name, points);
+	Highscore::getHighscore().addScore(name, points);
+	Highscore::getHighscore().writeToFile();
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();
 	pos.x = pos.x / 2 - 20;
