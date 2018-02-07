@@ -30,7 +30,7 @@ Highscore::Highscore() {
 		list[nrOfElements] = {score, name};
 		nrOfElements++;
 	}
-		
+	convertListToString();
 }
 
 Highscore::~Highscore() {
