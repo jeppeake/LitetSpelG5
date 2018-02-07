@@ -2,16 +2,14 @@
 
 #include "enginestate.h"
 #include "buttonhandler.h"
-#include "optionsstate.h"
+#include "menustate.h"
 
-class MenuState : public EngineState {
+class HighscoreState : public EngineState {
 private:
 	ButtonHandler bHandler;
 public:
-	virtual ~MenuState();
+	virtual ~HighscoreState() {}
 	virtual void init();
 	virtual void update(double dt);
-	void startGame();
-	void startOptions();
-	void startHighscore();
+	void startMenu();
 };

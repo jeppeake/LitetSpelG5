@@ -15,9 +15,6 @@
     <ClCompile Include="playersystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="gameoverstate.cpp">
-      <Filter>States</Filter>
-    </ClCompile>
     <ClCompile Include="menustate.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -77,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="highscorestate.cpp">
+      <Filter>States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +177,6 @@
     <ClInclude Include="enginestate.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="gameoverstate.h">
-      <Filter>States</Filter>
-    </ClInclude>
     <ClInclude Include="menustate.h">
       <Filter>States</Filter>
     </ClInclude>
@@ -272,6 +269,12 @@
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="highscoreaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="highscorestate.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

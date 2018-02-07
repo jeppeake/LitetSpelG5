@@ -139,6 +139,7 @@
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
+    <ClCompile Include="highscorestate.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
@@ -186,6 +187,8 @@
     <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
+    <ClInclude Include="highscoreaction.h" />
+    <ClInclude Include="highscorestate.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />
