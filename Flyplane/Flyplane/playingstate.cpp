@@ -81,8 +81,14 @@ void PlayingState::spawnEnemies(int nr) {
 void PlayingState::drawHighscore() {
 	glm::vec2 pos;
 	pos.x = 800;
-	pos.y = 300;
-	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.8);
+	pos.y = 400;
+	string* p = Highscore::getHighscore().getHighscoreList();
+	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
+	pos.x = 720;
+	for (int i = 0; i < 5; i++) {
+		pos.y -= 40;
+		AssetLoader::getLoader().getMenutext()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
+	}
 }
 
 void PlayingState::startMenu() {
@@ -209,7 +215,7 @@ void PlayingState::init()
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		//behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
+		behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 
 		entity.assign<AIComponent>(behaviours);
@@ -368,6 +374,8 @@ void PlayingState::update(double dt)
 
 void PlayingState::gameOver() {
 	playerAlive = false;
+	Highscore::getHighscore().addScore(name, points);
+	Highscore::getHighscore().writeToFile();
 	highscore.addScore(name, points);
 
 	ComponentHandle<SoundComponent> sound;
