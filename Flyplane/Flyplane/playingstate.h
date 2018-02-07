@@ -4,7 +4,7 @@
 #include "enginestate.h"
 #include "buttonhandler.h"
 #include "ButtonAction.h"
-
+#include "highscore.h"
 
 
 class PlayingState : public EngineState {
@@ -14,7 +14,9 @@ class PlayingState : public EngineState {
 private:
 	ButtonHandler bHandler;
 	bool menuOpen = false;
+	bool playerAlive = true;
 	float points = 0;
+	Highscore highscore;
 
 	sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
@@ -22,6 +24,7 @@ private:
 	sf::SoundBuffer* missileSB;
 
 	void spawnEnemies(int nr);
+	void drawHighscore();
 
 	std::string name;
 
