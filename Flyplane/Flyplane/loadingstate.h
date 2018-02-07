@@ -10,7 +10,9 @@ private:
 	bool done = false;
 	std::string current;
 	sf::Sound music;
+	string name;
 public:
+	LoadingState(string name) : name(name) {}
 	virtual ~LoadingState() {}
 	virtual void init();
 	virtual void update(double dt);

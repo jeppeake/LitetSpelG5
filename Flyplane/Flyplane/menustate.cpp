@@ -38,7 +38,7 @@ void MenuState::startHighscore() {
 }
 
 void MenuState::startGame() {
-	this->changeState(new LoadingState());
+	this->changeState(new NameState());
 }
 
 void MenuState::startLoadout() {

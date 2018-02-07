@@ -1,5 +1,6 @@
 #include "namestate.h"
-#include "playingstate.h"
+#include "loadingstate.h"
+
 
 void NameState::checkForInput() {
 	int offset = 'a' - 'A';
@@ -31,7 +32,7 @@ void NameState::update(double dt) {
 	pos.y = 500;
 	AssetLoader::getLoader().getText()->drawText(name, pos, glm::vec3(1, 1, 1), 0.7);
 	if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
-		this->changeState(new PlayingState(name));
+		this->changeState(new LoadingState(name));
 	}
 }
 

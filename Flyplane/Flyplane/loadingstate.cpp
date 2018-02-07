@@ -44,7 +44,7 @@ void LoadingState::init() {
 }
 
 void LoadingState::startGame() {
-	this->changeState(new PlayingState());
+	this->changeState(new PlayingState(name));
 }
 
 void LoadingState::update(double dt) {
