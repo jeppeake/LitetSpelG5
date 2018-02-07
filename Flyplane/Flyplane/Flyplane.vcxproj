@@ -140,6 +140,8 @@
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="loadingstate.cpp" />
+    <ClCompile Include="loadoutstate.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
@@ -187,6 +189,9 @@
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="loadingstate.h" />
+    <ClInclude Include="loadoutaction.h" />
+    <ClInclude Include="loadoutstate.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="menustate.h" />
@@ -211,6 +216,7 @@
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
     <ClInclude Include="startgameaction.h" />
+    <ClInclude Include="startloadingaction.h" />
     <ClInclude Include="targetcomponent.h" />
     <ClInclude Include="terraincomponent.h" />
     <ClInclude Include="text.hpp" />

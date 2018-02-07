@@ -99,8 +99,8 @@ void PlayingState::init()
 
 	Window::getWindow().showCursor(true);
 
-	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this)));
-	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this)));
+	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
+	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 
 
 	/*sf::SoundBuffer* flyingSB;
@@ -316,7 +316,7 @@ void PlayingState::update(double dt)
 	else {
 		ex.systems.update<RenderSystem>(dt);
 		if (!playerAlive) {
-			AssetLoader::getLoader().getMenutext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 3);
+			AssetLoader::getLoader().getBigtext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
 		Window::getWindow().showCursor(true);

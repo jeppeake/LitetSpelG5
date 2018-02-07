@@ -13,4 +13,5 @@ public:
 	virtual void update(double dt);
 	void startGame();
 	void startOptions();
+	void startLoadout();
 };
