@@ -6,11 +6,11 @@
 #include "physics.h"
 #include "input.h"
 #include <iostream>
+#include "particlesystem.h"
 
 using namespace entityx;
 
 struct PhysicsSystem : public entityx::System<PhysicsSystem> {
-
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 
 		ComponentHandle<Physics> physics;

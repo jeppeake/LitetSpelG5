@@ -149,6 +149,7 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menustate.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
     <ClCompile Include="particlesystem.cpp" />
     <ClCompile Include="playersystem.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
+    <ClInclude Include="namestate.h" />
     <ClInclude Include="particlesystem.h" />
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />

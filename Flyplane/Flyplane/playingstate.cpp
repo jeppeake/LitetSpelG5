@@ -83,11 +83,11 @@ void PlayingState::drawHighscore() {
 	pos.x = 800;
 	pos.y = 400;
 	string* p = Highscore::getHighscore().getHighscoreList();
-	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
-	pos.x = 720;
+	AssetLoader::getLoader().getHighscoreText()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
+	pos.x = 650;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
-		AssetLoader::getLoader().getMenutext()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
+		AssetLoader::getLoader().getHighscoreText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
 	}
 }
 
@@ -96,7 +96,7 @@ void PlayingState::startMenu() {
 }
 
 void PlayingState::restart() {
-	this->changeState(new PlayingState());
+	this->changeState(new PlayingState(name));
 }
 
 
@@ -130,6 +130,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
+	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
 
 
 	//get all assets (not really needed, can be used inline)
@@ -137,6 +138,7 @@ void PlayingState::init()
 	missileSB = AssetLoader::getLoader().getSoundBuffer("missile");
 	bulletSB = AssetLoader::getLoader().getSoundBuffer("sniperrifle");
 	machinegunSB = AssetLoader::getLoader().getSoundBuffer("machinegun");
+	machinegunShortSB = AssetLoader::getLoader().getSoundBuffer("machinegunShort");
 
 	/*
 	* add systems
@@ -242,7 +244,7 @@ void PlayingState::init()
 	entity.assign <FlightComponent>(200.f, 2.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(*flyingSB);
-	entity.assign<BurstSoundComponent>(*machinegunSB);
+	entity.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity.assign<Target>(10.0, FACTION_PLAYER);
 
 	std::vector<Weapon> weapons;
@@ -368,7 +370,7 @@ void PlayingState::update(double dt)
 	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)), pos, glm::vec3(1, 0, 0), 0.4);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
-		this->changeState(new PlayingState());
+		this->changeState(new PlayingState(name));
 	}
 }
 

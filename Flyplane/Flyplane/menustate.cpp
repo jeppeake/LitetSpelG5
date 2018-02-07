@@ -10,6 +10,7 @@
 #include "highscorestate.h"
 #include "loadoutstate.h"
 #include "startloadingaction.h"
+#include "namestate.h"
 
 MenuState::~MenuState() {
 }
@@ -37,7 +38,7 @@ void MenuState::startHighscore() {
 }
 
 void MenuState::startGame() {
-	this->changeState(new LoadingState());
+	this->changeState(new NameState());
 }
 
 void MenuState::startLoadout() {
