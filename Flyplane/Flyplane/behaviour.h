@@ -35,7 +35,7 @@ public:
 		return active;
 	}
 
-	virtual Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
+	virtual Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
 	int priority = 0;
 	bool active = false;
 	bool terminated = false;

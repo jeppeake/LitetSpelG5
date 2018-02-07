@@ -6,7 +6,7 @@ public:
 		this->time = time;
 		this->security = security;
 	}
-	bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) {
+	bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
 		float speed = AI.component<FlightComponent>()->base_speed;
 		glm::vec3 front = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
 		bool terrain_close = false;

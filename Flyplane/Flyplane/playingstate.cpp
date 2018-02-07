@@ -32,6 +32,8 @@
 #include "follow_target.h"
 #include "window.h"
 #include "menustate.h"
+#include "entity_close.h"
+#include "avoid_closest.h"
 
 #include "menustate.h"
 #include "pointcomponent.h"
@@ -48,7 +50,7 @@ sf::SoundBuffer* missileSB;
 
 void PlayingState::spawnEnemies(int nr) {
 
-	for (int i = 0; i < nr; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, rand() % 300 + 2000, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -171,7 +173,7 @@ void PlayingState::init()
 	entity2.assign<Transform>(pos, normalize(orien));
 	entity2.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 	entity2.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-	entity2.assign <FlightComponent>(200.f, 2.f);
+	entity2.assign <FlightComponent>(150.f, 2.f);
 	entity2.assign <CollisionComponent>();
 	std::vector<Behaviour*> behaviours;
 
@@ -209,8 +211,9 @@ void PlayingState::init()
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
+		behaviours.push_back(new Follow_Target(3, new Always_True(), entity2));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
+		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(20.f)));
 
 		entity.assign<AIComponent>(behaviours);
 		entity.assign<CollisionComponent>();

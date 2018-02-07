@@ -7,28 +7,41 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 		ComponentHandle<Transform> p_transform;
 		ComponentHandle<FlightComponent> p_flight;
 		for (Entity entity_player : es.entities_with_components(p_player, p_transform, p_flight)) {
-			ComponentHandle<AIComponent> ai;
-			ComponentHandle<FlightComponent> flight;
-			ComponentHandle<Transform> transform;
-			for (Entity entity_ai : es.entities_with_components(ai, flight, transform)) {
-				if (ai->behaviours.size() != 0) {
-					for (int i = 0; i < ai->behaviours.size(); i++) {
-						ai->behaviours.at(i)->setActive(ai->behaviours.at(i)->condition->test(entity_player, entity_ai, entity_terrain));
+			ComponentHandle<AIComponent> ai_ai;
+			ComponentHandle<FlightComponent> ai_flight;
+			ComponentHandle<Transform> ai_transform;
+			for (Entity entity_ai : es.entities_with_components(ai_ai, ai_flight, ai_transform)) {
+				Entity entity_closest;
+				float closest = 1000000000.f;
+				float new_closest = 0.f;
+				ComponentHandle<FlightComponent> closest_flight;
+				ComponentHandle<Transform> closest_transform;
+				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform)) {
+					new_closest = length(closest_transform->pos - ai_transform->pos);
+					if (new_closest < closest && new_closest != 0) {
+						entity_closest = entity_closest_search;
+						closest = new_closest;
+					}
+				}
+				//std::cout << closest << "\n";
+				if (ai_ai->behaviours.size() != 0) {
+					for (int i = 0; i < ai_ai->behaviours.size(); i++) {
+						ai_ai->behaviours.at(i)->setActive(ai_ai->behaviours.at(i)->condition->test(entity_player, entity_ai, entity_terrain, entity_closest));
 					}
 
-					Behaviour* b = ai->behaviours.at(0);
-					for (int i = 1; i < ai->behaviours.size(); i++) {
-						if (b->getPriority() < ai->behaviours.at(i)->getPriority() && ai->behaviours.at(i)->getActive() && !ai->behaviours.at(i)->terminated) {
-							b = ai->behaviours.at(i);
+					Behaviour* b = ai_ai->behaviours.at(0);
+					for (int i = 1; i < ai_ai->behaviours.size(); i++) {
+						if (b->getPriority() < ai_ai->behaviours.at(i)->getPriority() && ai_ai->behaviours.at(i)->getActive() && !ai_ai->behaviours.at(i)->terminated) {
+							b = ai_ai->behaviours.at(i);
 						}
 					}
 					Commands com;
 					glm::vec3 input;
 					if (b->getActive()) {
-						com = b->act(entity_player, entity_ai, entity_terrain);
+						com = b->act(entity_player, entity_ai, entity_terrain, entity_closest);
 					}
 
-					flight->setInput(com.steering);
+					ai_flight->setInput(com.steering);
 				}
 			}
 		}

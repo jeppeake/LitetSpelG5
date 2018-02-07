@@ -15,9 +15,6 @@
     <ClCompile Include="playersystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="gameoverstate.cpp">
-      <Filter>States</Filter>
-    </ClCompile>
     <ClCompile Include="menustate.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -177,9 +174,6 @@
     <ClInclude Include="enginestate.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="gameoverstate.h">
-      <Filter>States</Filter>
-    </ClInclude>
     <ClInclude Include="menustate.h">
       <Filter>States</Filter>
     </ClInclude>
@@ -272,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_close.h">
+      <Filter>Behaviours\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="avoid_closest.h">
+      <Filter>Behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

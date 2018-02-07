@@ -5,7 +5,7 @@ public:
 	Follow_Target(int priority, Condition* condition, entityx::Entity target) : Behaviour(priority, condition) {
 		this->target = target;
 	}
-	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) {
+	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
 		Commands com;
 		if (target.valid()) {
 			//std::cout << "DISTANCE TO TARGET: " << glm::length(target.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";

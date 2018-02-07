@@ -5,7 +5,7 @@ public:
 	Always_True() : Condition() {
 
 	}
-	bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) {
+	bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
 		return true;
 	}
 };

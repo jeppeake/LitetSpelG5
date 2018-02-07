@@ -162,6 +162,7 @@
     <ClInclude Include="aisystem.h" />
     <ClInclude Include="always_true.h" />
     <ClInclude Include="assetloader.h" />
+    <ClInclude Include="avoid_closest.h" />
     <ClInclude Include="backtomenuaction.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
     <ClInclude Include="ground_close_front.h" />
+    <ClInclude Include="entity_close.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
     <ClInclude Include="input.h" />
