@@ -12,6 +12,7 @@ Renderer::Renderer() {
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
+	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
