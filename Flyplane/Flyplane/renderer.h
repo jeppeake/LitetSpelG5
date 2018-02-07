@@ -19,6 +19,7 @@ private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
 	ShaderProgram shadow;
+	ShaderProgram guiShader;
 	GLuint frameBuffer;
 	GLuint depthTexture;
 	glm::mat4 shadowMatrix;
