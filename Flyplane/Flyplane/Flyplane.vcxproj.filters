@@ -332,6 +332,9 @@
     <None Include="vertexShader.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="partGeom.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">

@@ -12,6 +12,19 @@ void HighscoreState::update(double dt) {
 	AssetLoader::getLoader().getBigtext()->drawText("Highscore", glm::vec2(100, Window::getWindow().size().y - 100), glm::vec3(1, 1, 1), 1);
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
+
+	glm::vec2 pos;
+	pos.x = 470;
+	pos.y = 630;
+	AssetLoader::getLoader().getMenutext()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 1.5);
+	pos.x = 400;
+	pos.y = 600;
+	
+	for (int i = 0; i < 10; i++) {
+		pos.y -= 50;
+		AssetLoader::getLoader().getMenutext()->drawText(highscore[i], pos, glm::vec3(1, 1, 1), 1.0);
+		AssetLoader::getLoader().getMenutext()->drawText(to_string(i + 1) + ". ", pos - glm::vec2(50, 0), glm::vec3(1, 1, 1), 1.0);
+	}
 }
 
 void HighscoreState::startMenu() {

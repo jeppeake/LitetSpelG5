@@ -1,6 +1,7 @@
 #version 430
-in vec4 vertColor;
+layout(location = 0) out vec4 color;
+in vec4 fragCol;
 void main()
 {
-	gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+	color = fragCol;
 }

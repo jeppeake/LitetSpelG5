@@ -18,7 +18,4 @@ void OptionsState::update(double dt) {
 	AssetLoader::getLoader().getBigtext()->drawText("OPTIONS", glm::vec2(100, Window::getWindow().size().y - 100), glm::vec3(1, 1, 1), 1);
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
-	if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
-		this->changeState(new PlayingState());
-	}
 }

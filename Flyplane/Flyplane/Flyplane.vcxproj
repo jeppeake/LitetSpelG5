@@ -234,6 +234,7 @@
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
     <None Include="partFrag.glsl" />
+    <None Include="partGeom.glsl" />
     <None Include="partVert.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
