@@ -24,7 +24,7 @@ Highscore::Highscore() {
 	string name;
 	int score;
 
-	while (file >> score) {
+	while (file >> score && nrOfElements < 10) {
 		file >> name;
 
 		list[nrOfElements] = {score, name};
