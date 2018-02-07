@@ -4,11 +4,11 @@ layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 Pos[];
 in vec3 Normal[];
-//in vec2 Tex[];
+in vec2 Tex[];
 
 out vec3 vPos;
 out vec3 vNormal;
-//out vec2 vTex;
+out vec2 vTex;
 
 void main() {
 	vec3 v1 = Pos[0] - Pos[1];
@@ -17,7 +17,7 @@ void main() {
 	for(int i = 0; i < 3; i++) {
 		vPos = Pos[i];
 		vNormal = Normal[i];
-		//vTex = Tex[i];
+		vTex = Tex[i];
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();
 	}

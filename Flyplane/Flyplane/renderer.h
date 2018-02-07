@@ -27,6 +27,15 @@ private:
 	std::vector<Heightmap*> mapList;
 	glm::mat4 m;
 
+
+	Heightmap* hm;
+	std::vector<Patch> patches;
+
+
+	void Render(Model &model, Transform &trans);
+	void Render(RenderObject& obj);
+	void Render(Heightmap &map);
+	void RenderShadow(Model &model, Transform &trans);
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -37,11 +46,11 @@ public:
 	Renderer();
 	~Renderer();
 	void addToList(Model* model, Transform trans);
-	void addToList(Heightmap* map);
-	void Render(Model &model, Transform &trans);
-	void Render(RenderObject& obj);
-	void Render(Heightmap &map);
-	void RenderShadow(Model &model, Transform &trans);
+	void addToList(const std::vector<Patch>& patches);
+	void setHeightmap(Heightmap* hm) {
+		this->hm = hm;
+	}
+	
 	void RenderScene();
 
 	void setCamera(const Camera& camera);

@@ -11,5 +11,5 @@ void Map::render()
 {
 	if (!initialized)
 		return;
-	Renderer::getRenderer().addToList(&heightmap);
+	//Renderer::getRenderer().addToList(&heightmap);
 }

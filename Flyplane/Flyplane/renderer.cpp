@@ -52,8 +52,11 @@ void Renderer::addToList(Model* model, Transform trans) {
 	list.push_back({ model, trans });
 }
 
-void Renderer::addToList(Heightmap* map) {
-	mapList.push_back(map);
+
+
+void Renderer::addToList(const std::vector<Patch>& patches) {
+	this->patches = patches;
+	//mapList.push_back(map);
 }
 
 void Renderer::Render(Model &model, Transform &trans) {
@@ -146,24 +149,31 @@ void Renderer::RenderScene() {
 	terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 
 	terrain_shader.uniform("texSampler", 0);
-	terrain_shader.uniform("heightmap", 2);
 	terrain_shader.uniform("shadowMap", 1);
+	terrain_shader.uniform("heightmap", 2);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 
-
-	for (int y = 0; y < 4; y++) {
-		for (int x = 0; x < 4; x++) {
-			terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
-			for (int i = 0; i < mapList.size(); i++) {
-				mapList[i]->bind();
-				glm::mat4 trans = glm::translate(mapList[i]->pos);
-				this->terrain_shader.uniform("modelMatrix", trans);
-				glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
-			}
+	/*
+	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
+	for (int i = 0; i < mapList.size(); i++) {
+		mapList[i]->bind();
+		glm::mat4 trans = glm::translate(mapList[i]->pos);
+		this->terrain_shader.uniform("modelMatrix", trans);
+		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
+	}
+	*/
+	{
+		hm->bind();
+		glm::mat4 trans = glm::translate(hm->pos);
+		this->terrain_shader.uniform("modelMatrix", trans);
+		this->terrain_shader.uniform("scale", hm->scale);
+		for (int i = 0; i < patches.size(); i++) {
+			terrain_shader.uniform("offset", patches[i].offset);
+			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
+			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices.size(), GL_UNSIGNED_INT, 0);
 		}
 	}
-
 	
 
 

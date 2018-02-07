@@ -1,5 +1,7 @@
 #include "flightsystem.h"
 
+#include <GLFW\glfw3.h>
+
 void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) {
 	ComponentHandle<Physics> physics;
 	ComponentHandle<Transform> transform;
@@ -83,5 +85,26 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 
 		float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
 		physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
+		/*
+		glm::vec3 dir;
+		if (Input::isKeyDown(GLFW_KEY_A))
+			dir.x += 1;
+		if (Input::isKeyDown(GLFW_KEY_D))
+			dir.x -= 1;
+		if (Input::isKeyDown(GLFW_KEY_W))
+			dir.z += 1;
+		if (Input::isKeyDown(GLFW_KEY_S))
+			dir.z -= 1;
+		if (Input::isKeyDown(GLFW_KEY_SPACE))
+			dir.y += 1;
+		if (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL))
+			dir.y -= 1;
+
+		speed = 500;
+		if (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT))
+			speed = 3000;
+
+		physics->velocity = glm::toMat3(transform->orientation) * dir * speed;
+		*/
 	}
 }

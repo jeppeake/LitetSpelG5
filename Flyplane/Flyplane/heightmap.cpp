@@ -1,6 +1,7 @@
 #include "heightmap.h"
 #include "lodepng.h"
 #include <GL\glew.h>
+#include <glm\gtc\constants.hpp>
 #include <iostream>
 #include "model.h"
 #include "timer.h"
@@ -55,31 +56,31 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	}
 
 
-	int patchSize = 255;
+	numPatchVerts = 63;
+	scale = glm::vec3(70, 70, 70);
 
 	std::vector<glm::vec2> uvs;
-	for (int y = 0; y < patchSize; y++) {
-		for (int x = 0; x < patchSize; x++) {
-			uvs.emplace_back(float(x) / (patchSize-1), float(y) / (patchSize - 1));
+	for (int y = 0; y < numPatchVerts; y++) {
+		for (int x = 0; x < numPatchVerts; x++) {
+			uvs.emplace_back(float(x) / (numPatchVerts-1), float(y) / (numPatchVerts - 1));
 
-			if (x < patchSize - 1 && y < patchSize - 1) {
+			if (x < numPatchVerts - 1 && y < numPatchVerts - 1) {
 				if (x % 2 == y % 2) {
-					indices.push_back((x)+(y)* patchSize);
-					indices.push_back((x + 1) + (y + 1)* patchSize);
-					indices.push_back((x + 1) + (y)* patchSize);
+					indices.push_back((x)+(y)* numPatchVerts);
+					indices.push_back((x + 1) + (y + 1)* numPatchVerts);
+					indices.push_back((x + 1) + (y)* numPatchVerts);
 
-					indices.push_back((x)+(y)* patchSize);
-					indices.push_back((x)+(y + 1)* patchSize);
-
-					indices.push_back((x + 1) + (y + 1)* patchSize);
+					indices.push_back((x)+(y)* numPatchVerts);
+					indices.push_back((x)+(y + 1)* numPatchVerts);
+					indices.push_back((x + 1) + (y + 1)* numPatchVerts);
 				} else {
-					indices.push_back((x)+(y)* patchSize);
-					indices.push_back((x)+(y + 1)* patchSize);
-					indices.push_back((x + 1) + (y)* patchSize);
+					indices.push_back((x)+(y)* numPatchVerts);
+					indices.push_back((x)+(y + 1)* numPatchVerts);
+					indices.push_back((x + 1) + (y)* numPatchVerts);
 
-					indices.push_back((x + 1) + (y)* patchSize);
-					indices.push_back((x)+(y + 1)* patchSize);
-					indices.push_back((x + 1) + (y + 1)* patchSize);
+					indices.push_back((x + 1) + (y)* numPatchVerts);
+					indices.push_back((x)+(y + 1)* numPatchVerts);
+					indices.push_back((x + 1) + (y + 1)* numPatchVerts);
 				}
 			}
 		}
@@ -167,4 +168,56 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 	}
 
 	return height;
+}
+
+
+
+std::vector<Patch> Heightmap::buildPatches(glm::vec3 _pos) {
+
+	std::vector<Patch> result;
+
+	glm::vec2 pos(_pos.x/scale.x, _pos.z/scale.z);
+
+	glm::vec2 offset(0);
+
+	float patchSize = width / 2.f;
+
+	recursiveBuildPatches(result, pos, patchSize, offset, 0);
+
+	return result;
+}
+
+
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level) {
+
+	int maxLevels = 5;
+
+	for (int i = 0; i < 4; i++) {
+		int x = i % 2;
+		int z = i / 2;
+
+		glm::vec2 center;
+		center.x = offset.x + patchSize * x + patchSize * 0.5f;
+		center.y = offset.y + patchSize * z + patchSize * 0.5f;
+
+		float dist = length(pos - center);
+
+		bool is_close = dist < glm::root_two<float>() * patchSize*2.f;
+
+		glm::vec2 new_offset = offset;
+		new_offset.x += x * patchSize;
+		new_offset.y += z * patchSize;
+
+		if (!is_close) {
+			// add patch to list
+			patches.emplace_back(patchSize, new_offset);
+		} else {
+			if (level < maxLevels) {
+				// should divide
+				recursiveBuildPatches(patches, pos, patchSize*0.5f, new_offset, level + 1);
+			} else {
+				patches.emplace_back(patchSize, new_offset);
+			}	
+		}
+	}
 }
