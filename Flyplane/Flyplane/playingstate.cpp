@@ -341,6 +341,7 @@ void PlayingState::update(double dt)
 }
 
 void PlayingState::gameOver() {
+	playerAlive = false;
 	Highscore::getHighscore().addScore(name, points);
 	Highscore::getHighscore().writeToFile();
 	/*Highscore list;
