@@ -137,6 +137,7 @@
     <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="flightsystem.cpp" />
+    <ClCompile Include="fullscreenimage.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="highscorestate.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="fly_up.h" />
     <ClInclude Include="follow_path.h" />
     <ClInclude Include="follow_target.h" />
+    <ClInclude Include="fullscreenimage.h" />
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
     <ClInclude Include="ground_close_front.h" />
@@ -231,6 +233,8 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fcimageFrag.glsl" />
+    <None Include="fcimageVertex.glsl" />
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
     <None Include="partFrag.glsl" />
