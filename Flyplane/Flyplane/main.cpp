@@ -14,7 +14,6 @@
 
 int main(void)
 {	
-	Highscore h;
 	sf::Listener::setGlobalVolume(30);
 
 	srand(time(NULL));

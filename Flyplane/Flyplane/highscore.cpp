@@ -4,10 +4,10 @@
 
 
 void Highscore::convertListToString() {
-	for (int i = 0; i < list.size(); i++) {
+	for (int i = 0; i < nrOfElements; i++) {
 		highscoreList[i] = list[i].name;
 		string temp = to_string(list[i].score);
-		for (int k = 0; k < 20 - list[i].name.size() - temp.size(); k++) {
+		for (int k = 0; k < 40 - list[i].name.size() - temp.size(); k++) {
 			highscoreList[i] += " ";
 		}
 		highscoreList[i] += temp;
@@ -27,13 +27,14 @@ Highscore::Highscore() {
 	while (file >> score) {
 		file >> name;
 
-		list.push_back({score, name	});
+		list[nrOfElements] = {score, name};
+		nrOfElements++;
 	}
 		
 }
 
 Highscore::~Highscore() {
-
+	writeToFile();
 }
 
 string* Highscore::getHighscoreList() {
@@ -42,14 +43,30 @@ string* Highscore::getHighscoreList() {
 
 void Highscore::addScore(string name, int score) {
 	HighscoreElement temp;
-	for (int i = 0; i < list.size() && i < 10; i++) {
+	if (nrOfElements < 10) {
+		nrOfElements++;
+	}
+	for (int i = 0; i < nrOfElements; i++) {
 		if (list[i].score < score) {
 			temp = list[i];
-			list[i] = { score, name };
+			list[i] = { score, name};
 			score = temp.score;
 			name = temp.name;
 		}
 	}
 
 	convertListToString();
+}
+
+void Highscore::writeToFile() const {
+	ofstream file;
+	file.open("highscorelist.txt");
+
+	if (file.is_open()) {
+		for (int i = 0; i < nrOfElements; i++) {
+			file << list[i].score << endl;
+			file << list[i].name << endl;
+		}
+	}
+	file.close();
 }

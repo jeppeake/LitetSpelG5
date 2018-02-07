@@ -7,6 +7,7 @@
 #include "flightcomponent.h"
 #include "playercomponent.h"
 #include "terraincomponent.h"
+#include "behaviour.h"
 #include <iostream>
 
 using namespace entityx;

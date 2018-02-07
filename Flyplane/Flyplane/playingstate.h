@@ -16,7 +16,6 @@ private:
 	bool menuOpen = false;
 	bool playerAlive = true;
 	float points = 0;
-	Highscore highscore;
 
 	sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
@@ -26,7 +25,7 @@ private:
 	void spawnEnemies(int nr);
 	void drawHighscore();
 
-	std::string name;
+	std::string name = "name";
 
 public:
 	PlayingState() {};
