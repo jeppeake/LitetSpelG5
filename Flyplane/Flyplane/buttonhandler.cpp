@@ -10,11 +10,19 @@ void ButtonHandler::handleButtonClicks() {
 		
 		if (cp.x > dpos.x && cp.x < (dpos.x + button->dimensions.x) && cp.y > dpos.y && cp.y < (dpos.y + button->dimensions.y)) {
 			button->dcolor = button->hcolor;
+			if (!button->playedSound) {
+				button->soundHover.play();
+				button->playedSound = true;
+			}
 			if (Input::isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 				button->action->action();
+				button->soundClick.play();
 			}
 		}
-		else
+		else {
 			button->dcolor = button->color;
+			button->playedSound = false;
+		}
+			
 	}
 }

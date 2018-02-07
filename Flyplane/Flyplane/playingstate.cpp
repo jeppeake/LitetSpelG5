@@ -105,8 +105,8 @@ void PlayingState::init()
 
 	Window::getWindow().showCursor(true);
 
-	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this)));
-	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this)));
+	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
+	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 
 
 	/*sf::SoundBuffer* flyingSB;
@@ -130,6 +130,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
+	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
 
 
 	//get all assets (not really needed, can be used inline)
@@ -137,6 +138,7 @@ void PlayingState::init()
 	missileSB = AssetLoader::getLoader().getSoundBuffer("missile");
 	bulletSB = AssetLoader::getLoader().getSoundBuffer("sniperrifle");
 	machinegunSB = AssetLoader::getLoader().getSoundBuffer("machinegun");
+	machinegunShortSB = AssetLoader::getLoader().getSoundBuffer("machinegunShort");
 
 	/*
 	* add systems
@@ -242,7 +244,7 @@ void PlayingState::init()
 	entity.assign <FlightComponent>(200.f, 2.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(*flyingSB);
-	entity.assign<BurstSoundComponent>(*machinegunSB);
+	entity.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity.assign<Target>(10.0, FACTION_PLAYER);
 
 	std::vector<Weapon> weapons;
@@ -354,7 +356,7 @@ void PlayingState::update(double dt)
 	else {
 		ex.systems.update<RenderSystem>(dt);
 		if (!playerAlive) {
-			AssetLoader::getLoader().getMenutext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 3);
+			AssetLoader::getLoader().getBigtext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
 		Window::getWindow().showCursor(true);

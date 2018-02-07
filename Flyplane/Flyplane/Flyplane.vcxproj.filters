@@ -75,6 +75,12 @@
     <ClCompile Include="model.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="loadoutstate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="loadingstate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
     <ClCompile Include="highscorestate.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -269,6 +275,18 @@
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="loadoutstate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="loadoutaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="loadingstate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="startloadingaction.h">
+      <Filter>GUI\Actions</Filter>
     </ClInclude>
     <ClInclude Include="highscoreaction.h">
       <Filter>GUI\Actions</Filter>
