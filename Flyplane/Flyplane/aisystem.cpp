@@ -18,20 +18,17 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 
 					Behaviour* b = ai->behaviours.at(0);
 					for (int i = 1; i < ai->behaviours.size(); i++) {
-						if (b->getPriority() < ai->behaviours.at(i)->getPriority() && ai->behaviours.at(i)->getActive()) {
+						if (b->getPriority() < ai->behaviours.at(i)->getPriority() && ai->behaviours.at(i)->getActive() && !ai->behaviours.at(i)->terminated) {
 							b = ai->behaviours.at(i);
 						}
 					}
-
+					Commands com;
 					glm::vec3 input;
 					if (b->getActive()) {
-						input = b->act(entity_player, entity_ai, entity_terrain);
-					}
-					else {
-						input = glm::vec3(0.0, 0.0, 0.0);
+						com = b->act(entity_player, entity_ai, entity_terrain);
 					}
 
-					flight->setInput(input);
+					flight->setInput(com.steering);
 				}
 			}
 		}

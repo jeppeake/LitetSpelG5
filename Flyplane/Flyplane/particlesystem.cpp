@@ -1,10 +1,12 @@
 #include "particlesystem.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <fstream>
+#include <ctime>
 #include <iostream>
 
 ParticleSystem::ParticleSystem(unsigned particles, float life, float spread, glm::vec4 col, glm::vec4 vel)
 {
+	srand(time(NULL));
 	numParticles = particles;
 	particleLife = life;
 	particleSpread = spread;
@@ -33,7 +35,7 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float spread, glm
 	//Buffer the initial positions
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		p[i] = glm::vec4(0.2,1.0,5.0, 1.0);
+		p[i] = glm::vec4(0.0);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gVel);
@@ -54,7 +56,7 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float spread, glm
 	GLfloat *l = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, particles * sizeof(GLfloat), access);
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		l[i] = life;
+		l[i] = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / life));
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -92,6 +94,7 @@ void ParticleSystem::update(float dt, glm::vec3 pos, glm::vec3 direction)
 	glProgramUniform3fv(shaderID, glGetUniformLocation(shaderID, "spawn"), 1, glm::value_ptr(pos));
 	glProgramUniform3fv(shaderID, glGetUniformLocation(shaderID, "direction"), 1, glm::value_ptr(direction));
 	glProgramUniform1f(shaderID, glGetUniformLocation(shaderID, "particleLife"), particleLife);
+	glProgramUniform1f(shaderID, glGetUniformLocation(shaderID, "particleSpread"), particleSpread);
 	glProgramUniform1f(shaderID, glGetUniformLocation(shaderID, "dt"), dt);
 
 	glDispatchCompute((numParticles / 128) + 1, 1, 1);

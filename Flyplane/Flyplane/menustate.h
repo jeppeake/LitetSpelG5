@@ -14,4 +14,5 @@ public:
 	void startGame();
 	void startOptions();
 	void startLoadout();
+	void startHighscore();
 };
