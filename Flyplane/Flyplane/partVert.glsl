@@ -6,7 +6,7 @@ uniform mat4 projection;
 out vec4 vertColor;
 void main()
 {
-	gl_Position = projection * view * vertexPos;
-	gl_PointSize = 5.0;
+	gl_Position = vertexPos;
+	gl_PointSize = 15.0;
 	vertColor = inColor;
 }
