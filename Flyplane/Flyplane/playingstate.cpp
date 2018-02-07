@@ -273,8 +273,6 @@ void PlayingState::init()
 
 	entity.assign <Equipment>(pweapons, weapons);
 
-
-	map.load("assets/Terrain/swiss2.png", "assets/Terrain/buildings.png", ex.entities);
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 }

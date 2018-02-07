@@ -23,7 +23,9 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, file);
 	if (error != 0) {
-		std::cout << "[ERROR] Failed to load heightmap." << "\n";
+		std::cout << "[ERROR] Failed to load heightmap '" << file << "': " << lodepng_error_text(error) << "\n";
+		system("pause");
+		std::exit(EXIT_FAILURE);
 	}
 
 

@@ -31,7 +31,7 @@ void LoadingState::init() {
 	update(0);
 	Window::getWindow().update();
 
-	AssetLoader::getLoader().loadHeightmap("assets/textures/slojp.png", "assets/textures/grass.png", "testmap");
+	AssetLoader::getLoader().loadHeightmap("assets/Terrain/swiss2.png", "assets/textures/grass.png", "testmap");
 
 	current = "sounds";
 	update(0);

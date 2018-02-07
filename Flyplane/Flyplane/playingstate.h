@@ -12,7 +12,6 @@ class PlayingState : public EngineState {
 	entityx::EntityX ex;
 	AssetLoader assetLoader;
 private:
-	Map map;
 
 	ButtonHandler bHandler;
 	bool menuOpen = false;
