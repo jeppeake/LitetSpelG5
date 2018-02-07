@@ -215,7 +215,7 @@ void PlayingState::init()
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		//behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
+		behaviours.push_back(new Follow_Target(9, new Always_True(), entity2));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 
 		entity.assign<AIComponent>(behaviours);
@@ -298,12 +298,12 @@ void PlayingState::update(double dt)
 
 	
 
-	bool playerAlive = false;
+	/*bool playerAlive = false;
 
 	ComponentHandle<PlayerComponent> p_player;
 	for (entityx::Entity entity : ex.entities.entities_with_components(p_player)) {
 		playerAlive = true;
-	}
+	}*/
 
 	
 
