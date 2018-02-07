@@ -17,7 +17,7 @@ struct BurstSoundComponent {
 	BurstSoundComponent(sf::SoundBuffer& buffer) {
 		sound.setBuffer(buffer);
 		//sound.play();
-		sound.setLoop(true);
+		sound.setLoop(false);
 		sound.setMinDistance(100);
 		sound.setAttenuation(1);
 	}

@@ -20,6 +20,7 @@ private:
 	sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
 	sf::SoundBuffer* machinegunSB;
+	sf::SoundBuffer* machinegunShortSB;
 	sf::SoundBuffer* missileSB;
 
 	void spawnEnemies(int nr);
