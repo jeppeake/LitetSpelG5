@@ -31,7 +31,7 @@ void NameState::update(double dt) {
 	pos.x = 500;
 	pos.y = 500;
 	AssetLoader::getLoader().getText()->drawText(name, pos, glm::vec3(1, 1, 1), 0.7);
-	if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
+	if (Input::isKeyPressed(GLFW_KEY_ENTER) && name.size() > 0) {
 		this->changeState(new LoadingState(name));
 	}
 }
