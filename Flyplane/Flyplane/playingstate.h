@@ -5,12 +5,15 @@
 #include "buttonhandler.h"
 #include "ButtonAction.h"
 #include "highscore.h"
+#include "map.h"
 
 class PlayingState : public EngineState {
 	Timer deltatime, t;
 	entityx::EntityX ex;
 	AssetLoader assetLoader;
 private:
+	Map map;
+
 	ButtonHandler bHandler;
 	bool menuOpen = false;
 	bool playerAlive = true;
