@@ -10,34 +10,6 @@ int index(int x, int y, int width) {
 	return x + y * width;
 }
 
-// truth table for finding if the specified tri(angle) should be changed for each nine i's
-bool shouldChange(int i, int tri) {
-	switch (tri) {
-	case 1:
-		switch (i) {
-
-		}
-		break;
-	case 2:
-		switch (i) {
-
-		}
-		break;
-	case 3:
-		switch (i) {
-
-		}
-		break;
-	case 4:
-		switch (i) {
-
-		}
-		break;
-
-	}
-	return false;
-}
-
 // pls
 void Heightmap::createIndices(int x, int y, int i){
 	if (x % 2 == y % 2) {
@@ -160,7 +132,7 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	}
 
 
-	numPatchVerts = 63;
+	numPatchVerts = 31;
 	scale = glm::vec3(70, 70, 70);
 
 	std::vector<glm::vec2> uvs;
@@ -288,7 +260,7 @@ std::vector<Patch> Heightmap::buildPatches(glm::vec3 _pos) {
 
 void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level) {
 
-	int maxLevels = 5;
+	int maxLevels = 7;
 
 	// should divide
 	bool divideLeft = false;
