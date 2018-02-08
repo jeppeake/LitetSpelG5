@@ -6,6 +6,7 @@
 #include <glm\vec3.hpp>
 #include <iostream>
 #include "window.h"
+
 using namespace std;
 
 Renderer::Renderer() {
@@ -175,8 +176,18 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices.size(), GL_UNSIGNED_INT, 0);
 		}
 	}
-	
 
+	//Render crosshair
+	glm::vec2 aspect = Window::getWindow().size();
+	float aspectRatio = aspect.x / aspect.y;
+	guiShader.use();
+	guiShader.uniform("modelMatrix", crosshair.getMatrix());
+	glm::mat4 m = glm::ortho<float>(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, 0.01f, 2.0f);
+	guiShader.uniform("aspectMatrix", m);
+	guiShader.uniform("texSampler", 0);
+	crosshair.Bind();
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	list.clear();
 	mapList.clear();

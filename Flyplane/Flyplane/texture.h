@@ -7,6 +7,6 @@ private:
 	unsigned int id;
 	unsigned int width, height;
 public:
-	bool loadTexture(const std::string& file);
+	bool loadTexture(const std::string& file, int format = 0);
 	void bind(unsigned int slot);
 };
