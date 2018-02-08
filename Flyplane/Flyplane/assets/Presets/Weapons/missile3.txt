@@ -1,0 +1,14 @@
+Misiljaevel
+assets\Weapons\Missiles\ALAAT-10\ALAAT-10.fbx
+assets\Weapons\Missiles\ALAAT-10\ALAAT-10.fbx
+1
+100
+300
+10
+1
+3
+0.6
+0.6
+0
+1
+1

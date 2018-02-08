@@ -156,24 +156,19 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 
-	/*
+
 	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
-	for (int i = 0; i < mapList.size(); i++) {
-		mapList[i]->bind();
-		glm::mat4 trans = glm::translate(mapList[i]->pos);
-		this->terrain_shader.uniform("modelMatrix", trans);
-		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
-	}
-	*/
-	{
-		hm->bind();
-		glm::mat4 trans = glm::translate(hm->pos);
-		this->terrain_shader.uniform("modelMatrix", trans);
-		this->terrain_shader.uniform("scale", hm->scale);
-		for (int i = 0; i < patches.size(); i++) {
-			terrain_shader.uniform("offset", patches[i].offset);
-			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
-			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices.size(), GL_UNSIGNED_INT, 0);
+	if (hm != NULL) {
+		{
+			hm->bind();
+			glm::mat4 trans = glm::translate(hm->pos);
+			this->terrain_shader.uniform("modelMatrix", trans);
+			this->terrain_shader.uniform("scale", hm->scale);
+			for (int i = 0; i < patches.size(); i++) {
+				terrain_shader.uniform("offset", patches[i].offset);
+				terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
+				glDrawElements(GL_TRIANGLES, (GLuint)hm->indices.size(), GL_UNSIGNED_INT, 0);
+			}
 		}
 	}
 
