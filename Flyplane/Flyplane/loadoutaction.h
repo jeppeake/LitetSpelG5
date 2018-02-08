@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "ButtonAction.h"
 #include "menustate.h"
 

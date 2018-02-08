@@ -13,6 +13,7 @@
 #include "playercomponent.h"
 #include "terraincomponent.h"
 #include "equipment.h"
+#include "physics.h"
 
 using namespace entityx;
 

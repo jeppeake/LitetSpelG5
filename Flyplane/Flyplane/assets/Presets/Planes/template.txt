@@ -1,0 +1,19 @@
+name 		(string)
+model 		(string)
+normalspeed 	(double)
+boostspeed	(double)
+breakforce	(double)
+turnrate	(double)
+[weapon pos offsets array]
+x
+y
+z
+x
+y
+z
+x
+y
+z
+...
+..
+.

@@ -4,8 +4,9 @@
 
 class ButtonHandler {
 private:
-	std::vector<Button*> buttons;
+	
 public:
+	std::vector<Button*> buttons;
 	ButtonHandler() {}
 	~ButtonHandler() {}
 
@@ -17,6 +18,10 @@ public:
 		for(auto button : buttons) {
 			button->drawButton();
 		}
+	}
+
+	void clearButtons() {
+		buttons.clear();
 	}
 
 	void handleButtonClicks();
