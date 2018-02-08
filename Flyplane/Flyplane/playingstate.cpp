@@ -84,7 +84,7 @@ void PlayingState::drawHighscore() {
 	pos.y = 400;
 	string* p = Highscore::getHighscore().getHighscoreList();
 	AssetLoader::getLoader().getHighscoreText()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
-	pos.x = 650;
+	pos.x = 700;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
 		AssetLoader::getLoader().getHighscoreText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
@@ -241,7 +241,7 @@ void PlayingState::init()
 	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(200.f, 2.f);
+	entity.assign <FlightComponent>(300.f, 3.f);
 	entity.assign <CollisionComponent>();
 	entity.assign<SoundComponent>(*flyingSB);
 	entity.assign<BurstSoundComponent>(*machinegunShortSB);
@@ -393,3 +393,4 @@ void PlayingState::gameOver() {
 	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);*/
 	//this->changeState(new GameOverState(name, points));
 }
+

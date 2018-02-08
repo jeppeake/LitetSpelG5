@@ -1,4 +1,4 @@
-#version 420
+#version 420 core
 layout (location  = 1) in vec4 vertex;
 out vec2 TexCoords;
 

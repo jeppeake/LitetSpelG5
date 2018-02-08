@@ -20,11 +20,14 @@ void HighscoreState::update(double dt) {
 	pos.x = 400;
 	pos.y = 600;
 	
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 9; i++) {
 		pos.y -= 50;
 		AssetLoader::getLoader().getHighscoreText()->drawText(highscore[i], pos, glm::vec3(1, 1, 1), 1.0);
-		AssetLoader::getLoader().getHighscoreText()->drawText(to_string(i + 1) + ". ", pos - glm::vec2(50, 0), glm::vec3(1, 1, 1), 1.0);
+		AssetLoader::getLoader().getHighscoreText()->drawText(" " + to_string(i + 1) + ". ", pos - glm::vec2(60, 0), glm::vec3(1, 1, 1), 1);
 	}
+	pos.y -= 50;
+	AssetLoader::getLoader().getHighscoreText()->drawText(highscore[9], pos, glm::vec3(1, 1, 1), 1.0);
+	AssetLoader::getLoader().getHighscoreText()->drawText(to_string(10) + ". ", pos - glm::vec2(60, 0), glm::vec3(1, 1, 1), 1);
 }
 
 void HighscoreState::startMenu() {

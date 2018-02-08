@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
+#include <ctime>
 #include "particlesystem.h"
 #include "renderer.h"
 ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::vec3 color)
 {
+	srand(time(NULL));
 	numParticles = particles;
 	this->life = life;
 	this->size = size;
@@ -48,7 +50,7 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	GLfloat *l = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(GLfloat), access);
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		l[i] = life;
+		l[i] = rand() % (int)this->life + 1;
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 

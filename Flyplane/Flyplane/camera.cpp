@@ -88,7 +88,7 @@ void Camera::setTransform(const Transform &t)
 
 	// BAD
 	auto size = glm::vec2(Window::getWindow().size());
-	this->projMatrix = glm::infinitePerspective(glm::radians(80.0f), size.x / size.y, 0.1f);
+	this->projMatrix = glm::infinitePerspective(glm::radians(95.0f), size.x / size.y, 0.1f);
 }
 
 Transform Camera::getTransform() const

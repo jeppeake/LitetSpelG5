@@ -12,6 +12,7 @@ Renderer::Renderer() {
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
+	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -52,8 +53,11 @@ void Renderer::addToList(Model* model, Transform trans) {
 	list.push_back({ model, trans });
 }
 
-void Renderer::addToList(Heightmap* map) {
-	mapList.push_back(map);
+
+
+void Renderer::addToList(const std::vector<Patch>& patches) {
+	this->patches = patches;
+	//mapList.push_back(map);
 }
 
 void Renderer::Render(Model &model, Transform &trans) {
@@ -95,6 +99,9 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 	}
 }
 
+Timer t;
+
+
 void Renderer::RenderScene() {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	shadow.use();
@@ -102,6 +109,7 @@ void Renderer::RenderScene() {
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//Render shadow
+	/*
 	for (int i = 0; i < list.size(); i++) {
 		glm::mat4 modelMatrix = glm::translate(list[i].trans.pos) * glm::toMat4(list[i].trans.orientation) * glm::scale(list[i].trans.scale);
 
@@ -117,7 +125,7 @@ void Renderer::RenderScene() {
 		this->shadow.uniform("MVP", shadowMatrix*trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
-
+	*/
 
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -143,15 +151,33 @@ void Renderer::RenderScene() {
 
 	terrain_shader.uniform("texSampler", 0);
 	terrain_shader.uniform("shadowMap", 1);
+	terrain_shader.uniform("heightmap", 2);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 
+	/*
+	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
 	for (int i = 0; i < mapList.size(); i++) {
 		mapList[i]->bind();
 		glm::mat4 trans = glm::translate(mapList[i]->pos);
 		this->terrain_shader.uniform("modelMatrix", trans);
 		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
 	}
+	*/
+	{
+		hm->bind();
+		glm::mat4 trans = glm::translate(hm->pos);
+		this->terrain_shader.uniform("modelMatrix", trans);
+		this->terrain_shader.uniform("scale", hm->scale);
+		for (int i = 0; i < patches.size(); i++) {
+			terrain_shader.uniform("offset", patches[i].offset);
+			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
+			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices.size(), GL_UNSIGNED_INT, 0);
+		}
+	}
+	
+
+
 	list.clear();
 	mapList.clear();
 }
