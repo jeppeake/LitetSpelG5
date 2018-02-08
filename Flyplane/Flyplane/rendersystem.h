@@ -53,7 +53,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().setCamera(c);
 
 
-			playerPos = transform->pos + glm::toMat3(p_cam.orientation)*glm::vec3(0,0,4000);
+			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
 		}
 
 

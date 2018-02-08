@@ -13,6 +13,12 @@ namespace
 	{
 		scrolls[window] += glm::vec2(x, y);
 	}
+
+	void resizeCallback(GLFWwindow* window, int width, int height) {
+		height = width*9.0 / 16.0;
+		glfwSetWindowSize(window, width, height);
+		glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+	}
 }
 
 
@@ -65,8 +71,7 @@ void Window::open(int width, int height)
 
 	scrolls[window] = glm::vec2(0, 0);
 	glfwSetScrollCallback(window, scrollCallback);
-
-	
+	glfwSetWindowSizeCallback(window, resizeCallback);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -160,10 +165,6 @@ void Window::update()
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
-	auto _size = size();
-	_size.y = _size.x*9.0 / 16.0;
-	glfwSetWindowSize(window, _size.x, _size.y);
-	glViewport(0, 0, (GLsizei)_size.x, (GLsizei)_size.y);
 }
 
 bool Window::shouldClose()
