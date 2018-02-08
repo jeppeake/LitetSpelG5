@@ -21,6 +21,13 @@ void main() {
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();
 	}
+	/* for wireframe
+	vPos = Pos[0];
+	vNormal = Normal[0];
+	vTex = Tex[0];
+	gl_Position = gl_in[0].gl_Position;
+	EmitVertex();
+	*/
 	EndPrimitive();
 	
 }

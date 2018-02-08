@@ -6,6 +6,13 @@
 #include "startgameaction.h"
 
 void LoadingState::init() {
+	AssetLoader::getLoader().clearTerrains();
+	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
+	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
+	AssetLoader::getLoader().loadSound("Assets/Sound/buttonback.wav", "buttonback");
+	AssetLoader::getLoader().loadSound("assets/Sound/buttonback.wav", "loadingmusic");
+
+
 	bHandler.addButton(new Button("Start", glm::vec2(Window::getWindow().size().x - 200, Window::getWindow().size().y - 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new StartGameAction(this), "buttonforward"));
 	fi.load("assets/textures/loadingscreen.png");
 

@@ -13,9 +13,10 @@ struct House {
 // Data for drawing a single patch/part of the terrain
 struct Patch {
 
-	Patch(float size, glm::vec2 offset) : size(size), offset(offset) {}
+	Patch(float size, glm::vec2 offset, int indices) : size(size), offset(offset), indices(indices) {}
 	float size;
 	glm::vec2 offset;
+	int indices = 0;
 
 };
 
@@ -36,17 +37,20 @@ private:
 
 	GLuint heightmapTex = 0;
 
-	GLuint ebo = 0;
+	GLuint ebos[9];
 	GLuint vbo = 0;
 	GLuint vao = 0;
 
 
 	void recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level);
+	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
-	std::vector<GLuint> indices;
+
+	std::vector<GLuint> indices[9];
 	glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 scale;
+
 
 
 	Heightmap();
@@ -55,7 +59,8 @@ public:
 	void bind();
 	void unbind();
 	double heightAt(glm::vec3 pos);
-
+	void bindIndices(int i);
+	void unbindIndices();
 	
 
 	std::vector<Patch> buildPatches(glm::vec3 pos);

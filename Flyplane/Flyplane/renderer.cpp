@@ -85,7 +85,7 @@ void Renderer::Render(Heightmap &map) {
 	map.bind();
 	glm::mat4 trans = glm::translate(map.pos);
 	this->terrain_shader.uniform("modelMatrix", trans);
-	glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::RenderShadow(Model & model, Transform & trans) {
@@ -184,6 +184,27 @@ void Renderer::RenderScene() {
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+	for (int i = 0; i < mapList.size(); i++) {
+		mapList[i]->bind();
+		glm::mat4 trans = glm::translate(mapList[i]->pos);
+		this->terrain_shader.uniform("modelMatrix", trans);
+		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
+	}
+	*/
+	{
+		hm->bind();
+		glm::mat4 trans = glm::translate(hm->pos);
+		this->terrain_shader.uniform("modelMatrix", trans);
+		this->terrain_shader.uniform("scale", hm->scale);
+		for (int i = 0; i < patches.size(); i++) {
+			int indices = patches[i].indices;
+			hm->bindIndices(indices);
+			terrain_shader.uniform("offset", patches[i].offset);
+			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
+			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
+		}
+	}
+	
 	list.clear();
 	mapList.clear();
 }
