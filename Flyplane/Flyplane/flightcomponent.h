@@ -19,5 +19,6 @@ struct FlightComponent {
 	float engine_power = 0.f;
 	float turnrate = 0.f;
 	float base_speed = 0.f;
+	float current_speed = 0.f;
 	//float liftCoeff = 0.f, wingArea = 0.f;
 };

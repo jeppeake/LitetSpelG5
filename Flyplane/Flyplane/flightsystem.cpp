@@ -83,5 +83,6 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 
 		float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
 		physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
+		flight->current_speed = glm::length(physics->velocity);
 	}
 }

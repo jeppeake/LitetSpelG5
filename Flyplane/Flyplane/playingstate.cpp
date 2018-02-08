@@ -34,6 +34,9 @@
 #include "menustate.h"
 #include "entity_close.h"
 #include "avoid_closest.h"
+#include "hunt_target.h"
+#include "hunt_player.h"
+#include "form_on_formation.h"
 
 #include "menustate.h"
 #include "pointcomponent.h"
@@ -43,7 +46,8 @@
 #include "backtomenuaction.h"
 #include "restartaction.h"
 
-entityx::Entity entity;
+entityx::Entity entity_p;
+entityx::Entity entity_formation;
 entityx::Entity entity2;
 
 sf::SoundBuffer* missileSB;
@@ -71,7 +75,7 @@ void PlayingState::spawnEnemies(int nr) {
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
 
-		entity.assign<AIComponent>(behaviours);
+		entity.assign<AIComponent>(behaviours, true, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<PointComponent>(100);
@@ -173,7 +177,7 @@ void PlayingState::init()
 	entity2.assign<Transform>(pos, normalize(orien));
 	entity2.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 	entity2.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-	entity2.assign <FlightComponent>(150.f, 2.f);
+	entity2.assign <FlightComponent>(200.f, 2.f);
 	entity2.assign <CollisionComponent>();
 	std::vector<Behaviour*> behaviours;
 
@@ -187,60 +191,24 @@ void PlayingState::init()
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
-	entity2.assign<AIComponent>(behaviours);
+	entity2.assign<AIComponent>(behaviours, true, true);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
 
-	int enemies = 0;
-	for (int i = 0; i < 1; i++) {
-		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
-		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
-		entity.assign<Transform>(pos, normalize(orien));
-		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(200.f, 2.f);
-		entity.assign<Target>(10.0, FACTION_AI);
-		std::vector<Behaviour*> behaviours;
-
-		std::vector<glm::vec3> plotter;
-		plotter.push_back(glm::vec3(2500, 2500, 0));
-		plotter.push_back(glm::vec3(2500, 2500, 2500));
-		plotter.push_back(glm::vec3(0, 2500, 2500));
-		plotter.push_back(glm::vec3(0, 2500, 0));
-
-		//behaviours.push_back(new Constant_Turn(0));
-		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
-		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
-		behaviours.push_back(new Follow_Target(3, new Always_True(), entity2));
-		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
-		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(20.f)));
-
-		entity.assign<AIComponent>(behaviours);
-		entity.assign<CollisionComponent>();
-		entity.assign<SoundComponent>(*flyingSB);
-		enemies++;
-		//std::cout << "Enemy added\n";
-	}
-	std::cout << "\nAdded " << enemies << " enemies.\n";
-
-	//entity = ex.entities.create();
-	//entity.assign<SoundComponent>(soundBuffer);
-	
 	// ---	PLAYER	---
-	entity = ex.entities.create();
+	entity_p = ex.entities.create();
 	x = 500;
 	z = 500;
 	//glm::vec3 pos(x, 2500, z);
 	//glm::quat orien(1,0,0,0);
-	entity.assign<Transform>(pos, normalize(orien));
-	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
-	entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-	entity.assign <PlayerComponent>();
-	entity.assign <FlightComponent>(200.f, 2.f);
-	entity.assign <CollisionComponent>();
-	entity.assign<SoundComponent>(*flyingSB);
-	entity.assign<BurstSoundComponent>(*machinegunSB);
-	entity.assign<Target>(10.0, FACTION_PLAYER);
+	entity_p.assign<Transform>(pos, normalize(orien));
+	entity_p.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
+	entity_p.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
+	entity_p.assign <PlayerComponent>();
+	entity_p.assign <FlightComponent>(200.f, 2.f);
+	entity_p.assign <CollisionComponent>();
+	entity_p.assign<SoundComponent>(*flyingSB);
+	entity_p.assign<BurstSoundComponent>(*machinegunSB);
+	entity_p.assign<Target>(10.0, FACTION_PLAYER);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -256,17 +224,82 @@ void PlayingState::init()
 	weapons.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-1.3, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(1.3, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-1.7, -0.25, -1.5),glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
+	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-1.7, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(1.7, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-2.1, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(2.1, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(-2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
 	weapons.emplace_back(stats, AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(2.5, -0.25, -1.5), glm::vec3(0.6), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(180.f, glm::vec3(0, 0, 1)), true, true);
-	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f,glm::vec3(0,0,1)));
+	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
+	entity_p.assign <Equipment>(pweapons, weapons);
 
-	entity.assign <Equipment>(pweapons, weapons);
+	entity_formation = ex.entities.create();
+
+	entity_formation.assign<Transform>(pos, normalize(orien));
+	entity_formation.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
+	entity_formation.assign<FlightComponent>(200.f, 0.5f);
+	entity_formation.assign<FormationComponent>(25.f);
+	std::vector<glm::vec3> plotter2;
+	plotter2.push_back(glm::vec3(5000, 2500, 0));
+	plotter2.push_back(glm::vec3(5000, 2500, 5000));
+	plotter2.push_back(glm::vec3(0, 2500, 5000));
+	plotter2.push_back(glm::vec3(0, 2500, 0));
+	std::vector<Behaviour*> behaviours2;
+	behaviours2.push_back(new Follow_Path(10, new Always_True(), plotter2, true));
+	entity_formation.assign<AIComponent>(behaviours2, false, false);
+
+	int enemies = 0;
+	for (int i = 0; i < 7; i++) {
+		auto entity = ex.entities.create();
+		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
+		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
+		entity.assign<Transform>(pos, normalize(orien));
+		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
+		entity.assign <FlightComponent>(200.f, 1.5f);
+		entity.assign<Target>(10.0, FACTION_AI);
+		std::vector<Behaviour*> behaviours;
+
+		std::vector<glm::vec3> plotter;
+		plotter.push_back(glm::vec3(2500, 2500, 0));
+		plotter.push_back(glm::vec3(2500, 2500, 2500));
+		plotter.push_back(glm::vec3(0, 2500, 2500));
+		plotter.push_back(glm::vec3(0, 2500, 0));
+
+		//behaviours.push_back(new Constant_Turn(0));
+		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+		behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
+		behaviours.push_back(new Hunt_Target(3, new Always_True(), entity2, 0.05, 500.f));
+		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
+		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(20.f)));
+		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
+
+		entity.assign<AIComponent>(behaviours, true, true);
+		entity.assign<CollisionComponent>();
+		entity.assign<SoundComponent>(*flyingSB);
+		entity.assign<BurstSoundComponent>(*machinegunSB);
+
+		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
+		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
+		std::vector<Weapon> primary;
+		std::vector<Weapon> secondary;
+		secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+
+		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+		entity.assign<Equipment>(primary, secondary);
+		
+		
+		enemies++;
+		//std::cout << "Enemy added\n";
+	}
+	std::cout << "\nAdded " << enemies << " enemies.\n";
+
+	//entity = ex.entities.create();
+	//entity.assign<SoundComponent>(soundBuffer);
+
 
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));

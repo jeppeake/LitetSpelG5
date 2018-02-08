@@ -182,12 +182,16 @@
     <ClInclude Include="fly_up.h" />
     <ClInclude Include="follow_path.h" />
     <ClInclude Include="follow_target.h" />
+    <ClInclude Include="formationcomponent.h" />
+    <ClInclude Include="form_on_formation.h" />
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
     <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="entity_close.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
+    <ClInclude Include="hunt_player.h" />
+    <ClInclude Include="hunt_target.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="map.h" />

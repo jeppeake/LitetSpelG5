@@ -16,7 +16,8 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 				float new_closest = 0.f;
 				ComponentHandle<FlightComponent> closest_flight;
 				ComponentHandle<Transform> closest_transform;
-				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform)) {
+				ComponentHandle<Model> closest_model;
+				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform, closest_model)) {
 					new_closest = length(closest_transform->pos - ai_transform->pos);
 					if (new_closest < closest && new_closest != 0) {
 						entity_closest = entity_closest_search;
@@ -42,6 +43,22 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					}
 
 					ai_flight->setInput(com.steering);
+					if (ai_ai->throttle_allowed) {
+						ai_flight->i_throttle = com.throttle;
+						ai_flight->i_airBrake = com.brake;
+					}
+					if (com.brake > 0.f) {
+						//std::cout << "BRAKING\n";
+					}
+					if (com.throttle > 0.f) {
+						//std::cout << "BOOSTING\n";
+					}
+					if (entity_ai.has_component<Equipment>()) {
+						entity_ai.component<Equipment>()->primary.at(0).shouldFire = com.fire_primary;
+						if (com.fire_primary) {
+							//std::cout << "FIRING!" << std::endl;
+						}
+					}
 				}
 			}
 		}
