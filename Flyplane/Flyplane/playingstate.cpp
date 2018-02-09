@@ -41,6 +41,10 @@
 #include "backtomenuaction.h"
 #include "restartaction.h"
 
+#include "weaponpreset.h"
+#include "planepreset.h"
+#include <fstream>
+
 entityx::Entity entity;
 entityx::Entity entity2;
 
@@ -91,6 +95,74 @@ void PlayingState::drawHighscore() {
 	}
 }
 
+auto v = []() {
+	return (rand() % 1000 - 500)*0.05;
+};
+
+void PlayingState::loadLoadout()
+{
+	std::ifstream file("loadout.txt");
+	std::string str;
+
+	//read name
+	PlanePreset pp;
+	std::getline(file, str);
+	pp.load(str);
+
+
+	float x = 400;
+	float z = 500;
+	glm::vec3 pos(x, 4500, z);
+	glm::quat orien(1, 0, 0, 0);
+	// ---	PLAYER	---
+	entity = ex.entities.create();
+	x = 500;
+	z = 500;
+	//glm::vec3 pos(x, 2500, z);
+	//glm::quat orien(1,0,0,0);
+
+	AssetLoader::getLoader().loadModel(pp.model, pp.name);
+
+	entity.assign<Transform>(pos, normalize(orien));
+	entity.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
+	entity.assign <ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
+	entity.assign <PlayerComponent>();
+	entity.assign <FlightComponent>(pp.normalspeed, pp.turnrate);
+	entity.assign <CollisionComponent>();
+	entity.assign<SoundComponent>(*flyingSB);
+	entity.assign<BurstSoundComponent>(*machinegunShortSB);
+	entity.assign<Target>(10.0, FACTION_PLAYER);
+
+
+	std::vector<Weapon> weapons;
+	std::vector<Weapon> pweapons;
+
+
+	for (int i = 0; i < pp.wepPos.size(); i++) {
+		std::getline(file, str);
+		if (str.compare("0") != 0) {
+			WeaponPreset wp;
+			wp.load(str);
+
+			AssetLoader::getLoader().loadModel(wp.model, wp.name);
+			AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
+
+			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate);
+
+			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i], glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
+		}
+	}
+	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
+	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
+	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
+
+	entity.assign <Equipment>(pweapons, weapons);
+
+	entityx::Entity terrain = ex.entities.create();
+
+}
+
 void PlayingState::startMenu() {
 	this->changeState(new MenuState());
 }
@@ -98,6 +170,8 @@ void PlayingState::startMenu() {
 void PlayingState::restart() {
 	this->changeState(new PlayingState(name));
 }
+
+
 
 
 void PlayingState::init() 
@@ -167,9 +241,7 @@ void PlayingState::init()
 	entity.assign<Component class here>(Component constructor params);
 	*/
 	
-	auto v = []() {
-		return (rand() % 1000 - 500)*0.05;
-	};
+	
 
 	entity2 = ex.entities.create();
 	float x = 400;
@@ -231,8 +303,9 @@ void PlayingState::init()
 	//entity = ex.entities.create();
 	//entity.assign<SoundComponent>(soundBuffer);
 	
+	loadLoadout();
 	// ---	PLAYER	---
-	entity = ex.entities.create();
+	/*entity = ex.entities.create();
 	x = 500;
 	z = 500;
 	//glm::vec3 pos(x, 2500, z);
@@ -271,7 +344,7 @@ void PlayingState::init()
 	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 
-	entity.assign <Equipment>(pweapons, weapons);
+	entity.assign <Equipment>(pweapons, weapons);*/
 
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));

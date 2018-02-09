@@ -156,6 +156,7 @@
     <ClCompile Include="planepreset.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
+    <ClCompile Include="radar.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="SAIB.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="pointcomponent.h" />
     <ClInclude Include="presetloader.h" />
     <ClInclude Include="previewcomponenet.h" />
+    <ClInclude Include="radar.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
@@ -258,6 +260,8 @@
     <None Include="partFrag.glsl" />
     <None Include="partGeom.glsl" />
     <None Include="partVert.glsl" />
+    <None Include="radarFS.glsl" />
+    <None Include="radarVS.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />

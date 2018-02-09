@@ -97,6 +97,9 @@
     <ClCompile Include="weaponpreset.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="radar.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -346,6 +349,9 @@
     <ClInclude Include="previewcomponenet.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
+    <ClInclude Include="radar.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -397,6 +403,12 @@
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="guiFragmentShader.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="radarVS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="radarFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>
