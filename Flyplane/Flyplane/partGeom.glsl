@@ -18,8 +18,8 @@ void main()
 	vec3 pos = gl_in[0].gl_Position.xyz;
 	vec3 look = cPos - pos;
 	look = normalize(look);
-	vec3 right = cross(cUp, look);
-	vec3 up = cross(look, right);
+	vec3 right = -cross(cUp, look);
+	vec3 up = -cross(look, right);
 	
 	fragCol = passCol[0];
 	vec3 vert1 = pos - (right + up) * particleSize;

@@ -34,12 +34,16 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gVel);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	//Buffer the initial lives
-	GLfloat *v = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(GLfloat), access);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
+	glm::vec4 *v = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, (numParticles) * sizeof(glm::vec4), access);
+
+	//Buffer the initial positions
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		v[i] = 1.0;
+		float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		float y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		float z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		v[i] = glm::vec4(x / 2, y / 2, z / 2, 1.0);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 

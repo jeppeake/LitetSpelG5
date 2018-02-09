@@ -27,7 +27,7 @@ private:
 	std::vector<PlanePreset> planePresets;
 	std::vector<WeaponPreset> weaponPresets;
 	std::vector<int> pickedWeapons;
-	bool picking = false;
+	bool picking = false, pagePicked = false, planePicked = false;
 
 	Timer timer;
 	entityx::EntityX ex;

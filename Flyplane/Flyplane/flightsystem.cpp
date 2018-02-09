@@ -61,9 +61,9 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 
 		float turnrate = flight->turnrate + flight->turnrate * flight->drift;
 
-		angular_vel.z = turnrate * 1.5 * flight->roll;
-		angular_vel.x = -turnrate * flight->pitch;
-		angular_vel.y = turnrate * 0.5 * flight->yaw;
+		angular_vel.z = turnrate * 1.5 * flight->roll * flight->m_roll;
+		angular_vel.x = -turnrate * flight->pitch* flight->m_pitch;
+		angular_vel.y = turnrate * 0.5 * flight->yaw* flight->m_yaw;
 
 		angular_vel = glm::toMat3(transform->orientation)*angular_vel;
 
@@ -78,7 +78,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		transform->orientation = normalize(transform->orientation);
 
 		float boost = flight->base_speed * 2;
-		float breakForce = flight->base_speed;
+		float breakForce = flight->base_speed / 2;
 		float normalSpeed = flight->base_speed;
 
 		float maxDrift = 0.005;
@@ -88,6 +88,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 
 		float speed = (normalSpeed + (boost * flight->throttle) - (breakForce * flight->airBrake));
 		physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
+		flight->current_speed = glm::length(physics->velocity);
 		/*
 		glm::vec3 dir;
 		if (Input::isKeyDown(GLFW_KEY_A))
