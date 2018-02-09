@@ -12,6 +12,7 @@
 #include "transform.h"
 #include "playercomponent.h"
 #include "terraincomponent.h"
+#include "projectilecomponent.h"
 #include "equipment.h"
 #include "physics.h"
 #include "particlesystem.h"
@@ -74,10 +75,11 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().addToList(model->mptr, *transform.get());
 
 			player = entity.component<PlayerComponent>();
+			ComponentHandle<Projectile> projectile = entity.component<Projectile>();
 			if (player) {
 				radar.setPlayer(*transform.get());
 			}
-			else {
+			else if (!projectile) {
 				radar.addPlane(*transform.get());
 			}
 		}
