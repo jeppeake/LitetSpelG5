@@ -87,7 +87,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<AIComponent>(behaviours, true, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
-		//entity.assign<BurstSoundComponent>(*machinegunSB);
+		entity.assign<BurstSoundComponent>(*machinegunSB);
 
 		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
@@ -318,7 +318,7 @@ void PlayingState::init()
 		entity.assign<AIComponent>(behaviours, true, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
-		//entity.assign<BurstSoundComponent>(*machinegunSB);
+		entity.assign<BurstSoundComponent>(*machinegunSB);
 
 		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
