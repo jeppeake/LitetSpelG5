@@ -28,9 +28,11 @@ struct RenderSystem : public System<RenderSystem> {
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 
 		glm::vec3 playerPos;
+		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
 		for (Entity entity : es.entities_with_components(player, transform)) {
+			playing = true;
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
 			ComponentHandle<Physics> physics = entity.component<Physics>();
@@ -117,6 +119,8 @@ struct RenderSystem : public System<RenderSystem> {
 		Renderer::getRenderer().RenderScene();
 		radar.draw();
 		S->render();
+		if(playing)
+			radar.draw();
 	}
 
 	Radar radar;

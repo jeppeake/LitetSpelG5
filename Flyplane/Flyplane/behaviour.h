@@ -2,6 +2,7 @@
 
 #include "transform.h"
 #include "flightcomponent.h"
+#include "FormationComponent.h"
 #include "SAIB.h"
 #include <entityx\entityx.h>
 #include <entityx\Entity.h>
@@ -13,7 +14,8 @@ struct Commands {
 	bool fire_secondary = false;
 	bool fire_primary = false;
 	glm::vec3 steering = glm::vec3(0.0, 0.0, 0.0);
-	glm::vec2 throttle = glm::vec2(0.0, 0.0);
+	float throttle = 0.f;
+	float brake = 0.f;
 };
 class Behaviour {
 public:
@@ -35,7 +37,7 @@ public:
 		return active;
 	}
 
-	virtual Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
+	virtual Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
 	int priority = 0;
 	bool active = false;
 	bool terminated = false;

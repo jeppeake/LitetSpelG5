@@ -8,6 +8,7 @@
 #include "playercomponent.h"
 #include "terraincomponent.h"
 #include "behaviour.h"
+#include "equipment.h"
 #include <iostream>
 
 using namespace entityx;
