@@ -6,7 +6,7 @@ EnemyMarker::EnemyMarker() {
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 15, vertexdata, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3, vertexdata, GL_STATIC_DRAW);
 
 
 	unsigned int stride = 3 * sizeof(float);
@@ -16,8 +16,8 @@ EnemyMarker::EnemyMarker() {
 	glBindVertexArray(0);
 	
 	glLineWidth(5.0f);
-	//for (int i = 0; i < 500; i++)
-		//markers.push_back({ glm::vec3(10 * i, 1000 + i, 10 * i), 10.0f });
+	for (int i = 0; i < 500; i++)
+		markers.push_back({ glm::vec3(10 * i, 1000 + i, 10 * i), 10.0f });
 }
 
 EnemyMarker::~EnemyMarker() {

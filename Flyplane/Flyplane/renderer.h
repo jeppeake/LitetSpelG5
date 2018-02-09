@@ -23,7 +23,7 @@ private:
 	ShaderProgram terrain_shader;
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
-	ShaderProgram enemeyMarkerShader;
+	ShaderProgram enemyMarkerShader;
 
 	GLuint frameBuffer;
 	GLuint depthTexture;

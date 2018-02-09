@@ -443,6 +443,9 @@
     <None Include="enemymarkerFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="enemymarkerGS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
