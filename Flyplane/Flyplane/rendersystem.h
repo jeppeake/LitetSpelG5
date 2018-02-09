@@ -13,6 +13,7 @@
 #include "playercomponent.h"
 #include "terraincomponent.h"
 #include "equipment.h"
+#include "radar.h"
 
 using namespace entityx;
 
@@ -64,6 +65,14 @@ struct RenderSystem : public System<RenderSystem> {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
 			Renderer::getRenderer().addToList(model->mptr, *transform.get());
+
+			player = entity.component<PlayerComponent>();
+			if (player) {
+				radar.setPlayer(*transform.get());
+			}
+			else {
+				radar.addPlane(*transform.get());
+			}
 		}
 
 		ComponentHandle<Terrain> terrain;
@@ -99,6 +108,8 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		Renderer::getRenderer().RenderScene();
+		radar.draw();
 	}
 
+	Radar radar;
 };
