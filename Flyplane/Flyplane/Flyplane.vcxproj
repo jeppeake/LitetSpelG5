@@ -137,6 +137,7 @@
     <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="crosshair.cpp" />
+    <ClCompile Include="enemymarker.cpp" />
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="fullscreenimage.cpp" />
     <ClCompile Include="heightmap.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
     <ClInclude Include="crosshair.h" />
+    <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
     <ClInclude Include="flightcomponent.h" />
@@ -249,6 +251,8 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="enemymarkerFS.glsl" />
+    <None Include="enemymarkerVS.glsl" />
     <None Include="fcimageFrag.glsl" />
     <None Include="fcimageVertex.glsl" />
     <None Include="fragmentShader.glsl" />
