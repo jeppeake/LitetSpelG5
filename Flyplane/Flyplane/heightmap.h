@@ -2,6 +2,7 @@
 #include <vector>
 #include "model.h"
 #include "texture.h"
+#include "camera.h"
 
 struct House {
 	House(glm::vec3 pos, unsigned int type) : pos(pos), type(type) {}
@@ -12,12 +13,10 @@ struct House {
 
 // Data for drawing a single patch/part of the terrain
 struct Patch {
-
 	Patch(float size, glm::vec2 offset, int indices) : size(size), offset(offset), indices(indices) {}
 	float size;
 	glm::vec2 offset;
 	int indices = 0;
-
 };
 
 class Heightmap {
@@ -42,7 +41,7 @@ private:
 	GLuint vao = 0;
 
 
-	void recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level);
+	void recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level, glm::mat4 viewProj);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
@@ -63,7 +62,7 @@ public:
 	void unbindIndices();
 	
 
-	std::vector<Patch> buildPatches(glm::vec3 pos);
+	std::vector<Patch> buildPatches(glm::vec3 pos, Camera camera);
 
 	std::vector<House> getHouses() {
 		return houses;

@@ -5,10 +5,22 @@
 #include <iostream>
 #include "model.h"
 #include "timer.h"
+#include "camera.h"
 
 int index(int x, int y, int width) {
 	return x + y * width;
 }
+
+glm::vec3 normal(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3) {
+	auto v1 = p1 - p2;
+	auto v2 = p3 - p2;
+	return normalize(cross(v1, v2));
+}
+
+glm::vec3 normal(glm::vec4 p1, glm::vec4 p2, glm::vec4 p3) {
+	return normal(glm::vec3(p1), glm::vec3(p2), glm::vec3(p3));
+}
+
 
 // pls
 void Heightmap::createIndices(int x, int y, int i){
@@ -242,27 +254,53 @@ void Heightmap::unbindIndices() {
 
 
 
-std::vector<Patch> Heightmap::buildPatches(glm::vec3 _pos) {
-
+std::vector<Patch> Heightmap::buildPatches(glm::vec3 _pos, Camera camera) {
 	std::vector<Patch> result;
 
-	glm::vec2 pos(_pos.x/scale.x, _pos.z/scale.z);
+	auto inverse = camera.getInverse();
+	/*
+	glm::mat4 farPlane;
+	farPlane[0] = glm::vec4(-1, -1, 1, 1);
+	farPlane[1] = glm::vec4(1, -1, 1, 1);
+	farPlane[2] = glm::vec4(-1, 1, 1, 1);
+	farPlane[3] = glm::vec4(1, 1, 1, 1);
 
+	glm::mat4 nearPlane;
+	nearPlane[0] = glm::vec4(-1, -1, 0, 1);
+	nearPlane[1] = glm::vec4(1, -1, 0, 1);
+	nearPlane[2] = glm::vec4(-1, 1, 0, 1);
+	nearPlane[3] = glm::vec4(1, 1, 0, 1);
+	for (int i = 0; i < 4; i++) {
+		farPlane[i] = inverse * farPlane[i];
+		farPlane[i] /= farPlane[i].w;
+
+		nearPlane[i] = inverse * nearPlane[i];
+		nearPlane[i] /= nearPlane[i].w;
+	}
+	glm::vec3 origin = camera.getTransform().pos;
+
+	glm::vec3 left = normal(nearPlane[0], farPlane[0], farPlane[2]);
+	glm::vec3 bottom = normal(nearPlane[1], farPlane[1], farPlane[0]);
+	glm::vec3 right = normal(nearPlane[3], farPlane[3], farPlane[1]);
+	glm::vec3 top = normal(nearPlane[2], farPlane[2], farPlane[3]);
+	*/
+
+	auto viewProj = camera.getProjMatrix() * camera.getViewMatrix();
+
+ 	glm::vec2 pos(_pos.x/scale.x, _pos.z/scale.z);
 	glm::vec2 offset(0);
-
 	float patchSize = width / 2.f;
 
-	recursiveBuildPatches(result, pos, patchSize, offset, 0);
+	recursiveBuildPatches(result, pos, patchSize, offset, 0, viewProj);
 
 	return result;
 }
 
-
-void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level) {
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level, glm::mat4 viewProj) {
 
 	int maxLevels = 7;
 
-	// should divide
+	// better read as "left divides" etc
 	bool divideLeft = false;
 	bool divideRight = false;
 	bool divideTop = false;
@@ -309,6 +347,8 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos
 	for (int i = 0; i < 4; i++) {
 		int x = i % 2;
 		int y = i / 2;
+
+
 
 		glm::vec2 center;
 		center.x = offset.x + patchSize * x + patchSize * 0.5f;
@@ -361,13 +401,22 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos
 		}
 
 
+		glm::vec3 center3(center.x, 0, center.y);
+
+		glm::vec4 projected = viewProj * glm::vec4(scale*center3, 1);
+
+		projected /= projected.w;
+
+		if (abs(projected.x) > 1.f || abs(projected.y) > 1.f)
+			continue;
+
 		if (!is_close) {
 			// add patch to list
 			patches.emplace_back(patchSize, new_offset, indices);
 		} else {
 			if (level < maxLevels) {
 				// should divide
-				recursiveBuildPatches(patches, pos, patchSize*0.5f, new_offset, level + 1);
+				recursiveBuildPatches(patches, pos, patchSize*0.5f, new_offset, level + 1, viewProj);
 			} else {
 				patches.emplace_back(patchSize, new_offset, indices);
 			}	

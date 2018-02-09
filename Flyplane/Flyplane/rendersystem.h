@@ -12,6 +12,7 @@
 #include "transform.h"
 #include "playercomponent.h"
 #include "terraincomponent.h"
+#include "projectilecomponent.h"
 #include "equipment.h"
 #include "physics.h"
 #include "particlesystem.h"
@@ -26,7 +27,7 @@ struct RenderSystem : public System<RenderSystem> {
 		S = new ParticleSystem(1000, 5, 0.05, glm::vec3(1.0, 0.0, 0.0));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
-
+		Camera camera;
 		glm::vec3 playerPos;
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
@@ -60,7 +61,7 @@ struct RenderSystem : public System<RenderSystem> {
 			c.setTransform(p_cam);
 
 			Renderer::getRenderer().setCamera(c);
-
+			camera = c;
 
 			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
 			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
@@ -76,10 +77,11 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().addToList(model->mptr, *transform.get());
 
 			player = entity.component<PlayerComponent>();
+			ComponentHandle<Projectile> projectile = entity.component<Projectile>();
 			if (player) {
 				radar.setPlayer(*transform.get());
 			}
-			else {
+			else if (!projectile) {
 				radar.addPlane(*transform.get());
 			}
 		}
@@ -88,7 +90,8 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(terrain)) {
 			terrain = entity.component<Terrain>();
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
-			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(playerPos));
+			//camera.setTransform({ glm::vec3(10000, 0, 10000), glm::quat() });
+			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(camera.getTransform().pos, camera));
 		}
 		
 
