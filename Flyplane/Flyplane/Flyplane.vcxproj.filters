@@ -96,10 +96,7 @@
     <ClCompile Include="weaponpreset.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="crosshair.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="enemymarker.cpp">
+    <ClCompile Include="radar.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -351,8 +348,26 @@
     <ClInclude Include="previewcomponenet.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
-    <ClInclude Include="enemymarker.h">
+    <ClInclude Include="radar.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_close.h">
+      <Filter>Behaviours\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="avoid_closest.h">
+      <Filter>Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="hunt_player.h">
+      <Filter>Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="hunt_target.h">
+      <Filter>Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="formationcomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="form_on_formation.h">
+      <Filter>Behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -407,10 +422,10 @@
     <None Include="guiFragmentShader.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
-    <None Include="enemymarkerFS.glsl">
+    <None Include="radarVS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
-    <None Include="enemymarkerVS.glsl">
+    <None Include="radarFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>

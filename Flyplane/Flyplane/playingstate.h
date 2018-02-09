@@ -29,6 +29,8 @@ private:
 
 	std::string name;
 
+	void loadLoadout();
+
 public:
 	PlayingState(std::string name = "name") : name(name) {}
 	virtual ~PlayingState() {}

@@ -33,7 +33,7 @@ void LoadoutState::updatePreview() {
 	entityp = ex.entities.create();
 	// ---	PLAYER	---
 	entityp.assign<Transform>(oldTrans.pos, normalize(oldTrans.orientation));
-	entityp.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
+	entityp.assign <ModelComponent>(AssetLoader::getLoader().getModel(planePresets[this->selected].name));
 	entityp.assign<PreviewComponent>();
 
 	std::vector<Weapon> weapons;
@@ -67,11 +67,12 @@ void LoadoutState::init() {
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonback.wav", "buttonback");
 
-	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
-	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonback"));
 	bHandler.addButton(new Button("Planes", glm::vec2(50, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, planes), "buttonforward"));
 	bHandler.addButton(new Button("Weapons", glm::vec2(250, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, weapons), "buttonforward"));
 	bHandler.addButton(new Button("Skins", glm::vec2(450, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
+	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
+	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonback"));
+	
 	
 	PlanePreset pr;
 	pr.load("assets/Presets/Planes/MIG-212A.txt");
@@ -100,6 +101,9 @@ void LoadoutState::init() {
 		weaponsBHandler.addButton(new Button(weaponPresets[i].name, pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new PickWeaponAction(this, i), "buttonforward"));
 	}
 	
+	bHandler.buttons[this->page]->color = bHandler.buttons[this->page]->hcolor;
+	//planesBHandler.buttons[this->selected]->color = planesBHandler.buttons[this->selected]->hcolor;
+	//updatePreview();
 }
 
 void LoadoutState::startMenu() {
@@ -109,6 +113,10 @@ void LoadoutState::startMenu() {
 void LoadoutState::changePlane(unsigned int selected)
 {
 	clearPicks();
+	/*if (this->selected != selected)
+		planePicked = false;
+	else
+		planePicked = true;*/
 	this->selected = selected;
 	glm::vec2 pPos = glm::vec2(50, 150);
 	weaponSlotsBHandler.clearButtons();
@@ -117,6 +125,11 @@ void LoadoutState::changePlane(unsigned int selected)
 		pickedWeapons.push_back(NO_WEAPON);
 	}
 	updatePreview();
+	for (Button* button : planesBHandler.buttons) {
+		button->color = glm::vec3(1, 1, 1);
+	}
+	planePicked = true;
+	planesBHandler.buttons[this->selected]->color = planesBHandler.buttons[this->selected]->hcolor;
 }
 
 void LoadoutState::changeWeapon(unsigned int selected)
@@ -136,6 +149,10 @@ void LoadoutState::changeWeapon(unsigned int selected)
 void LoadoutState::changePage(int page)
 {
 	this->page = page;
+	for (Button* button : bHandler.buttons) {
+		button->color = glm::vec3(1, 1, 1);
+	}
+	bHandler.buttons[this->page]->color = bHandler.buttons[this->page]->hcolor;
 }
 
 void LoadoutState::pickWeapon(unsigned int selected)
@@ -155,7 +172,10 @@ void LoadoutState::saveLoadout()
 	ofstream outputFile("loadout.txt");
 	outputFile << this->planePresets[this->selected].file << "\n";
 	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {
-		outputFile << this->weaponPresets[this->pickedWeapons[i]].file << "\n";
+		if(this->pickedWeapons[i] != NO_WEAPON)
+			outputFile << this->weaponPresets[this->pickedWeapons[i]].file << "\n";
+		else
+			outputFile << 0 << "\n";
 	}
 }
 
@@ -178,12 +198,14 @@ void LoadoutState::update(double dt) {
 	double infoScale = 0.4;
 	double step = 30;
 
-	AssetLoader::getLoader().getMenutext()->drawText(planePresets[selected].name, infoPos, glm::vec3(1, 1, 1), 1);
-	AssetLoader::getLoader().getText()->drawText("Normal speed: " + std::to_string(planePresets[selected].normalspeed) , infoPos - glm::vec2(0, step), glm::vec3(1, 1, 1), infoScale);
-	AssetLoader::getLoader().getText()->drawText("Boost speed: " + std::to_string(planePresets[selected].boostspeed), infoPos - glm::vec2(0, step*2), glm::vec3(1, 1, 1), infoScale);
-	AssetLoader::getLoader().getText()->drawText("Breakforce: " + std::to_string(planePresets[selected].breakforce), infoPos - glm::vec2(0, step*3), glm::vec3(1, 1, 1), infoScale);
-	AssetLoader::getLoader().getText()->drawText("Turn rate: " + std::to_string(planePresets[selected].turnrate), infoPos - glm::vec2(0, step*4), glm::vec3(1, 1, 1), infoScale);
-	AssetLoader::getLoader().getText()->drawText("Weapon slots: " + std::to_string(planePresets[selected].wepPos.size()), infoPos - glm::vec2(0, step*5), glm::vec3(1, 1, 1), infoScale);
+	if (planePicked) {
+		AssetLoader::getLoader().getMenutext()->drawText(planePresets[selected].name, infoPos, glm::vec3(1, 1, 1), 1);
+		AssetLoader::getLoader().getText()->drawText("Normal speed: " + std::to_string(planePresets[selected].normalspeed), infoPos - glm::vec2(0, step), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Boost speed: " + std::to_string(planePresets[selected].boostspeed), infoPos - glm::vec2(0, step * 2), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Breakforce: " + std::to_string(planePresets[selected].breakforce), infoPos - glm::vec2(0, step * 3), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Turn rate: " + std::to_string(planePresets[selected].turnrate), infoPos - glm::vec2(0, step * 4), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Weapon slots: " + std::to_string(planePresets[selected].wepPos.size()), infoPos - glm::vec2(0, step * 5), glm::vec3(1, 1, 1), infoScale);
+	}
 
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
