@@ -9,6 +9,8 @@
 #include "transform.h"
 #include "text.hpp"
 #include "particlesystem.h"
+#include "crosshair.h"
+
 struct RenderObject {
 	Model* model;
 	Transform trans;
@@ -28,7 +30,7 @@ private:
 	std::vector<RenderObject> list;
 	std::vector<Heightmap*> mapList;
 	glm::mat4 m;
-
+	CrossHair crosshair;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;

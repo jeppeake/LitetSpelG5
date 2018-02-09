@@ -314,7 +314,7 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="crosshair.h">
-      <Filter>Graphics</Filter>
+      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="presetloader.h">
       <Filter>GUI</Filter>

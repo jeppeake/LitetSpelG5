@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <iostream>
 
-bool Texture::loadTexture(const std::string& file) {
+bool Texture::loadTexture(const std::string& file, int format) {
 	std::vector<unsigned char> image;
 	unsigned error = lodepng::decode(image, width, height, file);
 	if (error != 0) {
@@ -17,8 +17,14 @@ bool Texture::loadTexture(const std::string& file) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+	if (format) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+	else {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+	}
+	
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -27,6 +33,8 @@ bool Texture::loadTexture(const std::string& file) {
 
 	return true;
 }
+
+
 
 void Texture::bind(unsigned int slot) {
 	glActiveTexture(GL_TEXTURE0 + slot);
