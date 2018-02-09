@@ -1,6 +1,6 @@
 Misiljaevel
-assets\Weapons\Missiles\ALAAT-10\ALAAT-10.fbx
-assets\Weapons\Missiles\ALAAT-10\ALAAT-10.fbx
+assets/Weapons/Missiles/ALAAT-10/ALAAT-10.fbx
+assets/Weapons/Missiles/ALAAT-10/ALAAT-10.fbx
 1
 100
 300

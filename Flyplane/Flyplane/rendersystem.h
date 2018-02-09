@@ -24,14 +24,16 @@ struct RenderSystem : public System<RenderSystem> {
 	ParticleSystem *S;
 	RenderSystem()
 	{
-		S = new ParticleSystem(10000, 10, 0.09, glm::vec3(1.0, 0.0, 0.0));
+		S = new ParticleSystem(1000, 5, 0.05, glm::vec3(1.0, 0.0, 0.0));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 
 		glm::vec3 playerPos;
+		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
 		for (Entity entity : es.entities_with_components(player, transform)) {
+			playing = true;
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
 			ComponentHandle<Physics> physics = entity.component<Physics>();
@@ -62,7 +64,7 @@ struct RenderSystem : public System<RenderSystem> {
 
 
 			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
-			S->update(dt, transform->pos, glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
+			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
 
 
@@ -117,8 +119,10 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		Renderer::getRenderer().RenderScene();
-		S->render();
 		radar.draw();
+		S->render();
+		if(playing)
+			radar.draw();
 	}
 
 	Radar radar;

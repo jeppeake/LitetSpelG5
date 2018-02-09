@@ -10,6 +10,7 @@
 #include "text.hpp"
 #include "particlesystem.h"
 #include "crosshair.h"
+#include "enemymarker.h"
 
 struct RenderObject {
 	Model* model;
@@ -22,6 +23,8 @@ private:
 	ShaderProgram terrain_shader;
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
+	ShaderProgram enemeyMarkerShader;
+
 	GLuint frameBuffer;
 	GLuint depthTexture;
 	glm::mat4 shadowMatrix;
@@ -31,6 +34,7 @@ private:
 	std::vector<Heightmap*> mapList;
 	glm::mat4 m;
 	CrossHair crosshair;
+	EnemyMarker markers;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;

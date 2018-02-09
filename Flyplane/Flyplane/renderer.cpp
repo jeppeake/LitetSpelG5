@@ -14,6 +14,7 @@ Renderer::Renderer() {
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
+	this->enemeyMarkerShader.create("enemymarkerVS.glsl", "enemymarkerFS.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -172,6 +173,17 @@ void Renderer::RenderScene() {
 		}
 	}
 
+
+	//Render markers
+	enemeyMarkerShader.use();
+	markers.bind();
+	std::vector<Marker> p = markers.getMarkers();
+	enemeyMarkerShader.uniform("aspectMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	for (int i = 0; i < p.size(); i++) {
+		enemeyMarkerShader.uniform("modelMatrix", glm::translate(p[i].pos) * glm::scale(glm::vec3(p[i].scale)));
+		glDrawArrays(GL_LINE_STRIP, 0, 5);
+	}
+
 	//Render crosshair
 	glm::vec2 aspect = Window::getWindow().size();
 	float aspectRatio = aspect.x / aspect.y;
@@ -184,6 +196,7 @@ void Renderer::RenderScene() {
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+	//markers.clear();
 	list.clear();
 	mapList.clear();
 }

@@ -90,7 +90,6 @@
     <ClCompile Include="namestate.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="crosshair.cpp" />
     <ClCompile Include="planepreset.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -98,6 +97,12 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="radar.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="enemymarker.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="crosshair.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -370,6 +375,9 @@
     <ClInclude Include="form_on_formation.h">
       <Filter>Behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="enemymarker.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -427,6 +435,12 @@
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="radarFS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="enemymarkerVS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="enemymarkerFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>

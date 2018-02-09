@@ -33,7 +33,7 @@ void LoadoutState::updatePreview() {
 	entityp = ex.entities.create();
 	// ---	PLAYER	---
 	entityp.assign<Transform>(oldTrans.pos, normalize(oldTrans.orientation));
-	entityp.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
+	entityp.assign <ModelComponent>(AssetLoader::getLoader().getModel(planePresets[this->selected].name));
 	entityp.assign<PreviewComponent>();
 
 	std::vector<Weapon> weapons;
