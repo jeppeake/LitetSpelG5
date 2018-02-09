@@ -59,14 +59,14 @@ sf::SoundBuffer* missileSB;
 
 void PlayingState::spawnEnemies(int nr) {
 
-	for (int i = 0; i < 0; i++) {
+	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, rand() % 300 + 2000, rand() % 100);
+		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(200.f, 1.f);
+		entity.assign <FlightComponent>(200.f, 1.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
@@ -78,14 +78,26 @@ void PlayingState::spawnEnemies(int nr) {
 
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
-		behaviours.push_back(new Follow_Player(2, new Enemy_Close(2000.f)));
+		behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
+		behaviours.push_back(new Hunt_Target(3, new Always_True(), entity2, 0.05, 500.f));
+		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
+		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(20.f)));
+		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
 		entity.assign<AIComponent>(behaviours, true, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
-		entity.assign<PointComponent>(100);
+		//entity.assign<BurstSoundComponent>(*machinegunSB);
 
-		//std::cout << "Enemy added\n";
+		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
+		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
+		std::vector<Weapon> primary;
+		std::vector<Weapon> secondary;
+		secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+
+		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+		entity.assign<Equipment>(primary, secondary);
 	}
 }
 
@@ -305,7 +317,7 @@ void PlayingState::init()
 
 		entity.assign<AIComponent>(behaviours, true, true);
 		entity.assign<CollisionComponent>();
-		//entity.assign<SoundComponent>(*flyingSB);
+		entity.assign<SoundComponent>(*flyingSB);
 		//entity.assign<BurstSoundComponent>(*machinegunSB);
 
 		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
@@ -379,7 +391,7 @@ void PlayingState::update(double dt)
 {
 	if (deltatime.elapsed() > 30) {
 		deltatime.restart();
-		spawnEnemies(5);
+		spawnEnemies(1);
 	}
 
 	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
