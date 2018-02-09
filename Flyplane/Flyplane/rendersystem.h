@@ -20,7 +20,7 @@ using namespace entityx;
 struct RenderSystem : public System<RenderSystem> {
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
-
+		Camera camera;
 		glm::vec3 playerPos;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
@@ -52,7 +52,7 @@ struct RenderSystem : public System<RenderSystem> {
 			c.setTransform(p_cam);
 
 			Renderer::getRenderer().setCamera(c);
-
+			camera = c;
 
 			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
 		}
@@ -71,7 +71,8 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(terrain)) {
 			terrain = entity.component<Terrain>();
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
-			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(playerPos));
+			//camera.setTransform({ glm::vec3(10000, 0, 10000), glm::quat() });
+			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(camera.getTransform().pos, camera));
 		}
 		
 

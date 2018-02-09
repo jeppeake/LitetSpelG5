@@ -11,8 +11,10 @@ private:
 	//glm::vec3 up;
 	glm::mat4 projMatrix;
 
-	//float yaw, pitch;
+	glm::mat4 invViewProj;
 
+	float fov = 90.f;
+	//float yaw, pitch;
 public:
 	Camera();
 	~Camera();
@@ -21,4 +23,6 @@ public:
 	const glm::mat4& getProjMatrix() const;
 	void setTransform(const Transform& t);
 	Transform getTransform() const;
+
+	glm::mat4 getInverse() const;
 };
