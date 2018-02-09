@@ -14,11 +14,15 @@
 #include "terraincomponent.h"
 #include "equipment.h"
 #include "physics.h"
-
+#include "particlesystem.h"
 using namespace entityx;
 
 struct RenderSystem : public System<RenderSystem> {
-
+	ParticleSystem *S;
+	RenderSystem()
+	{
+		S = new ParticleSystem(10000, 10, 0.09, glm::vec3(1.0, 0.0, 0.0));
+	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 
 		glm::vec3 playerPos;
@@ -55,6 +59,7 @@ struct RenderSystem : public System<RenderSystem> {
 
 
 			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
+			S->update(dt, transform->pos, glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
 
 
@@ -100,6 +105,7 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		Renderer::getRenderer().RenderScene();
+		S->render();
 	}
 
 };

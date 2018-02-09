@@ -39,7 +39,7 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	GLfloat *v = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(GLfloat), access);
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		v[i] = 1.0;
+		v[i] = rand() % 15 + 1;
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
