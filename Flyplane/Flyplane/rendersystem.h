@@ -115,8 +115,8 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		Renderer::getRenderer().RenderScene();
-		S->render();
 		radar.draw();
+		S->render();
 	}
 
 	Radar radar;
