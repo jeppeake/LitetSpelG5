@@ -71,7 +71,7 @@ void LoadoutState::init() {
 	bHandler.addButton(new Button("Weapons", glm::vec2(250, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, weapons), "buttonforward"));
 	bHandler.addButton(new Button("Skins", glm::vec2(450, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
-	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonback"));
+	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
 	
 	
 	PlanePreset pr;
@@ -98,7 +98,7 @@ void LoadoutState::init() {
 
 	pPos = glm::vec2(450, 150);
 	for (int i = 0; i < weaponPresets.size(); i++) {
-		weaponsBHandler.addButton(new Button(weaponPresets[i].name, pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new PickWeaponAction(this, i), "buttonforward"));
+		weaponsBHandler.addButton(new Button(weaponPresets[i].name, pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new PickWeaponAction(this, i), "buttonback"));
 	}
 	
 	bHandler.buttons[this->page]->color = bHandler.buttons[this->page]->hcolor;
@@ -168,14 +168,16 @@ void LoadoutState::pickWeapon(unsigned int selected)
 
 void LoadoutState::saveLoadout()
 {
-	remove("loadout.txt");
-	ofstream outputFile("loadout.txt");
-	outputFile << this->planePresets[this->selected].file << "\n";
-	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {
-		if(this->pickedWeapons[i] != NO_WEAPON)
-			outputFile << this->weaponPresets[this->pickedWeapons[i]].file << "\n";
-		else
-			outputFile << 0 << "\n";
+	if (planePicked) {
+		remove("loadout.txt");
+		ofstream outputFile("loadout.txt");
+		outputFile << this->planePresets[this->selected].file << "\n";
+		for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {
+			if (this->pickedWeapons[i] != NO_WEAPON)
+				outputFile << this->weaponPresets[this->pickedWeapons[i]].file << "\n";
+			else
+				outputFile << 0 << "\n";
+		}
 	}
 }
 

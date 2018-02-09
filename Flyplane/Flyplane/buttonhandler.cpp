@@ -15,8 +15,8 @@ void ButtonHandler::handleButtonClicks() {
 				button->playedSound = true;
 			}
 			if (Input::isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-				button->action->action();
 				button->soundClick.play();
+				button->action->action();
 			}
 		}
 		else {

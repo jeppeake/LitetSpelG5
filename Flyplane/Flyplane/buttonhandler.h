@@ -8,7 +8,11 @@ private:
 public:
 	std::vector<Button*> buttons;
 	ButtonHandler() {}
-	~ButtonHandler() {}
+	~ButtonHandler() {
+		for (Button* button : buttons) {
+			delete button;
+		}
+	}
 
 	void addButton(Button* button) {
 		buttons.push_back(button);
@@ -21,6 +25,9 @@ public:
 	}
 
 	void clearButtons() {
+		for (Button* button : buttons) {
+			delete button;
+		}
 		buttons.clear();
 	}
 
