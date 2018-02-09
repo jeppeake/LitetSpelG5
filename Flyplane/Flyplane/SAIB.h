@@ -18,6 +18,7 @@
 namespace SAIB {//STANDARD ARTIFICIAL INTELLIGENCE BEHAVIOURS
 
 	glm::vec3 flyTo(glm::vec3 position, glm::quat orientation, glm::vec3 target);
+	glm::vec3 flyToRes(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 restrictions);
 	glm::vec3 fly_to(glm::vec3 position, glm::quat orientation, glm::vec3 target);
 
 	float rollTowards(glm::vec3 position, glm::quat orientation, glm::vec3 target);

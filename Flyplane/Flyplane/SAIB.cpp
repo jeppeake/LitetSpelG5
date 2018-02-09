@@ -21,6 +21,28 @@ glm::vec3 SAIB::flyTo(glm::vec3 position, glm::quat orientation, glm::vec3 targe
 	return glm::vec3(roll, pitch, yaw);
 }
 
+glm::vec3 SAIB::flyToRes(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 restrictions) {
+	glm::vec3 front = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0));
+	glm::vec3 up = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 1.0, 0.0));
+	glm::vec3 left = glm::normalize(glm::toMat3(orientation) * glm::vec3(1.0, 0.0, 0.0));
+
+	glm::vec3 pt = glm::normalize(target - position);
+
+	float pow = length(pt - front) / 2;
+	float roll = 0.f;
+	if (pow > 0.2) {
+		roll = -test2Axis(position, orientation, target, front, up);
+	}
+	else {
+		roll = -test2Axis(position, orientation, position + glm::vec3(0.0, 1.0, 0.0), front, up);
+	}
+	float pitch = test2Axis(position, orientation, target, left, front);
+	float yaw = -test2Axis(position, orientation, target, up, front);
+
+	//std::cout << roll << " : " << pitch << " : " << yaw << " : " << glm::length(position - target) << " : " << pow <<"\n";
+	return glm::vec3(roll * restrictions.x, pitch * restrictions.y, yaw * restrictions.z);
+}
+
 glm::vec3 SAIB::fly_to(glm::vec3 position, glm::quat orientation, glm::vec3 target) {//fly to target, ignore orientation
 	//return flyTo(position, orientation, target);
 	//std::cout << glm::length(position - target) << "\n";

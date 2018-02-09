@@ -170,8 +170,8 @@ void PlayingState::init()
 	};
 
 	entity2 = ex.entities.create();
-	float x = 400;
-	float z = 500;
+	float x = 0;
+	float z = 100;
 	glm::vec3 pos(x, 4500, z);
 	glm::quat orien(1, 0, 0, 0);
 	entity2.assign<Transform>(pos, normalize(orien));
@@ -196,8 +196,8 @@ void PlayingState::init()
 
 	// ---	PLAYER	---
 	entity_p = ex.entities.create();
-	x = 500;
-	z = 500;
+	x = 0;
+	z = 0;
 	//glm::vec3 pos(x, 2500, z);
 	//glm::quat orien(1,0,0,0);
 	entity_p.assign<Transform>(pos, normalize(orien));
@@ -242,10 +242,14 @@ void PlayingState::init()
 	entity_formation.assign<FlightComponent>(200.f, 0.5f);
 	entity_formation.assign<FormationComponent>(25.f);
 	std::vector<glm::vec3> plotter2;
-	plotter2.push_back(glm::vec3(5000, 2500, 0));
-	plotter2.push_back(glm::vec3(5000, 2500, 5000));
-	plotter2.push_back(glm::vec3(0, 2500, 5000));
-	plotter2.push_back(glm::vec3(0, 2500, 0));
+	plotter2.push_back(glm::vec3(7500, 3500, 0));
+	plotter2.push_back(glm::vec3(10000, 3500, 2500));
+	plotter2.push_back(glm::vec3(10000, 3500, 10000));
+	plotter2.push_back(glm::vec3(7500, 3500, 12500));
+	plotter2.push_back(glm::vec3(0, 3500, 12500));
+	plotter2.push_back(glm::vec3(-2500, 3500, 10000));
+	plotter2.push_back(glm::vec3(-2500, 3500, 2500));
+	plotter2.push_back(glm::vec3(0, 3500, 0));
 	std::vector<Behaviour*> behaviours2;
 	behaviours2.push_back(new Follow_Path(10, new Always_True(), plotter2, true));
 	entity_formation.assign<AIComponent>(behaviours2, false, false);
@@ -253,7 +257,7 @@ void PlayingState::init()
 	int enemies = 0;
 	for (int i = 0; i < 7; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, 2500, rand() % 100);
+		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));

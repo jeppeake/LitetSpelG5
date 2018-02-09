@@ -30,8 +30,11 @@ public:
 
 			glm::vec3 AI_front = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
 			glm::vec3 pt = flyToPos - AI.component<Transform>()->pos;
-			com.throttle = glm::pow(glm::clamp(length(pt),0.f, 1000.f) / 1000.f, 3.f);
+			if (glm::length(pt) > 5.f) {
+				com.throttle = glm::pow(glm::clamp(length(pt), 0.f, 1000.f) / 1000.f, 2.f);
+			}
 			//std::cout << com.throttle << "\n";
+			std::cout << glm::length(player.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";
 		}
 		else {
 			terminated = true;
