@@ -1,7 +1,7 @@
 assets/Presets/Planes/MIG-212A.txt
-0
-0
-0
-0
-0
-0
+assets/Presets/Weapons/missile3.txt
+assets/Presets/Weapons/missile3.txt
+assets/Presets/Weapons/missile3.txt
+assets/Presets/Weapons/missile3.txt
+assets/Presets/Weapons/missile3.txt
+assets/Presets/Weapons/missile3.txt
