@@ -4,6 +4,7 @@
 #include "transform.h"
 #include <vector>
 #include <glm/glm.hpp>
+#include "fullscreenimage.h"
 
 struct Data {
 	float x, y, z;
@@ -12,6 +13,7 @@ struct Data {
 
 class Radar {
 private:
+	FullscreenImage image;
 	ShaderProgram shader;
 	GLuint vao, vbo;
 	Transform player;
