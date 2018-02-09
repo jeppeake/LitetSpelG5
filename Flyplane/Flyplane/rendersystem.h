@@ -13,6 +13,7 @@
 #include "playercomponent.h"
 #include "terraincomponent.h"
 #include "equipment.h"
+#include "physics.h"
 #include "radar.h"
 
 using namespace entityx;
@@ -54,7 +55,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().setCamera(c);
 
 
-			playerPos = transform->pos + glm::toMat3(p_cam.orientation)*glm::vec3(0,0,4000);
+			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
 		}
 
 

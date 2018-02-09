@@ -153,6 +153,7 @@
     <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
     <ClCompile Include="particlesystem.cpp" />
+    <ClCompile Include="planepreset.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
     <ClCompile Include="radar.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="weaponpreset.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +178,9 @@
     <ClInclude Include="ButtonAction.h" />
     <ClInclude Include="buttonhandler.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="changepageaction.h" />
+    <ClInclude Include="changeplaneaction.h" />
+    <ClInclude Include="changeweaponaction.h" />
     <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
@@ -212,15 +217,20 @@
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />
     <ClInclude Include="physics.h" />
+    <ClInclude Include="pickweaponaction.h" />
+    <ClInclude Include="planepreset.h" />
     <ClInclude Include="playercomponent.h" />
     <ClInclude Include="playersystem.h" />
     <ClInclude Include="playingstate.h" />
     <ClInclude Include="pointcomponent.h" />
-    <ClInclude Include="radar.h" />
+    <ClInclude Include="presetloader.h" />
+    <ClInclude Include="previewcomponenet.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
+    <ClInclude Include="rotatepreviewsystem.h" />
     <ClInclude Include="SAIB.h" />
+    <ClInclude Include="saveloadoutaction.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="physicssystem.h" />
     <ClInclude Include="soundbuffers.h" />
@@ -235,6 +245,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="weaponpreset.h" />
     <ClInclude Include="weaponsystem.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>

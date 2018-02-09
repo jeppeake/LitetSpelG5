@@ -16,7 +16,7 @@ out vec3 Normal;
 out vec2 Tex;
 
 
-
+float rand(vec2 p);
 
 float noise(vec2 n);
 
@@ -53,6 +53,7 @@ void main() {
 	vec2 hmUV = pos2d/heightmapSize;
 
 	float height = sampleHeightmap(hmUV); 
+	//height = 0;
 	//height = -patch_size.x/1400.0;
 
 	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y);
@@ -60,16 +61,24 @@ void main() {
 	Pos = (modelMatrix * vec4(pos, 1.0)).xyz;
 	
 
+
+
 	Normal = sampleNormal(hmUV);
+	
 	/*
 	float pi = 3.1415;
-	float h = 2*pi*sqrt(patch_size.x/heightmapSize.x);
+	float h = pi*log(patch_size.x/heightmapSize.x);
 	Normal.x = 0.5*sin(h)+0.5;
 	Normal.y = 0.5*sin(h + 2*pi/3)+0.5;
 	Normal.z = 0.5*sin(h + 4*pi/3)+0.5;
-	*/
+	
 	//Normal = vec3(modelMatrix * vec4(normal, 0));
-
+	vec3 n;
+	n.x = fract(rand(pos.xz*100));
+	n.y = fract(rand(pos.xz*100 + vec2(1000, 1000)));
+	n.z = fract(rand(pos.xz*100 + vec2(2000, 2000)));
+	Normal = mix(Normal, n, 0.35);
+	*/
 	Tex = pos2d;
 
 	gl_Position = ViewProjMatrix * modelMatrix * vec4(pos, 1.0);

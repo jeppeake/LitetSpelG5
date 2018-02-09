@@ -6,6 +6,7 @@
 #include <glm\vec3.hpp>
 #include <iostream>
 #include "window.h"
+
 using namespace std;
 
 Renderer::Renderer() {
@@ -84,7 +85,7 @@ void Renderer::Render(Heightmap &map) {
 	map.bind();
 	glm::mat4 trans = glm::translate(map.pos);
 	this->terrain_shader.uniform("modelMatrix", trans);
-	glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::RenderShadow(Model & model, Transform & trans) {
@@ -155,28 +156,33 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 
-	/*
+
 	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
-	for (int i = 0; i < mapList.size(); i++) {
-		mapList[i]->bind();
-		glm::mat4 trans = glm::translate(mapList[i]->pos);
-		this->terrain_shader.uniform("modelMatrix", trans);
-		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
-	}
-	*/
-	{
+	if (hm != NULL) {
 		hm->bind();
 		glm::mat4 trans = glm::translate(hm->pos);
 		this->terrain_shader.uniform("modelMatrix", trans);
 		this->terrain_shader.uniform("scale", hm->scale);
 		for (int i = 0; i < patches.size(); i++) {
+			int indices = patches[i].indices;
+			hm->bindIndices(indices);
 			terrain_shader.uniform("offset", patches[i].offset);
 			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
-			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices.size(), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
 		}
 	}
-	
 
+	//Render crosshair
+	glm::vec2 aspect = Window::getWindow().size();
+	float aspectRatio = aspect.x / aspect.y;
+	guiShader.use();
+	guiShader.uniform("modelMatrix", crosshair.getMatrix());
+	glm::mat4 m = glm::ortho<float>(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, 0.01f, 2.0f);
+	guiShader.uniform("aspectMatrix", m);
+	guiShader.uniform("texSampler", 0);
+	crosshair.Bind();
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	list.clear();
 	mapList.clear();
