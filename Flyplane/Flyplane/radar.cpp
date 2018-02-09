@@ -1,8 +1,10 @@
 #include "radar.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "window.h"
+#include "assetloader.h"
 
 Radar::Radar() {
+	image.load("assets/textures/radar.png");
 	shader.create("radarVS.glsl", "radarFS.glsl");
 
 	/*proj = glm::mat4(1.0);//glm::ortho(0, 100, 100, 0);
@@ -31,6 +33,12 @@ Radar::Radar() {
 }
 
 void Radar::draw() {
+	auto s = Window::getWindow().size();
+	glViewport(s.x - 150, s.y - 150, 150, 150);
+
+	image.bind();
+	image.draw();
+
 	shader.use();
 	glm::vec3 direction = glm::toMat3(player.orientation) * glm::vec3(0.0, 0.0, 1.0);
 	direction.y = 0;
@@ -45,8 +53,6 @@ void Radar::draw() {
 	//bufferData[0].x += 1.01;
 	glBufferData(GL_ARRAY_BUFFER, oldSize, &bufferData[0], GL_DYNAMIC_DRAW);
 
-	auto s = Window::getWindow().size();
-	glViewport(s.x - 150, s.y - 150, 150, 150);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glDrawArrays(GL_POINTS, 0, bufferData.size());
