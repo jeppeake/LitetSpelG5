@@ -97,6 +97,9 @@
     <ClCompile Include="weaponpreset.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="radar.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />

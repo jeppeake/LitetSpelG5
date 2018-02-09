@@ -225,6 +225,7 @@
     <ClInclude Include="pointcomponent.h" />
     <ClInclude Include="presetloader.h" />
     <ClInclude Include="previewcomponenet.h" />
+    <ClInclude Include="radar.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
