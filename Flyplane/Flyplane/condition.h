@@ -14,6 +14,6 @@ public:
 	Condition() {
 	}
 
-	virtual bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
+	virtual bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) = 0; //add player, friendlies, (hostile) missiles and aircraft orientation to function call
 
 };
