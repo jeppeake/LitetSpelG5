@@ -36,6 +36,7 @@ public:
 			com.steering = SAIB::flyTo(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, aimPos);
 		}
 		else {
+			std::cout << "Terminated\n";
 			terminated = true;
 		}
 		return com;
