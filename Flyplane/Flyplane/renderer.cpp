@@ -79,16 +79,6 @@ void Renderer::Render(RenderObject& obj) {
 }
 
 
-void Renderer::Render(Heightmap &map) {
-	this->terrain_shader.use();
-	this->terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
-	terrain_shader.uniform("shadowMatrix", shadowMatrix);
-	map.bind();
-	glm::mat4 trans = glm::translate(map.pos);
-	this->terrain_shader.uniform("modelMatrix", trans);
-	//glDrawElements(GL_TRIANGLES, (GLuint)map.indices.size(), GL_UNSIGNED_INT, 0);
-}
-
 void Renderer::RenderShadow(Model & model, Transform & trans) {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glm::mat4 modelMatrix = glm::translate(trans.pos) * glm::toMat4(trans.orientation);
@@ -161,8 +151,6 @@ void Renderer::RenderScene() {
 	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
 	if (hm != NULL) {
 		hm->bind();
-		glm::mat4 trans = glm::translate(hm->pos);
-		this->terrain_shader.uniform("modelMatrix", trans);
 		this->terrain_shader.uniform("scale", hm->scale);
 		for (int i = 0; i < patches.size(); i++) {
 			int indices = patches[i].indices;

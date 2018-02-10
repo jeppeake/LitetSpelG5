@@ -115,22 +115,17 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	}
 
 
-	hScale = 2000.f;
-	spread = 40.f;
-
-
 	std::vector<unsigned char> heights;
 
-	for (int ix = 0; ix < width; ix++) {
-		for (int iy = 0; iy < height; iy++) {
+	for (int iy = 0; iy < height; iy++) {
+		for (int ix = 0; ix < width; ix++) {
 			int i = ix * 4 + iy * 4 * width;
-			float sumColors = 2.f*img[i]/255.f - 1.f;
 			
 			heights.push_back(img[i]);
 
-			float x = ix * spread;
-			float y = sumColors * hScale;
-			float z = iy * spread;
+			float x = ix;
+			float y = img[i];
+			float z = iy;
 			vertices.emplace_back(x, y, z);
 
 			/*
@@ -206,15 +201,9 @@ void Heightmap::unbind() {
 }
 
 double Heightmap::heightAt(glm::vec3 _pos) {
-
-	auto temp = _pos.x;
-	_pos.x = _pos.z;
-	_pos.z = temp;
-
 	double height = 0;
-	_pos = _pos - this->pos;
-	int x = (int)(_pos.x / spread);
-	int z = (int)(_pos.z / spread);
+	int x = (int)(_pos.x / scale.x);
+	int z = (int)(_pos.z / scale.z);
 
 	if (x < 0 || x >= width-1 || z < 0 || z >= this->height-1)
 		return height;
@@ -224,8 +213,8 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 	glm::vec3 v3 = vertices[index(x, z+1, width)];
 	glm::vec3 v4 = vertices[index(x+1, z+1, width)];
 
-	float sqX = (_pos.x / spread) - x;
-	float sqZ = (_pos.z / spread) - z;
+	float sqX = (_pos.x / scale.x) - x;
+	float sqZ = (_pos.z / scale.z) - z;
 
 
 	if ((sqX + sqZ) < 1)
@@ -241,8 +230,7 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 		height += (v3.y - v4.y) * (1.0f - sqX);
 	}
 
-	return -100;
-	return height;
+	return scale.y * height;
 }
 
 void Heightmap::bindIndices(int i) {

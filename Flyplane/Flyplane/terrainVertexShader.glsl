@@ -58,11 +58,6 @@ void main() {
 
 	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y);
 
-	Pos = (modelMatrix * vec4(pos, 1.0)).xyz;
-	
-
-
-
 	Normal = sampleNormal(hmUV);
 	
 	/*
@@ -79,9 +74,10 @@ void main() {
 	n.z = fract(rand(pos.xz*100 + vec2(2000, 2000)));
 	Normal = mix(Normal, n, 0.35);
 	*/
-	Tex = pos2d;
 
-	gl_Position = ViewProjMatrix * modelMatrix * vec4(pos, 1.0);
+	Tex = pos2d;
+	Pos = pos;
+	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }
 
 

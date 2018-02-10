@@ -29,8 +29,6 @@ private:
 	
 
 	unsigned int width, height;
-	float hScale = 1000.0f;
-	float spread = 20.0f;
 	int numPatchVerts;
 
 
@@ -47,7 +45,6 @@ public:
 	std::vector<glm::vec3> vertices;
 
 	std::vector<GLuint> indices[9];
-	glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 scale;
 
 
