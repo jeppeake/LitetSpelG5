@@ -85,7 +85,7 @@ void Camera::setTransform(const Transform &t)
 
 	//this->projMatrix = glm::perspective(glm::radians(fov), size.x / size.y, 0.1f, 10'000.f);
 
-	glm::mat4 finiteProjMatrix = glm::perspective(glm::radians(fov), size.x / size.y, 0.1f, 100.f);
+	glm::mat4 finiteProjMatrix = glm::perspective(glm::radians(fov), size.x / size.y, 1.f, 100.f);
 	this->invViewProj = glm::inverse(finiteProjMatrix * this->getViewMatrix());
 }
 

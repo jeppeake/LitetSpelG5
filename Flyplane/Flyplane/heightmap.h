@@ -41,7 +41,7 @@ private:
 	GLuint vao = 0;
 
 
-	void recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level, glm::mat4 viewProj);
+	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
@@ -62,9 +62,11 @@ public:
 	void unbindIndices();
 	
 
-	std::vector<Patch> buildPatches(glm::vec3 pos, Camera camera);
+	std::vector<Patch> buildPatches(Camera camera);
 
 	std::vector<House> getHouses() {
 		return houses;
 	}
 };
+
+int chooseIndices(int x, int y, bool divideLeft, bool divideTop, bool divideRight, bool divideBottom);

@@ -20,14 +20,17 @@
 
 using namespace entityx;
 
+
 struct RenderSystem : public System<RenderSystem> {
+
+	Camera cullingCamera;
+
 	ParticleSystem *S;
 	RenderSystem()
 	{
 		S = new ParticleSystem(1000, 5, 0.05, glm::vec3(1.0, 0.0, 0.0));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
-		Camera camera;
 		glm::vec3 playerPos;
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
@@ -61,14 +64,11 @@ struct RenderSystem : public System<RenderSystem> {
 			c.setTransform(p_cam);
 
 			Renderer::getRenderer().setCamera(c);
-			camera = c;
-
-			playerPos = transform->pos;// +glm::toMat3(p_cam.orientation)*glm::vec3(0, 0, 4000);
+			if (!Input::isKeyDown(GLFW_KEY_Q))
+				cullingCamera = c;
+			
 			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
-
-
-
 
 		ComponentHandle<ModelComponent> model;
 		for (Entity entity : es.entities_with_components(model, transform)) {
@@ -90,8 +90,7 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(terrain)) {
 			terrain = entity.component<Terrain>();
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
-			//camera.setTransform({ glm::vec3(10000, 0, 10000), glm::quat() });
-			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(camera.getTransform().pos, camera));
+			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(cullingCamera));
 		}
 		
 
@@ -120,7 +119,7 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		Renderer::getRenderer().RenderScene();
-		radar.draw();
+		//radar.draw();
 		S->render();
 		if(playing)
 			radar.draw();

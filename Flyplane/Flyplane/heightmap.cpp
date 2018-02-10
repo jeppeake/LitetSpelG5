@@ -2,6 +2,7 @@
 #include "lodepng.h"
 #include <GL\glew.h>
 #include <glm\gtc\constants.hpp>
+#include <glm\gtx\intersect.hpp>
 #include <iostream>
 #include "model.h"
 #include "timer.h"
@@ -105,7 +106,6 @@ Heightmap::Heightmap(const std::string &file, const std::string &texFile) {
 void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	tex.loadTexture(texFile);
 
-
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, file);
 	if (error != 0) {
@@ -145,7 +145,7 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 
 
 	numPatchVerts = 31;
-	scale = glm::vec3(70, 70, 70);
+	scale = glm::vec3(20, 20, 20);
 
 	std::vector<glm::vec2> uvs;
 	for (int y = 0; y < numPatchVerts; y++) {
@@ -241,6 +241,7 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 		height += (v3.y - v4.y) * (1.0f - sqX);
 	}
 
+	return -100;
 	return height;
 }
 
@@ -254,51 +255,77 @@ void Heightmap::unbindIndices() {
 
 
 
-std::vector<Patch> Heightmap::buildPatches(glm::vec3 _pos, Camera camera) {
+std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 	std::vector<Patch> result;
 
 	auto inverse = camera.getInverse();
-	/*
-	glm::mat4 farPlane;
-	farPlane[0] = glm::vec4(-1, -1, 1, 1);
-	farPlane[1] = glm::vec4(1, -1, 1, 1);
-	farPlane[2] = glm::vec4(-1, 1, 1, 1);
-	farPlane[3] = glm::vec4(1, 1, 1, 1);
-
-	glm::mat4 nearPlane;
-	nearPlane[0] = glm::vec4(-1, -1, 0, 1);
-	nearPlane[1] = glm::vec4(1, -1, 0, 1);
-	nearPlane[2] = glm::vec4(-1, 1, 0, 1);
-	nearPlane[3] = glm::vec4(1, 1, 0, 1);
-	for (int i = 0; i < 4; i++) {
-		farPlane[i] = inverse * farPlane[i];
-		farPlane[i] /= farPlane[i].w;
-
-		nearPlane[i] = inverse * nearPlane[i];
-		nearPlane[i] /= nearPlane[i].w;
-	}
+	
 	glm::vec3 origin = camera.getTransform().pos;
 
-	glm::vec3 left = normal(nearPlane[0], farPlane[0], farPlane[2]);
-	glm::vec3 bottom = normal(nearPlane[1], farPlane[1], farPlane[0]);
-	glm::vec3 right = normal(nearPlane[3], farPlane[3], farPlane[1]);
-	glm::vec3 top = normal(nearPlane[2], farPlane[2], farPlane[3]);
-	*/
+	glm::vec3 farPlane[4];
+	glm::mat4 farPlane4;
+	farPlane4[0] = glm::vec4(-1, -1, 1, 1);
+	farPlane4[1] = glm::vec4(1, -1, 1, 1);
+	farPlane4[2] = glm::vec4(-1, 1, 1, 1);
+	farPlane4[3] = glm::vec4(1, 1, 1, 1);
+	for (int i = 0; i < 4; i++) {
+		farPlane4[i] = inverse * farPlane4[i];
+		farPlane4[i] /= farPlane4[i].w;
 
-	auto viewProj = camera.getProjMatrix() * camera.getViewMatrix();
+		farPlane[i] = origin + 1'000'000.f*normalize(glm::vec3(farPlane4[i]) - origin);
+	}
 
- 	glm::vec2 pos(_pos.x/scale.x, _pos.z/scale.z);
 	glm::vec2 offset(0);
 	float patchSize = width / 2.f;
-
-	recursiveBuildPatches(result, pos, patchSize, offset, 0, viewProj);
+	recursiveBuildPatches(result, patchSize, offset, 0, farPlane, origin);
 
 	return result;
 }
 
-void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level, glm::mat4 viewProj) {
+int chooseIndices(int x, int y, bool divideLeft, bool divideTop, bool divideRight, bool divideBottom) {
+	int indices = 0;
+	if (x == 0 && y == 0) {
+		if (!divideLeft && !divideTop) {
+			indices = 6;
+		} else if (!divideLeft) {
+			indices = 2;
+		} else if (!divideTop) {
+			indices = 3;
+		}
+	} else if (x == 1 && y == 0) {
+		if (!divideTop && !divideRight) {
+			indices = 7;
+		} else if (!divideTop) {
+			indices = 3;
+		} else if (!divideRight) {
+			indices = 4;
+		}
+	} else if (x == 0 && y == 1) {
+		if (!divideLeft && !divideBottom) {
+			indices = 5;
+		} else if (!divideLeft) {
+			indices = 2;
+		} else if (!divideBottom) {
+			indices = 1;
+		}
+	} else {
+		if (!divideRight && !divideBottom) {
+			indices = 8;
+		} else if (!divideRight) {
+			indices = 4;
+		} else if (!divideBottom) {
+			indices = 1;
+		}
+	}
+	return indices;
+}
+
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig) {
 
 	int maxLevels = 7;
+
+
+	glm::vec2 pos(orig.x/scale.x, orig.z/scale.z);
 
 	// better read as "left divides" etc
 	bool divideLeft = false;
@@ -312,50 +339,27 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos
 	float dist;
 	glm::vec2 center;
 
-	//auto lambda = []() {};
+	auto checkDivide = [&](glm::vec2 d) {
+		glm::vec2 off = offset;
+		off += neighbourSize * d;
+		center = off + neighbourSize * glm::vec2(0.5f);
+		dist = length(pos - center);
+		return dist < len;
+	};
 
-	glm::vec2 left = offset;
-	left.x -= neighbourSize;
-	center.x = left.x + neighbourSize * 0.5f;
-	center.y = left.y + neighbourSize * 0.5f;
-	dist = length(pos - center);
-	divideLeft = dist < len;
-
-	glm::vec2 right = offset;
-	right.x += neighbourSize;
-	center.x = right.x + neighbourSize * 0.5f;
-	center.y = right.y + neighbourSize * 0.5f;
-	dist = length(pos - center);
-	divideRight = dist < len;
-	
-	glm::vec2 top = offset;
-	top.y -= neighbourSize;
-	center.x = top.x + neighbourSize * 0.5f;
-	center.y = top.y + neighbourSize * 0.5f;
-	dist = length(pos - center);
-	divideTop = dist < len;
-
-	glm::vec2 bottom = offset;
-	bottom.y += neighbourSize;
-	center.x = bottom.x + neighbourSize * 0.5f;
-	center.y = bottom.y + neighbourSize * 0.5f;
-	dist = length(pos - center);
-	divideBottom = dist < len;
-	
-
+	divideLeft = checkDivide(glm::vec2(-1, 0));
+	divideRight = checkDivide(glm::vec2(1, 0));
+	divideTop = checkDivide(glm::vec2(0, -1));
+	divideBottom = checkDivide(glm::vec2(0, 1));
 
 	for (int i = 0; i < 4; i++) {
 		int x = i % 2;
 		int y = i / 2;
 
 
-
-		glm::vec2 center;
-		center.x = offset.x + patchSize * x + patchSize * 0.5f;
-		center.y = offset.y + patchSize * y + patchSize * 0.5f;
+		glm::vec2 center = offset + patchSize * glm::vec2(x + 0.5f, y + 0.5f);
 
 		float dist = length(pos - center);
-
 		float len = glm::root_two<float>() * patchSize*2.f;
 
 		bool is_close = dist < len;
@@ -364,62 +368,40 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos
 		new_offset.x += x * patchSize;
 		new_offset.y += y * patchSize;
 
-		int indices = 0;
+		int indices = chooseIndices(x, y, divideLeft, divideTop, divideRight, divideBottom);
 
-		if (x == 0 && y == 0) {
-			if (!divideLeft && !divideTop) {
-				indices = 6;
-			} else if (!divideLeft) {
-				indices = 2;
-			} else if (!divideTop) {
-				indices = 3;
-			}
-		} else if (x == 1 && y == 0) {
-			if (!divideTop && !divideRight) {
-				indices = 7;
-			} else if (!divideTop) {
-				indices = 3;
-			} else if (!divideRight) {
-				indices = 4;
-			}
-		} else if (x == 0 && y == 1) {
-			if (!divideLeft && !divideBottom) {
-				indices = 5;
-			} else if (!divideLeft) {
-				indices = 2;
-			} else if (!divideBottom) {
-				indices = 1;
-			}
+		if (level < maxLevels && is_close) {
+			// should divide
+			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, farPlane, orig);
 		} else {
-			if (!divideRight && !divideBottom) {
-				indices = 8;
-			} else if (!divideRight) {
-				indices = 4;
-			} else if (!divideBottom) {
-				indices = 1;
-			}
-		}
+			glm::vec3 center3 = scale * glm::vec3(center.x, 0, center.y);
+
+			bool intersection = false;
+
+			//left
+			glm::vec3 posLeft;
+			if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[1], farPlane[3], posLeft))
+				intersection = true;
+				
+			//top
+			glm::vec3 posTop;
+			if(glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[3], farPlane[2], posTop))
+				intersection = true;
 
 
-		glm::vec3 center3(center.x, 0, center.y);
+			//right
+			glm::vec3 posRight;
+			if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[2], farPlane[0], posRight))
+				intersection = true;
 
-		glm::vec4 projected = viewProj * glm::vec4(scale*center3, 1);
 
-		projected /= projected.w;
+			//bottom
+			glm::vec3 posBottom;
+			if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[0], farPlane[1], posBottom))
+				intersection = true;
 
-		if (abs(projected.x) > 1.f || abs(projected.y) > 1.f)
-			continue;
-
-		if (!is_close) {
-			// add patch to list
-			patches.emplace_back(patchSize, new_offset, indices);
-		} else {
-			if (level < maxLevels) {
-				// should divide
-				recursiveBuildPatches(patches, pos, patchSize*0.5f, new_offset, level + 1, viewProj);
-			} else {
+			if (intersection && (posLeft.x > 0 || posTop.x > 0 || posRight.x > 0 || posBottom.x > 0))
 				patches.emplace_back(patchSize, new_offset, indices);
-			}	
 		}
 	}
 }
