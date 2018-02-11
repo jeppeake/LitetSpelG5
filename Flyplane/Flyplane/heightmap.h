@@ -26,13 +26,8 @@ private:
 	std::vector<unsigned char> heightmap;
 	Texture tex;
 
-	
-
 	unsigned int width, height;
-	float hScale = 1000.0f;
-	float spread = 20.0f;
 	int numPatchVerts;
-
 
 	GLuint heightmapTex = 0;
 
@@ -40,14 +35,12 @@ private:
 	GLuint vbo = 0;
 	GLuint vao = 0;
 
-
-	void recursiveBuildPatches(std::vector<Patch>& patches, glm::vec2 pos, float patchSize, glm::vec2 offset, int level, glm::mat4 viewProj);
+	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
 
 	std::vector<GLuint> indices[9];
-	glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 scale;
 
 
@@ -61,10 +54,15 @@ public:
 	void bindIndices(int i);
 	void unbindIndices();
 	
+	inline glm::vec2 getSize() {
+		return glm::vec2(width, height);
+	}
 
-	std::vector<Patch> buildPatches(glm::vec3 pos, Camera camera);
+	std::vector<Patch> buildPatches(Camera camera);
 
 	std::vector<House> getHouses() {
 		return houses;
 	}
 };
+
+int chooseIndices(int x, int y, bool divideLeft, bool divideTop, bool divideRight, bool divideBottom);

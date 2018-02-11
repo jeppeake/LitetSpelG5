@@ -4,11 +4,11 @@ uniform mat4 modelMatrix;
 uniform mat4 ViewProjMatrix;
 
 uniform sampler2D heightmap;
+uniform vec2 heightmapSize;
 
 
 uniform vec2 offset;
 uniform vec2 patch_size;
-const vec2 heightmapSize = vec2(1024);
 uniform vec3 scale;
 
 out vec3 Pos;
@@ -58,11 +58,6 @@ void main() {
 
 	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y);
 
-	Pos = (modelMatrix * vec4(pos, 1.0)).xyz;
-	
-
-
-
 	Normal = sampleNormal(hmUV);
 	
 	/*
@@ -79,9 +74,10 @@ void main() {
 	n.z = fract(rand(pos.xz*100 + vec2(2000, 2000)));
 	Normal = mix(Normal, n, 0.35);
 	*/
-	Tex = pos2d;
 
-	gl_Position = ViewProjMatrix * modelMatrix * vec4(pos, 1.0);
+	Tex = pos2d;
+	Pos = pos;
+	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }
 
 

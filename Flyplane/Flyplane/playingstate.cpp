@@ -129,9 +129,10 @@ void PlayingState::loadLoadout()
 	pp.load(str);
 
 
-	float x = 400;
-	float z = 500;
-	glm::vec3 pos(x, 4500, z);
+	float x = 0;
+	float z = 0;
+	float y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 500;
+	glm::vec3 pos(x, y, z);
 	glm::quat orien(1, 0, 0, 0);
 	// ---	PLAYER	---
 	entity_p = ex.entities.create();
