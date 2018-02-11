@@ -152,6 +152,7 @@ void Renderer::RenderScene() {
 	if (hm != NULL) {
 		hm->bind();
 		this->terrain_shader.uniform("scale", hm->scale);
+		this->terrain_shader.uniform("heightmapSize", hm->getSize());
 		for (int i = 0; i < patches.size(); i++) {
 			int indices = patches[i].indices;
 			hm->bindIndices(indices);

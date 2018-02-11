@@ -23,80 +23,6 @@ glm::vec3 normal(glm::vec4 p1, glm::vec4 p2, glm::vec4 p3) {
 }
 
 
-// pls
-void Heightmap::createIndices(int x, int y, int i){
-	if (x % 2 == y % 2) {
-		//1
-		// i == 3, 4, 6, 7, 8
-		if (y == 0 && (i == 3 || i == 6 || i == 7)) {
-			// up
-			indices[i].push_back(index(x, y, numPatchVerts));
-			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
-			indices[i].push_back(index(x + 2, y, numPatchVerts));
-		} else if (x == numPatchVerts - 2 && (i == 4 || i == 7 || i == 8)) {
-			// right
-			indices[i].push_back(index(x, y, numPatchVerts));
-			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
-			indices[i].push_back(index(x + 1, y-1, numPatchVerts));
-		} else {
-			indices[i].push_back(index(x, y, numPatchVerts));
-			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
-			indices[i].push_back(index(x + 1, y, numPatchVerts));
-		}
-		
-		//2
-		// left == 2, 5, 6
-		// down == 1, 5, 8
-		if (x == 0 && (i == 2 || i == 5 || i == 6)) {
-			// left
-			indices[i].push_back(index(x, y, numPatchVerts));
-			indices[i].push_back(index(x, y + 2, numPatchVerts));
-			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
-		} else if (y == numPatchVerts - 2 && (i == 1 || i == 5 || i == 8)) {
-			// down
-			// skip
-		} else {
-			indices[i].push_back(index(x, y, numPatchVerts));
-			indices[i].push_back(index(x, y + 1, numPatchVerts));
-			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
-		}
-		
-	} else {
-		//3
-		// left: 2, 5, 6
-		// up:   3, 6, 7
-		if (x == 0 && (i == 2 || i == 5 || i == 6)) {
-			// left
-			// skip
-		} else if (y == 0 && (i == 3 || i == 6 || i == 7)) {
-			// up
-			// skip
-		} else {
-			indices[i].push_back(index(x, y, numPatchVerts));
-			indices[i].push_back(index(x, y + 1, numPatchVerts));
-			indices[i].push_back(index(x + 1, y, numPatchVerts));
-		}
-
-		//4
-		// i == 1, 4, 5, 7, 8
-		if (y == numPatchVerts - 2 && (i == 1 || i == 5 || i == 8)) {
-			// down
-			indices[i].push_back(index(x + 1, y, numPatchVerts));
-			indices[i].push_back(index(x, y + 1, numPatchVerts));
-			indices[i].push_back(index(x + 2, y + 1, numPatchVerts));
-		} else if (x == numPatchVerts - 2 && (i == 4 || i == 7 || i == 8)) {
-			// right
-			// skip
-		} else {
-			indices[i].push_back(index(x + 1, y, numPatchVerts));
-			indices[i].push_back(index(x, y+1, numPatchVerts));
-			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
-		}
-	}
-}
-
-
-
 Heightmap::Heightmap() {}
 
 Heightmap::Heightmap(const std::string &file, const std::string &texFile) {
@@ -114,17 +40,49 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 		std::exit(EXIT_FAILURE);
 	}
 
+	double gaussian[7][7] = {
+		{0.000286,	0.001476,	0.003949,	0.00548,	0.003949,	0.001476,	0.000286},
+	{	0.001476,	0.00763,	0.020408,	0.02832,	0.020408,	0.00763,	0.001476},
+	{	0.003949,	0.020408,	0.054587,	0.075751,	0.054587,	0.020408,	0.003949},
+	{	0.00548,	0.02832,	0.075751,	0.105122,	0.075751,	0.02832,	0.00548},
+	{	0.003949,	0.020408,	0.054587,	0.075751,	0.054587,	0.020408,	0.003949},
+	{	0.001476,	0.00763,	0.020408,	0.02832,	0.020408,	0.00763,	0.001476},
+	{	0.000286,	0.001476,	0.003949,	0.00548,	0.003949,	0.001476,	0.000286}
+	};
 
-	std::vector<unsigned char> heights;
+	
+	
+
+	std::vector<unsigned int> heights;
 
 	for (int iy = 0; iy < height; iy++) {
 		for (int ix = 0; ix < width; ix++) {
-			int i = ix * 4 + iy * 4 * width;
+			int i = index(ix * 4, iy, 4 * width);
 			
-			heights.push_back(img[i]);
+			double smoothed = 0;
+			double regular = 0;
+
+			regular = (img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
+			if (iy >= 4 && iy <= height - 6 && ix >= 4 && ix <= width - 6) {
+				for (int j = -3; j <= 3; j++) {
+					for (int k = -3; k <= 3; k++) {
+						int ind = index((ix + j) * 4, iy + k, 4 * width);
+						double gauss = gaussian[j + 3][k + 3];
+						smoothed += gauss * (img[ind] / 255.0)*double(std::numeric_limits<unsigned int>::max());
+					}
+				}
+			} else {
+				smoothed = regular;
+			}
+
+			double val = 0;
+
+			val = smoothed;
+			
+			heights.push_back(val);
 
 			float x = ix;
-			float y = img[i];
+			float y = val *(255.0/double(std::numeric_limits<unsigned int>::max()));
 			float z = iy;
 			vertices.emplace_back(x, y, z);
 
@@ -139,8 +97,8 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	}
 
 
-	numPatchVerts = 31;
-	scale = glm::vec3(20, 20, 20);
+	numPatchVerts = 127;
+	scale = 40.f*glm::vec3(3, 5, 3);
 
 	std::vector<glm::vec2> uvs;
 	for (int y = 0; y < numPatchVerts; y++) {
@@ -161,7 +119,7 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, &heights[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_UNSIGNED_INT, &heights[0]);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 
@@ -263,54 +221,17 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 		farPlane[i] = origin + 1'000'000.f*normalize(glm::vec3(farPlane4[i]) - origin);
 	}
 
-	glm::vec2 offset(0);
-	float patchSize = width / 2.f;
+	glm::vec2 offset(-(width / 2.f));
+	float patchSize = width; // / 2.f;
 	recursiveBuildPatches(result, patchSize, offset, 0, farPlane, origin);
 
 	return result;
 }
 
-int chooseIndices(int x, int y, bool divideLeft, bool divideTop, bool divideRight, bool divideBottom) {
-	int indices = 0;
-	if (x == 0 && y == 0) {
-		if (!divideLeft && !divideTop) {
-			indices = 6;
-		} else if (!divideLeft) {
-			indices = 2;
-		} else if (!divideTop) {
-			indices = 3;
-		}
-	} else if (x == 1 && y == 0) {
-		if (!divideTop && !divideRight) {
-			indices = 7;
-		} else if (!divideTop) {
-			indices = 3;
-		} else if (!divideRight) {
-			indices = 4;
-		}
-	} else if (x == 0 && y == 1) {
-		if (!divideLeft && !divideBottom) {
-			indices = 5;
-		} else if (!divideLeft) {
-			indices = 2;
-		} else if (!divideBottom) {
-			indices = 1;
-		}
-	} else {
-		if (!divideRight && !divideBottom) {
-			indices = 8;
-		} else if (!divideRight) {
-			indices = 4;
-		} else if (!divideBottom) {
-			indices = 1;
-		}
-	}
-	return indices;
-}
 
 void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig) {
 
-	int maxLevels = 7;
+	int maxLevels = 8;
 
 
 	glm::vec2 pos(orig.x/scale.x, orig.z/scale.z);
@@ -362,34 +283,157 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 			// should divide
 			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, farPlane, orig);
 		} else {
-			glm::vec3 center3 = scale * glm::vec3(center.x, 0, center.y);
 
 			bool intersection = false;
 
-			//left
 			glm::vec3 posLeft;
-			if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[1], farPlane[3], posLeft))
-				intersection = true;
-				
-			//top
 			glm::vec3 posTop;
-			if(glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[3], farPlane[2], posTop))
-				intersection = true;
-
-
-			//right
 			glm::vec3 posRight;
-			if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[2], farPlane[0], posRight))
-				intersection = true;
-
-
-			//bottom
 			glm::vec3 posBottom;
-			if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[0], farPlane[1], posBottom))
-				intersection = true;
+			// check all corners of the patch
+			for (int iy = -1; iy <= 1 && !intersection; iy += 2) {
+				for (int ix = -1; ix <= 1 && !intersection; ix += 2) {
+					glm::vec3 center3 = scale * glm::vec3(center.x + ix* patchSize*0.5f, 0, center.y + iy * patchSize*0.5f);
 
-			if (intersection && (posLeft.x > 0 || posTop.x > 0 || posRight.x > 0 || posBottom.x > 0))
+					//left
+					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[1], farPlane[3], posLeft)) {
+						intersection = true;
+						break;
+					}
+					
+					//top
+					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[3], farPlane[2], posTop)) {
+						intersection = true;
+						break;
+					}
+
+					//right
+					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[2], farPlane[0], posRight)) {
+						intersection = true;
+						break;
+					}
+
+					//bottom
+					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[0], farPlane[1], posBottom)) {
+						intersection = true;
+						break;
+					}
+				}
+			}
+			
+
+			if (intersection) // && (posLeft.x > 0 || posTop.x > 0 || posRight.x > 0 || posBottom.x > 0))
 				patches.emplace_back(patchSize, new_offset, indices);
+		}
+	}
+}
+
+int chooseIndices(int x, int y, bool divideLeft, bool divideTop, bool divideRight, bool divideBottom) {
+	int indices = 0;
+	if (x == 0 && y == 0) {
+		if (!divideLeft && !divideTop) {
+			indices = 6;
+		} else if (!divideLeft) {
+			indices = 2;
+		} else if (!divideTop) {
+			indices = 3;
+		}
+	} else if (x == 1 && y == 0) {
+		if (!divideTop && !divideRight) {
+			indices = 7;
+		} else if (!divideTop) {
+			indices = 3;
+		} else if (!divideRight) {
+			indices = 4;
+		}
+	} else if (x == 0 && y == 1) {
+		if (!divideLeft && !divideBottom) {
+			indices = 5;
+		} else if (!divideLeft) {
+			indices = 2;
+		} else if (!divideBottom) {
+			indices = 1;
+		}
+	} else {
+		if (!divideRight && !divideBottom) {
+			indices = 8;
+		} else if (!divideRight) {
+			indices = 4;
+		} else if (!divideBottom) {
+			indices = 1;
+		}
+	}
+	return indices;
+}
+
+// pls
+void Heightmap::createIndices(int x, int y, int i) {
+	if (x % 2 == y % 2) {
+		//1
+		// i == 3, 4, 6, 7, 8
+		if (y == 0 && (i == 3 || i == 6 || i == 7)) {
+			// up
+			indices[i].push_back(index(x, y, numPatchVerts));
+			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 2, y, numPatchVerts));
+		} else if (x == numPatchVerts - 2 && (i == 4 || i == 7 || i == 8)) {
+			// right
+			indices[i].push_back(index(x, y, numPatchVerts));
+			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 1, y - 1, numPatchVerts));
+		} else {
+			indices[i].push_back(index(x, y, numPatchVerts));
+			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 1, y, numPatchVerts));
+		}
+
+		//2
+		// left == 2, 5, 6
+		// down == 1, 5, 8
+		if (x == 0 && (i == 2 || i == 5 || i == 6)) {
+			// left
+			indices[i].push_back(index(x, y, numPatchVerts));
+			indices[i].push_back(index(x, y + 2, numPatchVerts));
+			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
+		} else if (y == numPatchVerts - 2 && (i == 1 || i == 5 || i == 8)) {
+			// down
+			// skip
+		} else {
+			indices[i].push_back(index(x, y, numPatchVerts));
+			indices[i].push_back(index(x, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
+		}
+
+	} else {
+		//3
+		// left: 2, 5, 6
+		// up:   3, 6, 7
+		if (x == 0 && (i == 2 || i == 5 || i == 6)) {
+			// left
+			// skip
+		} else if (y == 0 && (i == 3 || i == 6 || i == 7)) {
+			// up
+			// skip
+		} else {
+			indices[i].push_back(index(x, y, numPatchVerts));
+			indices[i].push_back(index(x, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 1, y, numPatchVerts));
+		}
+
+		//4
+		// i == 1, 4, 5, 7, 8
+		if (y == numPatchVerts - 2 && (i == 1 || i == 5 || i == 8)) {
+			// down
+			indices[i].push_back(index(x + 1, y, numPatchVerts));
+			indices[i].push_back(index(x, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 2, y + 1, numPatchVerts));
+		} else if (x == numPatchVerts - 2 && (i == 4 || i == 7 || i == 8)) {
+			// right
+			// skip
+		} else {
+			indices[i].push_back(index(x + 1, y, numPatchVerts));
+			indices[i].push_back(index(x, y + 1, numPatchVerts));
+			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
 		}
 	}
 }

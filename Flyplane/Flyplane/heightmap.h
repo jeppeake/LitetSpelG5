@@ -26,18 +26,14 @@ private:
 	std::vector<unsigned char> heightmap;
 	Texture tex;
 
-	
-
 	unsigned int width, height;
 	int numPatchVerts;
-
 
 	GLuint heightmapTex = 0;
 
 	GLuint ebos[9];
 	GLuint vbo = 0;
 	GLuint vao = 0;
-
 
 	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig);
 	void createIndices(int x, int y, int i);
@@ -58,6 +54,9 @@ public:
 	void bindIndices(int i);
 	void unbindIndices();
 	
+	inline glm::vec2 getSize() {
+		return glm::vec2(width, height);
+	}
 
 	std::vector<Patch> buildPatches(Camera camera);
 

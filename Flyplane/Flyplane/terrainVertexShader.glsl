@@ -4,11 +4,11 @@ uniform mat4 modelMatrix;
 uniform mat4 ViewProjMatrix;
 
 uniform sampler2D heightmap;
+uniform vec2 heightmapSize;
 
 
 uniform vec2 offset;
 uniform vec2 patch_size;
-const vec2 heightmapSize = vec2(1024);
 uniform vec3 scale;
 
 out vec3 Pos;

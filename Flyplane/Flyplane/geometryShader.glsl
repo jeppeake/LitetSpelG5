@@ -1,6 +1,7 @@
 #version 420
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
+//layout(line_strip, max_vertices = 4) out;
 
 in vec3 Pos[];
 in vec3 Normal[];
@@ -9,6 +10,7 @@ in vec2 Tex[];
 out vec3 vPos;
 out vec3 vNormal;
 out vec2 vTex;
+
 
 void main() {
 	vec3 v1 = Pos[0] - Pos[1];
@@ -21,7 +23,8 @@ void main() {
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();
 	}
-	/* for wireframe
+	/*
+	// for wireframe
 	vPos = Pos[0];
 	vNormal = Normal[0];
 	vTex = Tex[0];
