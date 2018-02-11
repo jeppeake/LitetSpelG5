@@ -179,9 +179,11 @@ void Renderer::RenderScene() {
 	markers.bind();
 	std::vector<Marker> p = markers.getMarkers();
 	enemyMarkerShader.uniform("aspectMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	enemyMarkerShader.uniform("cameraPos", this->camera.getTransform().pos);
 	for (int i = 0; i < p.size(); i++) {
 		//enemeyMarkerShader.uniform("modelMatrix", glm::translate(p[i].pos) * glm::scale(glm::vec3(p[i].scale)));
 		enemyMarkerShader.uniform("transform", p[i].pos);
+		enemyMarkerShader.uniform("scale", p[i].scale);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
