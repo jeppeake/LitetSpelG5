@@ -38,7 +38,6 @@ void AssetLoader::loadTexture(const std::string filename, const std::string name
 	}
 }
 
-void AssetLoader::loadHeightmap(const std::string map, const std::string tex, std::string name) {
 void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &name) {
 	auto find = heightmaps.find(name);
 	if (find == heightmaps.end()) {
