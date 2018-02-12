@@ -378,6 +378,9 @@
     <ClInclude Include="enemymarker.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="changeskinaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">

@@ -16,6 +16,7 @@
 #include "equipment.h"
 #include "rendersystem.h"
 #include "rotatepreviewsystem.h"
+#include "changeskinaction.h"
 #include <fstream>
 #include <iostream>
 #include <experimental\filesystem>
@@ -23,11 +24,9 @@ namespace fs = std::experimental::filesystem;
 
 entityx::Entity entityp;
 Transform planetrans;
-
-
 void LoadoutState::updatePreview() {
 	Transform oldTrans;
-	glm::vec3 pos(-3, -2, 0);
+	glm::vec3 pos(-1.5, -1, 0);
 	glm::quat orien(1, 0, 0, 0);
 	oldTrans.pos = pos;
 	if(entityp.has_component<Transform>())
@@ -42,6 +41,7 @@ void LoadoutState::updatePreview() {
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
+
 
 	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {
 		if (this->pickedWeapons[i] != NO_WEAPON) {
@@ -58,7 +58,7 @@ void LoadoutState::init() {
 	entityp = ex.entities.create();
 	Camera camera;
 	Transform trans;
-	trans.pos = glm::vec3(0, 0, -10);
+	trans.pos = glm::vec3(0, 0, -5);
 	camera.setTransform(trans);
 	Renderer::getRenderer().setCamera(camera);
 	ex.systems.add<RenderSystem>();
@@ -124,12 +124,17 @@ void LoadoutState::changePlane(unsigned int selected)
 		weaponSlotsBHandler.addButton(new Button("Empty", pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangeWeaponAction(this, i), "buttonforward"));
 		pickedWeapons.push_back(NO_WEAPON);
 	}
+	skinsBHandler.clearButtons();
+	for (int i = 0; i < planePresets[selected].textureNames.size(); i++) {
+		skinsBHandler.addButton(new Button(planePresets[selected].textureNames[i], pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangeSkinAction(this, i), "buttonforward"));
+	}
 	updatePreview();
 	for (Button* button : planesBHandler.buttons) {
 		button->color = glm::vec3(1, 1, 1);
 	}
 	planePicked = true;
 	planesBHandler.buttons[this->selected]->color = planesBHandler.buttons[this->selected]->hcolor;
+	changeSkin(0);
 }
 
 void LoadoutState::changeWeapon(unsigned int selected)
@@ -144,6 +149,16 @@ void LoadoutState::changeWeapon(unsigned int selected)
 	}
 	if(picking)
 		weaponSlotsBHandler.buttons[this->selectedW]->color = weaponSlotsBHandler.buttons[this->selectedW]->hcolor;
+}
+
+void LoadoutState::changeSkin(unsigned int selected)
+{
+	selectedSkin = selected;
+	entityp.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(this->planePresets[this->selected].textureNames[selected]);
+	for (Button* button : skinsBHandler.buttons) {
+		button->color = glm::vec3(1, 1, 1);
+	}
+	skinsBHandler.buttons[this->selectedSkin]->color = skinsBHandler.buttons[this->selectedSkin]->hcolor;
 }
 
 void LoadoutState::changePage(int page)
@@ -178,6 +193,7 @@ void LoadoutState::saveLoadout()
 			else
 				outputFile << 0 << "\n";
 		}
+		outputFile << this->selectedSkin << "\n";
 	}
 }
 
@@ -224,6 +240,9 @@ void LoadoutState::update(double dt) {
 			weaponsBHandler.handleButtonClicks();
 		}
 		break;
+	case skins:
+		skinsBHandler.drawButtons();
+		skinsBHandler.handleButtonClicks();
 	}
 	
 }

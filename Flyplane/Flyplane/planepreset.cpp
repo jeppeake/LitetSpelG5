@@ -34,6 +34,17 @@ void PlanePreset::load(std::string presetname)
 	std::getline(file, str);
 	turnrate = std::stod(str, NULL);
 
+	int texCount = 0;
+	std::getline(file, str);
+	while (str.compare("-end textures-") != 0) {
+		textureNames.push_back(str);
+		std::string texPath;
+		std::getline(file, texPath);
+		AssetLoader::getLoader().loadTexture(texPath, str);
+		std::cout << "Loaded texture: " << str << ", " << texPath << "\n";
+		std::getline(file, str);
+	}
+
 	while (std::getline(file, str)) {
 		glm::vec3 pos;
 		pos.x = std::stod(str, NULL);
