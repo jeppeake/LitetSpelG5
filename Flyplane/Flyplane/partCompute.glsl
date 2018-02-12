@@ -23,10 +23,20 @@ layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 void main()
 {
 	uint gid = gl_GlobalInvocationID.x;
-	Positions[gid].xyz = spawn + (Velocities[gid].xyz * min(1.0,Lives[gid])) + direction * Lives[gid];
+	if(Positions[gid].xyz == vec3(0))
+	{
+		Positions[gid].xyz = spawn;
+		Velocities[gid].xyz = dt * vec3(direction.x * Velocities[gid].x, direction.y * Velocities[gid].y, direction.z * Velocities[gid].z);
+	}
+	else
+	{
+		Positions[gid].xyz += Velocities[gid].xyz * dt;
+	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
 	{
 		Lives[gid] = 0.0;
+		Positions[gid].xyz = spawn;
+		Velocities[gid].xyz = vec3(direction.x * Velocities[gid].x, direction.y * Velocities[gid].y, direction.z * Velocities[gid].z);
 	}
 }
