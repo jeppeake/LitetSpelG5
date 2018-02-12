@@ -183,6 +183,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="changepageaction.h" />
     <ClInclude Include="changeplaneaction.h" />
+    <ClInclude Include="changeskinaction.h" />
     <ClInclude Include="changeweaponaction.h" />
     <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />

@@ -62,6 +62,7 @@ public:
 	void RenderScene();
 	Camera getCamera() &;
 	void setCamera(const Camera& camera);
+	void addMarker(glm::vec3 pos, float scale);
 	// DEBUG
 	void update(float dt);
 };

@@ -17,6 +17,7 @@
 #include "physics.h"
 #include "particlesystem.h"
 #include "radar.h"
+#include "aicomponent.h"
 
 using namespace entityx;
 
@@ -24,6 +25,7 @@ using namespace entityx;
 struct RenderSystem : public System<RenderSystem> {
 
 	Camera cullingCamera;
+	Radar radar;
 
 	ParticleSystem *S;
 	RenderSystem()
@@ -31,18 +33,19 @@ struct RenderSystem : public System<RenderSystem> {
 		S = new ParticleSystem(1000, 5, 0.05, glm::vec3(1.0, 0.0, 0.0));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
-		glm::vec3 playerPos;
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
+		glm::vec3 playerPos;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			playing = true;
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
+			playerPos = transform->pos;
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 
 			Transform cam = *transform.get();
-			glm::vec3 offset(0, 4, -9);
+			glm::vec3 offset(0, 4*0.5, -9*0.5);
 			offset = glm::toMat3(normalize(cam.orientation))*offset;
 			//cam.pos += offset;
 
@@ -51,7 +54,7 @@ struct RenderSystem : public System<RenderSystem> {
 			//double v = length(physics->velocity)*0.001;
 			double f_pos = 0.05;
 			double f_orien = 0.0;
-			p_cam.pos += 0.98f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
+			p_cam.pos += 0.99f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
@@ -67,7 +70,7 @@ struct RenderSystem : public System<RenderSystem> {
 			if (!Input::isKeyDown(GLFW_KEY_Q))
 				cullingCamera = c;
 			
-			//S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
+			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
 
 		ComponentHandle<ModelComponent> model;
@@ -118,12 +121,21 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 		}
 
+		ComponentHandle<AIComponent> ai;
+
+		for (Entity entity : es.entities_with_components(ai, transform)) {
+			glm::vec3 enemyPos = entity.component<Transform>()->pos;
+			float length = glm::distance(enemyPos, playerPos);
+
+			//if (length < 20000.0f ) {
+				length = 5.0 + length / 100.0f;
+				Renderer::getRenderer().addMarker(enemyPos, length);
+			//}
+		}
 		Renderer::getRenderer().RenderScene();
-		//radar.draw();
+		//radar.draw(float(dt));
 		S->render();
 		if(playing)
-			radar.draw();
+			radar.draw((float)dt);
 	}
-
-	Radar radar;
 };
