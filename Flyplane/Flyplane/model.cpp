@@ -190,7 +190,7 @@ void Model::load(const std::string & file)
 	recursiveBuildTree(airoot, root);
 
 	// flatten tree
-	recursiveFlatten(root, glm::scale(glm::vec3(0.01)));
+	recursiveFlatten(root, glm::scale(glm::vec3(0.005)));
 
 	recursiveDeleteNodes(root);
 

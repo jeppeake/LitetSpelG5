@@ -16,6 +16,10 @@
 #include "equipment.h"
 #include "rendersystem.h"
 #include "rotatepreviewsystem.h"
+#include <fstream>
+#include <iostream>
+#include <experimental\filesystem>
+namespace fs = std::experimental::filesystem;
 
 entityx::Entity entityp;
 Transform planetrans;
@@ -74,23 +78,25 @@ void LoadoutState::init() {
 	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
 	
 	
-	PlanePreset pr;
-	pr.load("assets/Presets/Planes/MIG-212A.txt");
-	planePresets.push_back(pr);
-	pr = PlanePreset();
-	pr.load("assets/Presets/Planes/TU-101.txt");
-	planePresets.push_back(pr);
+	//Load all planes in plane preset folder
+	std::string path = "assets/Presets/Planes";
+	for (auto & p : fs::directory_iterator(path)) {
+		std::string curPath = p.path().string();
+		PlanePreset pr;
+		pr.load(curPath);
+		planePresets.push_back(pr);
+	}
 
-	WeaponPreset wp;
-	wp.load("assets/Presets/Weapons/missile.txt");
-	weaponPresets.push_back(wp);
-	wp = WeaponPreset();
-	wp.load("assets/Presets/Weapons/missile2.txt");
-	weaponPresets.push_back(wp);
-	wp = WeaponPreset();
-	wp.load("assets/Presets/Weapons/missile3.txt");
-	weaponPresets.push_back(wp);
+	//load all weapons in weapon preset folder
+	path = "assets/Presets/Weapons";
+	for (auto & p : fs::directory_iterator(path)) {
+		std::string curPath = p.path().string();
+		WeaponPreset pr;
+		pr.load(curPath);
+		weaponPresets.push_back(pr);
+	}
 
+	//place buttons
 	glm::vec2 pPos = glm::vec2(50, 150);
 	for (int i = 0; i < planePresets.size(); i++) {
 		planesBHandler.addButton(new Button(planePresets[i].name, pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePlaneAction(this, i), "buttonforward"));
@@ -102,8 +108,6 @@ void LoadoutState::init() {
 	}
 	
 	bHandler.buttons[this->page]->color = bHandler.buttons[this->page]->hcolor;
-	//planesBHandler.buttons[this->selected]->color = planesBHandler.buttons[this->selected]->hcolor;
-	//updatePreview();
 }
 
 void LoadoutState::startMenu() {
@@ -113,10 +117,6 @@ void LoadoutState::startMenu() {
 void LoadoutState::changePlane(unsigned int selected)
 {
 	clearPicks();
-	/*if (this->selected != selected)
-		planePicked = false;
-	else
-		planePicked = true;*/
 	this->selected = selected;
 	glm::vec2 pPos = glm::vec2(50, 150);
 	weaponSlotsBHandler.clearButtons();
