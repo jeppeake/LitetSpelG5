@@ -132,7 +132,6 @@ struct RenderSystem : public System<RenderSystem> {
 				Renderer::getRenderer().addMarker(enemyPos, length);
 			}
 		}
-		Renderer::getRenderer().addMarker(playerPos, 5);
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		S->render();
