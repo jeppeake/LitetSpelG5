@@ -61,7 +61,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
+		glm::vec3 pos(rand() % 2000,rand() % 1000 + 1500, rand() % 2000);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
@@ -285,7 +285,7 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 2500, 2500));
 	plotter.push_back(glm::vec3(0, 2500, 0));
 
-	spawnEnemies(20);
+	spawnEnemies(5);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 

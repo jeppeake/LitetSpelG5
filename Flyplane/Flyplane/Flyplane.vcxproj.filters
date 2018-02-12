@@ -105,6 +105,9 @@
     <ClCompile Include="crosshair.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="terrain_close.h">
+      <Filter>Behaviours\Conditions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
