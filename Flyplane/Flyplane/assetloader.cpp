@@ -1,6 +1,5 @@
 #include "assetloader.h"
 
-
 Text * AssetLoader::getText() &
 {
 	return text;
@@ -21,7 +20,7 @@ Text * AssetLoader::getHighscoreText() &
 	return highscoreText;
 }
 
-void AssetLoader::loadModel(const std::string filename, const std::string name) {
+void AssetLoader::loadModel(const std::string &filename, const std::string &name) {
 	auto find = models.find(name);
 	if (find == models.end()) {
 		Model model;
@@ -30,28 +29,46 @@ void AssetLoader::loadModel(const std::string filename, const std::string name) 
 	}
 }
 
-void AssetLoader::loadHeightmap(const std::string map, const std::string tex, std::string name) {
-	auto find = heightmaps.find(name);
-	if (find == heightmaps.end()) {
-		Heightmap hmap;
-		heightmaps[name] = hmap;
-		heightmaps[name] = Heightmap(map, tex);
+void AssetLoader::loadTexture(const std::string filename, const std::string name) {
+	auto find = textures.find(name);
+	if (find == textures.end()) {
+		Texture texture;
+		textures[name] = texture;
+		bool success = textures[name].loadTexture(filename);
 	}
 }
 
-void AssetLoader::loadSound(const std::string filename, const std::string name) {
+void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &name) {
+	auto find = heightmaps.find(name);
+	if (find == heightmaps.end()) {
+		Heightmap hmap;
+		heightmaps[name].loadMap(maptxt);
+	}
+}
+
+void AssetLoader::loadSound(const std::string &filename, const std::string &name) {
 	auto find = sounds.find(name);
 	if (find == sounds.end()) {
 		sf::SoundBuffer sb;
 		sounds[name] = sb;
 		if (!sounds[name].loadFromFile(filename))
-			std::cout << "AssetLoader error: sound " << filename << " coludn't load." << std::endl;
+			std::cout << "AssetLoader error: sound " << filename << " couldn't load." << std::endl;
 	}
 }
 
 Model* AssetLoader::getModel(const std::string name) {
 	auto find = models.find(name);
 	if (find != models.end())
+		return &(find->second);
+	else
+		std::cout << "AssetLoader error: Could not find requested model: " << name << "\n";
+	return nullptr;
+}
+
+Texture * AssetLoader::getTexture(const std::string name)
+{
+	auto find = textures.find(name);
+	if (find != textures.end())
 		return &(find->second);
 	else
 		std::cout << "AssetLoader error: Could not find requested model: " << name << "\n";

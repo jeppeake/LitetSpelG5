@@ -9,6 +9,7 @@ public:
 	std::string model = "";
 	std::string file = "";
 	double normalspeed, boostspeed, breakforce, turnrate;
+	std::vector<std::string> textureNames;
 	std::vector<glm::vec3> wepPos;
 	PlanePreset() {}
 	~PlanePreset() {}

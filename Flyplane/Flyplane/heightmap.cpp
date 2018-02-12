@@ -7,6 +7,9 @@
 #include "model.h"
 #include "timer.h"
 #include "camera.h"
+#include <fstream>
+#include "shader.h"
+#include <stdlib.h>
 
 int index(int x, int y, int width) {
 	return x + y * width;
@@ -25,60 +28,55 @@ glm::vec3 normal(glm::vec4 p1, glm::vec4 p2, glm::vec4 p3) {
 
 Heightmap::Heightmap() {}
 
-Heightmap::Heightmap(const std::string &file, const std::string &texFile) {
-	loadMap(file, texFile); 
+Heightmap::Heightmap(const std::string &maptxt) {
+	loadMap(maptxt);
 }
 
-void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
-	tex.loadTexture(texFile);
+void Heightmap::loadMap(const std::string &maptxt) {
+	std::ifstream f(maptxt);
+
+	std::string heightmap;
+	std::string materialmap;
+	std::string mat1; 
+	std::string mat2;
+	std::string mat3;
+
+	std::getline(f, heightmap);
+	std::getline(f, materialmap);
+	std::getline(f, mat1);
+	std::getline(f, mat2);
+	std::getline(f, mat3);
+
+	textures[0].loadTexture(mat1);
+	textures[1].loadTexture(mat2);
+	textures[2].loadTexture(mat3);
+	materialMap.loadTexture(materialmap);
 
 	std::vector<unsigned char> img;
-	unsigned error = lodepng::decode(img, width, height, file);
+	unsigned error = lodepng::decode(img, width, height, heightmap, LCT_RGBA, 16U);
 	if (error != 0) {
-		std::cout << "[ERROR] Failed to load heightmap '" << file << "': " << lodepng_error_text(error) << "\n";
+		std::cout << "[ERROR] Failed to load heightmap '" << heightmap << "': " << lodepng_error_text(error) << "\n";
 		system("pause");
 		std::exit(EXIT_FAILURE);
 	}
 
-	double gaussian[3][3] = {
-		{ 0.077847,	0.123317,	0.077847 },
-		{ 0.123317,	0.195346,	0.123317 },
-		{ 0.077847,	0.123317,	0.077847 }
-	};
-
-	
-	
-
-	std::vector<unsigned int> heights;
+	std::vector<uint16_t> heights;
 
 	for (int iy = 0; iy < height; iy++) {
 		for (int ix = 0; ix < width; ix++) {
-			int i = index(ix * 4, iy, 4 * width);
+			int i = index(ix * 8, iy, 8 * width);
 			
-			double smoothed = 0;
-			double regular = 0;
+			uint16_t a = img[i];
+			uint16_t b = img[i+1];
+			uint16_t red = (a << 8) | b;
+			double sample = red;
 
-			regular = (img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
-			if (iy >= 4 && iy <= height - 6 && ix >= 4 && ix <= width - 6) {
-				for (int j = -1; j <= 1; j++) {
-					for (int k = -1; k <= 1; k++) {
-						int ind = index((ix + j) * 4, iy + k, 4 * width);
-						double gauss = gaussian[j + 1][k + 1];
-						smoothed += gauss * (img[ind] / 255.0)*double(std::numeric_limits<unsigned int>::max());
-					}
-				}
-			} else {
-				smoothed = regular;
-			}
-
-			double val = 0;
-
-			val = smoothed;
+			//(img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
 			
-			heights.push_back(val);
+			heights.push_back(sample);
 
 			float x = ix;
-			float y = val *(255.0/double(std::numeric_limits<unsigned int>::max()));
+			float y = sample*255.0/double(std::numeric_limits<uint16_t>::max());
 			float z = iy;
 			vertices.emplace_back(x, y, z);
 
@@ -115,7 +113,7 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_UNSIGNED_INT, &heights[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_UNSIGNED_SHORT, &heights[0]);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 
@@ -139,13 +137,22 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	glBindVertexArray(0);
 }
 
-void Heightmap::bind() {
+void Heightmap::bind(ShaderProgram& shader) {
+	shader.uniform("scale", scale);
+	shader.uniform("heightmapSize", getSize());
+	
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	
-	glActiveTexture(GL_TEXTURE0);
-	tex.bind(0);
 
+	shader.uniform("materialmap", 0);
+	materialMap.bind(0);
+	for (size_t i = 0; i < 3; i++) {
+		int slot = i + 3;
+		shader.uniform("material" + std::to_string(i+1), slot);
+		textures[i].bind(slot);
+	}
+
+	shader.uniform("heightmap", 2);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, heightmapTex);
 }

@@ -141,21 +141,15 @@ void Renderer::RenderScene() {
 	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
 	terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 
-	terrain_shader.uniform("texSampler", 0);
 	terrain_shader.uniform("shadowMap", 1);
-	terrain_shader.uniform("heightmap", 2);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-
-
-	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
 	if (hm != NULL) {
-		hm->bind();
-		this->terrain_shader.uniform("scale", hm->scale);
-		this->terrain_shader.uniform("heightmapSize", hm->getSize());
+		hm->bind(terrain_shader);
 		for (int i = 0; i < patches.size(); i++) {
 			int indices = patches[i].indices;
 			hm->bindIndices(indices);
+
 			terrain_shader.uniform("offset", patches[i].offset);
 			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
@@ -173,6 +167,7 @@ void Renderer::RenderScene() {
 		//enemeyMarkerShader.uniform("modelMatrix", glm::translate(p[i].pos) * glm::scale(glm::vec3(p[i].scale)));
 		enemyMarkerShader.uniform("transform", p[i].pos);
 		enemyMarkerShader.uniform("scale", p[i].scale);
+		enemyMarkerShader.uniform("color", p[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
@@ -210,6 +205,11 @@ void Renderer::setCamera(const Camera & camera)
 
 void Renderer::addMarker(glm::vec3 pos, float scale) {
 	markers.addPosition(pos, scale);
+}
+
+void Renderer::addMarker(glm::vec3 pos, glm::vec3 color, float scale)
+{
+	markers.addPosition(pos, color, scale);
 }
 
 void Renderer::update(float dt)

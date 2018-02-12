@@ -160,6 +160,41 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				entity.destroy();
 		}
 
+		entityx::ComponentHandle<PlayerComponent> play;
+		for (Entity entity : es.entities_with_components(play, trans)) {
+			entityx::ComponentHandle<AIComponent> ai;
+			entityx::ComponentHandle<Target> target;
+			entityx::ComponentHandle<Transform> aitran;
+			glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
+			float bestDot = -1;
+			double bestScore = -1;
+			Entity cure;
+			for (Entity enemy : es.entities_with_components(aitran, target)) {
+				glm::vec3 dir = aitran->pos - trans->pos;
+				float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
+				ai = enemy.component<AIComponent>();
+				target->is_targeted = false;
+				double score = (dot * target->heat) / glm::length(dir);
+				if (score > bestScore && entity.component<Target>().get()->faction != target->faction) {
+					bestDot = dot;
+					bestScore = score;
+					cure = enemy;
+				}
+			}
+			bool noTarget = false;
+			glm::vec3 forward = v;
+			Transform newTrans;
+			newTrans.pos = forward;
+
+			if (bestDot == -1 || bestDot < 0.2) {
+				noTarget = true;
+			}
+
+			if (cure.valid() && !noTarget)
+				cure.component<Target>()->is_targeted = true;
+		}
+		
+
 
 		entityx::ComponentHandle<AIComponent> ai;
 		
@@ -169,7 +204,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			trans = entity.component<Transform>();
 			physics = entity.component<Physics>();
 			projectile = entity.component<Projectile>();
-			if (projectile->timer.elapsed() > 1) {
+			if (projectile->timer.elapsed() > 0.3) {
 				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
 				float bestDot = -1;
 				double bestScore = -1;
@@ -180,7 +215,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();
-					target->is_targeted = false;
+					//target->is_targeted = false;
 					double score = (dot * target->heat) / glm::length(dir);
 					if (score > bestScore && projectile->parentFaction != target->faction) {
 						bestDot = dot;
@@ -200,8 +235,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					noTarget = true;
 				}
 
-				if (cure.valid() && !noTarget)
-					cure.component<Target>()->is_targeted = true;
+				/*if (cure.valid() && !noTarget)
+					cure.component<Target>()->is_targeted = true;*/
 					
 
 				glm::quat q;
