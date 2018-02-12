@@ -32,6 +32,8 @@ Radar::Radar() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)sizeof(glm::vec3));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)(sizeof(glm::vec3) * 2));
 
 	glBindVertexArray(0);
 
@@ -113,9 +115,10 @@ void Radar::draw(float dt) {
 
 void Radar::setPlayer(Transform transform) {
 	player = transform;
-	bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 0.0, 0.0, 1.0 });
+	bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 0.0, 0.0, 1.0, 0.0 });
 }
 
 void Radar::addPlane(Transform transform) {
-	bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 1.0f, 0.0f, 0.0f });
+	if (glm::distance(transform.pos, player.pos) < 10000)
+		bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 1.0f, 0.0f, 0.0f, 15.0 });
 }
