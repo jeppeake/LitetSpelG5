@@ -141,21 +141,15 @@ void Renderer::RenderScene() {
 	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
 	terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 
-	terrain_shader.uniform("texSampler", 0);
 	terrain_shader.uniform("shadowMap", 1);
-	terrain_shader.uniform("heightmap", 2);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-
-
-	//terrain_shader.uniform("offset", glm::vec2(x*1024.0/4, y*1024.0 /4));
 	if (hm != NULL) {
-		hm->bind();
-		this->terrain_shader.uniform("scale", hm->scale);
-		this->terrain_shader.uniform("heightmapSize", hm->getSize());
+		hm->bind(terrain_shader);
 		for (int i = 0; i < patches.size(); i++) {
 			int indices = patches[i].indices;
 			hm->bindIndices(indices);
+
 			terrain_shader.uniform("offset", patches[i].offset);
 			terrain_shader.uniform("patch_size", glm::vec2(patches[i].size));
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);

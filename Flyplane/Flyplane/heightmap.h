@@ -3,6 +3,7 @@
 #include "model.h"
 #include "texture.h"
 #include "camera.h"
+#include "shader.h"
 
 struct House {
 	House(glm::vec3 pos, unsigned int type) : pos(pos), type(type) {}
@@ -24,11 +25,12 @@ private:
 	std::vector<House> houses;
 
 	std::vector<unsigned char> heightmap;
-	Texture tex;
+	Texture materialMap;
+	Texture textures[3];
 
 	unsigned int width, height;
 	int numPatchVerts;
-
+	
 	GLuint heightmapTex = 0;
 
 	GLuint ebos[9];
@@ -43,12 +45,12 @@ public:
 	std::vector<GLuint> indices[9];
 	glm::vec3 scale;
 
-
+	
 
 	Heightmap();
-	Heightmap(const std::string &file, const std::string &texFile);
-	void loadMap(const std::string &file, const std::string &texFile);
-	void bind();
+	Heightmap(const std::string &maptxt);
+	void loadMap(const std::string &maptxt);
+	void bind(ShaderProgram& program);
 	void unbind();
 	double heightAt(glm::vec3 pos);
 	void bindIndices(int i);
