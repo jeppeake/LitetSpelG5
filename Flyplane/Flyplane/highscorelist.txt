@@ -2,6 +2,8 @@
 boi
 3109
 abab
+2660
+kjh
 2086
 bogdan
 1810
@@ -12,9 +14,7 @@ bogdan
 name
 1139
 bogdan
-352
-bogdan
-328
-jesper
-274
-boi
+858
+jjj
+411
+hhh
