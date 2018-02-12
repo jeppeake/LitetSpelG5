@@ -67,7 +67,7 @@ struct RenderSystem : public System<RenderSystem> {
 			if (!Input::isKeyDown(GLFW_KEY_Q))
 				cullingCamera = c;
 			
-			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
+			//S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
 
 		ComponentHandle<ModelComponent> model;
