@@ -18,15 +18,3 @@ bogdan
 dfs
 1705
 bogdan
-1526
-name
-1215
-hork
-1139
-bogdan
-917
-yolk
-858
-jjj
-411
-hhh
