@@ -1,11 +1,15 @@
 #include "radar.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include "window.h"
 #include "assetloader.h"
 
 Radar::Radar() {
-	image.load("assets/textures/radar.png");
+	image.loadTexture("assets/textures/radar.png", 1);
 	shader.create("radarVS.glsl", "radarFS.glsl");
+	guiShader.create("guiVertexShader.glsl", "guiFragmentShader.glsl");
+	oldAngle = 0;
+	angle = 0;
 
 	/*proj = glm::mat4(1.0);//glm::ortho(0, 100, 100, 0);
 	proj[0][0] = 1 / 100.f;
@@ -30,14 +34,59 @@ Radar::Radar() {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)sizeof(glm::vec3));
 
 	glBindVertexArray(0);
+
+	float vertexbuffer[30] = {
+		-1.0, -1.0, 0.0,
+		 0.0,  0.0,
+
+		 1.0,  1.0, 0.0,
+		 1.0,  1.0,
+
+		-1.0,  1.0, 0.0,
+		 0.0,  1.0,
+
+		-1.0, -1.0, 0.0,
+		 0.0,  0.0,
+
+		 1.0, -1.0, 0.0,
+		 1.0,  0.0,
+
+		 1.0,  1.0, 0.0,
+		 1.0,  1.0
+	};
+
+	glGenVertexArrays(1, &guiVao);
+	glGenBuffers(1, &guiVbo);
+	glBindVertexArray(guiVao);
+	glBindBuffer(GL_ARRAY_BUFFER, guiVbo);
+	glBufferData(GL_ARRAY_BUFFER, 30 * sizeof(float), vertexbuffer, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+
+	glBindVertexArray(0);
 }
 
-void Radar::draw() {
-	auto s = Window::getWindow().size();
-	glViewport(s.x - 150, s.y - 150, 150, 150);
+void Radar::draw(float dt) {
+	oldAngle = angle;
+	angle += 360 * dt;
+	angle = (int)angle % 360;
 
-	image.bind();
-	image.draw();
+	auto s = Window::getWindow().size();
+	glViewport(s.x - 150, s.y - 150, 125, 125);
+
+	guiShader.use();
+	guiShader.uniform("matrix", glm::rotate(glm::mat4(1), glm::radians(angle), glm::vec3(0,0,1)));
+	guiShader.uniform("texSampler", 0);
+	glBindVertexArray(guiVao);
+	glBindBuffer(GL_ARRAY_BUFFER, guiVbo);
+	image.bind(0);
+	//image.draw();
+	glDisable(GL_CULL_FACE);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glEnable(GL_CULL_FACE);
 
 	shader.use();
 	glm::vec3 direction = glm::toMat3(player.orientation) * glm::vec3(0.0, 0.0, 1.0);

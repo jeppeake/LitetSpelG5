@@ -24,6 +24,7 @@ using namespace entityx;
 struct RenderSystem : public System<RenderSystem> {
 
 	Camera cullingCamera;
+	Radar radar;
 
 	ParticleSystem *S;
 	RenderSystem()
@@ -119,11 +120,9 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		Renderer::getRenderer().RenderScene();
-		//radar.draw();
+		//radar.draw(float(dt));
 		S->render();
 		if(playing)
-			radar.draw();
+			radar.draw(float(dt));
 	}
-
-	Radar radar;
 };
