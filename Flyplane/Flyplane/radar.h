@@ -4,7 +4,7 @@
 #include "transform.h"
 #include <vector>
 #include <glm/glm.hpp>
-#include "fullscreenimage.h"
+#include "texture.h"
 
 struct Data {
 	float x, y, z;
@@ -13,16 +13,20 @@ struct Data {
 
 class Radar {
 private:
-	FullscreenImage image;
+	Texture image;
 	ShaderProgram shader;
+	ShaderProgram guiShader;
 	GLuint vao, vbo;
+	GLuint guiVao, guiVbo;
 	Transform player;
 	std::vector<Data> bufferData;
 	glm::mat4 proj;
 	int oldSize;
+	float oldAngle;
+	float angle;
 public:
 	Radar();
-	void draw();
+	void draw(float dt);
 	void setPlayer(Transform transform);
 	void addPlane(Transform transform);
 };

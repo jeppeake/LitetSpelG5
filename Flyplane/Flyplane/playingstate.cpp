@@ -132,7 +132,7 @@ void PlayingState::loadLoadout()
 
 	float x = 0;
 	float z = 0;
-	float y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 500;
+	float y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500;
 	glm::vec3 pos(x, y, z);
 	glm::quat orien(1, 0, 0, 0);
 	// ---	PLAYER	---

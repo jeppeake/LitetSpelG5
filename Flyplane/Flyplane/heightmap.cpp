@@ -40,14 +40,10 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	double gaussian[7][7] = {
-		{0.000286,	0.001476,	0.003949,	0.00548,	0.003949,	0.001476,	0.000286},
-	{	0.001476,	0.00763,	0.020408,	0.02832,	0.020408,	0.00763,	0.001476},
-	{	0.003949,	0.020408,	0.054587,	0.075751,	0.054587,	0.020408,	0.003949},
-	{	0.00548,	0.02832,	0.075751,	0.105122,	0.075751,	0.02832,	0.00548},
-	{	0.003949,	0.020408,	0.054587,	0.075751,	0.054587,	0.020408,	0.003949},
-	{	0.001476,	0.00763,	0.020408,	0.02832,	0.020408,	0.00763,	0.001476},
-	{	0.000286,	0.001476,	0.003949,	0.00548,	0.003949,	0.001476,	0.000286}
+	double gaussian[3][3] = {
+		{ 0.077847,	0.123317,	0.077847 },
+		{ 0.123317,	0.195346,	0.123317 },
+		{ 0.077847,	0.123317,	0.077847 }
 	};
 
 	
@@ -64,10 +60,10 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 
 			regular = (img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
 			if (iy >= 4 && iy <= height - 6 && ix >= 4 && ix <= width - 6) {
-				for (int j = -3; j <= 3; j++) {
-					for (int k = -3; k <= 3; k++) {
+				for (int j = -1; j <= 1; j++) {
+					for (int k = -1; k <= 1; k++) {
 						int ind = index((ix + j) * 4, iy + k, 4 * width);
-						double gauss = gaussian[j + 3][k + 3];
+						double gauss = gaussian[j + 1][k + 1];
 						smoothed += gauss * (img[ind] / 255.0)*double(std::numeric_limits<unsigned int>::max());
 					}
 				}
@@ -97,8 +93,8 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	}
 
 
-	numPatchVerts = 127;
-	scale = 40.f*glm::vec3(3, 5, 3);
+	numPatchVerts = 63;
+	scale = 4.f*glm::vec3(3, 5, 3);
 
 	std::vector<glm::vec2> uvs;
 	for (int y = 0; y < numPatchVerts; y++) {
