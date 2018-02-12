@@ -17,6 +17,7 @@
 #include "physics.h"
 #include "particlesystem.h"
 #include "radar.h"
+#include "aicomponent.h"
 
 using namespace entityx;
 
@@ -32,14 +33,15 @@ struct RenderSystem : public System<RenderSystem> {
 		S = new ParticleSystem(1000, 5, 0.05, glm::vec3(1.0, 0.0, 0.0));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
-		glm::vec3 playerPos;
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
+		glm::vec3 playerPos;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			playing = true;
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
+			playerPos = transform->pos;
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 
 			Transform cam = *transform.get();
@@ -119,10 +121,22 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 		}
 
+		ComponentHandle<AIComponent> ai;
+
+		for (Entity entity : es.entities_with_components(ai, transform)) {
+			glm::vec3 enemyPos = entity.component<Transform>()->pos;
+			float length = glm::distance(enemyPos, playerPos);
+
+			if (length < 20000.0f ) {
+				length = 5.0 + length / 100.0f;
+				Renderer::getRenderer().addMarker(enemyPos, length);
+			}
+		}
+		Renderer::getRenderer().addMarker(playerPos, 5);
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		S->render();
 		if(playing)
-			radar.draw(float(dt));
+			radar.draw((float)dt);
 	}
 };

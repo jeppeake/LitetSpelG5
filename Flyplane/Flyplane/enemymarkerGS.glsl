@@ -16,48 +16,52 @@ void main() {
 	right = normalize(right);
 	up = cross(dir, right);
 	up = normalize(up);
+	right = right * scale;
+	vec3 right2 = right * 0.3;
+	up = up * scale;
+	vec3 up2 = up * 0.3;
 
 	//höger upp
-	gl_Position = aspectMatrix * vec4((Pos[0] + right * scale * 0.3 + up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] + right2 + up), 1);//right * scale * 0.3 + up * scale
 	EmitVertex();				 										
 								 										
-	gl_Position = aspectMatrix * vec4((Pos[0] + right * scale + up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] + right + up), 1);//right * scale + up * scale
 	EmitVertex();
 	
-	gl_Position = aspectMatrix * vec4((Pos[0] + right * scale + up * scale * 0.3), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] + right + up2), 1);//right * scale + up * scale * 0.3
 	EmitVertex();
 	EndPrimitive();				 										
 				  		
 	//höger ner
-	gl_Position = aspectMatrix * vec4((Pos[0] + right * scale - up * scale * 0.3), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] + right - up2), 1);//right * scale - up * scale * 0.3
 	EmitVertex(); 														
 				  														
-	gl_Position = aspectMatrix * vec4((Pos[0] + right * scale - up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] + right - up), 1);//right * scale - up * scale
 	EmitVertex(); 			
 	
-	gl_Position = aspectMatrix * vec4((Pos[0] + right * scale * 0.3 - up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] + right2 - up), 1);//right * scale * 0.3 - up * scale
 	EmitVertex(); 
 	EndPrimitive();				 										
 	
 	//vänster ner
-	gl_Position = aspectMatrix * vec4((Pos[0] - right * scale * 0.3 - up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] - right2 - up), 1);//right * scale * 0.3 - up * scale
 	EmitVertex(); 				 										
 				  				 										
-	gl_Position = aspectMatrix * vec4((Pos[0] - right * scale - up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] - right - up), 1);//right * scale - up * scale
 	EmitVertex(); 
 	
-	gl_Position = aspectMatrix * vec4((Pos[0] - right * scale - up * scale * 0.3), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] - right - up2), 1);// right * scale - up * scale * 0.3
 	EmitVertex(); 
 	EndPrimitive();				 										
 
 	//vänster upp
-	gl_Position = aspectMatrix * vec4((Pos[0] - right * scale + up * scale * 0.3), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] - right + up2), 1);//right * scale + up * scale * 0.3
 	EmitVertex(); 				 										
 
-	gl_Position = aspectMatrix * vec4((Pos[0] - right * scale + up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] - right + up), 1);//right * scale + up * scale
 	EmitVertex();
 
-	gl_Position = aspectMatrix * vec4((Pos[0] - right * scale * 0.3 + up * scale), 1);
+	gl_Position = aspectMatrix * vec4((Pos[0] - right2 + up), 1);//right * scale * 0.3 + up * scale
 	EmitVertex();
 	EndPrimitive();
 }
