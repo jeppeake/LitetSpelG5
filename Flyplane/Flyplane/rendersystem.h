@@ -42,7 +42,7 @@ struct RenderSystem : public System<RenderSystem> {
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 
 			Transform cam = *transform.get();
-			glm::vec3 offset(0, 4, -9);
+			glm::vec3 offset(0, 4*0.5, -9*0.5);
 			offset = glm::toMat3(normalize(cam.orientation))*offset;
 			//cam.pos += offset;
 
@@ -51,7 +51,7 @@ struct RenderSystem : public System<RenderSystem> {
 			//double v = length(physics->velocity)*0.001;
 			double f_pos = 0.05;
 			double f_orien = 0.0;
-			p_cam.pos += 0.98f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
+			p_cam.pos += 0.99f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
 			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
 			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
 
@@ -67,7 +67,7 @@ struct RenderSystem : public System<RenderSystem> {
 			if (!Input::isKeyDown(GLFW_KEY_Q))
 				cullingCamera = c;
 			
-			//S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
+			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -3), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
 
 		ComponentHandle<ModelComponent> model;

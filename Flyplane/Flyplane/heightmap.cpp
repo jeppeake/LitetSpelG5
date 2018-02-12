@@ -94,7 +94,7 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 
 
 	numPatchVerts = 63;
-	scale = 40.f*glm::vec3(3, 5, 3);
+	scale = 4.f*glm::vec3(3, 5, 3);
 
 	std::vector<glm::vec2> uvs;
 	for (int y = 0; y < numPatchVerts; y++) {
