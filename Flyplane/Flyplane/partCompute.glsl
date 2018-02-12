@@ -23,14 +23,14 @@ layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 void main()
 {
 	uint gid = gl_GlobalInvocationID.x;
-	if(Positions[gid] == vec3(0))
+	if(Positions[gid].xyz == vec3(0))
 	{
 		Positions[gid].xyz = spawn;
-		Velocities[gid].xyz = vec3(direction.x * Velocities[gid].x, direction.y * Velocities[gid].y, direction.z * Velocities[gid].z);
+		Velocities[gid].xyz = dt * vec3(direction.x * Velocities[gid].x, direction.y * Velocities[gid].y, direction.z * Velocities[gid].z);
 	}
 	else
 	{
-		Positions[gid].xyz += direction * dt;
+		Positions[gid].xyz += Velocities[gid].xyz * dt;
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
