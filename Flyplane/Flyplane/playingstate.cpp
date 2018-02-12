@@ -98,6 +98,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 		entity.assign<Equipment>(primary, secondary);
+		entity.assign<PointComponent>(100);
 	}
 }
 
@@ -284,7 +285,7 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 2500, 2500));
 	plotter.push_back(glm::vec3(0, 2500, 0));
 
-	//spawnEnemies(20);
+	spawnEnemies(20);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
@@ -294,7 +295,7 @@ void PlayingState::init()
 
 
 	int enemies = 0;
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -333,7 +334,7 @@ void PlayingState::init()
 
 		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 		entity.assign<Equipment>(primary, secondary);
-		
+		entity.assign<PointComponent>(100);
 		
 		enemies++;
 		//std::cout << "Enemy added\n";
