@@ -125,20 +125,18 @@ struct RenderSystem : public System<RenderSystem> {
 
 		for (Entity entity : es.entities_with_components(ai, transform)) {
 			glm::vec3 enemyPos = entity.component<Transform>()->pos;
-			glm::vec3 length = enemyPos - playerPos;
-			float length2 = length.length();
-			std::cout << "lenght " << std::endl;
+			float length = glm::distance(enemyPos, playerPos);
 
-			if (length2 > 200.0f ) { //&& length2 < 2000.0f
-				length2 = (length2 - 200.0f) / 1.0f;
-				Renderer::getRenderer().addMarker(enemyPos, length2);
+			if (length < 20000.0f ) {
+				length = 5.0 + length / 100.0f;
+				Renderer::getRenderer().addMarker(enemyPos, length);
 			}
 		}
-		//Renderer::getRenderer().addMarker(playerPos, 5);
+		Renderer::getRenderer().addMarker(playerPos, 5);
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		S->render();
 		if(playing)
-			radar.draw(float(dt));
+			radar.draw((float)dt);
 	}
 };

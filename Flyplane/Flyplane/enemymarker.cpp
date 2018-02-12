@@ -15,9 +15,7 @@ EnemyMarker::EnemyMarker() {
 
 	glBindVertexArray(0);
 	
-	glLineWidth(5.0f);
-	//for (int i = 0; i < 500; i++)
-		//markers.push_back({ glm::vec3(500 * i, 1000 + i, 500 * i), 100.0f });
+	glLineWidth(2.0f);
 }
 
 EnemyMarker::~EnemyMarker() {
