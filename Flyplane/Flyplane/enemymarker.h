@@ -6,6 +6,7 @@
 
 struct Marker {
 	glm::vec3 pos;
+	glm::vec3 color;
 	float scale;
 };
 
@@ -25,6 +26,7 @@ public:
 	~EnemyMarker();
 	void bind();
 	void addPosition(glm::vec3 pos, float scale);
+	void addPosition(glm::vec3 pos, glm::vec3 color, float scale);
 	std::vector<Marker>& getMarkers();
 	void clear();
 };

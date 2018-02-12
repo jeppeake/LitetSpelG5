@@ -1,5 +1,11 @@
 133742069
 boi
+6026
+korvish
+4940
+yolp
+4632
+yolp
 3246
 hork
 3109
@@ -12,9 +18,3 @@ dfs
 bogdan
 1526
 name
-1215
-hork
-1139
-bogdan
-917
-yolk

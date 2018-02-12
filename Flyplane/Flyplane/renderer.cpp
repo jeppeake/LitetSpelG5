@@ -173,6 +173,7 @@ void Renderer::RenderScene() {
 		//enemeyMarkerShader.uniform("modelMatrix", glm::translate(p[i].pos) * glm::scale(glm::vec3(p[i].scale)));
 		enemyMarkerShader.uniform("transform", p[i].pos);
 		enemyMarkerShader.uniform("scale", p[i].scale);
+		enemyMarkerShader.uniform("color", p[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
@@ -210,6 +211,11 @@ void Renderer::setCamera(const Camera & camera)
 
 void Renderer::addMarker(glm::vec3 pos, float scale) {
 	markers.addPosition(pos, scale);
+}
+
+void Renderer::addMarker(glm::vec3 pos, glm::vec3 color, float scale)
+{
+	markers.addPosition(pos, color, scale);
 }
 
 void Renderer::update(float dt)
