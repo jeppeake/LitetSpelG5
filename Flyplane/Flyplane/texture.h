@@ -4,8 +4,8 @@
 
 class Texture {
 private:
-	unsigned int id;
-	unsigned int width, height;
+	unsigned int id = 0;
+	unsigned int width = 0, height = 0;
 public:
 	bool loadTexture(const std::string& file, int format = 0);
 	void bind(unsigned int slot);

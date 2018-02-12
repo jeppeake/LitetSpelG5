@@ -15,9 +15,7 @@ EnemyMarker::EnemyMarker() {
 
 	glBindVertexArray(0);
 	
-	glLineWidth(5.0f);
-	//for (int i = 0; i < 500; i++)
-		//markers.push_back({ glm::vec3(500 * i, 1000 + i, 500 * i), 100.0f });
+	glLineWidth(2.0f);
 }
 
 EnemyMarker::~EnemyMarker() {
@@ -31,7 +29,11 @@ void EnemyMarker::bind() {
 }
 
 void EnemyMarker::addPosition(glm::vec3 pos, float scale) {
-	this->markers.push_back({ pos, scale });
+	this->markers.push_back({ pos, glm::vec3(1,0,0), scale });
+}
+
+void EnemyMarker::addPosition(glm::vec3 pos, glm::vec3 color, float scale) {
+	this->markers.push_back({ pos, color, scale });
 }
 
 std::vector<Marker>& EnemyMarker::getMarkers() {

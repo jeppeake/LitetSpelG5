@@ -61,7 +61,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
+		glm::vec3 pos(rand() % 2000,rand() % 1000 + 1500, rand() % 2000);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
@@ -98,6 +98,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 		entity.assign<Equipment>(primary, secondary);
+		entity.assign<PointComponent>(100);
 	}
 }
 
@@ -172,8 +173,11 @@ void PlayingState::loadLoadout()
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i], glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 		}
 	}
+	std::getline(file, str);
+	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
+
 	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
-	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.25, 0.5), glm::vec3(0.25), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
@@ -281,7 +285,7 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 2500, 2500));
 	plotter.push_back(glm::vec3(0, 2500, 0));
 
-	//spawnEnemies(20);
+	spawnEnemies(5);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
@@ -291,7 +295,7 @@ void PlayingState::init()
 
 
 	int enemies = 0;
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto entity = ex.entities.create();
 		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
@@ -330,7 +334,7 @@ void PlayingState::init()
 
 		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 		entity.assign<Equipment>(primary, secondary);
-		
+		entity.assign<PointComponent>(100);
 		
 		enemies++;
 		//std::cout << "Enemy added\n";

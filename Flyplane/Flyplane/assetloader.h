@@ -5,10 +5,12 @@
 #include "soundsystem.h"
 #include "heightmap.h"
 #include "text.hpp"
+#include "texture.h"
 
 class AssetLoader {
 private:
 	std::unordered_map<std::string, Model> models;
+	std::unordered_map<std::string, Texture> textures;
 	std::unordered_map<std::string, Heightmap> heightmaps;
 	std::unordered_map<std::string, sf::SoundBuffer> sounds;
 	Text *text = nullptr;
@@ -37,10 +39,15 @@ public:
 	void loadModel(const std::string &filename, const std::string &name);
 	void loadHeightmap(const std::string &maptxt, const std::string &name);
 	void loadSound(const std::string &filename, const std::string &name);
+	void loadModel(const std::string filename, const std::string name);
+	void loadTexture(const std::string filename, const std::string name);
+	void loadHeightmap(const std::string map, const std::string tex, std::string name);
+	void loadSound(const std::string filename, const std::string name);
 	void clearTerrains() {
 		this->heightmaps.clear();
 	}
-	Model* getModel(const std::string filename);
+	Model* getModel(const std::string name);
+	Texture* getTexture(const std::string name);
 	Heightmap* getHeightmap(const std::string name);
 	sf::SoundBuffer* getSoundBuffer(const std::string filename);
 };

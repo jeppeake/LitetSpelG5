@@ -4,6 +4,13 @@ normalspeed 	(double)
 boostspeed	(double)
 breakforce	(double)
 turnrate	(double)
+[skin textures]
+name
+file
+name
+file
+...
+-end textures-
 [weapon pos offsets array]
 x
 y

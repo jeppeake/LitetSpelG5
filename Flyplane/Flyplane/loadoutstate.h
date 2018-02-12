@@ -23,6 +23,7 @@ private:
 	ButtonHandler skinsBHandler;
 	unsigned int selected;
 	unsigned int selectedW;
+	unsigned int selectedSkin = 0;
 	int page = planes;
 	std::vector<PlanePreset> planePresets;
 	std::vector<WeaponPreset> weaponPresets;
@@ -39,6 +40,7 @@ public:
 	void startMenu();
 	void changePlane(unsigned int selected);
 	void changeWeapon(unsigned int selected);
+	void changeSkin(unsigned int selected);
 	void changePage(int page);
 	void pickWeapon(unsigned int selected);
 	void saveLoadout();

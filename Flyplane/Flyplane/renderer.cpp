@@ -167,6 +167,7 @@ void Renderer::RenderScene() {
 		//enemeyMarkerShader.uniform("modelMatrix", glm::translate(p[i].pos) * glm::scale(glm::vec3(p[i].scale)));
 		enemyMarkerShader.uniform("transform", p[i].pos);
 		enemyMarkerShader.uniform("scale", p[i].scale);
+		enemyMarkerShader.uniform("color", p[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
@@ -174,15 +175,16 @@ void Renderer::RenderScene() {
 	glm::vec2 aspect = Window::getWindow().size();
 	float aspectRatio = aspect.x / aspect.y;
 	guiShader.use();
-	guiShader.uniform("modelMatrix", crosshair.getMatrix());
+	//guiShader.uniform("modelMatrix", crosshair.getMatrix());
 	glm::mat4 m = glm::ortho<float>(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, 0.01f, 2.0f);
-	guiShader.uniform("aspectMatrix", m);
+	//guiShader.uniform("aspectMatrix", m);
+	guiShader.uniform("matrix", m * crosshair.getMatrix());
 	guiShader.uniform("texSampler", 0);
 	crosshair.Bind();
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	//markers.clear();
+	markers.clear();
 	list.clear();
 	mapList.clear();
 }
@@ -199,6 +201,15 @@ void Renderer::setCamera(const Camera & camera)
 	glm::mat4 proj = glm::ortho<float>(-2000.f, 2000.f, -2000.f, 2000.f, 0.f, 4000.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 2000.0f, 2000.0f + pos.z), glm::vec3(pos.x, 0, pos.z), glm::vec3(0, 1, 0));
 	this->shadowMatrix = proj * view;
+}
+
+void Renderer::addMarker(glm::vec3 pos, float scale) {
+	markers.addPosition(pos, scale);
+}
+
+void Renderer::addMarker(glm::vec3 pos, glm::vec3 color, float scale)
+{
+	markers.addPosition(pos, color, scale);
 }
 
 void Renderer::update(float dt)
