@@ -127,10 +127,10 @@ struct RenderSystem : public System<RenderSystem> {
 			glm::vec3 enemyPos = entity.component<Transform>()->pos;
 			float length = glm::distance(enemyPos, playerPos);
 
-			if (length < 20000.0f ) {
+			//if (length < 20000.0f ) {
 				length = 5.0 + length / 100.0f;
 				Renderer::getRenderer().addMarker(enemyPos, length);
-			}
+			//}
 		}
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
