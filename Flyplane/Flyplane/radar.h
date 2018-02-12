@@ -9,6 +9,7 @@
 struct Data {
 	float x, y, z;
 	float r, g, b;
+	float angle;
 };
 
 class Radar {
