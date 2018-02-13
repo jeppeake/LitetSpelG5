@@ -18,7 +18,7 @@ Radar::Radar() {
 	proj[1][1] = 0;
 	proj[2][2] = 1 / 100.f;*/
 
-	proj = glm::ortho<float>(-10000.f, 10000.f, -10000.f, 10000.f);
+	proj = glm::ortho<float>(-5000.f, 5000.f, -5000.f, 5000.f);
 
 	//bufferData.push_back({ -100,0,0 });
 
@@ -94,9 +94,12 @@ void Radar::draw(float dt) {
 
 	//glViewport(s.x - 25 - 125 / 2 - 12, s.y - 25 - 125 / 2 - 12, 25, 25);
 	glm::vec3 direction = glm::toMat3(player.orientation) * glm::vec3(0.0, 0.0, 1.0);
-	direction.y = 0;
-	glm::mat4 view = glm::lookAt(glm::vec3(0)/*player.pos*/, glm::vec3(0, -1, 0), direction/*glm::vec3(0, 0, 1)*/);
-	guiShader.uniform("matrix", glm::scale(glm::vec3(0.3, 0.3, 1)));
+	glm::vec3 up = glm::toMat3(player.orientation) * glm::vec3(1.0, 0.0, 0.0);
+	//direction.y = 0;
+	static float debug = 0;
+	debug += 0.1;
+	glm::mat4 view = glm::lookAt(glm::vec3(0)/*player.pos*/, glm::vec3(0, 1, 0)/**/, direction/*glm::vec3(0, 1, 0)*/);
+	guiShader.uniform("matrix", view * glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::scale(glm::vec3(0.2, 0.2, 1)));
 	plane.bind(0);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	//shader.uniform("matrix", proj * view);
@@ -133,7 +136,7 @@ void Radar::setPlayer(Transform transform) {
 }
 
 void Radar::addPlane(Transform transform) {
-	if (glm::distance(transform.pos, player.pos) < 10000) {
+	if (glm::distance(transform.pos, player.pos) < 5000) {
 		glm::vec3 vec = glm::normalize(glm::vec3(transform.pos.x, 0, transform.pos.z) - glm::vec3(player.pos.x, 0, player.pos.z));
 		float angle = glm::degrees(glm::angle(glm::vec3(0, 0, 1), vec));
 		if (transform.pos.x < 0) {
@@ -157,12 +160,12 @@ void Radar::update(float dt) {
 
 	for (int i = 0; i < bufferData.size(); i++) {
 		if (angle > oldAngle) {
-			if (angle > bufferData[i].angle && oldAngle < bufferData[i].angle) {
+			if (angle >= bufferData[i].angle && oldAngle <= bufferData[i].angle) {
 				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
 			}
 		}
 		else {
-			if (oldAngle < bufferData[i].angle || angle > bufferData[i].angle) {
+			if (oldAngle <= bufferData[i].angle || angle >= bufferData[i].angle) {
 				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
 			}
 		}
