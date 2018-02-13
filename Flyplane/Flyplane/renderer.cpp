@@ -45,6 +45,33 @@ Renderer::Renderer() {
 	
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	float vertexbuffer[] = {
+		-1.0,  1.0, 0.0,
+		 0.0,  1.0,
+
+		 1.0,  1.0, 0.0,
+		 1.0,  1.0,
+
+		-1.0, -1.0, 0.0,
+		 0.0,  0.0,
+
+		 1.0, -1.0, 0.0,
+		 1.0,  0.0
+	};
+
+	glGenVertexArrays(1, &quadVao);
+	glGenBuffers(1, &quadVbo);
+	glBindVertexArray(quadVao);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVbo);
+	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), vertexbuffer, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+
+	glBindVertexArray(0);
 }
 
 Renderer::~Renderer() {
@@ -210,6 +237,24 @@ void Renderer::addMarker(glm::vec3 pos, float scale) {
 void Renderer::addMarker(glm::vec3 pos, glm::vec3 color, float scale)
 {
 	markers.addPosition(pos, color, scale);
+}
+
+void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
+	guiShader.use();
+	guiShader.uniform("matrix", matrix);
+	guiShader.uniform("texSampler", 0);
+
+	glBindVertexArray(quadVao);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVbo);
+	texture.bind(0);
+
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::update(float dt)

@@ -25,6 +25,7 @@ private:
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
 
+	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
 	GLuint depthTexture;
 	glm::mat4 shadowMatrix;
@@ -64,6 +65,7 @@ public:
 	void setCamera(const Camera& camera);
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
+	void renderTexture(const Texture& texture, const glm::mat4& matrix);
 	// DEBUG
 	void update(float dt);
 };

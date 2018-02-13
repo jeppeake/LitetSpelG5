@@ -7,13 +7,15 @@ varying float f_intensity;
 //uniform float radarAngle;
 
 void main() {
-	/*float intensity = 1.0;
+	vec4 color = vec4(1, 0, 0, 1);
 
-	float angle = radarAngle - f_angle;
-	if (angle < 0)
-		angle += 360;
+	if (f_intensity < 90)
+		color = vec4(0, 1, 0, 1);
+	else if (f_intensity < 180)
+		color = vec4(0, 0, 1, 1);
+	else if (f_intensity < 270)
+		color = vec4(1, 1, 1, 1);
 
-	intensity = (360 - angle) / 360;*/
-
-	gl_FragColor = vec4(vec3(1, 0, 0), f_intensity);
+	gl_FragColor = color;
+	//gl_FragColor = vec4(vec3(1, 0, 0), f_intensity);
 }

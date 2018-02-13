@@ -13,7 +13,7 @@ struct Data {
 };
 
 struct NewPlane {
-	float x, y, z;
+	float x, y;
 	float angle;
 };
 
@@ -28,9 +28,9 @@ private:
 	Texture image;
 	Texture plane;
 	ShaderProgram shader;
-	ShaderProgram guiShader;
+	//ShaderProgram guiShader;
 	GLuint vao, vbo;
-	GLuint guiVao, guiVbo;
+	//GLuint guiVao, guiVbo;
 	Transform player;
 	std::vector<RadarData> oldBufferData;
 	std::vector<NewPlane> bufferData;

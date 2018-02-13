@@ -8,5 +8,5 @@ private:
 	unsigned int width = 0, height = 0;
 public:
 	bool loadTexture(const std::string& file, int format = 0);
-	void bind(unsigned int slot);
+	void bind(unsigned int slot) const;
 };
