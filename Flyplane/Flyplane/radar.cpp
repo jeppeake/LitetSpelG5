@@ -165,8 +165,8 @@ void Radar::update(float dt) {
 
 		if (oldBufferData[i].intensity < 0) {
 			//std::cout << "Intensity: " << oldBufferData[i].intensity << std::endl;
-			std::cout << "Size: " << oldBufferData.size() << std::endl;
-			std::cout << "Index: " << i << std::endl;
+			//std::cout << "Size: " << oldBufferData.size() << std::endl;
+			//std::cout << "Index: " << i << std::endl;
 			if (i >= oldBufferData.size())
 				std::cout << "mohhahaha" << std::endl;
 			oldBufferData.erase(oldBufferData.begin() + i);
