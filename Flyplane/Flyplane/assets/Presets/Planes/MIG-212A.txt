@@ -8,24 +8,24 @@ White
 assets/MIG-212A_UV.png
 Green
 assets/MIG-212A_UV green.png
-Kanser
+Jobbig
 assets/MIG-212A_UV magenta.png
 -end textures-
--0.7
+-0.3
 -0.1225
 -0.8
-0.7
+0.3
+-0.1225
+-0.8
+-0.6
+-0.1225
+-0.8
+0.6
 -0.1225
 -0.8
 -0.9
 -0.1225
 -0.8
 0.9
--0.1225
--0.8
--1.05
--0.1225
--0.8
-1.05
 -0.1225
 -0.8

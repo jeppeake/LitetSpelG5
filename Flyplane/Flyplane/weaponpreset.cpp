@@ -58,4 +58,11 @@ void WeaponPreset::load(std::string presetname)
 
 	std::getline(f, str);
 	dissappear = std::stoi(str, NULL);
+
+	std::getline(f, str);
+	extraOffset.x = std::stod(str, NULL);
+	std::getline(f, str);
+	extraOffset.y = std::stod(str, NULL);
+	std::getline(f, str);
+	extraOffset.z = std::stod(str, NULL);
 }

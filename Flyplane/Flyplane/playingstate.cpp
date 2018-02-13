@@ -170,7 +170,7 @@ void PlayingState::loadLoadout()
 
 			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate);
 
-			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i], glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
+			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 		}
 	}
 	std::getline(file, str);
@@ -179,7 +179,7 @@ void PlayingState::loadLoadout()
 	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
 	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.25, 0.5), glm::vec3(0.25), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
-	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
+	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 	entity_p.assign <Equipment>(pweapons, weapons);
 
@@ -461,12 +461,13 @@ void PlayingState::update(double dt)
 		Window::getWindow().showCursor(false);
 		ex.systems.update<PlayerSystem>(dt);
 		ex.systems.update<AISystem>(dt);
-		ex.systems.update<WeaponSystem>(dt);
+		
 		ex.systems.update<FlightSystem>(dt);
 		ex.systems.update<PhysicsSystem>(dt);
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		ex.systems.update<WeaponSystem>(dt);
 	}
 	else {
 		ex.systems.update<RenderSystem>(dt);
