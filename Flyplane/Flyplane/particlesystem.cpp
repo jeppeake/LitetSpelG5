@@ -106,10 +106,12 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	//Buffer the initial lives
 	GLfloat *l = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(GLfloat), access);
+
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
 		l[i] = dis(gen);
 	}
+
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gColor);
@@ -149,7 +151,7 @@ void ParticleSystem::update(float dt, glm::vec3 pos, glm::vec3 direction)
 	glProgramUniform1fv(cs, glGetUniformLocation(cs, "life"), 1, &life);
 	glProgramUniform1fv(cs, glGetUniformLocation(cs, "dt"), 1, &dt);
 	//Dispatch
-	glDispatchCompute((numParticles / 128) + 1, 1, 1);
+	glDispatchCompute((numParticles / 1000) + 1, 1, 1);
 	glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	glUseProgram(0);

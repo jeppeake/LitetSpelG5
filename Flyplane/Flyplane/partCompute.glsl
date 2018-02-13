@@ -19,7 +19,10 @@ uniform float dt;
 uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
-layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
+layout(local_size_x = 1000, local_size_y = 1, local_size_z = 1) in;
+
+float rand(float n);
+
 void main()
 {
 	uint gid = gl_GlobalInvocationID.x;
@@ -29,11 +32,26 @@ void main()
 	}
 	else
 	{
-		Positions[gid].xyz = spawn + direction * Lives[gid];
+		vec3 vel;
+		vel.x = dt * rand(float(gid));
+		vel.y = dt * rand(float(gid + 1000));
+		vel.z = dt * rand(float(gid + 2000));
+
+		Positions[gid].xyz += vel * dt;
+
+		//Positions[gid].xyz = spawn + direction * Lives[gid];
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] > life)
 	{
-		Lives[gid] = 0.0;
+		//Positions[gid].xyz = spawn;
+		Lives[gid] -= life;
+		Positions[gid].xyz = spawn + direction * Lives[gid];
+
 	}
+}
+
+
+float rand(float n) { 
+	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
 }
