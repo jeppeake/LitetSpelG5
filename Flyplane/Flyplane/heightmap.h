@@ -4,7 +4,7 @@
 #include "texture.h"
 #include "camera.h"
 #include "shader.h"
-
+#include <entityx/entityx.h>
 struct House {
 	House(glm::vec3 pos, unsigned int type) : pos(pos), type(type) {}
 	glm::vec3 pos;

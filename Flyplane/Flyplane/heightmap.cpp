@@ -1,4 +1,5 @@
 #include "heightmap.h"
+#include "assetloader.h"
 #include "lodepng.h"
 #include <GL\glew.h>
 #include <glm\gtc\constants.hpp>
@@ -6,6 +7,7 @@
 #include <iostream>
 #include "model.h"
 #include "modelComponent.h"
+#include "collisioncomponent.h"
 #include "timer.h"
 #include "camera.h"
 #include <fstream>
@@ -156,7 +158,9 @@ void Heightmap::buildStructures(entityx::EntityManager & mgr)
 	for (auto &house : houses)
 	{
 		entityx::Entity ent = mgr.create();
-		//ent.assign<ModelComponent>();
+		ent.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+		ent.assign<CollisionComponent>();
+		ent.assign<Transform>(house.pos, glm::quat(1.0,0.0,0.0,0.0));
 	}
 }
 
