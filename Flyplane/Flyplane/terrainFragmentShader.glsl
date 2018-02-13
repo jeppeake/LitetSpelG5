@@ -91,6 +91,7 @@ void main() {
 	result = clamp(result, 0, 1);
 
 	gl_FragColor = vec4(color * result * visibility * 0.7 + color * 0.3, 1);
+	gl_FragColor = vec4(color, 1.0);
 	//gl_FragColor = vec4(vMaterials, 1.0);
 }
 

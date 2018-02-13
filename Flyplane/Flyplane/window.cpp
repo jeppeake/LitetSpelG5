@@ -145,8 +145,39 @@ GLFWwindow * Window::getGLFWWindow()
 
 void Window::update()
 {
-	if (frame_timer.elapsed() >= 0.5)
-	{
+	updateTitle();
+
+	updateScrolls();
+
+	updateMousepos();
+	
+	swapBuffers();
+
+	pollEvents();
+}
+
+void Window::pollEvents() {
+	glfwPollEvents();
+}
+
+void Window::swapBuffers() {
+	glfwSwapBuffers(window);
+}
+
+void Window::updateMousepos() {
+
+	last_mouse_pos = mouse_pos;
+	glfwGetCursorPos(window, &mouse_pos.x, &mouse_pos.y);
+}
+
+void Window::updateScrolls() {
+	scroll = scrolls[window];
+	scrolls[window] = glm::vec2(0, 0);
+}
+
+void Window::updateTitle() {
+
+	if (frame_timer.elapsed() >= 0.5) {
 		double elapsed = frame_timer.restart();
 		double fps = frames / elapsed;
 		std::string new_title = title + " | FPS: " + std::to_string(fps);
@@ -154,17 +185,6 @@ void Window::update()
 		frames = 0;
 	}
 	frames += 1.0;
-
-	scroll = scrolls[window];
-	scrolls[window] = glm::vec2(0, 0);
-
-
-	last_mouse_pos = mouse_pos;
-	glfwGetCursorPos(window, &mouse_pos.x, &mouse_pos.y);
-	
-
-	glfwSwapBuffers(window);
-	glfwPollEvents();
 }
 
 bool Window::shouldClose()
