@@ -211,6 +211,9 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 	
 	glm::dvec3 origin = camera.getTransform().pos;
 
+	glm::vec3 dir = glm::toMat3(camera.getTransform().orientation) * glm::vec3(0, 0, 1);
+	bool lookingDown = dot(dir, glm::vec3(0, -1, 0)) > 0;
+
 	glm::dvec3 farPlane[4];
 	glm::dmat4 farPlane4;
 	farPlane4[0] = glm::dvec4(-1, -1, 1, 1);
@@ -226,13 +229,13 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 
 	glm::vec2 offset(-(width / 2.f));
 	float patchSize = width; // / 2.f;
-	recursiveBuildPatches(result, patchSize, offset, 0, farPlane, origin);
+	recursiveBuildPatches(result, patchSize, offset, 0, farPlane, origin, lookingDown);
 
 	return result;
 }
 
 
-void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig) {
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig, bool lookingDown) {
 
 	int maxLevels = 8;
 
@@ -284,7 +287,7 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 
 		if (level < maxLevels && is_close) {
 			// should divide
-			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, farPlane, orig);
+			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, farPlane, orig, lookingDown);
 		} else {
 
 			bool intersection = false;
@@ -340,7 +343,7 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 			bool cornerAbove = leftMax > 0 || topMax > 0 || rightMax > 0 || bottomMax > 0;
 
 			double maxHeight = 255.0*double(scale.y);
-			bool cornerBelow = leftMin < maxHeight || topMin < maxHeight || rightMin < maxHeight || bottomMin < maxHeight;
+			bool cornerBelow = leftMin < maxHeight || topMin < maxHeight || rightMin < maxHeight || bottomMin < maxHeight || lookingDown;
 
 
 			if (intersection && cornerAbove && cornerBelow)
