@@ -1,6 +1,6 @@
-assets\Presets\Planes\Spectre.txt
-assets\Presets\Weapons\rocketpod.txt
-assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Planes\laken.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
