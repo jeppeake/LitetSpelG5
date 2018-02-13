@@ -13,7 +13,7 @@ private:
 	GLfloat life, size;
 	ShaderProgram program;
 public:
-	ParticleSystem(unsigned particles, float life, float size, glm::vec3 color);
+	ParticleSystem(unsigned particles, float life, float size, glm::vec3 color, std::string path = "");
 	void update(float dt, glm::vec3 pos, glm::vec3 direction);
 	void render();
 };
