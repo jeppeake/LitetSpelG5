@@ -209,19 +209,19 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 
 	auto inverse = camera.getInverse();
 	
-	glm::vec3 origin = camera.getTransform().pos;
+	glm::dvec3 origin = camera.getTransform().pos;
 
-	glm::vec3 farPlane[4];
-	glm::mat4 farPlane4;
-	farPlane4[0] = glm::vec4(-1, -1, 1, 1);
-	farPlane4[1] = glm::vec4(1, -1, 1, 1);
-	farPlane4[2] = glm::vec4(-1, 1, 1, 1);
-	farPlane4[3] = glm::vec4(1, 1, 1, 1);
+	glm::dvec3 farPlane[4];
+	glm::dmat4 farPlane4;
+	farPlane4[0] = glm::dvec4(-1, -1, 1, 1);
+	farPlane4[1] = glm::dvec4(1, -1, 1, 1);
+	farPlane4[2] = glm::dvec4(-1, 1, 1, 1);
+	farPlane4[3] = glm::dvec4(1, 1, 1, 1);
 	for (int i = 0; i < 4; i++) {
 		farPlane4[i] = inverse * farPlane4[i];
 		farPlane4[i] /= farPlane4[i].w;
 
-		farPlane[i] = origin + 1'000'000.f*normalize(glm::vec3(farPlane4[i]) - origin);
+		farPlane[i] = origin + 10'000'000.0 * normalize(glm::dvec3(farPlane4[i]) - origin);
 	}
 
 	glm::vec2 offset(-(width / 2.f));
@@ -232,7 +232,7 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 }
 
 
-void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig) {
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig) {
 
 	int maxLevels = 8;
 
@@ -289,43 +289,61 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 
 			bool intersection = false;
 
-			glm::vec3 posLeft;
-			glm::vec3 posTop;
-			glm::vec3 posRight;
-			glm::vec3 posBottom;
+			
+			double leftMax = -std::numeric_limits<double>::max();
+			double topMax = -std::numeric_limits<double>::max();
+			double rightMax = -std::numeric_limits<double>::max();
+			double bottomMax = -std::numeric_limits<double>::max();
+
+			double leftMin = std::numeric_limits<double>::max();
+			double topMin = std::numeric_limits<double>::max();
+			double rightMin = std::numeric_limits<double>::max();
+			double bottomMin = std::numeric_limits<double>::max();
 			// check all corners of the patch
-			for (int iy = -1; iy <= 1 && !intersection; iy += 2) {
-				for (int ix = -1; ix <= 1 && !intersection; ix += 2) {
-					glm::vec3 center3 = scale * glm::vec3(center.x + ix* patchSize*0.5f, 0, center.y + iy * patchSize*0.5f);
+			for (int iy = -1; iy <= 1; iy += 2) {
+				for (int ix = -1; ix <= 1; ix += 2) {
+					glm::dvec3 pos;
+
+					glm::dvec3 center3 = glm::dvec3(scale) * glm::dvec3(center.x + ix* double(patchSize)*0.5, 0, center.y + iy * double(patchSize)*0.5);
 
 					//left
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[1], farPlane[3], posLeft)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[1], farPlane[3], pos)) {
 						intersection = true;
-						break;
+						leftMax = glm::max(pos.x, leftMax);
+						leftMin = glm::min(pos.x, leftMin);
 					}
 					
+					
 					//top
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[3], farPlane[2], posTop)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[3], farPlane[2], pos)) {
 						intersection = true;
-						break;
+						topMax = glm::max(pos.x, topMax);
+						topMin = glm::min(pos.x, topMin);
 					}
 
 					//right
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[2], farPlane[0], posRight)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[2], farPlane[0], pos)) {
 						intersection = true;
-						break;
+						rightMax = glm::max(pos.x, rightMax);
+						rightMin = glm::min(pos.x, rightMin);
 					}
 
 					//bottom
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[0], farPlane[1], posBottom)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[0], farPlane[1], pos)) {
 						intersection = true;
-						break;
+						bottomMax = glm::max(pos.x, bottomMax);
+						bottomMin = glm::min(pos.x, bottomMin);
 					}
 				}
 			}
-			
 
-			if (intersection) // && (posLeft.x > 0 || posTop.x > 0 || posRight.x > 0 || posBottom.x > 0))
+			bool cornerAbove = leftMax > 0 || topMax > 0 || rightMax > 0 || bottomMax > 0;
+
+			double maxHeight = 255.0*double(scale.y);
+			bool cornerBelow = leftMin < maxHeight || topMin < maxHeight || rightMin < maxHeight || bottomMin < maxHeight;
+
+
+			if (intersection && cornerAbove && cornerBelow)
 				patches.emplace_back(patchSize, new_offset, indices);
 		}
 	}

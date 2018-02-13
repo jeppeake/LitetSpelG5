@@ -19,7 +19,8 @@
 #include <ctime>
 #include "soundbuffers.h"
 #include "targetcomponent.h"
-
+#include "window.h"
+#include "healthcomponent.h"
 
 using namespace entityx;
 
@@ -75,7 +76,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 			Weapon* weapon = &equip->special[equip->selected];
 
-			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0) {
+			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0 && equip->special.size() > 0) {
 				weapon->shouldFire = true;
 			}
 			
@@ -137,6 +138,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				if (!weapon->stats.infAmmo)
 					weapon->stats.ammo--;
 
+				int preselect = equip->selected;
+
 				if (weapon->dissappear && weapon->stats.ammo <= 0) {
 					equip->special.erase(equip->special.begin() + equip->selected);
 					/*equip->selected = 0;
@@ -146,11 +149,14 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				int max = equip->special.size();
 				int c = 0;
 				while (equip->special[equip->selected].stats.ammo <= 0 && c <= max) {
-					equip->selected++;
+					equip->selected = (equip->selected + 1) % equip->special.size();
 					c++;
 				}
 				equip->special[equip->selected].timer.restart();
 			}
+
+			if(player)
+				AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weapon->stats.ammo), glm::vec2(10,10), glm::vec3(1, 0, 0), 0.4);
 			
 		}
 
@@ -211,7 +217,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity cure;
 				entityx::ComponentHandle<Target> target;
 				entityx::ComponentHandle<Transform> aitrans;
-				for (Entity enemy : es.entities_with_components(aitrans, target)) {
+				entityx::ComponentHandle<HealthComponent> health;
+				for (Entity enemy : es.entities_with_components(aitrans, target, health)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();
@@ -264,7 +271,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
 					if (!noTarget) {
 						if (cure.valid()) {
-							cure.destroy();
+							cure.component<HealthComponent>().get()->health -= 50;
 						}
 						entity.destroy();
 					}

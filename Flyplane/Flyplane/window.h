@@ -33,6 +33,16 @@ public:
 	GLFWwindow *getGLFWWindow();
 	void update();
 
+	void pollEvents();
+
+	void swapBuffers();
+
+	void updateMousepos();
+
+	void updateScrolls();
+
+	void updateTitle();
+
 	bool shouldClose();
 
 	bool mouseButtonDown(int button);

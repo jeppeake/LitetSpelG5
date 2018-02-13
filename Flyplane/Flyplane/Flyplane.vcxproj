@@ -206,6 +206,8 @@
     <ClInclude Include="follow_player.h" />
     <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="entity_close.h" />
+    <ClInclude Include="healthcomponent.h" />
+    <ClInclude Include="healthsystem.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
     <ClInclude Include="highscoreaction.h" />

@@ -1,4 +1,4 @@
-Misiljaevel
+Bigboi
 assets/Weapons/Missiles/ALAAT-10/ALAAT-10.fbx
 assets/Weapons/Missiles/ALAAT-10/ALAAT-10.fbx
 1
@@ -12,3 +12,6 @@ assets/Weapons/Missiles/ALAAT-10/ALAAT-10.fbx
 0
 1
 1
+0
+-0.1
+0.3

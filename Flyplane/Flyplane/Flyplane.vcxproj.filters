@@ -384,6 +384,12 @@
     <ClInclude Include="changeskinaction.h">
       <Filter>GUI\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="healthcomponent.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="healthsystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">

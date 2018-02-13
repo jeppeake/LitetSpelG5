@@ -5,7 +5,50 @@
 #include <ctime>
 #include "particlesystem.h"
 #include "renderer.h"
-ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::vec3 color)
+GLint createShader(const char *c)
+{
+	const GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
+	if (shader) {
+		glShaderSource(shader, 1, &c, NULL);
+		glCompileShader(shader);
+		const GLuint program = glCreateProgram();
+		if (program) {
+			GLint compiled = GL_FALSE;
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+			glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
+			if (compiled) {
+				glAttachShader(program, shader);
+				glLinkProgram(program);
+				glDetachShader(program, shader);
+			}
+			else
+			{
+				GLint success = 0;
+				glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+				if (success == GL_FALSE)
+				{
+					GLint log_size = 0;
+					glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
+					std::vector<GLchar> error(log_size);
+					glGetShaderInfoLog(shader, log_size, &log_size, &error[0]);
+					std::string errorstr{ &error[0] };
+
+					std::cout << "Error in ComputeShader:\n" << errorstr << "\n";
+
+					glDeleteShader(shader);
+					system("pause");
+					exit(1);
+				}
+			}
+		}
+		glDeleteShader(shader);
+		return program;
+	}
+	else {
+		return 0;
+	}
+}
+ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::vec3 color, std::string path)
 {
 	srand(time(NULL));
 	numParticles = particles;
@@ -17,10 +60,14 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glGenBuffers(1, &gVel);
 	glGenVertexArrays(1, &VAO);
 	{
-		std::ifstream file("partCompute.glsl");
+		if (path.empty())
+		{
+			path = "partCompute.glsl";
+		}
+		std::ifstream file(path);
 		std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 		const char *code = c.c_str();
-		cs = glCreateShaderProgramv(GL_COMPUTE_SHADER, 1, &code);
+		cs = createShader(code);
 	}
 	program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gPos);
@@ -38,21 +85,21 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	glm::vec4 *v = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, (numParticles) * sizeof(glm::vec4), access);
 
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(0.0, life);
+	std::uniform_real_distribution<float> dis2(0.0, 2);
+
 	//Buffer the initial velocities
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		float y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		float z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		v[i] = glm::vec4(x / 2, y / 2, z / 2, 1.0);
+		v[i] = glm::vec4(dis2(gen), dis2(gen), dis2(gen),1.0);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 	///////////////////////////////////////////////
 
-	std::random_device rd;  
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.0, life);
+
 
 	///////////////////////////////////////////
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gLife);

@@ -48,7 +48,7 @@ void LoadoutState::updatePreview() {
 			glm::vec3 pos = this->planePresets[this->selected].wepPos[i];
 			WeaponPreset pr = this->weaponPresets[this->pickedWeapons[i]];
 			WeaponStats stats = WeaponStats(pr.ammo, pr.lifetime, pr.speed, pr.mass, pr.cooldown, pr.infAmmo);
-			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(pr.name), AssetLoader::getLoader().getModel(pr.projModel), pos, glm::vec3(pr.scale), glm::vec3(pr.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(pr.name), AssetLoader::getLoader().getModel(pr.projModel), pos + pr.extraOffset, glm::vec3(pr.scale), glm::vec3(pr.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 		}
 	}
 	entityp.assign <Equipment>(pweapons, weapons);
