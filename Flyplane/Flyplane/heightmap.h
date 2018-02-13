@@ -3,6 +3,7 @@
 #include "model.h"
 #include "texture.h"
 #include "camera.h"
+#include "shader.h"
 
 struct House {
 	House(glm::vec3 pos, unsigned int type) : pos(pos), type(type) {}
@@ -24,18 +25,19 @@ private:
 	std::vector<House> houses;
 
 	std::vector<unsigned char> heightmap;
-	Texture tex;
+	Texture materialMap;
+	Texture textures[3];
 
 	unsigned int width, height;
 	int numPatchVerts;
-
+	
 	GLuint heightmapTex = 0;
 
 	GLuint ebos[9];
 	GLuint vbo = 0;
 	GLuint vao = 0;
 
-	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig);
+	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
@@ -43,12 +45,12 @@ public:
 	std::vector<GLuint> indices[9];
 	glm::vec3 scale;
 
-
+	
 
 	Heightmap();
-	Heightmap(const std::string &file, const std::string &texFile);
-	void loadMap(const std::string &file, const std::string &texFile);
-	void bind();
+	Heightmap(const std::string &maptxt);
+	void loadMap(const std::string &maptxt);
+	void bind(ShaderProgram& program);
 	void unbind();
 	double heightAt(glm::vec3 pos);
 	void bindIndices(int i);

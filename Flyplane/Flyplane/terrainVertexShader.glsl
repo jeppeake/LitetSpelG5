@@ -4,6 +4,7 @@ uniform mat4 modelMatrix;
 uniform mat4 ViewProjMatrix;
 
 uniform sampler2D heightmap;
+uniform sampler2D materialmap;
 uniform vec2 heightmapSize;
 
 
@@ -14,7 +15,7 @@ uniform vec3 scale;
 out vec3 Pos;
 out vec3 Normal;
 out vec2 Tex;
-
+out vec3 Materials;
 
 float rand(vec2 p);
 
@@ -60,6 +61,8 @@ void main() {
 
 	Normal = sampleNormal(hmUV);
 	
+
+
 	/*
 	float pi = 3.1415;
 	float h = pi*log(patch_size.x/heightmapSize.x);
@@ -75,7 +78,9 @@ void main() {
 	Normal = mix(Normal, n, 0.35);
 	*/
 
+	Materials = texture(materialmap, hmUV).rgb;
 	Tex = pos2d;
+	Tex = hmUV;
 	Pos = pos;
 	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }

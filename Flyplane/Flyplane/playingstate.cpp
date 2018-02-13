@@ -222,7 +222,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 
-	AssetLoader::getLoader().loadHeightmap("assets/textures/slojp.png", "assets/textures/grass.png", "testmap");
+	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
 	AssetLoader::getLoader().loadSound("assets/Sound/airplane-takeoff.wav", "takeoff");
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");

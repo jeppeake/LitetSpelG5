@@ -1,11 +1,13 @@
 #include "radar.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
 #include "window.h"
 #include "assetloader.h"
 
 Radar::Radar() {
 	image.loadTexture("assets/textures/radar.png", 1);
+	plane.loadTexture("assets/textures/radarPlane.png", 1);
 	shader.create("radarVS.glsl", "radarFS.glsl");
 	guiShader.create("guiVertexShader.glsl", "guiFragmentShader.glsl");
 	oldAngle = 0;
@@ -16,7 +18,7 @@ Radar::Radar() {
 	proj[1][1] = 0;
 	proj[2][2] = 1 / 100.f;*/
 
-	proj = glm::ortho<float>(-10000.f, 10000.f, -10000.f, 10000.f);
+	proj = glm::ortho<float>(-5000.f, 5000.f, -5000.f, 5000.f);
 
 	//bufferData.push_back({ -100,0,0 });
 
@@ -29,11 +31,11 @@ Radar::Radar() {
 	oldSize = 0;
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)sizeof(glm::vec3));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)(sizeof(glm::vec3) * 2));
+	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)sizeof(glm::vec2));
+	//glEnableVertexAttribArray(2);
+	//glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)(sizeof(glm::vec3) * 2));
 
 	glBindVertexArray(0);
 
@@ -80,33 +82,48 @@ void Radar::draw(float dt) {
 	glViewport(s.x - 150, s.y - 150, 125, 125);
 
 	guiShader.use();
-	guiShader.uniform("matrix", glm::rotate(glm::mat4(1), glm::radians(angle), glm::vec3(0,0,1)));
+	guiShader.uniform("matrix", glm::rotate(glm::mat4(1), glm::radians(angle), glm::vec3(0, 0, -1)));
 	guiShader.uniform("texSampler", 0);
 	glBindVertexArray(guiVao);
 	glBindBuffer(GL_ARRAY_BUFFER, guiVbo);
 	image.bind(0);
 	//image.draw();
 	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//glViewport(s.x - 25 - 125 / 2 - 12, s.y - 25 - 125 / 2 - 12, 25, 25);
+	glm::vec3 direction = glm::toMat3(player.orientation) * glm::vec3(0.0, 0.0, 1.0);
+	glm::vec3 up = glm::toMat3(player.orientation) * glm::vec3(1.0, 0.0, 0.0);
+	//direction.y = 0;
+	static float debug = 0;
+	debug += 0.1;
+	glm::mat4 view = glm::lookAt(glm::vec3(0)/*player.pos*/, glm::vec3(0, 1, 0)/**/, direction/*glm::vec3(0, 1, 0)*/);
+	guiShader.uniform("matrix", view * glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::scale(glm::vec3(0.2, 0.2, 1)));
+	plane.bind(0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	//shader.uniform("matrix", proj * view);
+	//shader.uniform("radarAngle", angle);
+	//shader.uniform("translate", player.pos);
+	
 	glEnable(GL_CULL_FACE);
 
+	glViewport(s.x - 150, s.y - 150, 125, 125);
+
+	update(dt);
 	shader.use();
-	glm::vec3 direction = glm::toMat3(player.orientation) * glm::vec3(0.0, 0.0, 1.0);
-	direction.y = 0;
-	glm::mat4 view = glm::lookAt(player.pos, player.pos + glm::vec3(0, -1, 0), direction/*glm::vec3(1, 0, 0)*/);
-	shader.uniform("matrix", proj * view);
-	//shader.uniform("translate", player.pos);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	glBufferData(GL_ARRAY_BUFFER, oldSize, nullptr, GL_DYNAMIC_DRAW);
-	oldSize = bufferData.size() * sizeof(Data);
+	oldSize = oldBufferData.size() * sizeof(RadarData);
 	//bufferData[0].x += 1.01;
-	glBufferData(GL_ARRAY_BUFFER, oldSize, &bufferData[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, oldSize, &oldBufferData[0], GL_DYNAMIC_DRAW);
 
-	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-	glDrawArrays(GL_POINTS, 0, bufferData.size());
+	glDrawArrays(GL_POINTS, 0, oldBufferData.size());
+
+	//std::cout << oldBufferData.size() << std::endl;
 
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, s.x, s.y);
@@ -115,10 +132,42 @@ void Radar::draw(float dt) {
 
 void Radar::setPlayer(Transform transform) {
 	player = transform;
-	bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 0.0, 0.0, 1.0, 0.0 });
+	//bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 0.0, 0.0, 1.0, 0.0 });
 }
 
 void Radar::addPlane(Transform transform) {
-	if (glm::distance(transform.pos, player.pos) < 10000)
-		bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, 1.0f, 0.0f, 0.0f, 15.0 });
+	if (glm::distance(transform.pos, player.pos) < 5000) {
+		glm::vec3 vec = glm::normalize(glm::vec3(transform.pos.x, 0, transform.pos.z) - glm::vec3(player.pos.x, 0, player.pos.z));
+		float angle = glm::degrees(glm::angle(glm::vec3(0, 0, 1), vec));
+		if (transform.pos.x < 0) {
+			angle += 180;
+		}
+		glm::mat4 view = glm::lookAt(player.pos, player.pos + glm::vec3(0, -1, 0), glm::vec3(0, 0, 1)/*direction*/);
+		vec = proj * view * glm::vec4(vec, 1);
+		bufferData.push_back({ vec.x, vec.y, vec.z, angle });
+		//std::cout << angle << std::endl;
+	}
+}
+
+void Radar::update(float dt) {
+	for (int i = 0; i < oldBufferData.size(); i++) {
+		oldBufferData[i].intensity -= dt;
+
+		if (oldBufferData[i].intensity < 0) {
+			oldBufferData.erase(oldBufferData.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < bufferData.size(); i++) {
+		if (angle > oldAngle) {
+			if (angle >= bufferData[i].angle && oldAngle <= bufferData[i].angle) {
+				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
+			}
+		}
+		else {
+			if (oldAngle <= bufferData[i].angle || angle >= bufferData[i].angle) {
+				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
+			}
+		}
+	}
 }

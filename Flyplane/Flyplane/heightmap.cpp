@@ -7,6 +7,9 @@
 #include "model.h"
 #include "timer.h"
 #include "camera.h"
+#include <fstream>
+#include "shader.h"
+#include <stdlib.h>
 
 int index(int x, int y, int width) {
 	return x + y * width;
@@ -25,60 +28,55 @@ glm::vec3 normal(glm::vec4 p1, glm::vec4 p2, glm::vec4 p3) {
 
 Heightmap::Heightmap() {}
 
-Heightmap::Heightmap(const std::string &file, const std::string &texFile) {
-	loadMap(file, texFile); 
+Heightmap::Heightmap(const std::string &maptxt) {
+	loadMap(maptxt);
 }
 
-void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
-	tex.loadTexture(texFile);
+void Heightmap::loadMap(const std::string &maptxt) {
+	std::ifstream f(maptxt);
+
+	std::string heightmap;
+	std::string materialmap;
+	std::string mat1; 
+	std::string mat2;
+	std::string mat3;
+
+	std::getline(f, heightmap);
+	std::getline(f, materialmap);
+	std::getline(f, mat1);
+	std::getline(f, mat2);
+	std::getline(f, mat3);
+
+	textures[0].loadTexture(mat1);
+	textures[1].loadTexture(mat2);
+	textures[2].loadTexture(mat3);
+	materialMap.loadTexture(materialmap);
 
 	std::vector<unsigned char> img;
-	unsigned error = lodepng::decode(img, width, height, file);
+	unsigned error = lodepng::decode(img, width, height, heightmap, LCT_RGBA, 16U);
 	if (error != 0) {
-		std::cout << "[ERROR] Failed to load heightmap '" << file << "': " << lodepng_error_text(error) << "\n";
+		std::cout << "[ERROR] Failed to load heightmap '" << heightmap << "': " << lodepng_error_text(error) << "\n";
 		system("pause");
 		std::exit(EXIT_FAILURE);
 	}
 
-	double gaussian[3][3] = {
-		{ 0.077847,	0.123317,	0.077847 },
-		{ 0.123317,	0.195346,	0.123317 },
-		{ 0.077847,	0.123317,	0.077847 }
-	};
-
-	
-	
-
-	std::vector<unsigned int> heights;
+	std::vector<uint16_t> heights;
 
 	for (int iy = 0; iy < height; iy++) {
 		for (int ix = 0; ix < width; ix++) {
-			int i = index(ix * 4, iy, 4 * width);
+			int i = index(ix * 8, iy, 8 * width);
 			
-			double smoothed = 0;
-			double regular = 0;
+			uint16_t a = img[i];
+			uint16_t b = img[i+1];
+			uint16_t red = (a << 8) | b;
+			double sample = red;
 
-			regular = (img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
-			if (iy >= 4 && iy <= height - 6 && ix >= 4 && ix <= width - 6) {
-				for (int j = -1; j <= 1; j++) {
-					for (int k = -1; k <= 1; k++) {
-						int ind = index((ix + j) * 4, iy + k, 4 * width);
-						double gauss = gaussian[j + 1][k + 1];
-						smoothed += gauss * (img[ind] / 255.0)*double(std::numeric_limits<unsigned int>::max());
-					}
-				}
-			} else {
-				smoothed = regular;
-			}
-
-			double val = 0;
-
-			val = smoothed;
+			//(img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
 			
-			heights.push_back(val);
+			heights.push_back(sample);
 
 			float x = ix;
-			float y = val *(255.0/double(std::numeric_limits<unsigned int>::max()));
+			float y = sample*255.0/double(std::numeric_limits<uint16_t>::max());
 			float z = iy;
 			vertices.emplace_back(x, y, z);
 
@@ -115,7 +113,7 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_UNSIGNED_INT, &heights[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_UNSIGNED_SHORT, &heights[0]);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 
@@ -139,13 +137,22 @@ void Heightmap::loadMap(const std::string &file, const std::string &texFile) {
 	glBindVertexArray(0);
 }
 
-void Heightmap::bind() {
+void Heightmap::bind(ShaderProgram& shader) {
+	shader.uniform("scale", scale);
+	shader.uniform("heightmapSize", getSize());
+	
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	
-	glActiveTexture(GL_TEXTURE0);
-	tex.bind(0);
 
+	shader.uniform("materialmap", 0);
+	materialMap.bind(0);
+	for (size_t i = 0; i < 3; i++) {
+		int slot = i + 3;
+		shader.uniform("material" + std::to_string(i+1), slot);
+		textures[i].bind(slot);
+	}
+
+	shader.uniform("heightmap", 2);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, heightmapTex);
 }
@@ -202,19 +209,19 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 
 	auto inverse = camera.getInverse();
 	
-	glm::vec3 origin = camera.getTransform().pos;
+	glm::dvec3 origin = camera.getTransform().pos;
 
-	glm::vec3 farPlane[4];
-	glm::mat4 farPlane4;
-	farPlane4[0] = glm::vec4(-1, -1, 1, 1);
-	farPlane4[1] = glm::vec4(1, -1, 1, 1);
-	farPlane4[2] = glm::vec4(-1, 1, 1, 1);
-	farPlane4[3] = glm::vec4(1, 1, 1, 1);
+	glm::dvec3 farPlane[4];
+	glm::dmat4 farPlane4;
+	farPlane4[0] = glm::dvec4(-1, -1, 1, 1);
+	farPlane4[1] = glm::dvec4(1, -1, 1, 1);
+	farPlane4[2] = glm::dvec4(-1, 1, 1, 1);
+	farPlane4[3] = glm::dvec4(1, 1, 1, 1);
 	for (int i = 0; i < 4; i++) {
 		farPlane4[i] = inverse * farPlane4[i];
 		farPlane4[i] /= farPlane4[i].w;
 
-		farPlane[i] = origin + 1'000'000.f*normalize(glm::vec3(farPlane4[i]) - origin);
+		farPlane[i] = origin + 10'000'000.0 * normalize(glm::dvec3(farPlane4[i]) - origin);
 	}
 
 	glm::vec2 offset(-(width / 2.f));
@@ -225,7 +232,7 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 }
 
 
-void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::vec3 farPlane[4], glm::vec3 orig) {
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig) {
 
 	int maxLevels = 8;
 
@@ -282,43 +289,61 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 
 			bool intersection = false;
 
-			glm::vec3 posLeft;
-			glm::vec3 posTop;
-			glm::vec3 posRight;
-			glm::vec3 posBottom;
+			
+			double leftMax = -std::numeric_limits<double>::max();
+			double topMax = -std::numeric_limits<double>::max();
+			double rightMax = -std::numeric_limits<double>::max();
+			double bottomMax = -std::numeric_limits<double>::max();
+
+			double leftMin = std::numeric_limits<double>::max();
+			double topMin = std::numeric_limits<double>::max();
+			double rightMin = std::numeric_limits<double>::max();
+			double bottomMin = std::numeric_limits<double>::max();
 			// check all corners of the patch
-			for (int iy = -1; iy <= 1 && !intersection; iy += 2) {
-				for (int ix = -1; ix <= 1 && !intersection; ix += 2) {
-					glm::vec3 center3 = scale * glm::vec3(center.x + ix* patchSize*0.5f, 0, center.y + iy * patchSize*0.5f);
+			for (int iy = -1; iy <= 1; iy += 2) {
+				for (int ix = -1; ix <= 1; ix += 2) {
+					glm::dvec3 pos;
+
+					glm::dvec3 center3 = glm::dvec3(scale) * glm::dvec3(center.x + ix* double(patchSize)*0.5, 0, center.y + iy * double(patchSize)*0.5);
 
 					//left
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[1], farPlane[3], posLeft)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[1], farPlane[3], pos)) {
 						intersection = true;
-						break;
+						leftMax = glm::max(pos.x, leftMax);
+						leftMin = glm::min(pos.x, leftMin);
 					}
 					
+					
 					//top
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[3], farPlane[2], posTop)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[3], farPlane[2], pos)) {
 						intersection = true;
-						break;
+						topMax = glm::max(pos.x, topMax);
+						topMin = glm::min(pos.x, topMin);
 					}
 
 					//right
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[2], farPlane[0], posRight)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[2], farPlane[0], pos)) {
 						intersection = true;
-						break;
+						rightMax = glm::max(pos.x, rightMax);
+						rightMin = glm::min(pos.x, rightMin);
 					}
 
 					//bottom
-					if (glm::intersectLineTriangle(center3, glm::vec3(0, 1, 0), orig, farPlane[0], farPlane[1], posBottom)) {
+					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[0], farPlane[1], pos)) {
 						intersection = true;
-						break;
+						bottomMax = glm::max(pos.x, bottomMax);
+						bottomMin = glm::min(pos.x, bottomMin);
 					}
 				}
 			}
-			
 
-			if (intersection) // && (posLeft.x > 0 || posTop.x > 0 || posRight.x > 0 || posBottom.x > 0))
+			bool cornerAbove = leftMax > 0 || topMax > 0 || rightMax > 0 || bottomMax > 0;
+
+			double maxHeight = 255.0*double(scale.y);
+			bool cornerBelow = leftMin < maxHeight || topMin < maxHeight || rightMin < maxHeight || bottomMin < maxHeight;
+
+
+			if (intersection && cornerAbove && cornerBelow)
 				patches.emplace_back(patchSize, new_offset, indices);
 		}
 	}

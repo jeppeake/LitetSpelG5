@@ -20,7 +20,7 @@ Text * AssetLoader::getHighscoreText() &
 	return highscoreText;
 }
 
-void AssetLoader::loadModel(const std::string filename, const std::string name) {
+void AssetLoader::loadModel(const std::string &filename, const std::string &name) {
 	auto find = models.find(name);
 	if (find == models.end()) {
 		Model model;
@@ -38,16 +38,15 @@ void AssetLoader::loadTexture(const std::string filename, const std::string name
 	}
 }
 
-void AssetLoader::loadHeightmap(const std::string map, const std::string tex, std::string name) {
+void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &name) {
 	auto find = heightmaps.find(name);
 	if (find == heightmaps.end()) {
 		Heightmap hmap;
-		heightmaps[name] = hmap;
-		heightmaps[name] = Heightmap(map, tex);
+		heightmaps[name].loadMap(maptxt);
 	}
 }
 
-void AssetLoader::loadSound(const std::string filename, const std::string name) {
+void AssetLoader::loadSound(const std::string &filename, const std::string &name) {
 	auto find = sounds.find(name);
 	if (find == sounds.end()) {
 		sf::SoundBuffer sb;
