@@ -2,9 +2,11 @@
 uniform sampler2D texSampler;
 uniform sampler2D shadowMap;
 uniform mat4 shadowMatrix;
-varying vec3 Pos;
-varying vec3 Normal;
-varying vec2 Tex;
+uniform vec3 cameraPos;
+
+in vec3 Pos;
+in vec3 Normal;
+in vec2 Tex;
 
 
 void main() {
@@ -20,13 +22,24 @@ void main() {
 		visibility = 1.0;
 	}
 
-	vec3 sun = vec3(0, 1, 1);
-	sun = normalize(sun);
-	vec3 n = normalize(Normal);
-	float result = dot(sun, n);
-	result = clamp(result, 0, 1);
+
 	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;
 
-	gl_FragColor = vec4(color * result * visibility * 0.7 + color * 0.3, 1);
+
+	vec3 sun = normalize(vec3(0, 1, 1));
+	vec3 n = normalize(Normal);
+
+	float diffuse = dot(sun, n);
+	diffuse = clamp(diffuse, 0, 1);
+	
+	vec3 look = normalize(cameraPos - Pos);
+	vec3 half = normalize(look + sun);
+	float specular = pow(clamp(dot(n, half), 0.0, 1.0), 100.0);
+
+	vec3 lighting;
+	lighting += color * diffuse * visibility * 0.7;
+	lighting += color * specular * visibility;
+	lighting += color * 0.3;
+	gl_FragColor = vec4(lighting, 1);
 	
 }

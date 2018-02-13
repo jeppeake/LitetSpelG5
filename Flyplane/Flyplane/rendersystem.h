@@ -68,9 +68,13 @@ struct RenderSystem : public System<RenderSystem> {
 			Camera c = player->camera;
 			c.setTransform(p_cam);
 
+			cullingCamera = c;
+			if (Input::isKeyDown(GLFW_KEY_Q)) {
+				c.setTransform(Transform(glm::vec3(24000, 20000, 24000), glm::quat(0, 0, -0.707, 0.707)));
+			}
+
+			
 			Renderer::getRenderer().setCamera(c);
-			if (!Input::isKeyDown(GLFW_KEY_Q))
-				cullingCamera = c;
 			
 			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -2.5), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
 		}
