@@ -1,8 +1,8 @@
 assets\Presets\Planes\Spectre.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
 0
