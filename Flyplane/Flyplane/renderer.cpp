@@ -158,7 +158,7 @@ void Renderer::RenderScene() {
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
 	shader.uniform("shadowMatrix", m * shadowMatrix);
-	
+	shader.uniform("cameraPos", camera.getTransform().pos);
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
 	}

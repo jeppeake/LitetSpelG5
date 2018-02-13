@@ -37,7 +37,7 @@ private:
 	GLuint vbo = 0;
 	GLuint vao = 0;
 
-	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig, bool lookingDown);
+	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
