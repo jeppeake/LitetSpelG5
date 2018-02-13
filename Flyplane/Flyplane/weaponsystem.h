@@ -157,8 +157,20 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				equip->special[equip->selected].timer.restart();
 			}
 
+			Weapon lastWep = equip->special[equip->selected];
+			unsigned int count = 0;
+			unsigned int totalAmmo = 0;
+			unsigned int tempselect = equip->selected;
+			while (count < equip->special.size()) {
+				if(equip->special[equip->selected].model == equip->special[tempselect].model)
+					totalAmmo += equip->special[tempselect].stats.ammo;
+				tempselect = (tempselect + 1) % equip->special.size();
+				count++;
+			}
+
+
 			if(player && weapon != nullptr)
-				AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weapon->stats.ammo), glm::vec2(10,10), glm::vec3(1, 0, 0), 0.4);
+				AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(totalAmmo), glm::vec2(10,10), glm::vec3(1, 0, 0), 0.4);
 			
 		}
 
@@ -269,17 +281,41 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
-				if (glm::length(u) < 10.0) {
-					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					if (!noTarget) {
+				if (glm::length(u) < 20.0) {
+					std::cout << "Missile exploded at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
+					Entity explosion = es.create();
+					explosion.assign<ExplosionComponent>(200, 30);
+					explosion.assign<Transform>(trans->pos);
+					entity.destroy();
+					/*if (!noTarget) {
+
 						if (cure.valid()) {
+
 							cure.component<HealthComponent>().get()->health -= 50;
 						}
 						entity.destroy();
-					}
+					}*/
 				}
 			}
 				
+		}
+
+		//explosions
+		entityx::ComponentHandle<ExplosionComponent> explosion;
+		for (Entity entity_explosion : es.entities_with_components(explosion, trans)) {
+			entityx::ComponentHandle<Target> target;
+			entityx::ComponentHandle<HealthComponent> health;
+			entityx::ComponentHandle<Transform> tran1;
+			for (Entity entity : es.entities_with_components(health, tran1)) {
+				double dist = glm::length(trans->pos - tran1->pos);
+				double fallof = explosion->damage / explosion->radius;
+				double damage = explosion->damage - (dist*fallof);
+				if (damage < 0)
+					damage = 0;
+				health->health -= damage;
+				std::cout << "Did " << damage << " damage." << "\n";
+			}
+			entity_explosion.destroy();
 		}
 	};
 };
