@@ -94,16 +94,20 @@ Model::Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<GLuint
 
 Model::Mesh::~Mesh()
 {
-	glDeleteBuffers(1, &ebo);
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
+	if (!is_bb) {
+		glDeleteBuffers(1, &ebo);
+		glDeleteBuffers(1, &vbo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 void Model::Mesh::bind()
 {
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	if (!is_bb) {
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	}
 }
 
 void Model::Mesh::unbind()
