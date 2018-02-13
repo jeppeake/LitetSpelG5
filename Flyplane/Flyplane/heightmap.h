@@ -50,6 +50,8 @@ public:
 	Heightmap();
 	Heightmap(const std::string &maptxt);
 	void loadMap(const std::string &maptxt);
+	void loadStructures();
+	void buildStructures(entityx::EntityManager &mgr);
 	void bind(ShaderProgram& program);
 	void unbind();
 	double heightAt(glm::vec3 pos);

@@ -5,12 +5,13 @@
 #include <glm\gtx\intersect.hpp>
 #include <iostream>
 #include "model.h"
+#include "modelComponent.h"
 #include "timer.h"
 #include "camera.h"
 #include <fstream>
 #include "shader.h"
 #include <stdlib.h>
-
+#include <entityx/entityx.h>
 int index(int x, int y, int width) {
 	return x + y * width;
 }
@@ -135,6 +136,28 @@ void Heightmap::loadMap(const std::string &maptxt) {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
 
 	glBindVertexArray(0);
+	this->loadStructures();
+}
+
+void Heightmap::loadStructures()
+{
+	std::string path = "assets/buildings/structuremap.txt";
+	std::ifstream infile(path);
+	unsigned x, y, type;
+	while (infile >> x >> y >> type)
+	{
+		double height = this->heightAt(glm::vec3(x,0.0,y));
+		houses.push_back(House(glm::vec3(x, height, y), type));
+	}
+}
+
+void Heightmap::buildStructures(entityx::EntityManager & mgr)
+{
+	for (auto &house : houses)
+	{
+		entityx::Entity ent = mgr.create();
+		//ent.assign<ModelComponent>();
+	}
 }
 
 void Heightmap::bind(ShaderProgram& shader) {
