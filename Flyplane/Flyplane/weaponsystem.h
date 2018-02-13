@@ -122,7 +122,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				switchT.restart();
 			}
 
-			if (weapon->shouldFire) {
+			if (equip->special.size() > 0 && weapon->shouldFire) {
 				weapon->shouldFire = false;
 				weapon->timer.restart();
 
@@ -157,7 +157,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				equip->special[equip->selected].timer.restart();
 			}
 
-			if(player)
+			if(player && weapon != nullptr)
 				AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weapon->stats.ammo), glm::vec2(10,10), glm::vec3(1, 0, 0), 0.4);
 			
 		}

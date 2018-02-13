@@ -67,6 +67,9 @@ void LoadingState::update(double dt) {
 	else
 		AssetLoader::getLoader().getBigtext()->drawText("Loading done!", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
 	if (done) {
+		if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
+			startGame();
+		}
 		bHandler.drawButtons();
 		bHandler.handleButtonClicks();
 	}
