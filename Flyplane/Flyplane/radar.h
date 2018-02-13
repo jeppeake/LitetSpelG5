@@ -36,13 +36,13 @@ private:
 	std::vector<NewPlane> bufferData;
 	glm::mat4 proj;
 	int oldSize;
-	float oldAngle;
-	float angle;
+	double oldAngle;
+	double angle;
 
-	void update(float dt);
+	void update(double dt);
 public:
 	Radar();
-	void draw(float dt);
+	void draw(double dt);
 	void setPlayer(Transform transform);
 	void addPlane(Transform transform);
 };

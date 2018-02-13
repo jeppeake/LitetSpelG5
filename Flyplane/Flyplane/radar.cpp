@@ -31,9 +31,9 @@ Radar::Radar() {
 	oldSize = 0;
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 3/*sizeof(RadarData)*/, (GLvoid*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)sizeof(glm::vec2));
+	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 3/*sizeof(RadarData)*/, (GLvoid*)(sizeof(float) * 2));
 	//glEnableVertexAttribArray(2);
 	//glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Data), (GLvoid*)(sizeof(glm::vec3) * 2));
 
@@ -73,7 +73,7 @@ Radar::Radar() {
 	glBindVertexArray(0);
 }
 
-void Radar::draw(float dt) {
+void Radar::draw(double dt) {
 	oldAngle = angle;
 	angle += 360 * dt;
 	if (angle > 360)
@@ -83,7 +83,7 @@ void Radar::draw(float dt) {
 	glViewport(s.x - 150, s.y - 150, 125, 125);
 
 	guiShader.use();
-	guiShader.uniform("matrix", glm::rotate(glm::mat4(1), glm::radians(angle), glm::vec3(0, 0, -1)));
+	guiShader.uniform("matrix", glm::rotate(glm::mat4(1), glm::radians((float)angle), glm::vec3(0, 0, -1)));
 	guiShader.uniform("texSampler", 0);
 	glBindVertexArray(guiVao);
 	glBindBuffer(GL_ARRAY_BUFFER, guiVbo);
@@ -109,7 +109,7 @@ void Radar::draw(float dt) {
 	
 	glEnable(GL_CULL_FACE);
 
-	glViewport(s.x - 150, s.y - 150, 125, 125);
+	//glViewport(s.x - 150, s.y - 150, 125, 125);
 
 	update(dt);
 	shader.use();
@@ -128,6 +128,7 @@ void Radar::draw(float dt) {
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glDrawArrays(GL_POINTS, 0, oldBufferData.size());
+	//std::cout << "Render nr of radar planes " << oldBufferData.size() << std::endl;
 
 	//std::cout << oldBufferData.size() << std::endl;
 
@@ -142,33 +143,30 @@ void Radar::setPlayer(Transform transform) {
 }
 
 void Radar::addPlane(Transform transform) {
+	//transform.pos = glm::vec3(500, 300, 3000);
+	//player.pos = glm::vec3(0);
 	float distance = glm::distance(glm::vec3(transform.pos.x, 0, transform.pos.z), glm::vec3(player.pos.x, 0, player.pos.z));
 
 	if (distance < 10000) {
 		glm::vec3 vec = glm::normalize(glm::vec3(transform.pos.x, 0, transform.pos.z) - glm::vec3(player.pos.x, 0, player.pos.z));
 		float angle = glm::degrees(glm::angle(glm::vec3(0, 0, 1), vec));
-		if (transform.pos.x < 0) {
+		if (transform.pos.z < 0) {
 			angle += 180;
 		}
 		glm::mat4 view = glm::lookAt(player.pos, player.pos + glm::vec3(0, -1, 0), glm::vec3(0, 0, 1)/*direction*/);
-		vec = proj * view * glm::vec4(vec, 1);
-		bufferData.push_back({ vec.x, vec.y, vec.z, angle });
+		vec = proj * view * glm::vec4(transform.pos.x, 0, transform.pos.z, 1);
+		bufferData.push_back({ vec.x, vec.y, 0/*vec.z*/, angle });
 		
 		//std::cout << "x: " << vec.x << "y: " << vec.y << "z: " << vec.z << std::endl;
 		//std::cout << "Distance: " <<  distance << std::endl;
 	}
 }
 
-void Radar::update(float dt) {
+void Radar::update(double dt) {
 	for (int i = oldBufferData.size() - 1; i >= 0; i--) {
 		oldBufferData[i].intensity -= dt;
 
 		if (oldBufferData[i].intensity < 0) {
-			//std::cout << "Intensity: " << oldBufferData[i].intensity << std::endl;
-			std::cout << "Size: " << oldBufferData.size() << std::endl;
-			std::cout << "Index: " << i << std::endl;
-			if (i >= oldBufferData.size())
-				std::cout << "mohhahaha" << std::endl;
 			oldBufferData.erase(oldBufferData.begin() + i);
 		}
 	}
@@ -185,4 +183,5 @@ void Radar::update(float dt) {
 			}
 		}
 	}
+	//std::cout << "nr of radar planes " << oldBufferData.size() << std::endl;
 }
