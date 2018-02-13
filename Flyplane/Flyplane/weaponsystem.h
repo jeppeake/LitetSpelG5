@@ -20,6 +20,7 @@
 #include "soundbuffers.h"
 #include "targetcomponent.h"
 #include "window.h"
+#include "healthcomponent.h"
 
 using namespace entityx;
 
@@ -216,7 +217,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity cure;
 				entityx::ComponentHandle<Target> target;
 				entityx::ComponentHandle<Transform> aitrans;
-				for (Entity enemy : es.entities_with_components(aitrans, target)) {
+				entityx::ComponentHandle<HealthComponent> health;
+				for (Entity enemy : es.entities_with_components(aitrans, target, health)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();
@@ -269,7 +271,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
 					if (!noTarget) {
 						if (cure.valid()) {
-							cure.destroy();
+							cure.component<HealthComponent>().get()->health -= 50;
 						}
 						entity.destroy();
 					}

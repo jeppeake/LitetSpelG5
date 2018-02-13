@@ -50,6 +50,9 @@
 #include "planepreset.h"
 #include <fstream>
 
+#include "healthcomponent.h"
+#include "healthsystem.h"
+
 //entityx::Entity entity;
 entityx::Entity entity_p;
 entityx::Entity entity_formation;
@@ -68,6 +71,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 		entity.assign <FlightComponent>(200.f, 1.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
+		entity.assign <HealthComponent>(100.0);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -182,6 +186,7 @@ void PlayingState::loadLoadout()
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 	entity_p.assign <Equipment>(pweapons, weapons);
+	entity_p.assign <HealthComponent>(100.0);
 
 	entityx::Entity terrain = ex.entities.create();
 
@@ -253,6 +258,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(AssetLoader::getLoader().getHeightmap("testmap"), this);
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
+	ex.systems.add<HealthSystem>();
 	ex.systems.add<GameOver>(this);
 	ex.systems.configure();
 
@@ -291,7 +297,7 @@ void PlayingState::init()
 
 	entity2.assign<AIComponent>(behaviours, true, true);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
-
+	entity2.assign <HealthComponent>(100.0);
 
 
 	int enemies = 0;
@@ -466,6 +472,7 @@ void PlayingState::update(double dt)
 		ex.systems.update<PhysicsSystem>(dt);
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
+		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		ex.systems.update<WeaponSystem>(dt);
 	}
