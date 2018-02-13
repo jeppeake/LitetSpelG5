@@ -5,5 +5,5 @@ uniform vec3 color;
 
 void main() {
 	//vec4 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y));
-	gl_FragColor = vec4(color, 0.4);
+	gl_FragColor = vec4(color, 0.7);
 }

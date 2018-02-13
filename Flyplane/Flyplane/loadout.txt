@@ -1,8 +1,8 @@
-assets\Presets\Planes\MIG-212A.txt
+assets\Presets\Planes\Spectre.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
-1
+0

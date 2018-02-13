@@ -226,6 +226,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
+	AssetLoader::getLoader().loadModel("assets/buildings/hus1.fbx", "hus1");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 

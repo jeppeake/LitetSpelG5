@@ -15,9 +15,11 @@ Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
 
+
+	std::cout << "\t\t[DEBUG] parsing mesh: '" << name << "'\n";
+
 	is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
-		//std::cout << name << " IS BOUNDING BOX\n";
 		//std::cout << mesh->mNumVertices << "\n";
 		is_bb = true;
 	}
@@ -94,16 +96,20 @@ Model::Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<GLuint
 
 Model::Mesh::~Mesh()
 {
-	glDeleteBuffers(1, &ebo);
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
+	if (!is_bb) {
+		glDeleteBuffers(1, &ebo);
+		glDeleteBuffers(1, &vbo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 void Model::Mesh::bind()
 {
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	if (!is_bb) {
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	}
 }
 
 void Model::Mesh::unbind()
@@ -139,6 +145,7 @@ void Model::load(const std::string & file)
 		return;
 	}
 
+	std::cout << "\t[DEBUG] loading meshes in model:\n";
 	loaded = true;
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
@@ -190,12 +197,12 @@ void Model::load(const std::string & file)
 	recursiveFlatten(root, glm::scale(glm::vec3(0.005)));
 
 	recursiveDeleteNodes(root);
-	/*
-	std::cout << file << ":\n";
-	std::cout << "\tnum meshes: " << meshes.size() << "\n";
-	std::cout << "\tnum meshes in hierarchy: " <<  model_meshes.size() << "\n";
-	std::cout << "\tbounding boxes: " << bounding_boxes.size() << "\n";
-	*/
+	
+	//std::cout << file << ":\n";
+	std::cout << "\t[DEBUG] meshes: " << meshes.size() << "\n";
+	std::cout << "\t[DEBUG] in hierarchy: " <<  model_meshes.size() << "\n";
+	std::cout << "\t[DEBUG] bounding boxes: " << bounding_boxes.size() << "\n";
+	
 
 	aiReleaseImport(scene);
 }

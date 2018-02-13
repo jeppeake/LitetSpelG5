@@ -30,7 +30,7 @@ struct RenderSystem : public System<RenderSystem> {
 	ParticleSystem *S;
 	RenderSystem()
 	{
-		S = new ParticleSystem(10000, 5, 0.005, glm::vec3(1.0, 0.0, 0.0));
+		S = new ParticleSystem(1000, 0.1, 0.5, glm::vec3(1.0, 0.0, 0.0));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		bool playing = false;
