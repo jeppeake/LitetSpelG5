@@ -1,5 +1,5 @@
 #version 420
-layout (location = 0) in vec4 pos;
+layout (location = 0) in vec2 pos;
 //layout (location = 1) in vec3 color;
 layout (location = 1) in float intensity;
 
@@ -14,7 +14,7 @@ void main() {
 	//gl_Position = (pos - vec4(translate, 0));
 	//gl_Position.z = 0;
 	//gl_Position = vec4(0,0,0,1);
-	gl_Position = pos;
+	gl_Position = vec4(pos, 0, 1);
 	gl_PointSize = 5;
 	//f_color = color;
 	f_intensity = intensity;
