@@ -133,7 +133,7 @@ struct RenderSystem : public System<RenderSystem> {
 				}
 			}
 
-			//if (length < 20000.0f ) {
+			if (length < 20000.0f ) {
 				length = 5.0 + length / 100.0f;
 				Renderer::getRenderer().addMarker(enemyPos, color, length);
 			}

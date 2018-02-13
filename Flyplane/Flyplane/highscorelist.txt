@@ -6,6 +6,8 @@ korvish
 yolp
 4632
 yolp
+3822
+kkk
 3246
 hork
 3109
@@ -16,17 +18,3 @@ kjh
 bogdan
 1810
 dfs
-1705
-bogdan
-1526
-name
-1215
-hork
-1139
-bogdan
-917
-yolk
-858
-jjj
-411
-hhh
