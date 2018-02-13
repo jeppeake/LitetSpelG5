@@ -38,6 +38,8 @@ struct RenderSystem : public System<RenderSystem> {
 		ComponentHandle<Transform> transform;
 		glm::vec3 playerPos;
 		for (Entity entity : es.entities_with_components(player, transform)) {
+			radar.setPlayer(*transform.get());
+
 			playing = true;
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
@@ -79,14 +81,14 @@ struct RenderSystem : public System<RenderSystem> {
 			transform = entity.component<Transform>();
 			Renderer::getRenderer().addToList(model->mptr, *transform.get());
 
-			player = entity.component<PlayerComponent>();
+			/*player = entity.component<PlayerComponent>();
 			ComponentHandle<Projectile> projectile = entity.component<Projectile>();
 			if (player) {
 				radar.setPlayer(*transform.get());
 			}
 			else if (!projectile) {
 				radar.addPlane(*transform.get());
-			}
+			}*/
 		}
 
 		ComponentHandle<Terrain> terrain;
@@ -124,6 +126,8 @@ struct RenderSystem : public System<RenderSystem> {
 		ComponentHandle<AIComponent> ai;
 
 		for (Entity entity : es.entities_with_components(ai, transform)) {
+			radar.addPlane(*transform.get());
+
 			glm::vec3 enemyPos = entity.component<Transform>()->pos;
 			float length = glm::distance(enemyPos, playerPos);
 			glm::vec3 color = glm::vec3(1, 0, 0);

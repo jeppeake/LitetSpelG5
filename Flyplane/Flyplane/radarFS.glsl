@@ -15,5 +15,5 @@ void main() {
 
 	intensity = (360 - angle) / 360;*/
 
-	gl_FragColor = vec4(f_intensity * vec3(1, 0, 0), 1);
+	gl_FragColor = vec4(vec3(1, 0, 0), f_intensity);
 }
