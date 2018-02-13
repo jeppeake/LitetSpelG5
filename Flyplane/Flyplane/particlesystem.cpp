@@ -1,3 +1,4 @@
+#include <random>
 #include <iostream>
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
@@ -37,7 +38,7 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	glm::vec4 *v = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, (numParticles) * sizeof(glm::vec4), access);
 
-	//Buffer the initial positions
+	//Buffer the initial velocities
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
 		float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -48,13 +49,19 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 	///////////////////////////////////////////////
+
+	std::random_device rd;  
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(0.0, life);
+
+	///////////////////////////////////////////
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gLife);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	//Buffer the initial lives
 	GLfloat *l = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(GLfloat), access);
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		l[i] = rand() % (int)this->life + 1;
+		l[i] = dis(gen);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
