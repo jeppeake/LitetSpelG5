@@ -15,9 +15,11 @@ Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
 
+
+	std::cout << "\t\t[DEBUG] parsing mesh: '" << name << "'\n";
+
 	is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
-		//std::cout << name << " IS BOUNDING BOX\n";
 		//std::cout << mesh->mNumVertices << "\n";
 		is_bb = true;
 	}
@@ -143,6 +145,7 @@ void Model::load(const std::string & file)
 		return;
 	}
 
+	std::cout << "\t[DEBUG] loading meshes in model:\n";
 	loaded = true;
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
@@ -194,12 +197,12 @@ void Model::load(const std::string & file)
 	recursiveFlatten(root, glm::scale(glm::vec3(0.005)));
 
 	recursiveDeleteNodes(root);
-	/*
-	std::cout << file << ":\n";
-	std::cout << "\tnum meshes: " << meshes.size() << "\n";
-	std::cout << "\tnum meshes in hierarchy: " <<  model_meshes.size() << "\n";
-	std::cout << "\tbounding boxes: " << bounding_boxes.size() << "\n";
-	*/
+	
+	//std::cout << file << ":\n";
+	std::cout << "\t[DEBUG] meshes: " << meshes.size() << "\n";
+	std::cout << "\t[DEBUG] in hierarchy: " <<  model_meshes.size() << "\n";
+	std::cout << "\t[DEBUG] bounding boxes: " << bounding_boxes.size() << "\n";
+	
 
 	aiReleaseImport(scene);
 }
