@@ -1,8 +1,8 @@
 Spectre
 assets/Spectre/Spectre_BODY.fbx
-300
-600
 100
+175
+70
 2
 Spectre Green
 assets/Spectre/Spectre_TEX.png

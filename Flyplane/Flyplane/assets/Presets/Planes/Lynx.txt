@@ -1,9 +1,9 @@
 Lynx
 assets/Lynx/Lynx.fbx
-300
-600
 100
-4
+175
+70
+3
 Lynx
 assets/Lynx/Lynx_TEX.png
 -end textures-
