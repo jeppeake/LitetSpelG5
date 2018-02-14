@@ -156,7 +156,8 @@ void Renderer::RenderScene() {
 	shader.uniform("shadowMap", 1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
+	shader.uniform("ViewProjMatrix", viewProjMatrix);
 	shader.uniform("shadowMatrix", m * shadowMatrix);
 	shader.uniform("cameraPos", camera.getTransform().pos);
 	for (int i = 0; i < list.size(); i++) {
@@ -166,7 +167,7 @@ void Renderer::RenderScene() {
 	terrain_shader.use();
 	terrain_shader.uniform("shadowMatrix", m * shadowMatrix);
 	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
-	terrain_shader.uniform("ViewProjMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	terrain_shader.uniform("ViewProjMatrix", viewProjMatrix);
 
 	terrain_shader.uniform("shadowMap", 1);
 	glActiveTexture(GL_TEXTURE1);
@@ -188,32 +189,31 @@ void Renderer::RenderScene() {
 	enemyMarkerShader.use();
 	markers.bind();
 	std::vector<Marker> p = markers.getMarkers();
-	enemyMarkerShader.uniform("aspectMatrix", this->camera.getProjMatrix() * this->camera.getViewMatrix());
+	enemyMarkerShader.uniform("aspectMatrix", viewProjMatrix);
 	enemyMarkerShader.uniform("cameraPos", this->camera.getTransform().pos);
 	for (int i = 0; i < p.size(); i++) {
-		//enemeyMarkerShader.uniform("modelMatrix", glm::translate(p[i].pos) * glm::scale(glm::vec3(p[i].scale)));
 		enemyMarkerShader.uniform("transform", p[i].pos);
 		enemyMarkerShader.uniform("scale", p[i].scale);
 		enemyMarkerShader.uniform("color", p[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
-	//Render crosshair
-	glm::vec2 aspect = Window::getWindow().size();
-	float aspectRatio = aspect.x / aspect.y;
-	guiShader.use();
-	//guiShader.uniform("modelMatrix", crosshair.getMatrix());
-	glm::mat4 m = glm::ortho<float>(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, 0.01f, 2.0f);
-	//guiShader.uniform("aspectMatrix", m);
-	guiShader.uniform("matrix", m * crosshair.getMatrix());
-	guiShader.uniform("texSampler", 0);
-	crosshair.Bind();
-
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
 	markers.clear();
 	list.clear();
 	mapList.clear();
+}
+
+void Renderer::RenderCrosshair() {
+	guiShader.use();
+	glm::mat4 pos = camera.getProjMatrix() * camera.getViewMatrix() * crosshair.getMatrix();
+	guiShader.uniform("matrix", pos * glm::mat4(orientation) * glm::rotate(3.14f / 4, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(50, 50, 1)));
+	guiShader.uniform("texSampler", 0);
+	crosshair.Bind();
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 Camera Renderer::getCamera() &
@@ -255,6 +255,15 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::setCrosshairPos(glm::vec3 pos) {
+	crosshair.setMatrix(glm::translate(pos));
+}
+
+glm::mat4& Renderer::getCrosshairPos()
+{
+	return crosshair.getMatrix();
 }
 
 void Renderer::update(float dt)
