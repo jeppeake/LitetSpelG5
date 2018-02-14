@@ -56,7 +56,7 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					if (entity_ai.has_component<Equipment>()) {
 						entity_ai.component<Equipment>()->primary.at(0).shouldFire = com.fire_primary;
 						if (com.fire_primary) {
-							//std::cout << "FIRING!" << std::endl;
+							std::cout << "FIRING!" << std::endl;
 						}
 					}
 				}

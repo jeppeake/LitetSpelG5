@@ -8,7 +8,7 @@
 #include "transform.h"
 #include "collisioncomponent.h"
 #include "pointcomponent.h"
-
+#include "factioncomponents.h"
 #include <entityx/entityx.h>
 #include <map>
 
@@ -43,13 +43,7 @@ private:
 			{
 				if (a_boxes[i].intersect(b_trans->pos))
 				{
-					if (a.has_component<PointComponent>())
-						state->addPoints(a.component<PointComponent>().get()->points);
-					if (b.has_component<PointComponent>())
-						state->addPoints(b.component<PointComponent>().get()->points);
-
-					to_remove[a.id()] = a;
-					to_remove[b.id()] = b;
+					handleCollision(a, b);
 					return;
 				}
 			}
@@ -87,16 +81,38 @@ private:
 				{
 					if (a_boxes[i].intersect(b_boxes[j]))
 					{
-						if (a.has_component<PointComponent>())
-							state->addPoints(a.component<PointComponent>().get()->points);
-						if (b.has_component<PointComponent>())
-							state->addPoints(b.component<PointComponent>().get()->points);
-						to_remove[a.id()] = a;
-						to_remove[b.id()] = b;
+						handleCollision(a, b);
 						return;
 					}
 				}
 			}
+		}
+	}
+
+	void handleHealth(entityx::Entity a, entityx::Entity b) {
+		if (a.has_component<HealthComponent>()) {
+			auto health = a.component<HealthComponent>();
+
+			if (b.has_component<Projectile>()) {
+				health->health -= 10;
+				// remove the projectile
+				to_remove[b.id()] = b;
+			}
+		}
+	}
+
+	void handleCollision(entityx::Entity a, entityx::Entity b) {
+		handleHealth(a, b);
+		handleHealth(b, a);
+
+		if (a.has_component<PointComponent>())
+			state->addPoints(a.component<PointComponent>().get()->points);
+		if (b.has_component<PointComponent>())
+			state->addPoints(b.component<PointComponent>().get()->points);
+
+		if (a.has_component<FlightComponent>() && b.has_component<FlightComponent>()) {
+			to_remove[a.id()] = a;
+			to_remove[b.id()] = b;
 		}
 	}
 
@@ -144,14 +160,28 @@ public:
 		entityx::ComponentHandle<ModelComponent> model;
 		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
 		{
-			// Collision with other entitites 
-			for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent>())
-			{
-				if(!entity.has_component<PlayerComponent>() && !other.has_component<PlayerComponent>())
-					checkCollision(entity, other);
-			}
-			
 
+
+			// Collision with other entitites 
+			if (entity.has_component<Projectile>()) {
+				if (entity.has_component<FactionPlayer>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, AIComponent>()) {
+						checkCollision(entity, other);
+					}
+				} else if (entity.has_component<FactionEnemy>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, PlayerComponent>()) {
+						checkCollision(entity, other);
+					}
+				} else {
+					// ???
+				}
+			} else {
+				if (entity.has_component<FlightComponent>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FlightComponent>()) {
+						checkCollision(entity, other);
+					}
+				}
+			}
 			
 			if (!map) {
 				continue;
