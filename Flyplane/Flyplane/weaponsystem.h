@@ -21,6 +21,7 @@
 #include "targetcomponent.h"
 #include "window.h"
 #include "healthcomponent.h"
+#include "factioncomponents.h"
 
 using namespace entityx;
 
@@ -34,6 +35,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
 		projectile.assign<CollisionComponent>();
+		if (parentFaction == FACTION_PLAYER)
+			projectile.assign<FactionPlayer>();
+		else
+			projectile.assign<FactionEnemy>();
 		//projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
@@ -111,7 +116,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 			}
 			
-			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
+			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f && equip->special.size() > 0) {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
 				unsigned int count = 0;

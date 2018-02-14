@@ -154,7 +154,7 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 
 			length = 5.0 + length / 100.0f;
-			Renderer::getRenderer().addMarker(enemyPos, length);
+			Renderer::getRenderer().addMarker(enemyPos, color, length);
 		}
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));

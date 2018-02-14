@@ -47,6 +47,7 @@ private:
 						state->addPoints(a.component<PointComponent>().get()->points);
 					if (b.has_component<PointComponent>())
 						state->addPoints(b.component<PointComponent>().get()->points);
+
 					to_remove[a.id()] = a;
 					to_remove[b.id()] = b;
 					return;
@@ -192,6 +193,9 @@ public:
 
 		for (auto& e : to_remove)
 		{
+			if (e.second.has_component<AIComponent>()) {
+				std::cout << "COLLISION DEATH\n";
+			}
 			e.second.destroy();
 		}
 		to_remove = {};
