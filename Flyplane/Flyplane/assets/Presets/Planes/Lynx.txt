@@ -3,6 +3,7 @@ assets/Lynx/Lynx.fbx
 300
 600
 100
+0.5
 4
 Lynx
 assets/Lynx/Lynx_TEX.png

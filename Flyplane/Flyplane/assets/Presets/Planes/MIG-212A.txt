@@ -3,6 +3,7 @@ assets/MIG-212A.fbx
 300
 600
 100
+0.5
 2
 White
 assets/MIG-212A_UV.png

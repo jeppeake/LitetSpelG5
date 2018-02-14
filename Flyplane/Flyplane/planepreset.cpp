@@ -30,6 +30,10 @@ void PlanePreset::load(std::string presetname)
 	std::getline(file, str);
 	breakforce = std::stod(str, NULL);
 
+	//read breakforce
+	std::getline(file, str);
+	acceleration = std::stod(str, NULL);
+
 	//read turnrate
 	std::getline(file, str);
 	turnrate = std::stod(str, NULL);

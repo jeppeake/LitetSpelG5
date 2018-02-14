@@ -3,6 +3,7 @@ assets/Laken/Laken.fbx
 300
 600
 100
+0.5
 2
 Laken
 assets/Laken/Laken_TEX.png

@@ -3,6 +3,7 @@ model 		(string)
 normalspeed 	(double)
 boostspeed	(double)
 breakforce	(double)
+acceleration	(double)
 turnrate	(double)
 [skin textures]
 name

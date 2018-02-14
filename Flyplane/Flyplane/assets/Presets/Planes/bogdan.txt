@@ -3,6 +3,7 @@ assets/untitled.fbx
 300
 600
 100
+3
 2
 Spectre Green
 assets/Spectre/Spectre_TEX.png

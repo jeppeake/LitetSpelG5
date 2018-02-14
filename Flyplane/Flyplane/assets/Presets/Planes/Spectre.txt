@@ -3,6 +3,7 @@ assets/Spectre/Spectre_BODY.fbx
 300
 600
 100
+0.5
 2
 Spectre Green
 assets/Spectre/Spectre_TEX.png

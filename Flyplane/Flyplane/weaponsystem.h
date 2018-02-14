@@ -312,7 +312,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				if (damage < 0)
 					damage = 0;
 				health->health -= damage;
-				std::cout << "Did " << damage << " damage." << "\n";
+				std::cout << "Explosion did " << damage << " damage." << "\n";
 			}
 			entity_explosion.destroy();
 		}
