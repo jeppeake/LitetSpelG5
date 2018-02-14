@@ -10,6 +10,7 @@
 #include "pointcomponent.h"
 #include "factioncomponents.h"
 #include <entityx/entityx.h>
+#include "missilecomponent.h"
 #include <map>
 
 class CollisionSystem : public entityx::System<CollisionSystem>
@@ -93,8 +94,15 @@ private:
 		if (a.has_component<HealthComponent>()) {
 			auto health = a.component<HealthComponent>();
 
-			if (b.has_component<Projectile>()) {
-				health->health -= 10;
+			if (b.has_component<Missile>()) {
+				auto missile = b.component<Missile>().get();
+				missile->shouldExplode = true;
+			}
+
+			else if (b.has_component<Projectile>()) {
+				auto projectile = b.component<Projectile>().get();
+				health->health -= projectile->damage;
+				std::cout << "Did " << projectile->damage << " damage." << "\n";
 				// remove the projectile
 				to_remove[b.id()] = b;
 			}

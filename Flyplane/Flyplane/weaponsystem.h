@@ -287,14 +287,16 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
 				if (glm::length(u) < missile->detonateRange) {
-					std::cout << "Missile exploded at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					Entity explosion = es.create();
-					explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
-					explosion.assign<Transform>(trans->pos);
-					entity.destroy();
+					missile->shouldExplode = true;
 				}
 			}
-				
+			if (missile->shouldExplode) {
+				std::cout << "Missile exploded \n";
+				Entity explosion = es.create();
+				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
+				explosion.assign<Transform>(trans->pos);
+				entity.destroy();
+			}
 		}
 
 		//explosions
