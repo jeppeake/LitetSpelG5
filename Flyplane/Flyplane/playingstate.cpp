@@ -397,6 +397,7 @@ void PlayingState::init()
 
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
+	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
 }
 
 void PlayingState::update(double dt)

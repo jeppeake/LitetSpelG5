@@ -4,7 +4,7 @@
 #include "texture.h"
 #include "camera.h"
 #include "shader.h"
-
+#include <entityx/entityx.h>
 struct House {
 	House(glm::vec3 pos, unsigned int type) : pos(pos), type(type) {}
 	glm::vec3 pos;
@@ -29,7 +29,8 @@ private:
 	Texture textures[3];
 
 	unsigned int width, height;
-	int numPatchVerts;
+	int numPatchVerts = 7;
+	int maxLevels = 3;
 	
 	GLuint heightmapTex = 0;
 
@@ -37,7 +38,7 @@ private:
 	GLuint vbo = 0;
 	GLuint vao = 0;
 
-	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig, bool lookingDown);
+	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
@@ -50,6 +51,8 @@ public:
 	Heightmap();
 	Heightmap(const std::string &maptxt);
 	void loadMap(const std::string &maptxt);
+	void loadStructures();
+	void buildStructures(entityx::EntityManager &mgr);
 	void bind(ShaderProgram& program);
 	void unbind();
 	double heightAt(glm::vec3 pos);

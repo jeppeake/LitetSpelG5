@@ -11,16 +11,16 @@ private:
 	Texture texture;
 	GLuint vbo = 0;
 	GLuint vao = 0;
-	glm::mat4 modleMatrix = glm::translate(glm::vec3(0, -0.08, 0)) *  glm::rotate(3.14f / 4, glm::vec3(0, 0, 1));
+	glm::mat4 modelMatrix = glm::translate(glm::vec3(0, -0.08, 0));
 
-	float vertexdata[20] = { -0.02f, -0.02f, -0.9f, 0.f, 0.f,
-							  0.02f, -0.02f, -0.9f, 1.f, 0.f,
-							 -0.02f,  0.02f, -0.9f, 0.f, 1.f,
-							  0.02f,  0.02f, -0.9f, 1.f, 1.f };
+	float vertexdata[20] = { -1.0f, -1.0f, 0.0f, 0.f, 0.f,
+							  1.0f, -1.0f, 0.0f, 1.f, 0.f,
+							 -1.0f,  1.0f, 0.0f, 0.f, 1.f,
+							  1.0f,  1.0f, 0.0f, 1.f, 1.f };
 public:
 	CrossHair();
 	~CrossHair();
 	void Bind();
 	glm::mat4& getMatrix();
-	
+	void setMatrix(glm::mat4 matrix);
 };

@@ -36,7 +36,7 @@ bool Texture::loadTexture(const std::string& file, int format) {
 
 
 
-void Texture::bind(unsigned int slot) {
+void Texture::bind(unsigned int slot) const {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, id);
 }

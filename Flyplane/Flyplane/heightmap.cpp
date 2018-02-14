@@ -1,16 +1,19 @@
 #include "heightmap.h"
+#include "assetloader.h"
 #include "lodepng.h"
 #include <GL\glew.h>
 #include <glm\gtc\constants.hpp>
 #include <glm\gtx\intersect.hpp>
 #include <iostream>
 #include "model.h"
+#include "modelComponent.h"
+#include "collisioncomponent.h"
 #include "timer.h"
 #include "camera.h"
 #include <fstream>
 #include "shader.h"
 #include <stdlib.h>
-
+#include <entityx/entityx.h>
 int index(int x, int y, int width) {
 	return x + y * width;
 }
@@ -33,24 +36,25 @@ Heightmap::Heightmap(const std::string &maptxt) {
 }
 
 void Heightmap::loadMap(const std::string &maptxt) {
-	std::ifstream f(maptxt);
-
 	std::string heightmap;
 	std::string materialmap;
 	std::string mat1; 
 	std::string mat2;
 	std::string mat3;
 
-	std::getline(f, heightmap);
-	std::getline(f, materialmap);
-	std::getline(f, mat1);
-	std::getline(f, mat2);
-	std::getline(f, mat3);
+	std::ifstream f(maptxt);
 
+	f >> scale.x >> scale.y >> scale.z;
+	f >> numPatchVerts;
+	f >> maxLevels;
+	f >> heightmap;
+	f >> materialmap;
+	f >> mat1 >> mat2 >> mat3;
+
+	materialMap.loadTexture(materialmap);
 	textures[0].loadTexture(mat1);
 	textures[1].loadTexture(mat2);
 	textures[2].loadTexture(mat3);
-	materialMap.loadTexture(materialmap);
 
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, heightmap, LCT_RGBA, 16U);
@@ -89,10 +93,6 @@ void Heightmap::loadMap(const std::string &maptxt) {
 			*/
 		}
 	}
-
-
-	numPatchVerts = 63;
-	scale = 4.f*glm::vec3(3, 5, 3);
 
 	std::vector<glm::vec2> uvs;
 	for (int y = 0; y < numPatchVerts; y++) {
@@ -135,6 +135,30 @@ void Heightmap::loadMap(const std::string &maptxt) {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
 
 	glBindVertexArray(0);
+	this->loadStructures();
+}
+
+void Heightmap::loadStructures()
+{
+	std::string path = "assets/buildings/structuremap.txt";
+	std::ifstream infile(path);
+	unsigned x, y, type;
+	while (infile >> x >> y >> type)
+	{
+		double height = this->heightAt(glm::vec3(x,0.0,y));
+		houses.push_back(House(glm::vec3(x, height, y), type));
+	}
+}
+
+void Heightmap::buildStructures(entityx::EntityManager & mgr)
+{
+	for (auto &house : houses)
+	{
+		entityx::Entity ent = mgr.create();
+		ent.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+		ent.assign<CollisionComponent>();
+		ent.assign<Transform>(house.pos, glm::quat(1.0,0.0,0.0,0.0));
+	}
 }
 
 void Heightmap::bind(ShaderProgram& shader) {
@@ -208,13 +232,10 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 	std::vector<Patch> result;
 
 	auto inverse = camera.getInverse();
-	
+
 	glm::dvec3 origin = camera.getTransform().pos;
 
-	glm::vec3 dir = glm::toMat3(camera.getTransform().orientation) * glm::vec3(0, 0, 1);
-	bool lookingDown = dot(dir, glm::vec3(0, -1, 0)) > 0;
-
-	glm::dvec3 farPlane[4];
+	glm::dvec3 corners[4];
 	glm::dmat4 farPlane4;
 	farPlane4[0] = glm::dvec4(-1, -1, 1, 1);
 	farPlane4[1] = glm::dvec4(1, -1, 1, 1);
@@ -224,22 +245,38 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 		farPlane4[i] = inverse * farPlane4[i];
 		farPlane4[i] /= farPlane4[i].w;
 
-		farPlane[i] = origin + 10'000'000.0 * normalize(glm::dvec3(farPlane4[i]) - origin);
+		corners[i] = normalize(glm::dvec3(farPlane4[i]) - origin);
 	}
+
+	glm::dvec3 normals[4];
+	// bottom
+	normals[0] = cross(corners[1], corners[0]);
+	// left
+	normals[1] = cross(corners[3], corners[1]);
+	// top
+	normals[2] = cross(corners[2], corners[3]);
+	// right
+	normals[3] = cross(corners[0], corners[2]);
+
 
 	glm::vec2 offset(-(width / 2.f));
 	float patchSize = width; // / 2.f;
-	recursiveBuildPatches(result, patchSize, offset, 0, farPlane, origin, lookingDown);
+	recursiveBuildPatches(result, patchSize, offset, 0, normals, origin);
 
 	return result;
 }
 
 
-void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 farPlane[4], glm::dvec3 orig, bool lookingDown) {
+bool lineSegmentSAT(const glm::dvec3 &axis, const glm::dvec3& orig, const glm::dvec3& bottom, const glm::dvec3& top) {
+	float origDot = dot(axis, orig);
+	if (dot(axis, bottom) > origDot)
+		return true;
+	else
+		return dot(axis, top) > origDot;
+}
 
-	int maxLevels = 8;
 
-
+void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig) {
 	glm::vec2 pos(orig.x/scale.x, orig.z/scale.z);
 
 	// better read as "left divides" etc
@@ -247,7 +284,6 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 	bool divideRight = false;
 	bool divideTop = false;
 	bool divideBottom = false;
-
 
 	float neighbourSize = patchSize * 2.f;
 	float len = glm::root_two<float>() * neighbourSize*2.f;
@@ -287,66 +323,36 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 
 		if (level < maxLevels && is_close) {
 			// should divide
-			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, farPlane, orig, lookingDown);
+			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, normals, orig);
 		} else {
 
 			bool intersection = false;
 
-			
-			double leftMax = -std::numeric_limits<double>::max();
-			double topMax = -std::numeric_limits<double>::max();
-			double rightMax = -std::numeric_limits<double>::max();
-			double bottomMax = -std::numeric_limits<double>::max();
-
-			double leftMin = std::numeric_limits<double>::max();
-			double topMin = std::numeric_limits<double>::max();
-			double rightMin = std::numeric_limits<double>::max();
-			double bottomMin = std::numeric_limits<double>::max();
 			// check all corners of the patch
-			for (int iy = -1; iy <= 1; iy += 2) {
-				for (int ix = -1; ix <= 1; ix += 2) {
-					glm::dvec3 pos;
+			for (int iy = -1; iy <= 1 && !intersection; iy += 2) {
+				for (int ix = -1; ix <= 1 && !intersection; ix += 2) {
 
-					glm::dvec3 center3 = glm::dvec3(scale) * glm::dvec3(center.x + ix* double(patchSize)*0.5, 0, center.y + iy * double(patchSize)*0.5);
+					glm::vec3 centerBottom = glm::vec3(center.x, 0, center.y);
+					centerBottom += patchSize * 0.5f * glm::vec3(ix, 0, iy);
+					centerBottom = scale * centerBottom;
 
-					//left
-					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[1], farPlane[3], pos)) {
-						intersection = true;
-						leftMax = glm::max(pos.x, leftMax);
-						leftMin = glm::min(pos.x, leftMin);
-					}
-					
-					
-					//top
-					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[3], farPlane[2], pos)) {
-						intersection = true;
-						topMax = glm::max(pos.x, topMax);
-						topMin = glm::min(pos.x, topMin);
+					glm::vec3 centerTop = centerBottom;
+					centerTop.y = 255.f * scale.y;
+
+					bool cornerIntersection = true;
+					for (int j = 0; j < 4; j++) {
+						if (!lineSegmentSAT(normals[j], orig, centerBottom, centerTop)) {
+							cornerIntersection = false;
+							break;
+						}
 					}
 
-					//right
-					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[2], farPlane[0], pos)) {
+					if (cornerIntersection)
 						intersection = true;
-						rightMax = glm::max(pos.x, rightMax);
-						rightMin = glm::min(pos.x, rightMin);
-					}
-
-					//bottom
-					if (glm::intersectLineTriangle(center3, glm::dvec3(0, 1, 0), orig, farPlane[0], farPlane[1], pos)) {
-						intersection = true;
-						bottomMax = glm::max(pos.x, bottomMax);
-						bottomMin = glm::min(pos.x, bottomMin);
-					}
 				}
 			}
 
-			bool cornerAbove = leftMax > 0 || topMax > 0 || rightMax > 0 || bottomMax > 0;
-
-			double maxHeight = 255.0*double(scale.y);
-			bool cornerBelow = leftMin < maxHeight || topMin < maxHeight || rightMin < maxHeight || bottomMin < maxHeight || lookingDown;
-
-
-			if (intersection && cornerAbove && cornerBelow)
+			if (intersection)
 				patches.emplace_back(patchSize, new_offset, indices);
 		}
 	}
