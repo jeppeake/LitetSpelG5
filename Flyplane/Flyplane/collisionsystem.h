@@ -190,6 +190,9 @@ public:
 
 		for (auto& e : to_remove)
 		{
+			if (e.second.has_component<AIComponent>()) {
+				std::cout << "COLLISION DEATH\n";
+			}
 			e.second.destroy();
 		}
 		to_remove = {};

@@ -64,7 +64,7 @@ void Radar::draw(float dt) {
 	//glm::mat4 viewMatrix = glm::lookAt(player.pos, player.pos - glm::vec3(0, 1, 0), glm::vec3(0,0,1)/*direction*/);
 	//glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1));
 	shader.uniform("matrix", glm::rotate(glm::mat4(1), glm::radians(directionAngle), glm::vec3(0, 0, 1)));
-	std::cout << directionAngle << std::endl;
+	//std::cout << directionAngle << std::endl;
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
