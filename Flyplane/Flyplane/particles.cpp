@@ -146,7 +146,7 @@ void Particles::update(ComputeShader& compute)
 
 void Particles::render()
 {
-	float size = 0.2f;
+	float size = 0.1f;
 
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();
@@ -156,7 +156,7 @@ void Particles::render()
 	program->uniform("projection", camera.getProjMatrix());
 	program->uniform("cPos", transform.pos);
 	program->uniform("cUp", transform.orientation * glm::vec3(0.0, 1.0, 0.0));
-	program->uniform("particleSize", size);
+	program->uniform("particleSize", 0.1f);
 	glDrawArrays(GL_POINTS, 0, numParticles);
 	glBindVertexArray(0);
 }

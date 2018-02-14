@@ -33,8 +33,10 @@ void main()
 	}
 	else
 	{
-		Velocities[gid].xyz -= 0.1*Velocities[gid].xyz * dt;
+		Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
+
+		Colors[gid].a = pow(1-Lives[gid] / life, 4);
 
 		//Positions[gid].xyz = spawn + direction * Lives[gid];
 	}
@@ -45,10 +47,10 @@ void main()
 		Positions[gid].xyz = spawn + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
 
 		vec3 vel;
-		vel.x = rand(float(gid));
-		vel.y = rand(float(gid + 1000));
-		vel.z = rand(float(gid + 2000));
-		Velocities[gid].xyz = 5 * direction + 3 * vel;
+		vel.x = rand(float(gid + dt*10));
+		vel.y = rand(float(gid + 1000 + dt*10));
+		vel.z = rand(float(gid + 2000 + dt*10));
+		Velocities[gid].xyz = 5 * direction + 3 * normalize(vel);
 	}
 }
 

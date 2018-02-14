@@ -22,6 +22,7 @@
 #include "window.h"
 #include "healthcomponent.h"
 #include "factioncomponents.h"
+#include "particlecomponent.h"
 
 using namespace entityx;
 
@@ -51,6 +52,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
+		missile.assign<ParticleComponent>();
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
