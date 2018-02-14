@@ -53,7 +53,7 @@ void Radar::draw(float dt) {
 
 	glm::mat4 rotation = glm::rotate(glm::radians(playerAngle), glm::vec3(0, 0, 1));
 
-	Renderer::getRenderer().renderTexture(image, glm::mat4(1));
+	Renderer::getRenderer().renderTexture(image, rotation);
 	Renderer::getRenderer().renderTexture(radarRay, glm::translate(glm::vec3(0, 0, -0.1)) * rotation * glm::rotate(glm::radians((float)angle), glm::vec3(0, 0, -1)));
 
 	//glm::mat4 view = glm::lookAt(glm::vec3(0), glm::vec3(0, 1, 0), direction);
