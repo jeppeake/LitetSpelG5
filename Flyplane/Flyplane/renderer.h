@@ -11,6 +11,7 @@
 #include "particlesystem.h"
 #include "crosshair.h"
 #include "enemymarker.h"
+#include "cloud.h"
 
 struct RenderObject {
 	Model* model;
@@ -36,6 +37,7 @@ private:
 	glm::mat4 m;
 	CrossHair crosshair;
 	EnemyMarker markers;
+	Cloud clouds;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;

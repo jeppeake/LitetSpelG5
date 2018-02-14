@@ -393,6 +393,9 @@
     <ClInclude Include="factioncomponents.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
+    <ClInclude Include="cloud.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">

@@ -184,7 +184,10 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
 		}
 	}
-
+	//Render clouds
+	for (int i = 0; i < clouds.transform.size(); i++) {
+		renderTexture(clouds.texture, viewProjMatrix * clouds.transform[i]);
+	}
 
 	//Render markers
 	enemyMarkerShader.use();
@@ -198,6 +201,7 @@ void Renderer::RenderScene() {
 		enemyMarkerShader.uniform("color", p[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
+
 
 	markers.clear();
 	list.clear();
