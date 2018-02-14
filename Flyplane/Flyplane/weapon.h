@@ -6,10 +6,11 @@
 struct WeaponStats {
 	//projectile model, sound, range?, ammo, speed, 
 	WeaponStats(unsigned int ammo, unsigned int lifetime, float speed, float mass, float cooldown, bool infAmmo) : ammo(ammo), lifetime(lifetime), speed(speed), mass(mass), cooldown(cooldown), infAmmo(infAmmo) {}
+	WeaponStats(unsigned int ammo, unsigned int lifetime, float speed, float mass, float cooldown, bool infAmmo, double damage) : ammo(ammo), lifetime(lifetime), speed(speed), mass(mass), cooldown(cooldown), infAmmo(infAmmo), damage(damage) {}
 	WeaponStats(unsigned int ammo, unsigned int lifetime, float speed, float mass, float cooldown, bool infAmmo, float turnRate, float detonateRange, float explodeRadius, float damage) : ammo(ammo), lifetime(lifetime), speed(speed), mass(mass), cooldown(cooldown), infAmmo(infAmmo), turnRate(turnRate),
 	detonateRange(detonateRange), explodeRadius(explodeRadius), damage(damage) {}
 	unsigned int ammo, lifetime;
-	float speed, mass, cooldown, damage;
+	float speed, mass, cooldown, damage = 10;
 	float turnRate, detonateRange, explodeRadius; //missile stuff
 	bool infAmmo;
 };
