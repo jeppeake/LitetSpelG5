@@ -39,5 +39,9 @@ void CrossHair::Bind() {
 }
 
 glm::mat4 & CrossHair::getMatrix() {
-	return modleMatrix;
+	return modelMatrix;
+}
+
+void CrossHair::setMatrix(glm::mat4 matrix) {
+	modelMatrix = matrix;// *glm::rotate(3.14f / 4, glm::vec3(0, 0, 1));
 }

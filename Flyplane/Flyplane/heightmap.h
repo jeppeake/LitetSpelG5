@@ -29,7 +29,8 @@ private:
 	Texture textures[3];
 
 	unsigned int width, height;
-	int numPatchVerts;
+	int numPatchVerts = 7;
+	int maxLevels = 3;
 	
 	GLuint heightmapTex = 0;
 

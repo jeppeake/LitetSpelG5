@@ -43,7 +43,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
-		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate);
+		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.explodeDamage);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
 	}
@@ -281,20 +281,12 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
-				if (glm::length(u) < 20.0) {
+				if (glm::length(u) < missile->detonateRange) {
 					std::cout << "Missile exploded at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
 					Entity explosion = es.create();
-					explosion.assign<ExplosionComponent>(200, 30);
+					explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
 					explosion.assign<Transform>(trans->pos);
 					entity.destroy();
-					/*if (!noTarget) {
-
-						if (cure.valid()) {
-
-							cure.component<HealthComponent>().get()->health -= 50;
-						}
-						entity.destroy();
-					}*/
 				}
 			}
 				
