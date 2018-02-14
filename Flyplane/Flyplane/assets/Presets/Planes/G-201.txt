@@ -1,0 +1,15 @@
+G-201
+assets/G-201/G-201.fbx
+75
+150
+50
+2
+Brown/gray
+assets/G-201/G-201_TEX.png
+-end textures-
+-1.55
+-0.1
+-0.4
+1.55
+-0.1
+-0.4

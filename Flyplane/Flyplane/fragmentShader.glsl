@@ -33,8 +33,8 @@ void main() {
 	diffuse = clamp(diffuse, 0, 1);
 	
 	vec3 look = normalize(cameraPos - Pos);
-	vec3 half = normalize(look + sun);
-	float specular = pow(clamp(dot(n, half), 0.0, 1.0), 100.0);
+	vec3 h = normalize(look + sun);
+	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 100.0);
 
 	vec3 lighting;
 	lighting += color * diffuse * visibility * 0.7;

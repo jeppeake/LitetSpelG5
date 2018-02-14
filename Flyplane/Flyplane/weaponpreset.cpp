@@ -65,4 +65,11 @@ void WeaponPreset::load(std::string presetname)
 	extraOffset.y = std::stod(str, NULL);
 	std::getline(f, str);
 	extraOffset.z = std::stod(str, NULL);
+
+	std::getline(f, str);
+	detonateRange = std::stod(str, NULL);
+	std::getline(f, str);
+	explodeRadius = std::stod(str, NULL);
+	std::getline(f, str);
+	damage = std::stod(str, NULL);
 }

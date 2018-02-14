@@ -1,3 +1,6 @@
+20 40 20
+31
+8
 assets/Terrain/braheightmap.png
 assets/Terrain/bratextur.png
 assets/Textures/bog.png

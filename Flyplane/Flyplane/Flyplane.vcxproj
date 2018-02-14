@@ -194,6 +194,7 @@
     <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
+    <ClInclude Include="factioncomponents.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />
     <ClInclude Include="fly_up.h" />

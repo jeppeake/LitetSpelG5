@@ -30,13 +30,16 @@ struct RenderSystem : public System<RenderSystem> {
 	ParticleSystem *S;
 	RenderSystem()
 	{
-		S = new ParticleSystem(1000, 0.1, 0.5, glm::vec3(1.0, 0.0, 0.0));
+		S = new ParticleSystem(1000, 7, 0.1, glm::vec3(0.7));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
 		glm::vec3 playerPos;
+		glm::vec3 playerDir;
+		glm::vec3 playerUp;
+		glm::quat playerOrientation;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
 
@@ -44,6 +47,9 @@ struct RenderSystem : public System<RenderSystem> {
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
 			playerPos = transform->pos;
+			playerOrientation = transform.get()->orientation;
+			playerDir = glm::mat3(playerOrientation) * glm::vec3(0, 0, 1);
+			playerUp = glm::mat3(playerOrientation) * glm::vec3(0, 1, 0);
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 
 			Transform cam = *transform.get();
@@ -76,7 +82,13 @@ struct RenderSystem : public System<RenderSystem> {
 			
 			Renderer::getRenderer().setCamera(c);
 			
-			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -2.5), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
+
+
+			glm::vec3 particleDir;
+			if (physics)
+				if (length(physics->velocity) > 0.0001)
+					particleDir = glm::normalize(physics->velocity);
+			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -2.5) - 3.f*particleDir, -particleDir);
 		}
 
 		ComponentHandle<ModelComponent> model;
@@ -141,15 +153,19 @@ struct RenderSystem : public System<RenderSystem> {
 				}
 			}
 
-			if (length < 20000.0f ) {
-				length = 5.0 + length / 100.0f;
-				Renderer::getRenderer().addMarker(enemyPos, color, length);
-			}
+			length = 5.0 + length / 100.0f;
+			Renderer::getRenderer().addMarker(enemyPos, color, length);
 		}
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		S->render();
-		if(playing)
+		if (playing) {
+			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
+			Renderer::getRenderer().setCrosshairPos(newPos);
+			Renderer::getRenderer().orientation = playerOrientation;
 			radar.draw((float)dt);
+			Renderer::getRenderer().RenderCrosshair();
+		}
+			
 	}
 };
