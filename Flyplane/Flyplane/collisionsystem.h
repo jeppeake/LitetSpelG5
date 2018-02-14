@@ -143,14 +143,17 @@ public:
 		entityx::ComponentHandle<ModelComponent> model;
 		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
 		{
-			// Collision with other entitites 
-			for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent>())
-			{
-				if(!entity.has_component<PlayerComponent>() && !other.has_component<PlayerComponent>())
-					checkCollision(entity, other);
-			}
-			
 
+
+			// Collision with other entitites 
+			if (entity.has_component<Projectile>()) {
+				
+			}
+			for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent>()) {
+				checkCollision(entity, other);
+			}
+
+			
 			
 			if (!map) {
 				continue;
