@@ -12,7 +12,7 @@ public:
 	unsigned int ammo, lifetime;
 	double speed, mass, cooldown, turnRate, scale, projScale;
 	bool infAmmo, isMissile, dissappear;
-	double detonateRange, explodeRadius, explodeDamage;
+	double detonateRange, explodeRadius, damage;
 	glm::vec3 extraOffset = glm::vec3(0,0,0);
 	WeaponPreset() {}
 	~WeaponPreset() {}
