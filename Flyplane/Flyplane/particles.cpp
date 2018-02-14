@@ -3,8 +3,9 @@
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
 #include <ctime>
-#include "particlesystem.h"
+#include "particles.h"
 #include "renderer.h"
+
 GLint createShader(const char *c)
 {
 	const GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
@@ -48,28 +49,16 @@ GLint createShader(const char *c)
 		return 0;
 	}
 }
-ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::vec3 color, std::string path)
+Particles::Particles(unsigned particles)
 {
 	srand(time(NULL));
 	numParticles = particles;
-	this->life = life;
-	this->size = size;
 	glGenBuffers(1, &gPos);
 	glGenBuffers(1, &gColor);
 	glGenBuffers(1, &gLife);
 	glGenBuffers(1, &gVel);
 	glGenVertexArrays(1, &VAO);
-	{
-		if (path.empty())
-		{
-			path = "partCompute.glsl";
-		}
-		std::ifstream file(path);
-		std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-		const char *code = c.c_str();
-		cs = createShader(code);
-	}
-	program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
+
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gPos);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	GLint access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
@@ -85,15 +74,18 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	glm::vec4 *v = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, (numParticles) * sizeof(glm::vec4), access);
 
+	/*
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dis(0.0, life);
 	std::uniform_real_distribution<float> dis2(0.0, 2);
+	*/
 
 	//Buffer the initial velocities
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		v[i] = glm::vec4(dis2(gen), dis2(gen), dis2(gen),1.0);
+		//v[i] = glm::vec4(dis2(gen), dis2(gen), dis2(gen),1.0);
+		v[i] = glm::vec4();
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -109,7 +101,8 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		l[i] = dis(gen);
+		//l[i] = dis(gen);
+		l[i] = 0;
 	}
 
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -120,7 +113,8 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glm::vec4 *c = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(glm::vec4), access);
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		c[i] = glm::vec4(color, 1.0);
+		//c[i] = glm::vec4(color, 1.0);
+		c[i] = glm::vec4();
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -136,38 +130,33 @@ ParticleSystem::ParticleSystem(unsigned particles, float life, float size, glm::
 	glBindVertexArray(0);
 }
 
-void ParticleSystem::update(float dt, glm::vec3 pos, glm::vec3 direction)
+void Particles::update(ComputeShader& compute)
 {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, gPos);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, gVel);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, gLife);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, gColor);
 
-	//Set the compute-shader
-	glUseProgram(cs);
-	//Set the uniforms
-	glProgramUniform3fv(cs, glGetUniformLocation(cs, "spawn"), 1, glm::value_ptr(pos));
-	glProgramUniform3fv(cs, glGetUniformLocation(cs, "direction"), 1, glm::value_ptr(direction));
-	glProgramUniform1fv(cs, glGetUniformLocation(cs, "life"), 1, &life);
-	glProgramUniform1fv(cs, glGetUniformLocation(cs, "dt"), 1, &dt);
 	//Dispatch
-	glDispatchCompute((numParticles / 1000) + 1, 1, 1);
+	glDispatchCompute((numParticles / 128) + 1, 1, 1);
 	glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	glUseProgram(0);
 }
 
-void ParticleSystem::render()
+void Particles::render()
 {
+	float size = 1.f;
+
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();
-	program.use();
+	program->use();
 	glBindVertexArray(VAO);
-	program.uniform("view", camera.getViewMatrix());
-	program.uniform("projection", camera.getProjMatrix());
-	program.uniform("cPos", transform.pos);
-	program.uniform("cUp", glm::toMat3(transform.orientation) * glm::vec3(0.0, 1.0, 0.0));
-	program.uniform("particleSize", size);
+	program->uniform("view", camera.getViewMatrix());
+	program->uniform("projection", camera.getProjMatrix());
+	program->uniform("cPos", transform.pos);
+	program->uniform("cUp", transform.orientation * glm::vec3(0.0, 1.0, 0.0));
+	program->uniform("particleSize", size);
 	glDrawArrays(GL_POINTS, 0, numParticles);
 	glBindVertexArray(0);
 }

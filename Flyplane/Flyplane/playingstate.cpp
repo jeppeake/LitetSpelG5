@@ -15,6 +15,7 @@
 #include "collisionsystem.h"
 #include "soundsystem.h"
 #include "gameoversystem.h"
+#include "particlesystem.h"
 
 #include "aicomponent.h"
 #include "aisystem.h"
@@ -74,6 +75,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
+		entity.assign<ParticleComponent>();
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -159,7 +161,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<SoundComponent>(*flyingSB);
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
-
+	entity_p.assign<ParticleComponent>();
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -263,6 +265,7 @@ void PlayingState::init()
 	ex.systems.add<SoundSystem>();
 	ex.systems.add<HealthSystem>();
 	ex.systems.add<GameOver>(this);
+	ex.systems.add<ParticleSystem>();
 	ex.systems.configure();
 
 	/*
@@ -400,6 +403,7 @@ void PlayingState::init()
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
+
 }
 
 void PlayingState::update(double dt)
@@ -471,14 +475,16 @@ void PlayingState::update(double dt)
 		Window::getWindow().showCursor(false);
 		ex.systems.update<PlayerSystem>(dt);
 		ex.systems.update<AISystem>(dt);
-		
+
 		ex.systems.update<FlightSystem>(dt);
 		ex.systems.update<PhysicsSystem>(dt);
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
+		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		ex.systems.update<WeaponSystem>(dt);
+
 	}
 	else {
 		ex.systems.update<RenderSystem>(dt);

@@ -15,9 +15,10 @@
 #include "projectilecomponent.h"
 #include "equipment.h"
 #include "physics.h"
-#include "particlesystem.h"
+#include "particles.h"
 #include "radar.h"
 #include "aicomponent.h"
+#include "particlecomponent.h"
 
 using namespace entityx;
 
@@ -27,11 +28,8 @@ struct RenderSystem : public System<RenderSystem> {
 	Camera cullingCamera;
 	Radar radar;
 
-	ParticleSystem *S;
 	RenderSystem()
-	{
-		S = new ParticleSystem(1000, 7, 0.1, glm::vec3(0.7));
-	}
+	{}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
@@ -79,16 +77,7 @@ struct RenderSystem : public System<RenderSystem> {
 				c.setTransform(Transform(glm::vec3(24000, 20000, 24000), glm::quat(0, 0, -0.707, 0.707)));
 			}
 
-			
 			Renderer::getRenderer().setCamera(c);
-			
-
-
-			glm::vec3 particleDir;
-			if (physics)
-				if (length(physics->velocity) > 0.0001)
-					particleDir = glm::normalize(physics->velocity);
-			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -2.5) - 3.f*particleDir, -particleDir);
 		}
 
 		ComponentHandle<ModelComponent> model;
@@ -158,7 +147,13 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
-		S->render();
+
+
+		ComponentHandle<ParticleComponent> particles;
+		for (Entity e : es.entities_with_components(particles)) {
+			particles->system->render();
+		}
+
 		if (playing) {
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			Renderer::getRenderer().setCrosshairPos(newPos);

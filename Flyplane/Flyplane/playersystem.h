@@ -13,11 +13,11 @@
 #include "flightcomponent.h"
 
 #include "input.h "
-#include "particlesystem.h"
+#include "particles.h"
 using namespace entityx;
 
 struct PlayerSystem : public System<PlayerSystem> {
-	ParticleSystem *S;
+	Particles *S;
 	PlayerSystem();
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override;
 

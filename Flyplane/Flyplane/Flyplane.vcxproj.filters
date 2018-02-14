@@ -9,9 +9,6 @@
     <ClCompile Include="flightsystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="particlesystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="playersystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -111,6 +108,9 @@
     <ClCompile Include="computeShader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="particles.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -187,9 +187,6 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="flightsystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="particlesystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="physicssystem.h">
@@ -402,21 +399,21 @@
     <ClInclude Include="computeShader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="particlecomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="particles.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="particlesystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="geometryShader.glsl">
-      <Filter>Graphics\Shaders</Filter>
-    </None>
-    <None Include="partCompute.glsl">
-      <Filter>Graphics\Shaders</Filter>
-    </None>
-    <None Include="partFrag.glsl">
-      <Filter>Graphics\Shaders</Filter>
-    </None>
-    <None Include="partVert.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="shadowFragmentShader.glsl">
@@ -438,9 +435,6 @@
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="vertexShader.glsl">
-      <Filter>Graphics\Shaders</Filter>
-    </None>
-    <None Include="partGeom.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="fcimageFrag.glsl">
@@ -469,6 +463,21 @@
     </None>
     <None Include="enemymarkerGS.glsl">
       <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="partFrag.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="partGeom.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="particlereset.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="particletrail.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="partVert.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -507,6 +516,9 @@
     </Filter>
     <Filter Include="UTILS">
       <UniqueIdentifier>{0fa4f499-87e1-41dc-a232-1820224d0e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shaders\particles">
+      <UniqueIdentifier>{cdc6dbc7-8244-4b83-a334-9cbed9cfe506}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #include "computeShader.h"
-bool computeShader::create(const std::string & path)
+bool ComputeShader::create(const std::string & path)
 {
 	std::ifstream file(path);
 	std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -46,7 +46,7 @@ bool computeShader::create(const std::string & path)
 		return false;
 	}
 }
-GLuint computeShader::findUniformLocation(const std::string & name)
+GLuint ComputeShader::findUniformLocation(const std::string & name)
 {
 	auto it = uniform_locations.find(name);
 	GLuint uniform_location;
@@ -62,63 +62,60 @@ GLuint computeShader::findUniformLocation(const std::string & name)
 		uniform_location = it->second;
 	return uniform_location;
 }
-void computeShader::use()
+void ComputeShader::use()
 {
 	glUseProgram(program);
 }
-void computeShader::uniformv(const std::string & name, GLuint count, const glm::mat4* matrices)
+void ComputeShader::uniformv(const std::string & name, GLuint count, const glm::mat4* matrices)
 {
 	glUniformMatrix4fv(findUniformLocation(name), count, GL_FALSE, (GLfloat*)matrices);
 }
-void computeShader::uniform(const std::string & name, const glm::mat4& matrix)
+void ComputeShader::uniform(const std::string & name, const glm::mat4& matrix)
 {
 	uniformv(name, 1, &matrix);
 }
 
-
-void computeShader::uniformv(const std::string & name, GLuint count, const GLfloat* values)
+void ComputeShader::uniformv(const std::string & name, GLuint count, const GLfloat* values)
 {
 	glUniform1fv(findUniformLocation(name), count, (GLfloat*)values);
 }
-void computeShader::uniform(const std::string & name, GLfloat value)
+void ComputeShader::uniform(const std::string & name, GLfloat value)
 {
 	uniformv(name, 1, &value);
 }
 
-
-void computeShader::uniformv(const std::string & name, GLuint count, const glm::vec2* vectors)
+void ComputeShader::uniformv(const std::string & name, GLuint count, const glm::vec2* vectors)
 {
 	glUniform2fv(findUniformLocation(name), count, (GLfloat*)vectors);
 }
-void computeShader::uniform(const std::string & name, const glm::vec2& vector)
+void ComputeShader::uniform(const std::string & name, const glm::vec2& vector)
 {
 	uniformv(name, 1, &vector);
 }
 
-
-void computeShader::uniformv(const std::string & name, GLuint count, const glm::vec3* vectors)
+void ComputeShader::uniformv(const std::string & name, GLuint count, const glm::vec3* vectors)
 {
 	glUniform3fv(findUniformLocation(name), count, (GLfloat*)vectors);
 }
-void computeShader::uniform(const std::string & name, const glm::vec3& vector)
+void ComputeShader::uniform(const std::string & name, const glm::vec3& vector)
 {
 	uniformv(name, 1, &vector);
 }
 
-void computeShader::uniformv(const std::string & name, GLuint count, const glm::vec4* vectors)
+void ComputeShader::uniformv(const std::string & name, GLuint count, const glm::vec4* vectors)
 {
 	glUniform4fv(findUniformLocation(name), count, (GLfloat*)vectors);
 }
-void computeShader::uniform(const std::string & name, const glm::vec4& vector)
+void ComputeShader::uniform(const std::string & name, const glm::vec4& vector)
 {
 	uniformv(name, 1, &vector);
 }
 
-void computeShader::uniformv(const std::string & name, GLuint count, const GLint* values)
+void ComputeShader::uniformv(const std::string & name, GLuint count, const GLint* values)
 {
 	glUniform1iv(findUniformLocation(name), count, values);
 }
-void computeShader::uniform(const std::string & name, GLint value)
+void ComputeShader::uniform(const std::string & name, GLint value)
 {
 	uniformv(name, 1, &value);
 }

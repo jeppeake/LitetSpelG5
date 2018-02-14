@@ -154,7 +154,7 @@
     <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
     <ClCompile Include="computeShader.cpp" />
-    <ClCompile Include="particlesystem.cpp" />
+    <ClCompile Include="particles.cpp" />
     <ClCompile Include="planepreset.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
@@ -229,9 +229,11 @@
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="namestate.h" />
     <ClInclude Include="computeShader.h" />
-    <ClInclude Include="particlesystem.h" />
+    <ClInclude Include="particlecomponent.h" />
+    <ClInclude Include="particles.h" />
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />
+    <ClInclude Include="particlesystem.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="pickweaponaction.h" />
     <ClInclude Include="planepreset.h" />
@@ -278,6 +280,7 @@
     <None Include="guiVertexShader.glsl" />
     <None Include="partFrag.glsl" />
     <None Include="partGeom.glsl" />
+    <None Include="particlereset.glsl" />
     <None Include="partVert.glsl" />
     <None Include="radarFS.glsl" />
     <None Include="radarVS.glsl" />
@@ -285,7 +288,7 @@
     <None Include="shadowVertexShader.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
-    <None Include="partCompute.glsl" />
+    <None Include="particletrail.glsl" />
     <None Include="textFrag.glsl" />
     <None Include="textVert.glsl" />
     <None Include="vertexShader.glsl" />

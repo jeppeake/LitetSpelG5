@@ -6,7 +6,7 @@
 #include "physics.h"
 #include "input.h"
 #include <iostream>
-#include "particlesystem.h"
+#include "particles.h"
 
 using namespace entityx;
 

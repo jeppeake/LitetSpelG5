@@ -8,7 +8,7 @@
 #include "heightmap.h"
 #include "transform.h"
 #include "text.hpp"
-#include "particlesystem.h"
+#include "particles.h"
 #include "crosshair.h"
 #include "enemymarker.h"
 #include "cloud.h"

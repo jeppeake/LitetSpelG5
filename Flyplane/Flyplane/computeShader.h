@@ -6,7 +6,7 @@
 #include <fstream>
 #include <map>
 #include <glm/glm.hpp>
-class computeShader
+class ComputeShader
 {
 private:
 	GLuint program;

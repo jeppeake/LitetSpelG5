@@ -19,7 +19,7 @@ uniform float dt;
 uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
-layout(local_size_x = 1000, local_size_y = 1, local_size_z = 1) in;
+layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 float rand(float n);
 
@@ -32,7 +32,6 @@ void main()
 	}
 	else
 	{
-
 		Velocities[gid].xyz -= 0.1*Velocities[gid].xyz * dt;
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
