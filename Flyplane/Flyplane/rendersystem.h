@@ -30,7 +30,7 @@ struct RenderSystem : public System<RenderSystem> {
 	ParticleSystem *S;
 	RenderSystem()
 	{
-		S = new ParticleSystem(1000, 0.1, 0.5, glm::vec3(1.0, 0.0, 0.0));
+		S = new ParticleSystem(1000, 7, 0.1, glm::vec3(0.7));
 	}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		bool playing = false;
@@ -82,7 +82,13 @@ struct RenderSystem : public System<RenderSystem> {
 			
 			Renderer::getRenderer().setCamera(c);
 			
-			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -2.5), glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -1.0));
+
+
+			glm::vec3 particleDir;
+			if (physics)
+				if (length(physics->velocity) > 0.0001)
+					particleDir = glm::normalize(physics->velocity);
+			S->update(dt, transform->pos + glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, -2.5) - 3.f*particleDir, -particleDir);
 		}
 
 		ComponentHandle<ModelComponent> model;

@@ -14,6 +14,8 @@ uniform sampler2D material2;
 uniform sampler2D material3;
 uniform vec2 heightmapSize;
 
+uniform vec3 cameraPos;
+
 float noise(vec2 pos);
 
 float detail(vec2 pos) {
@@ -90,7 +92,14 @@ void main() {
 	float result = dot(sun, n);
 	result = clamp(result, 0, 1);
 
-	gl_FragColor = vec4(color * result * visibility * 0.7 + color * 0.3, 1);
+	//gl_FragColor = vec4(color * result * visibility * 0.7 + color * 0.3, 1);
+
+	float dist = length(cameraPos - vPos);
+	float fog = pow(clamp(dist/48000.0, 0.0, 1.0), 1.5);
+	vec3 fogColor = 0.95*vec3(100.0/255,149.0/255,234.0/255);
+
+	color = mix(color, vec3(fogColor), fog);
+
 	gl_FragColor = vec4(color, 1.0);
 	//gl_FragColor = vec4(vMaterials, 1.0);
 }

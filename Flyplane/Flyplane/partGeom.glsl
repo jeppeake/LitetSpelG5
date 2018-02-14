@@ -21,6 +21,9 @@ void main()
 	vec3 right = -cross(cUp, look);
 	vec3 up = -cross(look, right);
 	
+	right *= pow(max(length(cPos - pos), 1.0), 0.3);
+	up *= pow(max(length(cPos - pos), 1.0), 0.3);
+
 	fragCol = passCol[0];
 	vec3 vert1 = pos - (right + up) * particleSize;
 	gl_Position = projection * view * vec4(vert1, 1.0);
