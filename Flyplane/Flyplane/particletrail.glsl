@@ -50,7 +50,7 @@ void main()
 		vel.x = rand(float(gid + dt*10));
 		vel.y = rand(float(gid + 1000 + dt*10));
 		vel.z = rand(float(gid + 2000 + dt*10));
-		Velocities[gid].xyz = 5 * direction + 3 * normalize(vel);
+		Velocities[gid].xyz = 20 * direction + 3 * normalize(vel);
 	}
 }
 

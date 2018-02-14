@@ -259,8 +259,10 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 	normals[3] = cross(corners[0], corners[2]);
 
 
-	glm::vec2 offset(-(width / 2.f));
-	float patchSize = width; // / 2.f;
+	//glm::vec2 offset(-(width / 2.f));
+	//float patchSize = width; // / 2.f;
+	glm::vec2 offset(0);
+	float patchSize = width / 2.f;
 	recursiveBuildPatches(result, patchSize, offset, 0, normals, origin);
 
 	return result;
