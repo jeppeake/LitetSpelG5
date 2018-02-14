@@ -29,6 +29,7 @@ void main()
 	if(Positions[gid].xyz == vec3(0))
 	{
 		Positions[gid].xyz = spawn;
+		Lives[gid] = life * (rand(float(gid)) + 1)/2;
 	}
 	else
 	{

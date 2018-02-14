@@ -146,7 +146,7 @@ void Particles::update(ComputeShader& compute)
 
 void Particles::render()
 {
-	float size = 1.f;
+	float size = 0.2f;
 
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();

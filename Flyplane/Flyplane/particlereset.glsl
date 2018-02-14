@@ -23,6 +23,6 @@ void main()
 	uint gid = gl_GlobalInvocationID.x;
 	Positions[gid] = vec4(0);
 	Velocities[gid] = vec4(0);
-	Colors[gid] = vec4(0);
+	Colors[gid] = vec4(vec3(0.7), 1);
 	Lives[gid] = 0;
 }
