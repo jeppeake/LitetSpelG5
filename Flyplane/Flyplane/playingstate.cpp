@@ -64,7 +64,9 @@ void PlayingState::spawnEnemies(int nr) {
 
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 2000,rand() % 1000 + 1500, rand() % 2000);
+		float x = rand() % 2000;
+		float z = rand() % 2000;
+		glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
