@@ -184,7 +184,10 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
 		}
 	}
-
+	//Render clouds
+	for (int i = 0; i < clouds.transform.size(); i++) {
+		renderTexture(clouds.texture, viewProjMatrix * clouds.transform[i]);
+	}
 
 	//Render markers
 	enemyMarkerShader.use();
@@ -198,6 +201,7 @@ void Renderer::RenderScene() {
 		enemyMarkerShader.uniform("color", p[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
+
 
 	markers.clear();
 	list.clear();
@@ -250,12 +254,12 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 	texture.bind(0);
 
 	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setCrosshairPos(glm::vec3 pos) {

@@ -185,6 +185,7 @@
     <ClInclude Include="changeplaneaction.h" />
     <ClInclude Include="changeskinaction.h" />
     <ClInclude Include="changeweaponaction.h" />
+    <ClInclude Include="cloud.h" />
     <ClInclude Include="collisioncomponent.h" />
     <ClInclude Include="collisionevents.h" />
     <ClInclude Include="collisionsystem.h" />
