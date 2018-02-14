@@ -7,7 +7,7 @@
 #include "texture.h"
 
 struct NewPlane {
-	float x, y, z;
+	float x, y;
 	float angle;
 };
 
@@ -16,21 +16,24 @@ struct RadarData {
 	float intensity;
 };
 
+/*
 struct Data {
 	float x, y, z;
 	float intensity;
 };
+*/
 
 
 class Radar {
 private:
 	Texture image;
 	Texture plane;
+	Texture radarRay;
 	ShaderProgram shader;
 	GLuint vao, vbo;
 	Transform player;
 	std::vector<RadarData> oldBufferData;
-	std::vector<Data> debugBufferData;
+	//std::vector<Data> debugBufferData;
 	std::vector<NewPlane> bufferData;
 	glm::mat4 proj;
 	glm::mat4 rotationMatrix;
