@@ -40,8 +40,6 @@ void Radar::draw(float dt) {
 	if (angle > 360)
 		angle -= 360;
 
-	std::cout << "radar angle " << angle << std::endl;
-
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 150, s.y - 150, 125, 125);
 
@@ -64,23 +62,19 @@ void Radar::draw(float dt) {
 	glDisable(GL_DEPTH_TEST);
 	update(dt);
 	shader.use();
-	//glm::mat4 viewMatrix = glm::lookAt(player.pos, player.pos - glm::vec3(0, 1, 0), glm::vec3(0,0,1)/*direction*/);
-	//glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1));
 	shader.uniform("matrix", rotation);
-	//std::cout << directionAngle << std::endl;
+	
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	glBufferData(GL_ARRAY_BUFFER, oldSize, nullptr, GL_DYNAMIC_DRAW);
 	oldSize = oldBufferData.size() * sizeof(RadarData);
-	//oldSize = debugBufferData.size() * sizeof(Data);
 	
 	if (oldSize == 0) {
 		glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
 	}
 	else {
 		glBufferData(GL_ARRAY_BUFFER, oldSize, &oldBufferData[0], GL_DYNAMIC_DRAW);
-		//glBufferData(GL_ARRAY_BUFFER, oldSize, &debugBufferData[0], GL_DYNAMIC_DRAW);
 	}
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
@@ -109,41 +103,27 @@ void Radar::addPlane(Transform transform) {
 		glm::mat4 view = glm::lookAt(player.pos, player.pos + glm::vec3(0, -1, 0), glm::vec3(0, 0, 1));
 		vec = proj * view * glm::vec4(transform.pos.x, 0, transform.pos.z, 1);
 		bufferData.push_back({ vec.x, vec.y, angle });
-		std::cout << "x: " << vec.x << "y: " << vec.y << "z: " << vec.z << std::endl;
-		std::cout << "length: " << vec.x * vec.x + vec.y * vec.y << std::endl;
-		//bufferData.push_back({ transform.pos.x, transform.pos.y, transform.pos.z, angle });
 	}
 }
 
 void Radar::update(float dt) {
 	for (int i = oldBufferData.size() - 1; i >= 0; i--) {
 		oldBufferData[i].intensity -= dt;
-		//debugBufferData[i].intensity -= dt * 3;
 
 		if (oldBufferData[i].intensity <= 0) {
 			oldBufferData.erase(oldBufferData.begin() + i);
 		}
 	}
-	/*debugBufferData.push_back({ 300, 200, 0, 1 });
-	debugBufferData.push_back({ 3000, 200, 0, 1 });
-	debugBufferData.push_back({ 300, 2000, 0, 1 });
-	debugBufferData.push_back({ 3000, 2000, 0, 1 });
-	debugBufferData.push_back({ player.pos.x + 2000, 0, player.pos.z + 2000, 1.0 });
-	debugBufferData.push_back({ player.pos.x + 2000, 0, player.pos.z - 2000, 1.0 });
-	debugBufferData.push_back({ player.pos.x - 200, 0, player.pos.z + 2000, 1.0 });
-	debugBufferData.push_back({ player.pos.x - 2000, 0, player.pos.z - 2000, 1.0 });*/
+	
 	for (int i = 0; i < bufferData.size(); i++) {
 		if (angle >= oldAngle) {
 			if (angle >= bufferData[i].angle && oldAngle <= bufferData[i].angle) {
 				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
-				//debugBufferData.push_back({ bufferData[i].x, 0, bufferData[i].z, 1.0 });
-				std::cout << "Update Plane angle " << bufferData[i].angle << std::endl;
 			}
 		}
 		else {
 			if (oldAngle <= bufferData[i].angle || angle >= bufferData[i].angle) {
 				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
-				std::cout << "Plane angle " << bufferData[i].angle << std::endl;
 			}
 		}
 	}

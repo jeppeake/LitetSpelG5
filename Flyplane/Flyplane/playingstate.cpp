@@ -71,23 +71,23 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(100.f, 1.5f);
+		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
-		plotter.push_back(glm::vec3(2500, 2500, 0));
-		plotter.push_back(glm::vec3(2500, 2500, 2500));
-		plotter.push_back(glm::vec3(0, 2500, 2500));
-		plotter.push_back(glm::vec3(0, 2500, 0));
+		plotter.push_back(glm::vec3(2500, 4500, 0));
+		plotter.push_back(glm::vec3(2500, 4500, 2500));
+		plotter.push_back(glm::vec3(0, 4500, 2500));
+		plotter.push_back(glm::vec3(0, 4500, 0));
 
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
 		behaviours.push_back(new Hunt_Target(3, new Always_True(), entity2, 0.05, 500.f));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
-		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(20.f)));
+		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
 		entity.assign<AIComponent>(behaviours, true, true);
@@ -154,7 +154,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity_p.assign <ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 	entity_p.assign <PlayerComponent>();
-	entity_p.assign <FlightComponent>(pp.normalspeed, pp.turnrate);
+	entity_p.assign <FlightComponent>(pp.normalspeed, 200.f, 50.f, pp.turnrate, 0.5f);
 	entity_p.assign <CollisionComponent>();
 	entity_p.assign<SoundComponent>(*flyingSB);
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
@@ -284,15 +284,15 @@ void PlayingState::init()
 	entity2.assign<Transform>(pos, normalize(orien));
 	entity2.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 	entity2.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-	entity2.assign <FlightComponent>(200.f, 2.f);
+	entity2.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 	entity2.assign <CollisionComponent>();
 	std::vector<Behaviour*> behaviours;
 
 	std::vector<glm::vec3> plotter;
-	plotter.push_back(glm::vec3(2500, 2500, 0));
-	plotter.push_back(glm::vec3(2500, 2500, 2500));
-	plotter.push_back(glm::vec3(0, 2500, 2500));
-	plotter.push_back(glm::vec3(0, 2500, 0));
+	plotter.push_back(glm::vec3(2500, 4500, 0));
+	plotter.push_back(glm::vec3(2500, 4500, 2500));
+	plotter.push_back(glm::vec3(0, 4500, 2500));
+	plotter.push_back(glm::vec3(0, 4500, 0));
 
 	spawnEnemies(5);
 	//behaviours.push_back(new Constant_Turn(0));
@@ -311,22 +311,22 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(100.f, 1.5f);
+		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
-		plotter.push_back(glm::vec3(2500, 2500, 0));
-		plotter.push_back(glm::vec3(2500, 2500, 2500));
-		plotter.push_back(glm::vec3(0, 2500, 2500));
-		plotter.push_back(glm::vec3(0, 2500, 0));
+		plotter.push_back(glm::vec3(2500, 4500, 0));
+		plotter.push_back(glm::vec3(2500, 4500, 2500));
+		plotter.push_back(glm::vec3(0, 4500, 2500));
+		plotter.push_back(glm::vec3(0, 4500, 0));
 
 		//behaviours.push_back(new Constant_Turn(0));
 		behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 		behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
 		behaviours.push_back(new Hunt_Target(3, new Always_True(), entity2, 0.05, 500.f));
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
-		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(20.f)));
+		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
 		entity.assign<AIComponent>(behaviours, true, true);
@@ -406,7 +406,7 @@ void PlayingState::update(double dt)
 {
 	if (deltatime.elapsed() > 30) {
 		deltatime.restart();
-		spawnEnemies(1);
+		spawnEnemies(2);
 	}
 
 	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
