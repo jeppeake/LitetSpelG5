@@ -1,6 +1,4 @@
-assets\Presets\Planes\laken.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
+assets\Presets\Planes\Lynx.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
