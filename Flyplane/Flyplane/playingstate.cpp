@@ -50,6 +50,9 @@
 #include "planepreset.h"
 #include <fstream>
 
+#include "healthcomponent.h"
+#include "healthsystem.h"
+
 //entityx::Entity entity;
 entityx::Entity entity_p;
 entityx::Entity entity_formation;
@@ -66,8 +69,9 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(200.f, 1.5f);
+		entity.assign <FlightComponent>(100.f, 1.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
+		entity.assign <HealthComponent>(100.0);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -170,18 +174,19 @@ void PlayingState::loadLoadout()
 
 			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate);
 
-			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i], glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
+			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 		}
 	}
 	std::getline(file, str);
 	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
 
 	WeaponStats stats2 = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
-	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.25, 0.5), glm::vec3(0.25), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
-	weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
+	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 	entity_p.assign <Equipment>(pweapons, weapons);
+	entity_p.assign <HealthComponent>(100.0);
 
 	entityx::Entity terrain = ex.entities.create();
 
@@ -221,8 +226,9 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
+	AssetLoader::getLoader().loadModel("assets/buildings/hus1.fbx", "hus1");
 
-	AssetLoader::getLoader().loadHeightmap("assets/textures/slojp.png", "assets/textures/grass.png", "testmap");
+	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
 	AssetLoader::getLoader().loadSound("assets/Sound/airplane-takeoff.wav", "takeoff");
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
@@ -253,6 +259,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(AssetLoader::getLoader().getHeightmap("testmap"), this);
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
+	ex.systems.add<HealthSystem>();
 	ex.systems.add<GameOver>(this);
 	ex.systems.configure();
 
@@ -291,7 +298,7 @@ void PlayingState::init()
 
 	entity2.assign<AIComponent>(behaviours, true, true);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
-
+	entity2.assign <HealthComponent>(100.0);
 
 
 	int enemies = 0;
@@ -302,7 +309,7 @@ void PlayingState::init()
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(200.f, 1.5f);
+		entity.assign <FlightComponent>(100.f, 1.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		std::vector<Behaviour*> behaviours;
 
@@ -390,6 +397,7 @@ void PlayingState::init()
 
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
+	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
 }
 
 void PlayingState::update(double dt)
@@ -461,12 +469,14 @@ void PlayingState::update(double dt)
 		Window::getWindow().showCursor(false);
 		ex.systems.update<PlayerSystem>(dt);
 		ex.systems.update<AISystem>(dt);
-		ex.systems.update<WeaponSystem>(dt);
+		
 		ex.systems.update<FlightSystem>(dt);
 		ex.systems.update<PhysicsSystem>(dt);
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
+		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		ex.systems.update<WeaponSystem>(dt);
 	}
 	else {
 		ex.systems.update<RenderSystem>(dt);

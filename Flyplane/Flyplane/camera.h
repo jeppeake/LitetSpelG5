@@ -13,7 +13,7 @@ private:
 
 	glm::mat4 invViewProj;
 
-	float fov = 90.f;
+	float fov = 85.f;
 	//float yaw, pitch;
 public:
 	Camera();

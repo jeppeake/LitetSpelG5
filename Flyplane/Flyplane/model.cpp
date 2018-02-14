@@ -15,10 +15,12 @@ Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
 
+
+	std::cout << "\t\t[DEBUG] parsing mesh: '" << name << "'\n";
+
 	is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
-		std::cout << name << " IS BOUNDING BOX\n";
-		std::cout << mesh->mNumVertices << "\n";
+		//std::cout << mesh->mNumVertices << "\n";
 		is_bb = true;
 	}
 
@@ -41,12 +43,6 @@ Model::Mesh::Mesh(aiMesh * mesh)
 		}
 		auto pos = mesh->mVertices[i];
 		aiVector3D new_pos(pos.x, pos.z, -pos.y);
-
-		if (is_bb)
-		{
-			if (i % 24 == 0)
-				std::cout << "New BB\n";
-		}
 
 		vertices.emplace_back(pos,
 			normal,
@@ -100,16 +96,20 @@ Model::Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<GLuint
 
 Model::Mesh::~Mesh()
 {
-	glDeleteBuffers(1, &ebo);
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
+	if (!is_bb) {
+		glDeleteBuffers(1, &ebo);
+		glDeleteBuffers(1, &vbo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 void Model::Mesh::bind()
 {
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	if (!is_bb) {
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	}
 }
 
 void Model::Mesh::unbind()
@@ -120,10 +120,13 @@ void Model::Mesh::unbind()
 
 void Model::load(const std::string & file)
 {
+
+
 	if (loaded) {
-		std::cout << "WARNING: model trying to load '" << file << "' already in use\n";
+		std::cout << "[WARNING] model '" << file << "', already loaded. Skipping\n";
 		return;
 	}
+	std::cout << "[DEBUG] loading: '" << file << "'\n";
 
 	const aiScene* scene = aiImportFile(file.c_str(),
 		//aiProcess_GenNormals |
@@ -138,10 +141,11 @@ void Model::load(const std::string & file)
 	);
 	if (!scene)
 	{
-		std::cout << "Could not open model '" << file << "': " + std::string(aiGetErrorString()) << "\n";
+		std::cout << "\t[ERROR] Could not open model '" << file << "': " + std::string(aiGetErrorString()) << "\n";
 		return;
 	}
 
+	std::cout << "\t[DEBUG] loading meshes in model:\n";
 	loaded = true;
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
@@ -165,7 +169,7 @@ void Model::load(const std::string & file)
 		
 		std::string tex_file;
 		if (mat->GetTextureCount(t) == 0) {
-			std::cout << "ERROR: texture not in model\n";
+			std::cout << "\t[ERROR] one material missing texture, using korven.png\n";
 			//system("pause");
 			//exit(EXIT_FAILURE);
 			tex_file = "assets/textures/korven.png";
@@ -179,7 +183,7 @@ void Model::load(const std::string & file)
 		 
 		if (!texture.loadTexture(tex_file))
 		{
-			std::cout << "ERROR: Could not load texture: '" << tex_file << "'\n";
+			//std::cout << "\tERROR: Could not load texture: '" << tex_file << "'\n";
 		}
 	}
 
@@ -193,11 +197,11 @@ void Model::load(const std::string & file)
 	recursiveFlatten(root, glm::scale(glm::vec3(0.005)));
 
 	recursiveDeleteNodes(root);
-
-	std::cout << file << ":\n";
-	std::cout << "\tnum meshes: " << meshes.size() << "\n";
-	std::cout << "\tnum meshes in hierarchy: " <<  model_meshes.size() << "\n";
-	std::cout << "\tbounding boxes: " << bounding_boxes.size() << "\n";
+	
+	//std::cout << file << ":\n";
+	std::cout << "\t[DEBUG] meshes: " << meshes.size() << "\n";
+	std::cout << "\t[DEBUG] in hierarchy: " <<  model_meshes.size() << "\n";
+	std::cout << "\t[DEBUG] bounding boxes: " << bounding_boxes.size() << "\n";
 	
 
 	aiReleaseImport(scene);

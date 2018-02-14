@@ -38,7 +38,7 @@ void LoadingState::init() {
 	update(0);
 	Window::getWindow().update();
 
-	AssetLoader::getLoader().loadHeightmap("assets/Terrain/smudge.png", "assets/textures/bog.png", "testmap");
+	AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
 	current = "sounds";
 	update(0);
@@ -67,6 +67,9 @@ void LoadingState::update(double dt) {
 	else
 		AssetLoader::getLoader().getBigtext()->drawText("Loading done!", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
 	if (done) {
+		if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
+			startGame();
+		}
 		bHandler.drawButtons();
 		bHandler.handleButtonClicks();
 	}

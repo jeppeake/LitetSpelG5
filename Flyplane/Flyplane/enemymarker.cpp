@@ -29,7 +29,11 @@ void EnemyMarker::bind() {
 }
 
 void EnemyMarker::addPosition(glm::vec3 pos, float scale) {
-	this->markers.push_back({ pos, scale });
+	this->markers.push_back({ pos, glm::vec3(1,0,0), scale });
+}
+
+void EnemyMarker::addPosition(glm::vec3 pos, glm::vec3 color, float scale) {
+	this->markers.push_back({ pos, color, scale });
 }
 
 std::vector<Marker>& EnemyMarker::getMarkers() {

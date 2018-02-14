@@ -19,7 +19,8 @@
 #include <ctime>
 #include "soundbuffers.h"
 #include "targetcomponent.h"
-
+#include "window.h"
+#include "healthcomponent.h"
 
 using namespace entityx;
 
@@ -75,7 +76,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 			Weapon* weapon = &equip->special[equip->selected];
 
-			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0) {
+			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0 && equip->special.size() > 0) {
 				weapon->shouldFire = true;
 			}
 			
@@ -121,7 +122,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				switchT.restart();
 			}
 
-			if (weapon->shouldFire) {
+			if (equip->special.size() > 0 && weapon->shouldFire) {
 				weapon->shouldFire = false;
 				weapon->timer.restart();
 
@@ -137,6 +138,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				if (!weapon->stats.infAmmo)
 					weapon->stats.ammo--;
 
+				int preselect = equip->selected;
+
 				if (weapon->dissappear && weapon->stats.ammo <= 0) {
 					equip->special.erase(equip->special.begin() + equip->selected);
 					/*equip->selected = 0;
@@ -145,12 +148,29 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				int max = equip->special.size();
 				int c = 0;
-				while (equip->special[equip->selected].stats.ammo <= 0 && c <= max) {
-					equip->selected++;
-					c++;
+				if (equip->special.size() > 0) {
+					while (equip->special[equip->selected].stats.ammo <= 0 && c <= max) {
+						equip->selected = (equip->selected + 1) % equip->special.size();
+						c++;
+					}
 				}
 				equip->special[equip->selected].timer.restart();
 			}
+
+			Weapon lastWep = equip->special[equip->selected];
+			unsigned int count = 0;
+			unsigned int totalAmmo = 0;
+			unsigned int tempselect = equip->selected;
+			while (count < equip->special.size()) {
+				if(equip->special[equip->selected].model == equip->special[tempselect].model)
+					totalAmmo += equip->special[tempselect].stats.ammo;
+				tempselect = (tempselect + 1) % equip->special.size();
+				count++;
+			}
+
+
+			if(player && weapon != nullptr)
+				AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(totalAmmo), glm::vec2(10,10), glm::vec3(1, 0, 0), 0.4);
 			
 		}
 
@@ -159,6 +179,41 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			if (projectile->timer.elapsed() > projectile->lifetime)
 				entity.destroy();
 		}
+
+		entityx::ComponentHandle<PlayerComponent> play;
+		for (Entity entity : es.entities_with_components(play, trans)) {
+			entityx::ComponentHandle<AIComponent> ai;
+			entityx::ComponentHandle<Target> target;
+			entityx::ComponentHandle<Transform> aitran;
+			glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
+			float bestDot = -1;
+			double bestScore = -1;
+			Entity cure;
+			for (Entity enemy : es.entities_with_components(aitran, target)) {
+				glm::vec3 dir = aitran->pos - trans->pos;
+				float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
+				ai = enemy.component<AIComponent>();
+				target->is_targeted = false;
+				double score = (dot * target->heat) / glm::length(dir);
+				if (score > bestScore && entity.component<Target>().get()->faction != target->faction) {
+					bestDot = dot;
+					bestScore = score;
+					cure = enemy;
+				}
+			}
+			bool noTarget = false;
+			glm::vec3 forward = v;
+			Transform newTrans;
+			newTrans.pos = forward;
+
+			if (bestDot == -1 || bestDot < 0.2) {
+				noTarget = true;
+			}
+
+			if (cure.valid() && !noTarget)
+				cure.component<Target>()->is_targeted = true;
+		}
+		
 
 
 		entityx::ComponentHandle<AIComponent> ai;
@@ -169,18 +224,19 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			trans = entity.component<Transform>();
 			physics = entity.component<Physics>();
 			projectile = entity.component<Projectile>();
-			if (projectile->timer.elapsed() > 1) {
+			if (projectile->timer.elapsed() > 0.3) {
 				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
 				float bestDot = -1;
 				double bestScore = -1;
 				Entity cure;
 				entityx::ComponentHandle<Target> target;
 				entityx::ComponentHandle<Transform> aitrans;
-				for (Entity enemy : es.entities_with_components(aitrans, target)) {
+				entityx::ComponentHandle<HealthComponent> health;
+				for (Entity enemy : es.entities_with_components(aitrans, target, health)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();
-					target->is_targeted = false;
+					//target->is_targeted = false;
 					double score = (dot * target->heat) / glm::length(dir);
 					if (score > bestScore && projectile->parentFaction != target->faction) {
 						bestDot = dot;
@@ -200,8 +256,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					noTarget = true;
 				}
 
-				if (cure.valid() && !noTarget)
-					cure.component<Target>()->is_targeted = true;
+				/*if (cure.valid() && !noTarget)
+					cure.component<Target>()->is_targeted = true;*/
 					
 
 				glm::quat q;
@@ -225,17 +281,41 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
-				if (glm::length(u) < 10.0) {
-					std::cout << "Missile hit target at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					if (!noTarget) {
+				if (glm::length(u) < 20.0) {
+					std::cout << "Missile exploded at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
+					Entity explosion = es.create();
+					explosion.assign<ExplosionComponent>(200, 30);
+					explosion.assign<Transform>(trans->pos);
+					entity.destroy();
+					/*if (!noTarget) {
+
 						if (cure.valid()) {
-							cure.destroy();
+
+							cure.component<HealthComponent>().get()->health -= 50;
 						}
 						entity.destroy();
-					}
+					}*/
 				}
 			}
 				
+		}
+
+		//explosions
+		entityx::ComponentHandle<ExplosionComponent> explosion;
+		for (Entity entity_explosion : es.entities_with_components(explosion, trans)) {
+			entityx::ComponentHandle<Target> target;
+			entityx::ComponentHandle<HealthComponent> health;
+			entityx::ComponentHandle<Transform> tran1;
+			for (Entity entity : es.entities_with_components(health, tran1)) {
+				double dist = glm::length(trans->pos - tran1->pos);
+				double fallof = explosion->damage / explosion->radius;
+				double damage = explosion->damage - (dist*fallof);
+				if (damage < 0)
+					damage = 0;
+				health->health -= damage;
+				std::cout << "Did " << damage << " damage." << "\n";
+			}
+			entity_explosion.destroy();
 		}
 	};
 };

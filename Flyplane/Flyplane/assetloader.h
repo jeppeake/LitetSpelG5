@@ -36,10 +36,10 @@ public:
 	Text *getHighscoreText() &;
 	AssetLoader(const AssetLoader &other) = delete;
 	void operator=(const AssetLoader &other) = delete;
-	void loadModel(const std::string filename, const std::string name);
+	void loadModel(const std::string &filename, const std::string &name);
+	void loadHeightmap(const std::string &maptxt, const std::string &name);
+	void loadSound(const std::string &filename, const std::string &name);
 	void loadTexture(const std::string filename, const std::string name);
-	void loadHeightmap(const std::string map, const std::string tex, std::string name);
-	void loadSound(const std::string filename, const std::string name);
 	void clearTerrains() {
 		this->heightmaps.clear();
 	}

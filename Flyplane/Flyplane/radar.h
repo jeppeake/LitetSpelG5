@@ -6,25 +6,34 @@
 #include <glm/glm.hpp>
 #include "texture.h"
 
-struct Data {
-	float x, y, z;
-	float r, g, b;
+struct NewPlane {
+	float x, y;
 	float angle;
 };
+
+struct RadarData {
+	float x, y;
+	float intensity;
+};
+
 
 class Radar {
 private:
 	Texture image;
+	Texture plane;
 	ShaderProgram shader;
-	ShaderProgram guiShader;
 	GLuint vao, vbo;
-	GLuint guiVao, guiVbo;
 	Transform player;
-	std::vector<Data> bufferData;
+	std::vector<RadarData> oldBufferData;
+	std::vector<NewPlane> bufferData;
 	glm::mat4 proj;
+	glm::mat4 rotationMatrix;
+	glm::mat4 scale;
 	int oldSize;
-	float oldAngle;
-	float angle;
+	double oldAngle;
+	double angle;
+
+	void update(float dt);
 public:
 	Radar();
 	void draw(float dt);

@@ -6,10 +6,12 @@ layout(triangle_strip, max_vertices = 3) out;
 in vec3 Pos[];
 in vec3 Normal[];
 in vec2 Tex[];
+in vec3 Materials[];
 
 out vec3 vPos;
 out vec3 vNormal;
 out vec2 vTex;
+out vec3 vMaterials;
 
 
 void main() {
@@ -20,6 +22,7 @@ void main() {
 		vPos = Pos[i];
 		vNormal = Normal[i];
 		vTex = Tex[i];
+		vMaterials = Materials[i];
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();
 	}

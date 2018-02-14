@@ -48,7 +48,7 @@ void LoadoutState::updatePreview() {
 			glm::vec3 pos = this->planePresets[this->selected].wepPos[i];
 			WeaponPreset pr = this->weaponPresets[this->pickedWeapons[i]];
 			WeaponStats stats = WeaponStats(pr.ammo, pr.lifetime, pr.speed, pr.mass, pr.cooldown, pr.infAmmo);
-			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(pr.name), AssetLoader::getLoader().getModel(pr.projModel), pos, glm::vec3(pr.scale), glm::vec3(pr.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(pr.name), AssetLoader::getLoader().getModel(pr.projModel), pos + pr.extraOffset, glm::vec3(pr.scale), glm::vec3(pr.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 		}
 	}
 	entityp.assign <Equipment>(pweapons, weapons);
@@ -73,7 +73,7 @@ void LoadoutState::init() {
 
 	bHandler.addButton(new Button("Planes", glm::vec2(50, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, planes), "buttonforward"));
 	bHandler.addButton(new Button("Weapons", glm::vec2(250, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, weapons), "buttonforward"));
-	bHandler.addButton(new Button("Skins", glm::vec2(450, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
+	bHandler.addButton(new Button("Skins", glm::vec2(480, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
 	

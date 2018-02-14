@@ -30,3 +30,9 @@ struct Weapon {
 	glm::quat rot = glm::quat();
 	unsigned int group = 0;
 };
+
+struct ExplosionComponent {
+	ExplosionComponent(double damage, double radius) : damage(damage), radius(radius) {}
+	double damage;
+	double radius;
+};

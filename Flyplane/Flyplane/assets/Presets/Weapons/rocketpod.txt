@@ -1,0 +1,17 @@
+Rocketpod
+assets/Weapons/Rocketpod/rocketpod.fbx
+assets/Weapons/Missiles/Stinger/stinger.fbx
+14
+10
+500
+5
+0.5
+0
+0.25
+0.6
+0
+0
+0
+0
+-0.15
+0

@@ -1,12 +1,7 @@
 #version 420
 
-varying vec3 f_color;
-varying float f_angle;
+varying float f_intensity;
 
 void main() {
-	float intensity = 0.6;
-	if (f_angle == 15.0)
-		intensity = 0.3;
-
-	gl_FragColor = vec4(intensity * f_color, 1);
+	gl_FragColor = vec4(vec3(1, 0, 0), f_intensity);
 }
