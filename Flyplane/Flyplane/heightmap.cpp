@@ -36,24 +36,25 @@ Heightmap::Heightmap(const std::string &maptxt) {
 }
 
 void Heightmap::loadMap(const std::string &maptxt) {
-	std::ifstream f(maptxt);
-
 	std::string heightmap;
 	std::string materialmap;
 	std::string mat1; 
 	std::string mat2;
 	std::string mat3;
 
-	std::getline(f, heightmap);
-	std::getline(f, materialmap);
-	std::getline(f, mat1);
-	std::getline(f, mat2);
-	std::getline(f, mat3);
+	std::ifstream f(maptxt);
 
+	f >> scale.x >> scale.y >> scale.z;
+	f >> numPatchVerts;
+	f >> maxLevels;
+	f >> heightmap;
+	f >> materialmap;
+	f >> mat1 >> mat2 >> mat3;
+
+	materialMap.loadTexture(materialmap);
 	textures[0].loadTexture(mat1);
 	textures[1].loadTexture(mat2);
 	textures[2].loadTexture(mat3);
-	materialMap.loadTexture(materialmap);
 
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, heightmap, LCT_RGBA, 16U);
@@ -92,10 +93,6 @@ void Heightmap::loadMap(const std::string &maptxt) {
 			*/
 		}
 	}
-
-
-	numPatchVerts = 63;
-	scale = 4.f*glm::vec3(3, 5, 3);
 
 	std::vector<glm::vec2> uvs;
 	for (int y = 0; y < numPatchVerts; y++) {
@@ -238,9 +235,6 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 
 	glm::dvec3 origin = camera.getTransform().pos;
 
-	glm::vec3 dir = glm::toMat3(camera.getTransform().orientation) * glm::vec3(0, 0, 1);
-	bool lookingDown = dot(dir, glm::vec3(0, -1, 0)) > 0;
-
 	glm::dvec3 corners[4];
 	glm::dmat4 farPlane4;
 	farPlane4[0] = glm::dvec4(-1, -1, 1, 1);
@@ -264,9 +258,6 @@ std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 	// right
 	normals[3] = cross(corners[0], corners[2]);
 
-	if (lookingDown) {
-		std::cout << "Looking Down\n";
-	}
 
 	glm::vec2 offset(-(width / 2.f));
 	float patchSize = width; // / 2.f;
@@ -286,9 +277,6 @@ bool lineSegmentSAT(const glm::dvec3 &axis, const glm::dvec3& orig, const glm::d
 
 
 void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig) {
-
-	int maxLevels = 8;
-
 	glm::vec2 pos(orig.x/scale.x, orig.z/scale.z);
 
 	// better read as "left divides" etc
