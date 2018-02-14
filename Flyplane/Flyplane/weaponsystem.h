@@ -21,6 +21,7 @@
 #include "targetcomponent.h"
 #include "window.h"
 #include "healthcomponent.h"
+#include "factioncomponents.h"
 
 using namespace entityx;
 
@@ -34,6 +35,10 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
 		projectile.assign<CollisionComponent>();
+		if (parentFaction == FACTION_PLAYER)
+			projectile.assign<FactionPlayer>();
+		else
+			projectile.assign<FactionEnemy>();
 		//projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
