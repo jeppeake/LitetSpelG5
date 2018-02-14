@@ -406,7 +406,7 @@ void PlayingState::update(double dt)
 {
 	if (deltatime.elapsed() > 30) {
 		deltatime.restart();
-		spawnEnemies(1);
+		spawnEnemies(2);
 	}
 
 	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
