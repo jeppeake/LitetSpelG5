@@ -71,5 +71,5 @@ void WeaponPreset::load(std::string presetname)
 	std::getline(f, str);
 	explodeRadius = std::stod(str, NULL);
 	std::getline(f, str);
-	explodeDamage = std::stod(str, NULL);
+	damage = std::stod(str, NULL);
 }

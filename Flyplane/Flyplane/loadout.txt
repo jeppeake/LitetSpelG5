@@ -1,8 +1,4 @@
-assets\Presets\Planes\laken.txt
+assets\Presets\Planes\G-201.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\missile3.txt
 0

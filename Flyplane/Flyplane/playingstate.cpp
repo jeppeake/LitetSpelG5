@@ -64,12 +64,14 @@ void PlayingState::spawnEnemies(int nr) {
 
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		glm::vec3 pos(rand() % 2000,rand() % 1000 + 1500, rand() % 2000);
+		float x = rand() % 2000;
+		float z = rand() % 2000;
+		glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(100.f, 1.5f);
+		entity.assign <FlightComponent>(10.f, 1.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
 		std::vector<Behaviour*> behaviours;
@@ -172,7 +174,7 @@ void PlayingState::loadLoadout()
 			AssetLoader::getLoader().loadModel(wp.model, wp.name);
 			AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
 
-			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.explodeDamage);
+			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage);
 
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 		}

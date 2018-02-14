@@ -8,4 +8,5 @@ struct Missile {
 	
 	Transform* target;
 	float speed, turnRate, detonateRange, explodeRadius, explodeDamage;
+	bool shouldExplode = false;
 };
