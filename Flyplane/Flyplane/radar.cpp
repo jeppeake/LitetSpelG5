@@ -40,8 +40,6 @@ void Radar::draw(float dt) {
 	if (angle > 360)
 		angle -= 360;
 
-	std::cout << "radar angle " << angle << std::endl;
-
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 150, s.y - 150, 125, 125);
 
