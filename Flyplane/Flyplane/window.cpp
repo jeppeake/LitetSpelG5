@@ -53,6 +53,7 @@ void Window::open(int width, int height)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
+	
 
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (!window)
@@ -72,6 +73,8 @@ void Window::open(int width, int height)
 	scrolls[window] = glm::vec2(0, 0);
 	glfwSetScrollCallback(window, scrollCallback);
 	glfwSetWindowSizeCallback(window, resizeCallback);
+
+	glfwSwapInterval(1);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
