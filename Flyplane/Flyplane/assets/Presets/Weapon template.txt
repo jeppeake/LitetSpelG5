@@ -15,3 +15,7 @@ dissappear	(bool)
 extra offset.x	(double)
 extra offset.y	(double)
 extra offset.z	(double)
+[missile stuff]
+detonateRange	(double)
+explodeRadius	(double)
+explodeDamage	(double)
