@@ -160,7 +160,7 @@ void Heightmap::buildStructures(entityx::EntityManager & mgr)
 		entityx::Entity ent = mgr.create();
 		ent.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 		ent.assign<CollisionComponent>();
-		ent.assign<Transform>(house.pos, glm::quat(1.0,0.0,0.0,0.0));
+		ent.assign<Transform>(house.pos, glm::quat(0.0,0.0,1.0,0.0));
 	}
 }
 
