@@ -153,6 +153,7 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
+    <ClCompile Include="computeShader.cpp" />
     <ClCompile Include="particlesystem.cpp" />
     <ClCompile Include="planepreset.cpp" />
     <ClCompile Include="playersystem.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="namestate.h" />
+    <ClInclude Include="computeShader.h" />
     <ClInclude Include="particlesystem.h" />
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />

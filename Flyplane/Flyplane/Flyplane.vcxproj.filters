@@ -108,6 +108,9 @@
     <ClCompile Include="terrain_close.h">
       <Filter>Behaviours\Conditions</Filter>
     </ClCompile>
+    <ClCompile Include="computeShader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -394,6 +397,9 @@
       <Filter>Systems\Components</Filter>
     </ClInclude>
     <ClInclude Include="cloud.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="computeShader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
