@@ -390,6 +390,9 @@
     <ClInclude Include="healthsystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="factioncomponents.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
     <ClInclude Include="cloud.h">
       <Filter>Graphics</Filter>
     </ClInclude>

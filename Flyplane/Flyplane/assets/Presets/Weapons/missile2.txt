@@ -15,3 +15,6 @@ assets/Weapons/Missiles/Fishrod/fishrod.fbx
 0
 0
 0
+20
+30
+250

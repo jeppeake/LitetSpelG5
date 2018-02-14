@@ -21,6 +21,7 @@
 #include "targetcomponent.h"
 #include "window.h"
 #include "healthcomponent.h"
+#include "factioncomponents.h"
 
 using namespace entityx;
 
@@ -32,8 +33,12 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
 		projectile.assign<Physics>(weapon->stats.mass, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats.speed) + planeSpeed, glm::vec3());
 		projectile.assign<ModelComponent>(weapon->projectileModel);
-		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
+		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
 		projectile.assign<CollisionComponent>();
+		if (parentFaction == FACTION_PLAYER)
+			projectile.assign<FactionPlayer>();
+		else
+			projectile.assign<FactionEnemy>();
 		//projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
@@ -42,8 +47,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->scale);
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
-		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
-		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate);
+		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
+		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
 	}
@@ -111,7 +116,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 			}
 			
-			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f) {
+			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f && equip->special.size() > 0) {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
 				unsigned int count = 0;
@@ -281,23 +286,17 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				//sstd::cout << "Missile position: " << trans->pos.x << " " << trans->pos.y << " " << trans->pos.z << "dot: " << glm::dot(vn, un) << "\n";
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
-				if (glm::length(u) < 20.0) {
-					std::cout << "Missile exploded at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					Entity explosion = es.create();
-					explosion.assign<ExplosionComponent>(200, 30);
-					explosion.assign<Transform>(trans->pos);
-					entity.destroy();
-					/*if (!noTarget) {
-
-						if (cure.valid()) {
-
-							cure.component<HealthComponent>().get()->health -= 50;
-						}
-						entity.destroy();
-					}*/
+				if (glm::length(u) < missile->detonateRange) {
+					missile->shouldExplode = true;
 				}
 			}
-				
+			if (missile->shouldExplode) {
+				std::cout << "Missile exploded \n";
+				Entity explosion = es.create();
+				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
+				explosion.assign<Transform>(trans->pos);
+				entity.destroy();
+			}
 		}
 
 		//explosions
