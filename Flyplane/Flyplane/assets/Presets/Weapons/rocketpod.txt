@@ -18,3 +18,4 @@ assets/Weapons/Missiles/Stinger/stinger.fbx
 0
 0
 0
+80

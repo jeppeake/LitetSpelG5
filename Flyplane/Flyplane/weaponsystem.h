@@ -33,7 +33,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
 		projectile.assign<Physics>(weapon->stats.mass, 1, glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, weapon->stats.speed) + planeSpeed, glm::vec3());
 		projectile.assign<ModelComponent>(weapon->projectileModel);
-		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
+		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
 		projectile.assign<CollisionComponent>();
 		if (parentFaction == FACTION_PLAYER)
 			projectile.assign<FactionPlayer>();
@@ -47,8 +47,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->scale);
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
-		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction);
-		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.explodeDamage);
+		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
+		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
 	}
@@ -287,14 +287,16 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				physics->velocity = glm::toMat3(trans->orientation) * glm::vec3(0,0,missile->speed);
 
 				if (glm::length(u) < missile->detonateRange) {
-					std::cout << "Missile exploded at: " << " " << u.x << " " << u.y << " " << glm::length(u) << "\n";
-					Entity explosion = es.create();
-					explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
-					explosion.assign<Transform>(trans->pos);
-					entity.destroy();
+					missile->shouldExplode = true;
 				}
 			}
-				
+			if (missile->shouldExplode) {
+				std::cout << "Missile exploded \n";
+				Entity explosion = es.create();
+				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
+				explosion.assign<Transform>(trans->pos);
+				entity.destroy();
+			}
 		}
 
 		//explosions
