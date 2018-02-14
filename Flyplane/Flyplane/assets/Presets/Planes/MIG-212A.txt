@@ -1,9 +1,9 @@
 MIG-212A
 assets/MIG-212A.fbx
-300
-600
 100
-2
+200
+50
+1.5
 White
 assets/MIG-212A_UV.png
 Green
