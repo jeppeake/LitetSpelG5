@@ -85,7 +85,7 @@ void Radar::addPlane(Transform transform) {
 		glm::vec3 vec = glm::normalize(glm::vec3(transform.pos.x, 0, transform.pos.z) - glm::vec3(player.pos.x, 0, player.pos.z));
 
 		float angle = glm::degrees(glm::angle(glm::vec3(0, 0, 1), vec));
-		if (vec.x < 0) {
+		if (vec.x > 0) {
 			angle = -angle;
 			angle += 360;
 		}
@@ -97,7 +97,7 @@ void Radar::addPlane(Transform transform) {
 
 void Radar::update(float dt) {
 	for (int i = oldBufferData.size() - 1; i >= 0; i--) {
-		oldBufferData[i].intensity -= dt;
+		oldBufferData[i].intensity -= dt * 3;
 
 		if (oldBufferData[i].intensity < 0) {
 			oldBufferData.erase(oldBufferData.begin() + i);
