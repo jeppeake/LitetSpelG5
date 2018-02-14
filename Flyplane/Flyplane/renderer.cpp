@@ -254,12 +254,12 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 	texture.bind(0);
 
 	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setCrosshairPos(glm::vec3 pos) {
