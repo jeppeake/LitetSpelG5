@@ -60,9 +60,13 @@ public:
 	}
 	
 	void RenderScene();
+	void RenderCrosshair();
 	Camera getCamera() &;
 	void setCamera(const Camera& camera);
 	void addMarker(glm::vec3 pos, float scale);
+	void setCrosshairPos(glm::vec3 pos);
+	glm::mat4& getCrosshairPos();
+	glm::quat orientation;
 	// DEBUG
 	void update(float dt);
 };
