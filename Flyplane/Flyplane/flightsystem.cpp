@@ -97,7 +97,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 
 		physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
 		float minSpeed = breakSpeed;
-		float gravFactor = (1.f - (glm::clamp(glm::length(physics->velocity), minSpeed, 0.f) / minSpeed)) * 0.2;
+		float gravFactor = (1.f - (glm::clamp(glm::length(physics->velocity), minSpeed, 0.f) / minSpeed)) * 0.1;
 		physics->velocity += physics->g * gravFactor;
 		//std::cout << gravFactor << "\n";
 		flight->current_speed = glm::length(physics->velocity);

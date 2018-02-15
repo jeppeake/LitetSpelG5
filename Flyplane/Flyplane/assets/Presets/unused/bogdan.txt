@@ -1,0 +1,28 @@
+monkey trouble
+assets/untitled.fbx
+300
+600
+100
+3
+2
+Spectre Green
+assets/Spectre/Spectre_TEX.png
+-end textures-
+-0.5
+-0.35
+-0.4
+0.5
+-0.35
+-0.4
+-1.0
+-0.38
+-0.5
+1.0
+-0.38
+-0.5
+-1.5
+-0.38
+-0.6
+1.5
+-0.38
+-0.6
