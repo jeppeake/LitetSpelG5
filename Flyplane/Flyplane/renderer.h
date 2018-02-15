@@ -64,6 +64,7 @@ public:
 	
 	void RenderScene();
 	void RenderCrosshair();
+	void RenderClouds();
 	Camera getCamera() &;
 	void setCamera(const Camera& camera);
 	void addMarker(glm::vec3 pos, float scale);
