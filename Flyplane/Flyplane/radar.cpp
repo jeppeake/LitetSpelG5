@@ -40,9 +40,6 @@ void Radar::draw(float dt) {
 	if (angle > 360)
 		angle -= 360;
 
-	auto s = Window::getWindow().size();
-	glViewport(s.x - 150, s.y - 150, 125, 125);
-
 	glm::vec3 direction = glm::toMat3(player.orientation) * glm::vec3(0.0, 0.0, 1.0);
 	//direction.y = 0;
 	float playerAngle = glm::degrees(glm::angle(glm::vec3(0, 0, 1), glm::normalize(glm::vec3(direction.x, 0.f, direction.z))));
@@ -53,6 +50,42 @@ void Radar::draw(float dt) {
 
 	glm::mat4 rotation = glm::rotate(glm::radians(playerAngle), glm::vec3(0, 0, 1));
 
+
+	glm::vec2 text(0, 125 / 2);
+	text = glm::vec2(0, 125 / 2);
+	text = rotation * glm::vec4(text, 0, 1);
+	text *= 1.20;
+	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text -= glm::vec2(8, 8);
+	AssetLoader::getLoader().getText()->drawText("N", text, glm::vec3(1), 0.4);
+
+	text = glm::vec2(125 / 2, 0);
+	text = rotation * glm::vec4(text, 0, 1);
+	text *= 1.20;
+	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text -= glm::vec2(8, 8);
+	AssetLoader::getLoader().getText()->drawText("E", text, glm::vec3(1), 0.4);
+	
+	text = glm::vec2(0, -125 / 2);
+	text = rotation * glm::vec4(text, 0, 1);
+	text *= 1.20;
+	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text -= glm::vec2(8, 8);
+	AssetLoader::getLoader().getText()->drawText("S", text, glm::vec3(1), 0.4);
+
+	text = glm::vec2(-125 / 2, 0);
+	text = rotation * glm::vec4(text, 0, 1);
+	text *= 1.20;
+	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text -= glm::vec2(8, 8);
+	AssetLoader::getLoader().getText()->drawText("W", text, glm::vec3(1), 0.4);
+
+	
+	auto s = Window::getWindow().size();
+	glViewport(s.x - 150, s.y - 150, 125, 125);
+
+
+	//Renderer::getRenderer().renderTexture(plane, rotation * glm::translate(glm::vec3(0, 0.8, 0)) * glm::scale(glm::vec3(0.2, 0.2, 1)));
 	Renderer::getRenderer().renderTexture(image, rotation);
 	Renderer::getRenderer().renderTexture(radarRay, glm::translate(glm::vec3(0, 0, -0.1)) * rotation * glm::rotate(glm::radians((float)angle), glm::vec3(0, 0, -1)));
 

@@ -9,6 +9,7 @@
 #include "terraincomponent.h"
 #include "behaviour.h"
 #include "equipment.h"
+#include "modelcomponent.h"
 #include <iostream>
 
 using namespace entityx;

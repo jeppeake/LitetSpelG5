@@ -11,19 +11,24 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 			ComponentHandle<FlightComponent> ai_flight;
 			ComponentHandle<Transform> ai_transform;
 			for (Entity entity_ai : es.entities_with_components(ai_ai, ai_flight, ai_transform)) {
+
 				Entity entity_closest;
 				float closest = 1000000000.f;
 				float new_closest = 0.f;
+
 				ComponentHandle<FlightComponent> closest_flight;
 				ComponentHandle<Transform> closest_transform;
-				ComponentHandle<Model> closest_model;
-				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform, closest_model)) {
-					new_closest = length(closest_transform->pos - ai_transform->pos);
-					if (new_closest < closest && new_closest != 0) {
+				ComponentHandle<ModelComponent> closest_model;
+
+				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform)) {
+					new_closest = glm::length(closest_transform->pos - ai_transform->pos);
+					//std::cout << new_closest << "\n";
+					if (new_closest < closest && new_closest > 1.f) {
 						entity_closest = entity_closest_search;
 						closest = new_closest;
 					}
 				}
+
 				//std::cout << closest << "\n";
 				if (ai_ai->behaviours.size() != 0) {
 					for (int i = 0; i < ai_ai->behaviours.size(); i++) {
@@ -45,6 +50,8 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					ai_flight->setInput(com.steering);
 					if (ai_ai->throttle_allowed) {
 						ai_flight->i_throttle = com.throttle;
+					}
+					if (ai_ai->brake_allowed) {
 						ai_flight->i_airBrake = com.brake;
 					}
 					if (com.brake > 0.f) {
@@ -56,7 +63,7 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					if (entity_ai.has_component<Equipment>()) {
 						entity_ai.component<Equipment>()->primary.at(0).shouldFire = com.fire_primary;
 						if (com.fire_primary) {
-							std::cout << "FIRING!" << std::endl;
+							//std::cout << "FIRING!" << std::endl;
 						}
 					}
 				}

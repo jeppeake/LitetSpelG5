@@ -11,6 +11,7 @@
 #include <stack>
 #include "texture.h"
 
+
 Model::Mesh::Mesh(aiMesh * mesh)
 {
 	name = mesh->mName.C_Str();
@@ -226,8 +227,7 @@ void Model::buildBoundingBoxes(Mesh * m, glm::mat4 transform)
 	
 
 	for (int i = 0; i < m->vertices.size(); i++) {
-		auto pos = m->vertices[i].position;
-
+		auto pos = transform*glm::vec4(m->vertices[i].position, 1.0);
 
 		float len = glm::length(pos);
 		if (len > max_radius)

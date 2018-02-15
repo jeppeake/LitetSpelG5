@@ -7,6 +7,10 @@ boostspeed
 600
 breakforce
 100
+150
+75
+0.3
+3
 acceleration
 0.5
 turnrate

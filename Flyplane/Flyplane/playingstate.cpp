@@ -92,7 +92,7 @@ void PlayingState::spawnEnemies(int nr) {
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
-		entity.assign<AIComponent>(behaviours, true, true);
+		entity.assign<AIComponent>(behaviours, true, true, false);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
@@ -136,7 +136,6 @@ void PlayingState::loadLoadout()
 	PlanePreset pp;
 	std::getline(file, str);
 	pp.load(str);
-
 
 	float x = 0;
 	float z = 0;
@@ -230,7 +229,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
-	AssetLoader::getLoader().loadModel("assets/buildings/hus1.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("assets/buildings/911.fbx", "hus1");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -301,7 +300,7 @@ void PlayingState::init()
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
-	entity2.assign<AIComponent>(behaviours, true, true);
+	entity2.assign<AIComponent>(behaviours, true, true, false);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
 	entity2.assign <HealthComponent>(100.0);
 
@@ -332,7 +331,7 @@ void PlayingState::init()
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
-		entity.assign<AIComponent>(behaviours, true, true);
+		entity.assign<AIComponent>(behaviours, true, true, false);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
