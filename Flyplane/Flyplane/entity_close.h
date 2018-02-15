@@ -6,7 +6,9 @@ public:
 		this->distance = distance;
 	}
 	bool test(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
+		//std::cout << "Testing\n";
 		if (closest.valid()) {
+			//std::cout << glm::length(closest.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";
 			return (glm::length(closest.component<Transform>()->pos - AI.component<Transform>()->pos) < distance);
 		}
 		else {
