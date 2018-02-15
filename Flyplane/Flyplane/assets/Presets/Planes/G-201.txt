@@ -23,4 +23,4 @@ weppos
 -0.1
 -0.4
 description
-The first batch of the G-201 started manufacturing in 1952, this is easily the oldest plane currently in service, owing its long lifespan to ease of manufacture and a timeless design, earning it the nickname "Bongen" by its pilots. Worth noting is that this aircraft shares a surprising amount of parts in common with agricultural machines.
+The first batch of the G-201 started manufacturing in 1952, this is easily the oldest plane currently in service, owing its long lifespan to ease of manufacture and a timeless design. Worth noting is that this aircraft shares a surprising amount of parts in common with agricultural machines.

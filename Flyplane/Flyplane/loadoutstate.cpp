@@ -218,7 +218,7 @@ void LoadoutState::update(double dt) {
 
 	if (planePicked) {
 		AssetLoader::getLoader().getMenutext()->drawText(planePresets[selected].name, infoPos, glm::vec3(1, 1, 1), 1);
-		AssetLoader::getLoader().getText()->drawText("Description: " + std::to_string(planePresets[selected].normalspeed), infoPos - glm::vec2(0, step * 1), glm::vec3(1, 1, 1), infoScale*0.5);
+		AssetLoader::getLoader().getText()->drawText("Description: " + planePresets[selected].description, infoPos - glm::vec2(0, step * 1), glm::vec3(1, 1, 1), infoScale*0.75);
 		AssetLoader::getLoader().getText()->drawText("Normal speed: " + std::to_string(planePresets[selected].normalspeed), infoPos - glm::vec2(0, step * 2), glm::vec3(1, 1, 1), infoScale);
 		AssetLoader::getLoader().getText()->drawText("Boost speed: " + std::to_string(planePresets[selected].boostspeed), infoPos - glm::vec2(0, step * 3), glm::vec3(1, 1, 1), infoScale);
 		AssetLoader::getLoader().getText()->drawText("Breakforce: " + std::to_string(planePresets[selected].breakforce), infoPos - glm::vec2(0, step * 4), glm::vec3(1, 1, 1), infoScale);
