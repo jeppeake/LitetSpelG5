@@ -263,7 +263,7 @@ void PlayingState::init()
 	ex.systems.add<CollisionSystem>(AssetLoader::getLoader().getHeightmap("testmap"), this);
 	ex.systems.add<AISystem>();
 	ex.systems.add<SoundSystem>();
-	ex.systems.add<HealthSystem>();
+	ex.systems.add<HealthSystem>(this);
 	ex.systems.add<GameOver>(this);
 	ex.systems.add<ParticleSystem>();
 	ex.systems.configure();
@@ -455,7 +455,7 @@ void PlayingState::update(double dt)
 	}
 	
 	
-	if(Input::isKeyDown(GLFW_KEY_SPACE))
+	if(Input::isKeyPressed(GLFW_KEY_F8))
 		std::cout << ex.entities.size() << "\n";
 
 
@@ -489,7 +489,7 @@ void PlayingState::update(double dt)
 	else {
 		ex.systems.update<RenderSystem>(dt);
 		if (!playerAlive) {
-			AssetLoader::getLoader().getBigtext()->drawText("WASTED", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
+			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
 		Window::getWindow().showCursor(true);

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "glm\glm.hpp"
+#include "weapon.h"
 
 class WeaponPreset {
 public:
@@ -17,4 +18,5 @@ public:
 	WeaponPreset() {}
 	~WeaponPreset() {}
 	void load(std::string presetname);
+	Weapon* getWeapon();
 };

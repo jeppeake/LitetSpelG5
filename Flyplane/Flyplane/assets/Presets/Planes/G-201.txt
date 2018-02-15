@@ -1,16 +1,24 @@
 G-201
+model
 assets/G-201/G-201.fbx
+normalspeed
 75
+boostspeed
 150
+breakforce
 50
+acceleration
 0.5
+turnrate
 2
+skin
 Brown/gray
 assets/G-201/G-201_TEX.png
--end textures-
+weppos
 -1.55
 -0.1
 -0.4
+weppos
 1.55
 -0.1
 -0.4
