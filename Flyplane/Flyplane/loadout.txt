@@ -1,8 +1,10 @@
-assets\Presets\Planes\MIG-212A.txt
+assets\Presets\Planes\Starfighter.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
-2
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+0
