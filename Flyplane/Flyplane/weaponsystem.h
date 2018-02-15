@@ -189,7 +189,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 		entityx::ComponentHandle<PlayerComponent> play;
 		for (Entity entity : es.entities_with_components(play, trans)) {
-			entityx::ComponentHandle<AIComponent> ai;
 			entityx::ComponentHandle<Target> target;
 			entityx::ComponentHandle<Transform> aitran;
 			glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
@@ -199,7 +198,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (Entity enemy : es.entities_with_components(aitran, target)) {
 				glm::vec3 dir = aitran->pos - trans->pos;
 				float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
-				ai = enemy.component<AIComponent>();
 				target->is_targeted = false;
 				double score = (dot * target->heat) / glm::length(dir);
 				if (score > bestScore && entity.component<Target>().get()->faction != target->faction) {
