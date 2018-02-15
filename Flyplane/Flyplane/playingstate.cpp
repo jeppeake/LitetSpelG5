@@ -233,7 +233,8 @@ void PlayingState::init()
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
-	AssetLoader::getLoader().loadSound("assets/Sound/airplane-takeoff.wav", "takeoff");
+	//AssetLoader::getLoader().loadSound("assets/Sound/airplane-takeoff.wav", "takeoff");
+	AssetLoader::getLoader().loadSound("assets/Sound/airplane1.wav", "takeoff");
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
@@ -515,6 +516,14 @@ void PlayingState::gameOver() {
 	for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
 		sound = entity.component<SoundComponent>();
 		SoundComponent* s = sound.get();
+
+		s->sound.pause();
+	}
+
+	ComponentHandle<BurstSoundComponent> burstSound;
+	for (entityx::Entity entity : ex.entities.entities_with_components(burstSound)) {
+		burstSound = entity.component<BurstSoundComponent>();
+		BurstSoundComponent* s = burstSound.get();
 
 		s->sound.pause();
 	}

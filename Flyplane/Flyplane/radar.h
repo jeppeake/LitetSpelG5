@@ -20,7 +20,7 @@ struct RadarData {
 class Radar {
 private:
 	Texture image;
-	Texture plane;
+	///Texture plane;
 	Texture radarRay;
 	ShaderProgram shader;
 	GLuint vao, vbo;

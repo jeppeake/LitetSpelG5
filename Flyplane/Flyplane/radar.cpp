@@ -9,7 +9,7 @@
 Radar::Radar() {
 	radarRay.loadTexture("assets/textures/radarray.png", 1);
 	image.loadTexture("assets/textures/radar2.png", 1);
-	plane.loadTexture("assets/textures/radarPlane.png", 1);
+	//plane.loadTexture("assets/textures/radarPlane.png", 1);
 	shader.create("radarVS.glsl", "radarFS.glsl");
 	
 	oldAngle = 0;
@@ -84,8 +84,6 @@ void Radar::draw(float dt) {
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 150, s.y - 150, 125, 125);
 
-
-	//Renderer::getRenderer().renderTexture(plane, rotation * glm::translate(glm::vec3(0, 0.8, 0)) * glm::scale(glm::vec3(0.2, 0.2, 1)));
 	Renderer::getRenderer().renderTexture(image, rotation);
 	Renderer::getRenderer().renderTexture(radarRay, glm::translate(glm::vec3(0, 0, -0.1)) * rotation * glm::rotate(glm::radians((float)angle), glm::vec3(0, 0, -1)));
 
