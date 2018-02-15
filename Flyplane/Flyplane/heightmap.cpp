@@ -56,6 +56,9 @@ void Heightmap::loadMap(const std::string &maptxt) {
 	textures[1].loadTexture(mat2);
 	textures[2].loadTexture(mat3);
 
+
+	
+
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, heightmap, LCT_RGBA, 16U);
 	if (error != 0) {
@@ -63,6 +66,8 @@ void Heightmap::loadMap(const std::string &maptxt) {
 		system("pause");
 		std::exit(EXIT_FAILURE);
 	}
+
+	pos = glm::vec3(-float(width*scale.x/2.f), 0, -(height*scale.z/2.f));
 
 	std::vector<uint16_t> heights;
 
@@ -79,9 +84,9 @@ void Heightmap::loadMap(const std::string &maptxt) {
 			
 			heights.push_back(sample);
 
-			float x = ix;
-			float y = sample*255.0/double(std::numeric_limits<uint16_t>::max());
-			float z = iy;
+			float x = scale.x*ix + pos.x;
+			float y = scale.y*sample*255.0/double(std::numeric_limits<uint16_t>::max()) + pos.y;
+			float z = scale.z*iy + pos.z;
 			vertices.emplace_back(x, y, z);
 
 			/*
@@ -146,8 +151,10 @@ void Heightmap::loadStructures()
 	unsigned x, y, type;
 	while (infile >> x >> y >> type)
 	{
-		double height = this->heightAt(glm::vec3(x,0.0,y));
-		houses.push_back(House(glm::vec3(x, height, y), type));
+		glm::vec3 p(x,0,y);
+		p = p * scale + pos;
+		double height = this->heightAt(p);
+		houses.push_back(House(glm::vec3(p.x, height, p.z), type));
 	}
 }
 
@@ -157,7 +164,7 @@ void Heightmap::buildStructures(entityx::EntityManager & mgr)
 	{
 		entityx::Entity ent = mgr.create();
 		ent.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
-		ent.assign<CollisionComponent>();
+		//ent.assign<CollisionComponent>();
 		ent.assign<Transform>(house.pos, glm::quat());
 	}
 }
@@ -165,6 +172,7 @@ void Heightmap::buildStructures(entityx::EntityManager & mgr)
 void Heightmap::bind(ShaderProgram& shader) {
 	shader.uniform("scale", scale);
 	shader.uniform("heightmapSize", getSize());
+	shader.uniform("heightmapPos", pos);
 	
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -188,8 +196,10 @@ void Heightmap::unbind() {
 
 double Heightmap::heightAt(glm::vec3 _pos) {
 	double height = 0;
+	_pos -= pos;
 	int x = (int)(_pos.x / scale.x);
 	int z = (int)(_pos.z / scale.z);
+
 
 	if (x < 0 || x >= width-1 || z < 0 || z >= this->height-1)
 		return height;
@@ -216,7 +226,7 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 		height += (v3.y - v4.y) * (1.0f - sqX);
 	}
 
-	return scale.y * height;
+	return height;
 }
 
 void Heightmap::bindIndices(int i) {
@@ -280,7 +290,7 @@ bool lineSegmentSAT(const glm::dvec3 &axis, const glm::dvec3& orig, const glm::d
 
 
 void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig) {
-	glm::vec2 pos(orig.x/scale.x, orig.z/scale.z);
+	glm::vec2 pos((orig.x - this->pos.x)/scale.x, (orig.z - this->pos.z)/scale.z);
 
 	// better read as "left divides" etc
 	bool divideLeft = false;
@@ -337,10 +347,10 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 
 					glm::vec3 centerBottom = glm::vec3(center.x, 0, center.y);
 					centerBottom += patchSize * 0.5f * glm::vec3(ix, 0, iy);
-					centerBottom = scale * centerBottom;
+					centerBottom = scale * centerBottom + this->pos;
 
 					glm::vec3 centerTop = centerBottom;
-					centerTop.y = 255.f * scale.y;
+					centerTop.y += 255.f * scale.y;
 
 					bool cornerIntersection = true;
 					for (int j = 0; j < 4; j++) {

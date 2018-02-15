@@ -6,7 +6,7 @@ uniform mat4 ViewProjMatrix;
 uniform sampler2D heightmap;
 uniform sampler2D materialmap;
 uniform vec2 heightmapSize;
-
+uniform vec3 heightmapPos;
 
 uniform vec2 offset;
 uniform vec2 patch_size;
@@ -57,7 +57,7 @@ void main() {
 	//height = 0;
 	//height = -patch_size.x/1400.0;
 
-	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y);
+	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y) + heightmapPos;
 
 	Normal = sampleNormal(hmUV);
 	

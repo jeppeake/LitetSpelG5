@@ -1,32 +1,46 @@
 MIG-212A
+model
 assets/MIG-212A.fbx
+normalspeed
 100
+boostspeed
 200
+breakforce
 50
+acceleration
 0.3
+turnrate
 1.5
+skin
 White
 assets/MIG-212A_UV.png
+skin
 Green
 assets/MIG-212A_UV green.png
+skin
 Jobbig
 assets/MIG-212A_UV magenta.png
--end textures-
+weppos
 -0.3
 -0.1225
 -0.8
+weppos
 0.3
 -0.1225
 -0.8
+weppos
 -0.6
 -0.1225
 -0.8
+weppos
 0.6
 -0.1225
 -0.8
+weppos
 -0.9
 -0.1225
 -0.8
+weppos
 0.9
 -0.1225
 -0.8

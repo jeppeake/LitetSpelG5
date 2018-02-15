@@ -157,6 +157,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().setCrosshairPos(newPos);
 			Renderer::getRenderer().orientation = playerOrientation;
 			radar.draw((float)dt);
+			Renderer::getRenderer().RenderClouds();
 			Renderer::getRenderer().RenderCrosshair();
 		}
 			

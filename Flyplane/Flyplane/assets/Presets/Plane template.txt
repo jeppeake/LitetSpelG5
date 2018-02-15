@@ -1,27 +1,28 @@
-name 		(string)
-model 		(string)
-normalspeed 	(double)
-boostspeed	(double)
-breakforce	(double)
-acceleration	(double)
-turnrate	(double)
-[skin textures]
-name
-file
-name
-file
-...
--end textures-
-[weapon pos offsets array]
-x
-y
-z
-x
-y
-z
-x
-y
-z
-...
-..
-.
+[string] (Plane name)
+
+model
+[string]
+
+normalspeed
+[double]
+
+boostspeed
+[double]
+
+breakforce
+[double]
+
+acceleration
+[double]
+
+turnrate
+[double]
+
+skin
+[string] (name)
+[string] (path)
+
+weppos
+[double] (x)
+[double] (y)
+[double] (z)

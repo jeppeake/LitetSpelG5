@@ -113,10 +113,10 @@ private:
 		handleHealth(a, b);
 		handleHealth(b, a);
 
-		if (a.has_component<PointComponent>())
+		/*if (a.has_component<PointComponent>())
 			state->addPoints(a.component<PointComponent>().get()->points);
 		if (b.has_component<PointComponent>())
-			state->addPoints(b.component<PointComponent>().get()->points);
+			state->addPoints(b.component<PointComponent>().get()->points);*/
 
 		if (a.has_component<FlightComponent>() && b.has_component<FlightComponent>()) {
 			to_remove[a.id()] = a;

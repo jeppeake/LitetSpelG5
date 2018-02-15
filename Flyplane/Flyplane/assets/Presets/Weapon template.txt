@@ -1,21 +1,54 @@
-name		(string)
-model		(string)
-projModel	(string)
-ammo		(unsigned int)
-lifetime	(unsigned int)
-speed		(double)
-mass		(double)
-cooldown	(double)
-turnRate	(double)
-scale		(double)
-projScale	(double)
-infAmmo		(bool)
-isMissile	(bool)
-dissappear	(bool)
-extra offset.x	(double)
-extra offset.y	(double)
-extra offset.z	(double)
-[missile stuff]
-detonateRange	(double)
-explodeRadius	(double)
-damage	(double)
+[string] (name)
+
+model
+[string]
+
+projmodel
+[string]
+
+ammo
+[unsigned int]
+
+lifetime
+[double]
+
+speed
+[double]
+
+mass
+[double]
+
+cooldown
+[double]
+
+turnRate
+[double]
+
+scale
+[double]
+
+projscale
+[double]
+
+infammo
+[bool (0/1)]
+
+ismissile
+[bool (0/1)]
+
+dissappear
+[bool (0/1)]
+
+offset
+[double] (x)
+[double] (y)
+[double] (z)
+
+detonaterange
+[double]
+
+exploderadius
+[double]
+
+damage
+[double]
