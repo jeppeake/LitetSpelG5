@@ -135,6 +135,7 @@ void Heightmap::loadMap(const std::string &maptxt) {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (GLvoid*)0);
 
 	glBindVertexArray(0);
+
 	this->loadStructures();
 }
 
@@ -157,7 +158,7 @@ void Heightmap::buildStructures(entityx::EntityManager & mgr)
 		entityx::Entity ent = mgr.create();
 		ent.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 		ent.assign<CollisionComponent>();
-		ent.assign<Transform>(house.pos, glm::quat(0.0,0.0,1.0,0.0));
+		ent.assign<Transform>(house.pos, glm::quat());
 	}
 }
 
