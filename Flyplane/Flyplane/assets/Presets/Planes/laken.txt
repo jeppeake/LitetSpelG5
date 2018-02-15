@@ -7,6 +7,8 @@ assets/Laken/Laken.fbx
 1.2
 Laken
 assets/Laken/Laken_TEX.png
+En Svensk tiger
+assets/Laken/Laken_TEX2.png
 -end textures-
 -0.3
 -0.16

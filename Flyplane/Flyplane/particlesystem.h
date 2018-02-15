@@ -24,7 +24,7 @@ public:
 
 		program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 200; i++) {
 			pool.emplace_back(5000);
 		}
 	}
