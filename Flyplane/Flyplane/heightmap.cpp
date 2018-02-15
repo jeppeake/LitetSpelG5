@@ -151,12 +151,10 @@ void Heightmap::loadStructures()
 	unsigned x, y, type;
 	while (infile >> x >> y >> type)
 	{
-		x *= scale.x;
-		y *= scale.z;
-		x += pos.x;
-		y += pos.z;
-		double height = this->heightAt(glm::vec3(x,0.0,y));
-		houses.push_back(House(glm::vec3(x, height, y), type));
+		glm::vec3 p(x,0,y);
+		p = p * scale + pos;
+		double height = this->heightAt(p);
+		houses.push_back(House(glm::vec3(p.x, height, p.z), type));
 	}
 }
 
@@ -166,7 +164,7 @@ void Heightmap::buildStructures(entityx::EntityManager & mgr)
 	{
 		entityx::Entity ent = mgr.create();
 		ent.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
-		ent.assign<CollisionComponent>();
+		//ent.assign<CollisionComponent>();
 		ent.assign<Transform>(house.pos, glm::quat());
 	}
 }
