@@ -44,6 +44,7 @@ public:
 	std::vector<glm::vec3> vertices;
 
 	std::vector<GLuint> indices[9];
+	glm::vec3 pos;
 	glm::vec3 scale;
 
 	
