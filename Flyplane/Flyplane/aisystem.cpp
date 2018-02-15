@@ -50,6 +50,8 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					ai_flight->setInput(com.steering);
 					if (ai_ai->throttle_allowed) {
 						ai_flight->i_throttle = com.throttle;
+					}
+					if (ai_ai->brake_allowed) {
 						ai_flight->i_airBrake = com.brake;
 					}
 					if (com.brake > 0.f) {
