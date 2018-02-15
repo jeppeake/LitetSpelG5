@@ -65,5 +65,9 @@ void PlanePreset::load(std::string presetname)
 			wepPos.push_back(pos);
 			continue;
 		}
+		else if (str.compare("description") == 0) {
+			std::getline(file, str);
+			description = str;
+		}
 	}
 }

@@ -478,12 +478,12 @@ void PlayingState::update(double dt)
 
 		ex.systems.update<FlightSystem>(dt);
 		ex.systems.update<PhysicsSystem>(dt);
+		ex.systems.update<WeaponSystem>(dt);
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
-		ex.systems.update<WeaponSystem>(dt);
 
 	}
 	else {
