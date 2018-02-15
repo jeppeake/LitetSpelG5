@@ -1,27 +1,22 @@
 Laken
 model
 assets/Laken/Laken.fbx
-175
-350
-75
-0.2
-1.2
 normalspeed
-300
+175
 boostspeed
-600
+350
 breakforce
-100
+75
 acceleration
-0.5
+0.2
 turnrate
-2
+1.2
 skin
 Laken
 assets/Laken/Laken_TEX.png
+skin
 En Svensk tiger
 assets/Laken/Laken_TEX2.png
--end textures-
 weppos
 -0.3
 -0.16
