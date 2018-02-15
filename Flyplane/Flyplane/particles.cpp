@@ -6,49 +6,6 @@
 #include "particles.h"
 #include "renderer.h"
 
-GLint createShader(const char *c)
-{
-	const GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
-	if (shader) {
-		glShaderSource(shader, 1, &c, NULL);
-		glCompileShader(shader);
-		const GLuint program = glCreateProgram();
-		if (program) {
-			GLint compiled = GL_FALSE;
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-			glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
-			if (compiled) {
-				glAttachShader(program, shader);
-				glLinkProgram(program);
-				glDetachShader(program, shader);
-			}
-			else
-			{
-				GLint success = 0;
-				glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-				if (success == GL_FALSE)
-				{
-					GLint log_size = 0;
-					glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
-					std::vector<GLchar> error(log_size);
-					glGetShaderInfoLog(shader, log_size, &log_size, &error[0]);
-					std::string errorstr{ &error[0] };
-
-					std::cout << "Error in ComputeShader:\n" << errorstr << "\n";
-
-					glDeleteShader(shader);
-					system("pause");
-					exit(1);
-				}
-			}
-		}
-		glDeleteShader(shader);
-		return program;
-	}
-	else {
-		return 0;
-	}
-}
 Particles::Particles(unsigned particles)
 {
 	srand(time(NULL));
@@ -74,17 +31,10 @@ Particles::Particles(unsigned particles)
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	glm::vec4 *v = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, (numParticles) * sizeof(glm::vec4), access);
 
-	/*
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.0, life);
-	std::uniform_real_distribution<float> dis2(0.0, 2);
-	*/
 
 	//Buffer the initial velocities
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		//v[i] = glm::vec4(dis2(gen), dis2(gen), dis2(gen),1.0);
 		v[i] = glm::vec4();
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -101,7 +51,6 @@ Particles::Particles(unsigned particles)
 
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		//l[i] = dis(gen);
 		l[i] = 0;
 	}
 
@@ -113,7 +62,6 @@ Particles::Particles(unsigned particles)
 	glm::vec4 *c = (glm::vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, numParticles * sizeof(glm::vec4), access);
 	for (unsigned i = 0; i < this->numParticles; i++)
 	{
-		//c[i] = glm::vec4(color, 1.0);
 		c[i] = glm::vec4();
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -156,7 +104,7 @@ void Particles::render()
 	program->uniform("projection", camera.getProjMatrix());
 	program->uniform("cPos", transform.pos);
 	program->uniform("cUp", transform.orientation * glm::vec3(0.0, 1.0, 0.0));
-	program->uniform("particleSize", 0.1f);
+	program->uniform("particleSize", size);
 	glDrawArrays(GL_POINTS, 0, numParticles);
 	glBindVertexArray(0);
 }
