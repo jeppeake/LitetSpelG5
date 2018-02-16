@@ -38,3 +38,5 @@ weppos
 1.5
 -0.38
 -0.6
+description
+The F92 "Spectre" sports fairly mediocre statistics, but carries an ace up its sleeve. The nose mounted auto tracking turret is designed to help pilots follow the target and take down enemis from unexpected angles. Some pilots question its effectiveness though, since the system was designed by 'KV heavy industries', the lowest bidder. 

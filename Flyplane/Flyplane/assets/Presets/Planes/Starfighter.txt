@@ -46,3 +46,5 @@ weppos
 2.0
 -0.43
 -0.2
+description
+The F110 is a forward-swept wing aircraft with a futuristic appearance, earning it the name "Starfighter" by its pilots. It sports an enormous arsenal and good flight characteristics.
