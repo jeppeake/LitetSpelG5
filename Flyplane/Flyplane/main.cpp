@@ -9,7 +9,7 @@
 #include "input.h"
 #include "transform.h"
 #include <sfml\Audio.hpp>
-
+#include "timevisualizer.h"
 #include "highscore.h"
 
 int main(void)
@@ -24,14 +24,22 @@ int main(void)
 	EngineState* engine = new MenuState();
 	engine->init();
 
+	TimeVisualizer::init();
+
 	Timer deltatime;
 	while (!Window::getWindow().shouldClose()) {
 		double dt = deltatime.restart();
 
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+		TimeVisualizer::startTiming("everything");
+
 		Renderer::getRenderer().update(dt);
 		engine->update(dt);
+
+		TimeVisualizer::stopTiming();
+		TimeVisualizer::draw();
 
 		EngineState* new_state = engine->newState();
 		if (new_state) {
