@@ -33,13 +33,13 @@ int main(void)
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		TimeVisualizer::startTiming("everything");
+		//TimeVisualizer::startTiming("everything");
 
 		Renderer::getRenderer().update(dt);
 		engine->update(dt);
 
-		TimeVisualizer::stopTiming();
-		TimeVisualizer::draw();
+		//TimeVisualizer::stopTiming();
+		//TimeVisualizer::draw();
 
 		EngineState* new_state = engine->newState();
 		if (new_state) {
