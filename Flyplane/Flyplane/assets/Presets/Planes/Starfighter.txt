@@ -2,15 +2,15 @@ Starfighter
 model
 assets/Starfighter/starfighter.fbx
 normalspeed
-125
+100
 boostspeed
-250
+175
 breakforce
-80
+75
 acceleration
-0.7
+0.5
 turnrate
-2.5
+2
 skin
 Starfighter
 assets/Starfighter/starfighter_TEX.png
@@ -46,5 +46,3 @@ weppos
 2.0
 -0.43
 -0.2
-description
-The F110 is a forward-swept wing aircraft with a futuristic appearance, earning it the name "Starfighter" by its pilots. It sports an enormous arsenal and good flight characteristics.
