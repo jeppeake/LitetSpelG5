@@ -234,7 +234,7 @@ public:
 			auto handle = e.second.component<ParticleComponent>();
 			if (handle)
 			{
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 5000);
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 5);
 			}
 			e.second.destroy();
 		}

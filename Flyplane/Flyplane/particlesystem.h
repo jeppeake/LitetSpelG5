@@ -41,19 +41,9 @@ public:
 					particles->systems[i]->used = false;
 					particles->systems.erase(particles->systems.begin() + i);
 					i--;
+					std::cout << "[DEBUG] - Removed timed particleSystem \n";
 				}
 			}
-			/*
-			trailShader.use();
-			auto transform = entity.component<Transform>();
-			if (transform) {
-				trailShader.uniform("spawn", transform->pos);
-				trailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
-			}
-			trailShader.uniform("life", 10.f);
-			trailShader.uniform("dt", float(dt));
-			*/
-
 
 			for (auto &p : particles->systems)
 			{

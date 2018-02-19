@@ -4,6 +4,7 @@ enum PARTICLE_TYPES
 {
 	TRAIL,
 	EXPLOSION,
+	ENGINE_TRAIL,
 	NUM_TYPES
 };
 struct AddParticleEvent {

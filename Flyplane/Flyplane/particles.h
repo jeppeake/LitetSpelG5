@@ -10,12 +10,12 @@
 class Particles
 {
 private:
-	Timer t;
 	float effectTime;
 	unsigned numParticles;
 	GLuint gPos, gColor, gLife, gVel, VAO;
 	ComputeShader compute;
 public:
+	Timer t;
 	Particles(unsigned particles, float _effectTime = 0);
 	void setComputeShader(ComputeShader &compute)
 	{
