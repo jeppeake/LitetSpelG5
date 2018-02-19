@@ -21,6 +21,10 @@ public:
 	{
 		this->compute = compute;
 	}
+	void setTimer(float _effectTime)
+	{
+		effectTime = _effectTime;
+	}
 	void update();
 	void render();
 	bool isAlive();

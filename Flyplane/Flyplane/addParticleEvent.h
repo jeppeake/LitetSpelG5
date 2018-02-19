@@ -9,5 +9,6 @@ enum PARTICLE_TYPES
 struct AddParticleEvent {
 	PARTICLE_TYPES type;
 	entityx::ComponentHandle<ParticleComponent> component;
-	AddParticleEvent(PARTICLE_TYPES type, entityx::ComponentHandle<ParticleComponent> component) : type(type), component(component) {}
+	float effectLength = 0;
+	AddParticleEvent(PARTICLE_TYPES type, entityx::ComponentHandle<ParticleComponent> component, float effectLength = 0) : type(type), component(component), effectLength(effectLength) {}
 };

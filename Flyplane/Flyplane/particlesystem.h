@@ -116,6 +116,7 @@ public:
 		if (free) {
 			free->program = &program;
 			free->type = event.type;
+			free->setTimer(event.effectLength);
 			resetShader.use();
 			free->setComputeShader(resetShader);
 			free->update();
