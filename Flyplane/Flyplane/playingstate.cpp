@@ -410,13 +410,8 @@ void PlayingState::init()
 
 void PlayingState::update(double dt)
 {
-	if (deltatime.elapsed() > 30) {
-		deltatime.restart();
-		spawnEnemies(2);
-	}
-
 	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
-
+	pointObject.time -= (float)dt;
 	/*
 	ex.systems.update<System class here>(dt);
 	*/
@@ -473,7 +468,18 @@ void PlayingState::update(double dt)
 	
 
 	if (playerAlive && !menuOpen) {
-		points += 10 * dt;
+		//points += 10 * dt;
+
+		if (deltatime.elapsed() > 30) {
+			deltatime.restart();
+			spawnEnemies(2);
+		}
+
+		timerMultiplier -= dt;
+		if (timerMultiplier <= 0) {
+			multiplier = 1;
+		}
+
 		Window::getWindow().showCursor(false);
 		ex.systems.update<PlayerSystem>(dt);
 		ex.systems.update<AISystem>(dt);
@@ -486,7 +492,10 @@ void PlayingState::update(double dt)
 		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
-
+		glm::vec2 window = Window::getWindow().size();
+		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
+		if (pointObject.time >  0)
+		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
 	else {
 		ex.systems.update<RenderSystem>(dt);

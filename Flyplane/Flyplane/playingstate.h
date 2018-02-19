@@ -7,6 +7,11 @@
 #include "highscore.h"
 #include "map.h"
 
+struct PointObject {
+	int points;
+	float time = 0;
+};
+
 class PlayingState : public EngineState {
 	Timer deltatime, t;
 	entityx::EntityX ex;
@@ -17,6 +22,9 @@ private:
 	bool menuOpen = false;
 	bool playerAlive = true;
 	float points = 0;
+	int multiplier = 1;
+	double timerMultiplier = 0;
+	PointObject pointObject;
 
 	sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
@@ -46,7 +54,17 @@ public:
 	void gameOver();
 
 	void addPoints(int p) {
-		points += p;
+		if (pointObject.time > 0) {
+			pointObject.points += p * multiplier;
+		}
+		
+		else {
+			pointObject.points = p * multiplier;
+		}
+		pointObject.time = 0.8;
+		points += pointObject.points;
+		multiplier++;
+		timerMultiplier = 10;
 	}
 
 };

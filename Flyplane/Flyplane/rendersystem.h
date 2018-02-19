@@ -156,11 +156,11 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		if (playing) {
+			Renderer::getRenderer().RenderClouds();
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			Renderer::getRenderer().setCrosshairPos(newPos);
 			Renderer::getRenderer().orientation = playerOrientation;
 			radar.draw((float)dt);
-			Renderer::getRenderer().RenderClouds();
 			Renderer::getRenderer().RenderCrosshair();
 		}
 			
