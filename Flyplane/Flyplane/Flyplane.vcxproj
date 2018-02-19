@@ -166,6 +166,7 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="timevisualizer.cpp" />
     <ClCompile Include="weaponpreset.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -261,6 +262,7 @@
     <ClInclude Include="terraincomponent.h" />
     <ClInclude Include="text.hpp" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="timevisualizer.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="timer.h" />
@@ -291,6 +293,8 @@
     <None Include="particletrail.glsl" />
     <None Include="textFrag.glsl" />
     <None Include="textVert.glsl" />
+    <None Include="timesFrag.glsl" />
+    <None Include="timesVert.glsl" />
     <None Include="vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

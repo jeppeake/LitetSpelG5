@@ -111,6 +111,9 @@
     <ClCompile Include="particles.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="timevisualizer.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -408,6 +411,9 @@
     <ClInclude Include="particlesystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="timevisualizer.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -478,6 +484,12 @@
     </None>
     <None Include="partVert.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="timesFrag.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="timesVert.glsl">
+      <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
