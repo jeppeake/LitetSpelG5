@@ -408,6 +408,9 @@
     <ClInclude Include="particlesystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="addParticleEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -477,6 +480,12 @@
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
     <None Include="partVert.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="explosionCompute.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="engineTrail.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
   </ItemGroup>
