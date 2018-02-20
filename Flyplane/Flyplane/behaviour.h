@@ -25,6 +25,7 @@ public:
 		this->condition = condition;
 	}
 	~Behaviour() {
+		std::cout << "Deleting condition\n";
 		delete condition;
 	}
 	virtual int getPriority() {
