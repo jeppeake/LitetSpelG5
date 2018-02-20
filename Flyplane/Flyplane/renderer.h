@@ -25,6 +25,7 @@ private:
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
+	ShaderProgram missileShader;
 
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;

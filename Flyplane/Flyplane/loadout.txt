@@ -1,8 +1,8 @@
-assets\Presets\Planes\MIG-212A.txt
+assets\Presets\Planes\laken.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile2.txt
+assets\Presets\Weapons\missile3.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
 assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile2.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile2.txt
 0

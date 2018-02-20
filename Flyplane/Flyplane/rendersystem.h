@@ -56,6 +56,12 @@ struct RenderSystem : public System<RenderSystem> {
 
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
 			hp = hpComponent->health / hpComponent->maxHP;
+
+			if (entity.has_component<Equipment>()) {
+				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
+				Renderer::getRenderer().setWeaponModel(equipment->special[equipment->selected].model);
+				Renderer::getRenderer().setAmmo(equipment->special[equipment->selected].stats.ammo);
+			}
 		}
 
 		ComponentHandle<CameraOnComponent> cameraOn;
