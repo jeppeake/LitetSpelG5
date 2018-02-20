@@ -16,6 +16,7 @@ enum Page { planes, weapons, skins };
 
 class LoadoutState : public EngineState {
 private:
+	FullscreenImage bg;
 	ButtonHandler bHandler;
 	ButtonHandler planesBHandler;
 	ButtonHandler weaponSlotsBHandler;

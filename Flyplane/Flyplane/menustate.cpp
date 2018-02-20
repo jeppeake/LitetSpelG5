@@ -49,7 +49,10 @@ void MenuState::spawnEnemies(int nr) {
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
-		entity.assign<ParticleComponent>();
+		auto handle = entity.assign<ParticleComponent>();
+		ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::TRAIL, handle);
+		ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::ENGINE_TRAIL, handle);
+
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -81,7 +84,6 @@ MenuState::~MenuState() {
 
 void MenuState::init() {
 	vignette.load("assets/Textures/vignette.png");
-	AssetLoader::getLoader().clearTerrains();
 	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonback.wav", "buttonback");
@@ -134,10 +136,12 @@ void MenuState::init() {
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
 	ex.systems.system<RenderSystem>()->cullingCamera = camera;
+	ex.systems.system<RenderSystem>()->playing = false;
 	//ex.systems.add<PlayerSystem>();
 	ex.systems.add<FlightSystem>();
 	ex.systems.add<AISystem>();
 	ex.systems.add<ParticleSystem>();
+
 	ex.systems.configure();
 
 	entity3 = ex.entities.create();
@@ -151,7 +155,10 @@ void MenuState::init() {
 	entity3.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 	entity3.assign <CollisionComponent>();
 	entity3.assign<PlayerComponent>();
-	entity3.assign<ParticleComponent>();
+	auto handle = entity3.assign<ParticleComponent>();
+	ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::TRAIL, handle);
+	ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::ENGINE_TRAIL, handle);
+
 	std::vector<Behaviour*> behaviours;
 
 	std::vector<glm::vec3> plotter;

@@ -55,6 +55,8 @@ void LoadoutState::updatePreview() {
 }
 
 void LoadoutState::init() {
+	bg.load("assets/Textures/loadoutbg.png");
+
 	entityp = ex.entities.create();
 	Camera camera;
 	Transform trans;
@@ -66,6 +68,7 @@ void LoadoutState::init() {
 	ex.systems.configure();
 
 	Renderer::getRenderer().setHeightmap(nullptr);
+	ex.systems.system<RenderSystem>()->playing = false;
 
 	timer.restart();
 
@@ -76,8 +79,8 @@ void LoadoutState::init() {
 	bHandler.addButton(new Button("PLANES", glm::vec2(50, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, planes), "buttonforward"));
 	bHandler.addButton(new Button("WEAPONS", glm::vec2(250, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, weapons), "buttonforward"));
 	bHandler.addButton(new Button("SKINS", glm::vec2(480, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
-	bHandler.addButton(new Button("BACK TO MENU", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
-	bHandler.addButton(new Button("SAVE LOADOUT", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
+	bHandler.addButton(new Button("BACK TO MENU", glm::vec2(50, Window::getWindow().size().y - 90), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
+	bHandler.addButton(new Button("SAVE LOADOUT", glm::vec2(350, Window::getWindow().size().y - 90), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
 	
 	
 	//Load all planes in plane preset folder
@@ -212,20 +215,23 @@ void LoadoutState::update(double dt) {
 
 	ex.systems.update<RenderSystem>(dt);
 	ex.systems.update<RotatePreviewSystem>(dt);
-	AssetLoader::getLoader().getBigtext()->drawText("LOADOUT", glm::vec2(100, Window::getWindow().size().y - 50), glm::vec3(1, 1, 1), 1);
 
-	glm::vec2 infoPos = glm::vec2(Window::getWindow().size().x - 400, Window::getWindow().size().y - 50);
+	
+
+	AssetLoader::getLoader().getBigtext()->drawText("LOADOUT", glm::vec2(50, Window::getWindow().size().y - 50), glm::vec3(1, 1, 1), 1);
+
+	glm::vec2 infoPos = glm::vec2(Window::getWindow().size().x - 300, Window::getWindow().size().y - 300);
 	double infoScale = 0.4;
 	double step = 30;
 
 	if (planePicked) {
 		AssetLoader::getLoader().getBigtext()->drawText(planePresets[selected].name, infoPos, glm::vec3(1, 1, 1), 1);
-		AssetLoader::getLoader().getText()->drawText("Description: " + planePresets[selected].description, infoPos - glm::vec2(0, step * 1), glm::vec3(1, 1, 1), infoScale*0.75);
-		AssetLoader::getLoader().getText()->drawText("Normal speed: " + std::to_string(planePresets[selected].normalspeed), infoPos - glm::vec2(0, step * 2), glm::vec3(1, 1, 1), infoScale);
-		AssetLoader::getLoader().getText()->drawText("Boost speed: " + std::to_string(planePresets[selected].boostspeed), infoPos - glm::vec2(0, step * 3), glm::vec3(1, 1, 1), infoScale);
-		AssetLoader::getLoader().getText()->drawText("Breakforce: " + std::to_string(planePresets[selected].breakforce), infoPos - glm::vec2(0, step * 4), glm::vec3(1, 1, 1), infoScale);
-		AssetLoader::getLoader().getText()->drawText("Turn rate: " + std::to_string(planePresets[selected].turnrate), infoPos - glm::vec2(0, step * 5), glm::vec3(1, 1, 1), infoScale);
-		AssetLoader::getLoader().getText()->drawText("Weapon slots: " + std::to_string(planePresets[selected].wepPos.size()), infoPos - glm::vec2(0, step * 6), glm::vec3(1, 1, 1), infoScale);
+		//AssetLoader::getLoader().getText()->drawText("Description: " + planePresets[selected].description, infoPos - glm::vec2(0, step * 1), glm::vec3(1, 1, 1), infoScale*0.75);
+		AssetLoader::getLoader().getText()->drawText("Normal speed: " + std::to_string(planePresets[selected].normalspeed), infoPos - glm::vec2(0, step * 1), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Boost speed: " + std::to_string(planePresets[selected].boostspeed), infoPos - glm::vec2(0, step * 2), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Breakforce: " + std::to_string(planePresets[selected].breakforce), infoPos - glm::vec2(0, step * 3), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Turn rate: " + std::to_string(planePresets[selected].turnrate), infoPos - glm::vec2(0, step * 4), glm::vec3(1, 1, 1), infoScale);
+		AssetLoader::getLoader().getText()->drawText("Weapon slots: " + std::to_string(planePresets[selected].wepPos.size()), infoPos - glm::vec2(0, step * 5), glm::vec3(1, 1, 1), infoScale);
 	}
 
 	bHandler.drawButtons();
