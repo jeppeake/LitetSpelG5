@@ -54,10 +54,8 @@ struct RenderSystem : public System<RenderSystem> {
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
 			hp = hpComponent->health / hpComponent->maxHP;
-			Transform cam = *transform.get();
-			glm::vec3 offset(0, 4*0.5, -9*0.5);
-			offset = glm::toMat3(normalize(cam.orientation))*offset;
-			//cam.pos += offset;
+
+
 
 			Camera cam;
 
