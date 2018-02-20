@@ -85,7 +85,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		float speed = glm::mix(speedAim, currentSpeed, float(1.0 - glm::pow(acc, dt))) * (1.f - flight->driftReduction);
 
 		glm::vec3 angular_vel;
-		float turnrateAim = (flight->turnrate + flight->turnrate * flight->drift * 2.f) * (1.f - flight->driftReduction);
+		float turnrateAim = (flight->turnrate + (flight->turnrate * flight->drift * 2.f) - (flight->turnrate * flight->throttle / 2) + (flight->turnrate * flight->airBrake / 2)) * (1.f - flight->driftReduction);
 		float turnrateACC = 0.005;
 		float turnrate = glm::mix(turnrateAim, flight->turnrate, float(1.0 - glm::pow(turnrateACC, dt)));
 
