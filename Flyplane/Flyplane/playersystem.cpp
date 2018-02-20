@@ -73,9 +73,25 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		flight->i_drift = driftFactor;
 
-		flight->i_pitch = pitch;
-		flight->i_roll = roll;
-		flight->i_yaw = yaw;
+		if (player->flyByWire) {
+			glm::vec3 ABS_up = glm::vec3(0.f, 1.f, 0.f);
+			glm::vec3 front = transform->orientation * glm::vec3(0.f, 0.f, 1.f);
+			glm::vec3 fixed_left = glm::cross(ABS_up, front);
+			glm::vec3 fixed_up = glm::cross(fixed_left, front);
+			glm::vec3 flyToPos = transform->pos + (fixed_left * yaw) + (fixed_up * -pitch) + front;
+			glm::vec3 input = SAIB::flyTo(transform->pos, transform->orientation, flyToPos);
+			flight->setInput(input);
+			std::cout << roll << std::endl;
+			if (roll > 0.1f || roll < -0.1f) {
+				flight->i_roll = roll;
+			}
+		}
+		else {
+
+			flight->i_pitch = pitch;
+			flight->i_roll = roll;
+			flight->i_yaw = yaw;
+		}
 
 		flight->i_throttle = throttle;
 		flight->i_airBrake = brake;

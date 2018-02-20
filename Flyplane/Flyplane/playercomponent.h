@@ -5,6 +5,6 @@ struct PlayerComponent {
 	PlayerComponent() {
 
 	}
-
+	bool flyByWire = false;
 	Camera camera;
 };
