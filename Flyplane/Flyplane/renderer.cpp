@@ -124,7 +124,11 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 }
 
 void Renderer::RenderWeapon() {
-	AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(500, 500), glm::vec3(1, 1, 0), 1.4);
+	auto s = Window::getWindow().size();
+	glViewport(s.x - 300, 0, 150, 150);
+	guiShader.use();
+	
+	//AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(500, 500), glm::vec3(1, 1, 0), 1.4);
 }
 
 Timer t;
