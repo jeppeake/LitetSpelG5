@@ -149,7 +149,10 @@ struct RenderSystem : public System<RenderSystem> {
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
 		for (Entity e : es.entities_with_components(particles)) {
-			particles->system->render();
+			for (auto &p : particles->systems)
+			{
+				p->render();
+			}
 		}
 
 		if (playing) {
