@@ -71,13 +71,27 @@ void main() {
 	color = 1.1*vec3(0.376, 0.702, 0.22);
 	vec3 matNormal = sampleNormal(vTex);
 
-	if(vPos.y + 300*(noise(vPos.xz*0.05)+noise(vPos.xz*0.01)) > 3500) {
+	float snowHeight = 2500 + 300*(noise(vPos.xz*0.05)+noise(vPos.xz*0.01));
+
+	if(vPos.y > snowHeight) {
 		color = vec3(1);
 	}
 
-	if(dot(matNormal, vec3(0,1,0)) < 0.35) {
-		color = vec3(0.3);
+	if(dot(matNormal, vec3(0,1,0)) < 0.4) {
+		color = vec3(0.4);
 	}
+
+	/*
+	float range = 200;
+	float val = (snowHeight - vPos.y)/range;
+	val = clamp(val, 0.0, 1.0);
+
+	color = mix(vec3(1), color, val);
+
+	val = (dot(matNormal, vec3(0,1,0)) - 0.35)/0.1;
+	val = clamp(val, 0.0, 1.0);
+	color = mix(vec3(0.4), color, val);
+	*/
 
 
 	float result = dot(sun, n);

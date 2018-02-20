@@ -331,6 +331,8 @@ glm::mat4& Renderer::getCrosshairPos()
 
 void Renderer::update(float dt)
 {
-
+	if (Input::isKeyPressed(GLFW_KEY_F8)) {
+		this->terrain_shader.reload();
+	}
 }
 

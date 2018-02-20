@@ -34,7 +34,7 @@ public:
 	void create(const std::string& vert,
 		const std::string& frag);
 
-	//void reload();
+	void reload();
 
 	void use();
 
