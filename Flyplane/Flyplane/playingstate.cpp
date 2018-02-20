@@ -78,6 +78,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <HealthComponent>(100.0);
 		auto handle = entity.assign<ParticleComponent>();
 		ex.events.emit<AddParticleEvent>(TRAIL, handle);
+		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -165,7 +166,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
-
+	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 

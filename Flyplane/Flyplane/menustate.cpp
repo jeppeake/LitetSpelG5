@@ -80,7 +80,7 @@ MenuState::~MenuState() {
 }
 
 void MenuState::init() {
-
+	vignette.load("assets/Textures/vignette.png");
 	AssetLoader::getLoader().clearTerrains();
 	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
@@ -202,6 +202,10 @@ void MenuState::update(double dt) {
 	//ex.systems.update<SoundSystem>(dt);
 	ex.systems.update<ParticleSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	vignette.bind();
+	vignette.draw();
+	glClear(GL_DEPTH_BUFFER_BIT);
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
 }
