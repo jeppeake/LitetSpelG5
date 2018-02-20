@@ -38,9 +38,13 @@ private:
 	CrossHair crosshair;
 	EnemyMarker markers;
 	Cloud clouds;
+
 	Texture hpbar;
 	Texture hpTexture;
 	glm::mat4 hpMatrix;
+
+	int weaponAmmo;
+	Model *missile = nullptr;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
@@ -50,6 +54,7 @@ private:
 	void Render(RenderObject& obj);
 	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
+	void RenderWeapon();
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -69,6 +74,8 @@ public:
 	void RenderCrosshair();
 	void RenderClouds();
 	void RenderHPBar(float hp);
+	void setWeaponModel(Model *mptr);
+	void setAmmo(int ammo);
 	Camera getCamera() &;
 	void setCamera(const Camera& camera);
 	void addMarker(glm::vec3 pos, float scale);
