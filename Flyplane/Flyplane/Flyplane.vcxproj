@@ -171,6 +171,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="addParticleEvent.h" />
     <ClInclude Include="aicomponent.h" />
     <ClInclude Include="aisystem.h" />
     <ClInclude Include="always_true.h" />
@@ -275,6 +276,8 @@
     <None Include="enemymarkerFS.glsl" />
     <None Include="enemymarkerGS.glsl" />
     <None Include="enemymarkerVS.glsl" />
+    <None Include="engineTrail.glsl" />
+    <None Include="explosionCompute.glsl" />
     <None Include="fcimageFrag.glsl" />
     <None Include="fcimageVertex.glsl" />
     <None Include="fragmentShader.glsl" />

@@ -59,7 +59,7 @@ entityx::Entity entity_p;
 entityx::Entity entity_formation;
 entityx::Entity entity2;
 
-sf::SoundBuffer* missileSB;
+//sf::SoundBuffer* missileSB;
 
 void PlayingState::spawnEnemies(int nr) {
 
@@ -75,7 +75,8 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
-		entity.assign<ParticleComponent>();
+		auto handle = entity.assign<ParticleComponent>();
+		ex.events.emit<AddParticleEvent>(TRAIL, handle);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -97,7 +98,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
 
-		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
+		WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
 		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 		std::vector<Weapon> primary;
 		std::vector<Weapon> secondary;
@@ -161,7 +162,8 @@ void PlayingState::loadLoadout()
 	entity_p.assign<SoundComponent>(*flyingSB);
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
-	entity_p.assign<ParticleComponent>();
+	auto handle = entity_p.assign<ParticleComponent>();
+	ex.events.emit<AddParticleEvent>(TRAIL, handle);
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
@@ -184,7 +186,7 @@ void PlayingState::loadLoadout()
 	std::getline(file, str);
 	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
 
-	WeaponStats stats2 = WeaponStats(10000, 3, 700, 0.2, 0.02f, true, 50);
+	WeaponStats stats2 = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true, 50);
 	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.25, 0.5), glm::vec3(0.25), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
@@ -409,13 +411,8 @@ void PlayingState::init()
 
 void PlayingState::update(double dt)
 {
-	if (deltatime.elapsed() > 30) {
-		deltatime.restart();
-		spawnEnemies(2);
-	}
-
 	glClearColor(100.0/255,149.0/255,234.0/255, 1.0);
-
+	pointObject.time -= (float)dt;
 	/*
 	ex.systems.update<System class here>(dt);
 	*/
@@ -472,7 +469,18 @@ void PlayingState::update(double dt)
 	
 
 	if (playerAlive && !menuOpen) {
-		points += 10 * dt;
+		//points += 10 * dt;
+
+		if (deltatime.elapsed() > 30) {
+			deltatime.restart();
+			spawnEnemies(2);
+		}
+
+		timerMultiplier -= dt;
+		if (timerMultiplier <= 0) {
+			multiplier = 1;
+		}
+
 		Window::getWindow().showCursor(false);
 		ex.systems.update<PlayerSystem>(dt);
 		ex.systems.update<AISystem>(dt);
@@ -485,7 +493,10 @@ void PlayingState::update(double dt)
 		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
-
+		glm::vec2 window = Window::getWindow().size();
+		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
+		if (pointObject.time >  0)
+		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
 	else {
 		ex.systems.update<RenderSystem>(dt);

@@ -6,8 +6,10 @@
 #include "particles.h"
 #include "renderer.h"
 
-Particles::Particles(unsigned particles)
+Particles::Particles(unsigned particles, float _effectTime)
 {
+	this->effectTime = _effectTime;
+	this->t.restart();
 	srand(time(NULL));
 	numParticles = particles;
 	glGenBuffers(1, &gPos);
@@ -78,7 +80,7 @@ Particles::Particles(unsigned particles)
 	glBindVertexArray(0);
 }
 
-void Particles::update(ComputeShader& compute)
+void Particles::update()
 {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, gPos);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, gVel);
@@ -107,4 +109,20 @@ void Particles::render()
 	program->uniform("particleSize", size);
 	glDrawArrays(GL_POINTS, 0, numParticles);
 	glBindVertexArray(0);
+}
+
+bool Particles::isAlive()
+{
+	if (!effectTime)
+		return true;
+	double elapsed = t.elapsed();
+	if (elapsed >= effectTime)
+	{
+		t.restart();
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }

@@ -46,7 +46,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		//projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
-	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
+	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, entityx::EventManager &em, unsigned int parentFaction) {
 		entityx::Entity missile = es.create();
 		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->scale);
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
@@ -55,7 +55,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
-		missile.assign<ParticleComponent>();
+		auto handle = missile.assign<ParticleComponent>();
+		em.emit<AddParticleEvent>(TRAIL, handle);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -105,7 +106,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 						parentfaction = target->faction;
 
 					if(pweapon->isMissile)
-						spawnMissile(trans.get(), pweapon, planeSpeed, es, parentfaction);
+						spawnMissile(trans.get(), pweapon, planeSpeed, es, events, parentfaction);
 					else {
 						spawnBullet(trans.get(), pweapon, planeSpeed, es, parentfaction);
 
@@ -141,7 +142,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					parentfaction = target->faction;
 
 				if (weapon->isMissile)
-					spawnMissile(trans.get(), weapon, planeSpeed, es, parentfaction);
+					spawnMissile(trans.get(), weapon, planeSpeed, es,events, parentfaction);
 				else
 					spawnBullet(trans.get(), weapon, planeSpeed, es, parentfaction);
 
@@ -298,6 +299,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity explosion = es.create();
 				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
 				explosion.assign<Transform>(trans->pos);
+				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), true, 500);
+				auto handle = explosion.assign<ParticleComponent>();
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
 				entity.destroy();
 			}
 		}
@@ -317,7 +321,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				health->health -= damage;
 				std::cout << "Explosion did " << damage << " damage." << "\n";
 			}
-			entity_explosion.destroy();
+			entity_explosion.remove<ExplosionComponent>();
 		}
 	};
 };

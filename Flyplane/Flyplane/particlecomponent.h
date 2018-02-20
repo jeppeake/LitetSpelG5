@@ -1,9 +1,9 @@
 #pragma once
-
+#include <vector>
 #include "computeShader.h"
-#include "particles.h"
-
+#include <bitset>
+class Particles;
 struct ParticleComponent {
 	ParticleComponent() {}
-	Particles* system;
+	std::vector<Particles*> systems;
 };
