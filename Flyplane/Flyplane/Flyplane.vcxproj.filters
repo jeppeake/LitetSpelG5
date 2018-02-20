@@ -387,9 +387,6 @@
     <ClInclude Include="changeskinaction.h">
       <Filter>GUI\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="healthcomponent.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="healthsystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -416,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="addParticleEvent.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="healthcomponent.h">
+      <Filter>Systems\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

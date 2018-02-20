@@ -72,6 +72,10 @@ Renderer::Renderer() {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
 
 	glBindVertexArray(0);
+
+	hpbar.loadTexture("assets/textures/hpbar.png");
+	hpTexture.loadTexture("assets/textures/hp.png", 1);
+	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 }
 
 Renderer::~Renderer() {
@@ -221,6 +225,11 @@ void Renderer::RenderClouds() {
 	for (int i = 0; i < clouds.transform.size(); i++) {
 		renderTexture(clouds.texture, camera.getProjMatrix() * camera.getViewMatrix() * clouds.transform[i]);
 	}
+}
+
+void Renderer::RenderHPBar(float hp) {
+	renderTexture(hpbar, hpMatrix);
+	renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
 }
 
 Camera Renderer::getCamera() &

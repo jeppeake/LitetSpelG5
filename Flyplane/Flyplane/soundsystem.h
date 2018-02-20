@@ -55,10 +55,10 @@ struct SoundSystem : public System<SoundSystem> {
 			Transform t = *transform.get();
 
 			if (Input::isKeyDown(GLFW_KEY_W)) {
-				s->sound.setPitch(s->sound.getPitch() + 0.001f);
+				//s->sound.setPitch(s->sound.getPitch() + 0.001f);
 			}
 			else if (Input::isKeyDown(GLFW_KEY_S)) {
-				s->sound.setPitch(s->sound.getPitch() - 0.001f);
+				//s->sound.setPitch(s->sound.getPitch() - 0.001f);
 			}
 			//std::cout << "Pitch: " << s->sound.getPitch() << std::endl;
 			//s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
