@@ -193,7 +193,7 @@ void PlayingState::loadLoadout()
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 	entity_p.assign <Equipment>(pweapons, weapons);
-	entity_p.assign <HealthComponent>(100.0);
+	entity_p.assign <HealthComponent>(1000.0);
 
 	entityx::Entity terrain = ex.entities.create();
 
@@ -212,7 +212,6 @@ void PlayingState::restart() {
 
 void PlayingState::init() 
 {
-
 	Window::getWindow().showCursor(true);
 
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));

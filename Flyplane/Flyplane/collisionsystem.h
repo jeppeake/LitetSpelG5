@@ -18,6 +18,7 @@ class CollisionSystem : public entityx::System<CollisionSystem>
 private:
 	Heightmap *map;
 	PlayingState *state;
+	sf::Sound hitSound;
 
 	std::map<entityx::Entity::Id, entityx::Entity> to_remove;
 
@@ -105,6 +106,10 @@ private:
 				std::cout << "Did " << projectile->damage << " damage." << "\n";
 				// remove the projectile
 				to_remove[b.id()] = b;
+
+				if (b.has_component<FactionPlayer>()) {
+					hitSound.play();
+				}
 			}
 		}
 	}
@@ -149,10 +154,21 @@ private:
 		}
 	}
 public:
-	CollisionSystem(Heightmap *map) : map(map)  {};
-	CollisionSystem(Heightmap *map, PlayingState *state) : map(map), state(state) {};
+	CollisionSystem(Heightmap *map) : map(map) {
+		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
+		hitSound.setRelativeToListener(true);
+		hitSound.setPosition(0, 0, 0);
+	};
+	CollisionSystem(Heightmap *map, PlayingState *state) : map(map), state(state) {
+		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
+		hitSound.setRelativeToListener(true);
+		hitSound.setPosition(0, 0, 0);
+	};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
+		auto size = to_remove.size();
+
+
 		Heightmap* map = nullptr;
 		entityx::ComponentHandle<Terrain> terr;
 		entityx::Entity terrain;
@@ -225,6 +241,7 @@ public:
 				}
 			}
 		}
+
 
 		for (auto& e : to_remove)
 		{
