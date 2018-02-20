@@ -23,7 +23,6 @@
 #include "healthcomponent.h"
 #include "factioncomponents.h"
 #include "particlecomponent.h"
-#include "renderer.h"
 
 using namespace entityx;
 
@@ -87,10 +86,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			player = entity.component<PlayerComponent>();
 
 			Weapon* weapon = &equip->special[equip->selected];
-			if (weapon) {
-				Renderer::getRenderer().setWeaponModel(weapon->model);
-				Renderer::getRenderer().setAmmo(weapon->stats.ammo);
-			}
 		
 			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0 && equip->special.size() > 0) {
 				weapon->shouldFire = true;
