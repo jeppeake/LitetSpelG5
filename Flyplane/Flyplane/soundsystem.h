@@ -71,7 +71,7 @@ struct SoundSystem : public System<SoundSystem> {
 				float pitch = 0;
 
 				pitch = glm::clamp((flyplane.get()->throttle - flyplane.get()->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
-				std::cout << "Pitch: " << pitch << std::endl;
+				//std::cout << "Pitch: " << pitch << std::endl;
 				s->sound.setPitch(pitch);
 			}
 
