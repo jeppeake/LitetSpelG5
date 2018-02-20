@@ -83,10 +83,10 @@ public:
 			p->setComputeShader(engineTrailShader);
 			engineTrailShader.use();
 			if (transform) {
-				explosionShader.uniform("spawn", transform->pos);
-				explosionShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+				engineTrailShader.uniform("spawn", transform->pos);
+				engineTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
-			engineTrailShader.uniform("life", 3.f);
+			engineTrailShader.uniform("life", 1.f);
 			engineTrailShader.uniform("dt", float(dt));
 			break;
 		default:

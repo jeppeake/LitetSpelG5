@@ -1,11 +1,17 @@
 #include "SAIB.h"
 
 glm::vec3 SAIB::flyTo(glm::vec3 position, glm::quat orientation, glm::vec3 target) {
+
 	glm::vec3 front = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 0.0, 1.0));
 	glm::vec3 up = glm::normalize(glm::toMat3(orientation) * glm::vec3(0.0, 1.0, 0.0));
 	glm::vec3 left = glm::normalize(glm::toMat3(orientation) * glm::vec3(1.0, 0.0, 0.0));
-
-	glm::vec3 pt = glm::normalize(target - position);
+	glm::vec3 pt;
+	if (glm::length(target - position) >= 1.f) {
+		pt = glm::normalize(target - position);
+	}
+	else {
+		pt = target - position;
+	}
 
 	float pow = length(pt - front) / 2;
 	float roll = 0.f;

@@ -25,6 +25,7 @@ private:
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
+	ShaderProgram missileShader;
 
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
@@ -45,6 +46,7 @@ private:
 
 	int weaponAmmo;
 	Model *missile = nullptr;
+	glm::mat4 missileMatrix;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;

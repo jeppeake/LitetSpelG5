@@ -14,6 +14,8 @@
 
 #include "input.h "
 #include "particles.h"
+
+#include "SAIB.h"
 using namespace entityx;
 
 struct PlayerSystem : public System<PlayerSystem> {

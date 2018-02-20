@@ -420,6 +420,9 @@
     <ClInclude Include="healthcomponent.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
+    <ClInclude Include="camerasystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -501,6 +504,12 @@
       <Filter>Graphics\Shaders</Filter>
     </None>
     <None Include="timesVert.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="missileVS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="missileFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -52,34 +52,22 @@ struct RenderSystem : public System<RenderSystem> {
 			playerOrientation = transform.get()->orientation;
 			playerDir = playerOrientation * glm::vec3(0, 0, 1);
 			playerUp = playerOrientation * glm::vec3(0, 1, 0);
-			ComponentHandle<Physics> physics = entity.component<Physics>();
+
+
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
 			hp = hpComponent->health / hpComponent->maxHP;
 
-
-
-			Camera cam;
-
-			glm::vec3 v;
-			if (length(physics->velocity) > 0.0001f) {
-				v = normalize(physics->velocity);
+			if (entity.has_component<Equipment>()) {
+				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
+				Renderer::getRenderer().setWeaponModel(equipment->special[equipment->selected].model);
+				Renderer::getRenderer().setAmmo(equipment->special[equipment->selected].stats.ammo);
 			}
+		}
 
-			glm::mat4 lookAt = glm::lookAt(playerPos, playerPos - playerDir, glm::vec3(0, 1, 0));
-
-			Transform camTrans;
-			camTrans.orientation = glm::inverse(glm::quat_cast(lookAt));
-			camTrans.pos = playerPos;
-
-			glm::vec3 offset(0, 1, -5.5);
-
-			offset = playerOrientation * offset;
-			camTrans.pos += offset;
-
-			cam.setTransform(camTrans);
-
-			cullingCamera = cam;
-			Renderer::getRenderer().setCamera(cam);
+		ComponentHandle<CameraOnComponent> cameraOn;
+		for (Entity entity : es.entities_with_components(cameraOn)) {
+			cullingCamera = cameraOn->camera;
+			Renderer::getRenderer().setCamera(cameraOn->camera);
 		}
 
 		ComponentHandle<ModelComponent> model;

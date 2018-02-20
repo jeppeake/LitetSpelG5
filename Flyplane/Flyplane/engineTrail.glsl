@@ -21,7 +21,10 @@ uniform vec3 spawn;
 uniform vec3 direction;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
-float rand(float n);
+// [-1, 1]
+float rand(float n) { 
+	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
+}
 
 void main()
 {
@@ -34,19 +37,19 @@ void main()
 	}
 	else
 	{
-		Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
-		Positions[gid].xyz += Velocities[gid].xyz * dt;
+		//Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
+		//Positions[gid].xyz += Velocities[gid].xyz * dt;
 
 		Colors[gid].a = pow(1-Lives[gid] / life, 4);
 
-		//Positions[gid].xyz = spawn + direction * Lives[gid];
+		Positions[gid].xyz = spawn + direction * (Lives[gid]*3 + 2);
 	}
 	Lives[gid] += dt;
-	if(Lives[gid] >= life + 0.1*life*rand(float(gid)))
+	if(Lives[gid] >= life)
 	{
 		Lives[gid] -= life;
-		Positions[gid].xyz = spawn - direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
-
+		Positions[gid].xyz = spawn; // + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
+		Lives[gid] = (2.0/60.0) * life * (rand(float(gid) + 1000) + 1)/2;
 		vec3 vel;
 		vel.x = rand(float(gid + dt*10));
 		vel.y = rand(float(gid + 1000 + dt*10));
@@ -55,7 +58,3 @@ void main()
 	}
 }
 
-// [-1, 1]
-float rand(float n) { 
-	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
-}

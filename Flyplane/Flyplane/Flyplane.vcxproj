@@ -185,6 +185,7 @@
     <ClInclude Include="buttonhandler.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="cameraoncomponent.h" />
+    <ClInclude Include="camerasystem.h" />
     <ClInclude Include="changepageaction.h" />
     <ClInclude Include="changeplaneaction.h" />
     <ClInclude Include="changeskinaction.h" />
@@ -284,6 +285,8 @@
     <None Include="geometryShader.glsl" />
     <None Include="guiFragmentShader.glsl" />
     <None Include="guiVertexShader.glsl" />
+    <None Include="missileFS.glsl" />
+    <None Include="missileVS.glsl" />
     <None Include="partFrag.glsl" />
     <None Include="partGeom.glsl" />
     <None Include="particlereset.glsl" />
