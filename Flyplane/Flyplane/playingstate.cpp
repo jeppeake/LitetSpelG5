@@ -59,7 +59,7 @@ entityx::Entity entity_p;
 entityx::Entity entity_formation;
 entityx::Entity entity2;
 
-sf::SoundBuffer* missileSB;
+//sf::SoundBuffer* missileSB;
 
 void PlayingState::spawnEnemies(int nr) {
 
