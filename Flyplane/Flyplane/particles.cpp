@@ -118,6 +118,7 @@ bool Particles::isAlive()
 	double elapsed = t.elapsed();
 	if (elapsed >= effectTime)
 	{
+		t.restart();
 		return false;
 	}
 	else
