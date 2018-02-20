@@ -6,7 +6,9 @@
 
 class MenuState : public EngineState {
 private:
+	entityx::EntityX ex;
 	ButtonHandler bHandler;
+	void spawnEnemies(int nr);
 public:
 	virtual ~MenuState();
 	virtual void init();
