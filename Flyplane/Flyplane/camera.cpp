@@ -70,8 +70,9 @@ const glm::mat4& Camera::getProjMatrix() const
 	return this->projMatrix;
 }
 
-void Camera::setTransform(const Transform &t)
+void Camera::setTransform(const Transform &t, float _fov)
 {
+	
 	/*
 	pos = t.pos;
 	forward = glm::toMat3(t.orientation)*glm::vec3(0, 0, 1);
@@ -79,8 +80,10 @@ void Camera::setTransform(const Transform &t)
 	*/
 	transform = t;
 
+	this->fov = _fov;
+
 	// BAD
-	auto size = glm::vec2(Window::getWindow().size());
+	auto size = Window::getWindow().size();
 	this->projMatrix = glm::infinitePerspective(glm::radians(fov), size.x / size.y, 0.1f);
 
 	//this->projMatrix = glm::perspective(glm::radians(fov), size.x / size.y, 0.1f, 10'000.f);
@@ -92,6 +95,10 @@ void Camera::setTransform(const Transform &t)
 Transform Camera::getTransform() const
 {
 	return transform;
+}
+
+float Camera::getFov() const {
+	return fov;
 }
 
 glm::mat4 Camera::getInverse() const {

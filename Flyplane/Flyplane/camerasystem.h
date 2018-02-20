@@ -21,23 +21,33 @@ struct CameraSystem : public System<CameraSystem> {
 		for (Entity entity : es.entities_with_components(cameraOn, transform)) {
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 
+			float speed = length(physics->velocity);
 			glm::vec3 v;
-			if (length(physics->velocity) > 0.0001f) {
+			if (speed > 0.0001f) {
 				v = normalize(physics->velocity);
 			}
 
-			glm::mat4 lookAt = glm::lookAt(transform->pos, transform->pos - transform->orientation * glm::vec3(0,0,1), glm::vec3(0, 1, 0));
-
-			Transform camTrans;
-			camTrans.orientation = glm::inverse(glm::quat_cast(lookAt));
-			camTrans.pos = transform->pos;
-			 
 			glm::vec3 offset(0, 1, -5.5);
 
-			offset = transform->orientation * offset;
-			camTrans.pos += offset;
+			Transform camTrans = cameraOn->camera.getTransform();
 
-			cameraOn->camera.setTransform(camTrans);
+			double f = 0.0005;
+			camTrans.orientation = glm::mix(camTrans.orientation, transform->orientation, float(1.0 - glm::pow(f, 2.0*dt)));
+
+			offset = camTrans.orientation * offset;
+			camTrans.pos = transform->pos + offset;
+
+			float baseFov = 80.f;
+			float currentFov = cameraOn->camera.getFov();
+			float spread = 25.f;
+
+			float targetFov = baseFov + spread * (speed / 175.f - 1.f);
+
+			float fFov = 0.0005;
+			float newFov = glm::mix(currentFov, targetFov, float(1.0 - glm::pow(fFov, dt)));
+
+			
+			cameraOn->camera.setTransform(camTrans, newFov);
 		}
 	}
 

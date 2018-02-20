@@ -16,6 +16,7 @@ Renderer::Renderer() {
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
+	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -77,6 +78,8 @@ Renderer::Renderer() {
 	hpbar.loadTexture("assets/textures/hpbar.png");
 	hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
+
+	missileMatrix = glm::ortho(-1.5, 1.5, -1.5, 1.5);
 }
 
 Renderer::~Renderer() {
@@ -124,7 +127,18 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 }
 
 void Renderer::RenderWeapon() {
-	AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(500, 500), glm::vec3(1, 1, 0), 1.4);
+	auto s = Window::getWindow().size();
+	glViewport(s.x - 300, 0, 150, 150);
+	//renderTexture(hpbar, glm::translate(glm::vec3(0, 0, 0)));
+	this->missileShader.use();
+	missile->texture.bind(0);
+	for (int i = 0; i < missile->model_meshes.size(); i++) {
+		missile->model_meshes[i].first->bind();
+		this->missileShader.uniform("matrix", missileMatrix);
+		glDrawElements(GL_TRIANGLES, missile->model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
+	}
+	glViewport(0, 0, s.x, s.y);
+	AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(s.x - 400, 20), glm::vec3(1, 1, 0), 0.4);
 }
 
 Timer t;
@@ -208,7 +222,7 @@ void Renderer::RenderScene() {
 	}
 
 	//Render weapon
-	if (missile)
+	if (weaponAmmo)
 		RenderWeapon();
 
 	markers.clear();
