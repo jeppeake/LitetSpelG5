@@ -28,7 +28,9 @@ public:
 		this->dimensions = dimensions;
 		this->action = action;
 		soundHover = sf::Sound();
+		soundHover.setVolume(30);
 		soundClick = sf::Sound();
+		soundClick.setVolume(70);
 		soundHover.setBuffer(*AssetLoader::getLoader().getSoundBuffer("buttonsound"));
 		soundClick.setBuffer(*AssetLoader::getLoader().getSoundBuffer(soundstring));
 	}
