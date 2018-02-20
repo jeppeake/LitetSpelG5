@@ -4,6 +4,7 @@
 #include "buttonhandler.h"
 #include "menustate.h"
 #include "fullscreenimage.h"
+#include <string>
 
 class LoadingState : public EngineState {
 private:
@@ -12,9 +13,9 @@ private:
 	bool done = false;
 	std::string current;
 	sf::Sound music;
-	string name;
+	std::string name;
 public:
-	LoadingState(string name) : name(name) {}
+	LoadingState(std::string name) : name(name) {}
 	virtual ~LoadingState() {}
 	virtual void init();
 	virtual void update(double dt);

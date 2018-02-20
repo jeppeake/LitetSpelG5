@@ -19,6 +19,7 @@
 #include "radar.h"
 #include "aicomponent.h"
 #include "particlecomponent.h"
+#include "cameraoncomponent.h"
 
 using namespace entityx;
 
@@ -32,17 +33,19 @@ struct RenderSystem : public System<RenderSystem> {
 	{}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		bool playing = false;
+
 		ComponentHandle<PlayerComponent> player;
+		ComponentHandle<CameraOnComponent> camon;
 		ComponentHandle<Transform> transform;
 		glm::vec3 playerPos;
 		glm::vec3 playerDir;
 		glm::vec3 playerUp;
 		glm::quat playerOrientation;
-		for (Entity entity : es.entities_with_components(player, transform)) {
+		for (Entity entity : es.entities_with_components(camon, transform)) {
 			radar.setPlayer(*transform.get());
 
 			playing = true;
-			player = entity.component<PlayerComponent>();
+			camon = entity.component<CameraOnComponent>();
 			transform = entity.component<Transform>();
 			playerPos = transform->pos;
 			playerOrientation = transform.get()->orientation;
@@ -55,7 +58,7 @@ struct RenderSystem : public System<RenderSystem> {
 			offset = glm::toMat3(normalize(cam.orientation))*offset;
 			//cam.pos += offset;
 
-			Transform p_cam = player->camera.getTransform();
+			Transform p_cam = camon->camera.getTransform();
 
 			//double v = length(physics->velocity)*0.001;
 			double f_pos = 0.05;
@@ -66,10 +69,10 @@ struct RenderSystem : public System<RenderSystem> {
 
 			p_cam.orientation =  p_cam.orientation * glm::rotate(glm::quat(), glm::radians(0.f), glm::vec3(1,0,0));
 
-			player->camera.setTransform(p_cam);
+			camon->camera.setTransform(p_cam);
 
 			p_cam.pos += offset;
-			Camera c = player->camera;
+			Camera c = camon->camera;
 			c.setTransform(p_cam);
 
 			cullingCamera = c;
@@ -128,23 +131,7 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 		}
 
-		ComponentHandle<AIComponent> ai;
-
-		for (Entity entity : es.entities_with_components(ai, transform)) {
-			radar.addPlane(*transform.get());
-
-			glm::vec3 enemyPos = entity.component<Transform>()->pos;
-			float length = glm::distance(enemyPos, playerPos);
-			glm::vec3 color = glm::vec3(1, 0, 0);
-			if (entity.has_component<Target>()) {
-				if (entity.component<Target>().get()->is_targeted) {
-					color = glm::vec3(0, 1, 0);
-				}
-			}
-
-			length = 5.0 + length / 100.0f;
-			Renderer::getRenderer().addMarker(enemyPos, color, length);
-		}
+		
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
@@ -153,6 +140,25 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 
 		if (playing) {
+
+			ComponentHandle<AIComponent> ai;
+
+			for (Entity entity : es.entities_with_components(ai, transform)) {
+				radar.addPlane(*transform.get());
+
+				glm::vec3 enemyPos = entity.component<Transform>()->pos;
+				float length = glm::distance(enemyPos, playerPos);
+				glm::vec3 color = glm::vec3(1, 0, 0);
+				if (entity.has_component<Target>()) {
+					if (entity.component<Target>().get()->is_targeted) {
+						color = glm::vec3(0, 1, 0);
+					}
+				}
+
+				length = 5.0 + length / 100.0f;
+				Renderer::getRenderer().addMarker(enemyPos, color, length);
+			}
+
 			Renderer::getRenderer().RenderClouds();
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			Renderer::getRenderer().setCrosshairPos(newPos);

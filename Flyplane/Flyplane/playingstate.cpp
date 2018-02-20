@@ -155,6 +155,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity_p.assign <ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 	entity_p.assign <PlayerComponent>();
+	entity_p.assign <CameraOnComponent>();
 	entity_p.assign <FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 	entity_p.assign <CollisionComponent>();
 	entity_p.assign<SoundComponent>(*flyingSB);

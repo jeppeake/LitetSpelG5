@@ -414,6 +414,9 @@
     <ClInclude Include="timevisualizer.h">
       <Filter>UTILS</Filter>
     </ClInclude>
+    <ClInclude Include="cameraoncomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
