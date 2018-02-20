@@ -186,7 +186,8 @@ glm::vec3 SAIB::calculateInterdiction(entityx::Entity target, entityx::Entity in
 	glm::vec3 projectile_origin = AI_position;
 	float projectile_speed = interdictor.component<FlightComponent>()->current_speed + interdictor.component<Equipment>()->primary.at(0).stats.speed;
 
-	float t = glm::length(target_position - AI_position) / (projectile_speed - target_speed);
+	float t = (glm::length(target_position - AI_position) / (projectile_speed - target_speed)) * glm::dot(target_vector, glm::normalize( AI_position));
+	//float t = (glm::length(target_position - AI_position) / (projectile_speed - target_speed));
 
 	glm::vec3 aimPos = target_position + (target_vector * target_speed * t);
 
