@@ -39,6 +39,7 @@ public:
 				if (!particles->systems[i]->isAlive())
 				{
 					particles->systems[i]->used = false;
+					particles->systems[i]->t.restart();
 					particles->systems.erase(particles->systems.begin() + i);
 					i--;
 					std::cout << "[DEBUG] - Removed timed particleSystem \n";
@@ -106,6 +107,7 @@ public:
 		if (free) {
 			free->program = &program;
 			free->type = event.type;
+			free->t.restart();
 			free->setTimer(event.effectLength);
 			resetShader.use();
 			free->setComputeShader(resetShader);
