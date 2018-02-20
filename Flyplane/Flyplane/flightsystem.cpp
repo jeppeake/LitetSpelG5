@@ -57,9 +57,37 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 			flight->airBrake = glm::mix(flight->airBrake, 0.f, float(1.0 - glm::pow(fbt, dt)));
 		}
 
-		glm::vec3 angular_vel;
+		float maxDrift = 0.015;
 
-		float turnrate = flight->turnrate + flight->turnrate * flight->drift;
+		float drift = glm::pow(flight->drift, 0.005);
+		float driftFactor = (1.00000000001f + maxDrift - drift);
+
+		if (driftFactor < 0.02f) {
+			flight->driftReduction += 0.01;
+			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.9f);
+		}
+		else {
+			flight->driftReduction -= 0.016f;
+			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.9f);
+		}
+
+		float boostSpeed = flight->boost_speed;
+		float breakSpeed = flight->brake_speed;
+		float normalSpeed = flight->base_speed;
+		float acc = flight->engine_acceleration;
+		float currentSpeed = flight->current_speed;
+
+		float boostFactor = glm::clamp(flight->throttle - flight->airBrake, 0.f, 1.f);
+		float brakeFactor = glm::clamp(flight->airBrake - flight->throttle, 0.f, 1.f);
+
+		float speedAim = normalSpeed + ((boostSpeed - normalSpeed) * boostFactor) + ((breakSpeed - normalSpeed) * brakeFactor);//speed components
+
+		float speed = glm::mix(speedAim, currentSpeed, float(1.0 - glm::pow(acc, dt))) * (1.f - flight->driftReduction);
+
+		glm::vec3 angular_vel;
+		float turnrateAim = (flight->turnrate + flight->turnrate * flight->drift * 2.f) * (1.f - flight->driftReduction);
+		float turnrateACC = 0.005;
+		float turnrate = glm::mix(turnrateAim, flight->turnrate, float(1.0 - glm::pow(turnrateACC, dt)));
 
 		angular_vel.z = turnrate * 1.5 * flight->roll * flight->m_roll;
 		angular_vel.x = -turnrate * flight->pitch* flight->m_pitch;
@@ -77,28 +105,17 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		transform->orientation += spin * float(dt);
 		transform->orientation = normalize(transform->orientation);
 
-		float boostSpeed = flight->boost_speed;
-		float breakSpeed = flight->brake_speed;
-		float normalSpeed = flight->base_speed;
-		float acc = flight->engine_acceleration;
-		float currentSpeed = flight->current_speed;
+		glm::vec3 normalFlight = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor;
+		glm::vec3 driftFlight = physics->velocity * (drift - (drift * maxDrift));
 
-		float maxDrift = 0.01;
+		physics->velocity = normalFlight + driftFlight;
+		//physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
 
-		float drift = glm::pow(flight->drift, 0.005);
-		float driftFactor = (1.00000000001f + maxDrift - drift);
-
-		//float speed = (normalSpeed + (boostSpeed * flight->throttle) - (breakSpeed * flight->airBrake));
-		float boostFactor = glm::clamp(flight->throttle - flight->airBrake, 0.f, 1.f);
-		float brakeFactor = glm::clamp(flight->airBrake - flight->throttle, 0.f, 1.f);
-
-		float speedAim = normalSpeed + ((boostSpeed - normalSpeed) * boostFactor) + ((breakSpeed - normalSpeed) * brakeFactor);
-		float speed = glm::mix(speedAim, currentSpeed, float(1.0 - glm::pow(acc, dt)));
-
-		physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
 		float minSpeed = breakSpeed;
 		float gravFactor = (1.f - (glm::clamp(glm::length(physics->velocity), minSpeed, 0.f) / minSpeed)) * 0.1;
+
 		physics->velocity += physics->g * gravFactor;
+
 		//std::cout << gravFactor << "\n";
 		flight->current_speed = glm::length(physics->velocity);
 		/*
