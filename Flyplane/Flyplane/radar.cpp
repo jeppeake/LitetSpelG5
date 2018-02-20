@@ -79,7 +79,6 @@ void Radar::draw(float dt) {
 	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
 	text -= glm::vec2(8, 8);
 	AssetLoader::getLoader().getText()->drawText("W", text, glm::vec3(1), 0.4);
-
 	
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 150, s.y - 150, 125, 125);
