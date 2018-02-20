@@ -21,8 +21,10 @@ public:
 	//void update(float dt);
 	glm::mat4 getViewMatrix() const;
 	const glm::mat4& getProjMatrix() const;
-	void setTransform(const Transform& t);
+	void setTransform(const Transform& t, float fov = 85.f);
 	Transform getTransform() const;
+
+	float getFov() const;
 
 	glm::mat4 getInverse() const;
 };
