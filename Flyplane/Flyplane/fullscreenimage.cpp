@@ -13,7 +13,7 @@ std::vector<unsigned int> ind{
 };
 
 void FullscreenImage::load(std::string filename) {
-	tex.loadTexture(filename);
+	tex.loadTexture(filename, 1);
 
 	p.create("fcImagevertex.glsl", "fcimageFrag.glsl");
 

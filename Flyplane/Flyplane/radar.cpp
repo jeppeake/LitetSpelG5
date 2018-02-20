@@ -35,6 +35,7 @@ Radar::Radar() {
 }
 
 void Radar::draw(float dt) {
+	auto s = Window::getWindow().size();
 	oldAngle = angle;
 	angle += 360 * dt;
 	if (angle > 360)
@@ -55,32 +56,31 @@ void Radar::draw(float dt) {
 	text = glm::vec2(0, 125 / 2);
 	text = rotation * glm::vec4(text, 0, 1);
 	text *= 1.20;
-	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text += glm::vec2(s.x - 25 - 125 / 2, s.y - 25 - 125 / 2);
 	text -= glm::vec2(8, 8);
 	AssetLoader::getLoader().getText()->drawText("N", text, glm::vec3(1), 0.4);
 
 	text = glm::vec2(125 / 2, 0);
 	text = rotation * glm::vec4(text, 0, 1);
 	text *= 1.20;
-	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text += glm::vec2(s.x - 25 - 125 / 2, s.y - 25 - 125 / 2);
 	text -= glm::vec2(8, 8);
 	AssetLoader::getLoader().getText()->drawText("E", text, glm::vec3(1), 0.4);
 	
 	text = glm::vec2(0, -125 / 2);
 	text = rotation * glm::vec4(text, 0, 1);
 	text *= 1.20;
-	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text += glm::vec2(s.x - 25 - 125 / 2, s.y - 25 - 125 / 2);
 	text -= glm::vec2(8, 8);
 	AssetLoader::getLoader().getText()->drawText("S", text, glm::vec3(1), 0.4);
 
 	text = glm::vec2(-125 / 2, 0);
 	text = rotation * glm::vec4(text, 0, 1);
 	text *= 1.20;
-	text += glm::vec2(1280 - 25 - 125 / 2, 720 - 25 - 125 / 2);
+	text += glm::vec2(s.x - 25 - 125 / 2, s.y - 25 - 125 / 2);
 	text -= glm::vec2(8, 8);
 	AssetLoader::getLoader().getText()->drawText("W", text, glm::vec3(1), 0.4);
 	
-	auto s = Window::getWindow().size();
 	glViewport(s.x - 150, s.y - 150, 125, 125);
 
 	Renderer::getRenderer().renderTexture(image, rotation);
