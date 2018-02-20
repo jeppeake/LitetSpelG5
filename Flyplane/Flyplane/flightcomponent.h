@@ -25,5 +25,8 @@ struct FlightComponent {
 	float previous_speed = 0.f;
 	float engine_acceleration = 0.f;
 	float current_speed = 0.f;
+
+	//Timer driftTime;
+	float driftReduction = 0.f;
 	//float liftCoeff = 0.f, wingArea = 0.f;
 };

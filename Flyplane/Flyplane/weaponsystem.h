@@ -299,6 +299,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity explosion = es.create();
 				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
 				explosion.assign<Transform>(trans->pos);
+				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), true, 500);
+				auto handle = explosion.assign<ParticleComponent>();
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
 				entity.destroy();
 			}
 		}
@@ -318,7 +321,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				health->health -= damage;
 				std::cout << "Explosion did " << damage << " damage." << "\n";
 			}
-			entity_explosion.destroy();
+			entity_explosion.remove<ExplosionComponent>();
 		}
 	};
 };

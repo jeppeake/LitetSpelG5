@@ -48,12 +48,19 @@ struct SoundSystem : public System<SoundSystem> {
 		
 		ComponentHandle<PlayerComponent> player;
 		for (Entity entity : es.entities_with_components(player, transform)) {
-			//sound = entity.component<SoundComponent>();
+			sound = entity.component<SoundComponent>();
 			transform = entity.component<Transform>();
 
-			//SoundComponent* s = sound.get();
+			SoundComponent* s = sound.get();
 			Transform t = *transform.get();
 
+			if (Input::isKeyDown(GLFW_KEY_W)) {
+				//s->sound.setPitch(s->sound.getPitch() + 0.001f);
+			}
+			else if (Input::isKeyDown(GLFW_KEY_S)) {
+				//s->sound.setPitch(s->sound.getPitch() - 0.001f);
+			}
+			//std::cout << "Pitch: " << s->sound.getPitch() << std::endl;
 			//s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
 			sf::Listener::setPosition(t.pos.x, t.pos.y, t.pos.z);
 			glm::vec3 vec = glm::toMat3(t.orientation) * glm::vec3(0.0, 0.0, 1.0);

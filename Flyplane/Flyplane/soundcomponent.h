@@ -14,12 +14,14 @@ struct SoundComponent {
 };
 
 struct BurstSoundComponent {
-	BurstSoundComponent(sf::SoundBuffer& buffer) {
+	BurstSoundComponent(sf::SoundBuffer& buffer, bool shouldPlay = false, float minDistance = 100) {
 		sound.setBuffer(buffer);
-		//sound.play();
 		sound.setLoop(false);
-		sound.setMinDistance(100);
+		sound.setMinDistance(minDistance);
 		sound.setAttenuation(1);
+		
+		if(shouldPlay)
+			sound.play();
 	}
 
 	sf::Sound sound;
