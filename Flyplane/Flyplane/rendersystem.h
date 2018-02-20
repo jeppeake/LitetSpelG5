@@ -55,9 +55,7 @@ struct RenderSystem : public System<RenderSystem> {
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
 			hp = hpComponent->health / hpComponent->maxHP;
-			Transform cam = *transform.get();
-			glm::vec3 offset(0, 4*0.5, -9*0.5);
-			offset = glm::toMat3(normalize(cam.orientation))*offset;
+			
 			//cam.pos += offset;
 
 			Camera cam;
@@ -137,11 +135,13 @@ struct RenderSystem : public System<RenderSystem> {
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
 		for (Entity e : es.entities_with_components(particles)) {
-			particles->system->render();
+			for (auto &p : particles->systems)
+			{
+				p->render();
+			}
 		}
 
 		if (playing) {
-
 			ComponentHandle<AIComponent> ai;
 
 			for (Entity entity : es.entities_with_components(ai, transform)) {
@@ -159,19 +159,6 @@ struct RenderSystem : public System<RenderSystem> {
 				length = 5.0 + length / 100.0f;
 				Renderer::getRenderer().addMarker(enemyPos, color, length);
 			}
-			length = 5.0 + length / 100.0f;
-			Renderer::getRenderer().addMarker(enemyPos, color, length);
-		}
-		Renderer::getRenderer().RenderScene();
-		//radar.draw(float(dt));
-		ComponentHandle<ParticleComponent> particles;
-		for (Entity e : es.entities_with_components(particles)) {
-			for (auto &p : particles->systems)
-			{
-				p->render();
-			}
-		}
-
 			Renderer::getRenderer().RenderClouds();
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			Renderer::getRenderer().setCrosshairPos(newPos);
@@ -180,6 +167,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().RenderCrosshair();
 			Renderer::getRenderer().RenderHPBar(hp);
 		}
-			
+		//Renderer::getRenderer().RenderScene();
+		//radar.draw(float(dt));
 	}
 };
