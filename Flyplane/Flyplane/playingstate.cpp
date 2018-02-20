@@ -77,6 +77,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <HealthComponent>(100.0);
 		auto handle = entity.assign<ParticleComponent>();
 		ex.events.emit<AddParticleEvent>(TRAIL, handle);
+		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -156,6 +157,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity_p.assign <ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 	entity_p.assign <PlayerComponent>();
+	entity_p.assign <CameraOnComponent>();
 	entity_p.assign <FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 	entity_p.assign <CollisionComponent>();
 	entity_p.assign<SoundComponent>(*flyingSB);
@@ -163,7 +165,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
-
+	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 

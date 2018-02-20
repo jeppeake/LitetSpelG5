@@ -36,7 +36,7 @@ void main()
 		Velocities[gid].xyz -= Velocities[gid].xyz * dt;
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].g += Lives[gid] / 2.0 * dt;
+		Colors[gid].g += Lives[gid] / 3.0 * dt;
 		Colors[gid].a -= dt / 3.0;
 	}
 	Lives[gid] += dt;

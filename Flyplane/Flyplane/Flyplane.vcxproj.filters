@@ -411,6 +411,9 @@
     <ClInclude Include="timevisualizer.h">
       <Filter>UTILS</Filter>
     </ClInclude>
+    <ClInclude Include="cameraoncomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
     <ClInclude Include="addParticleEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
