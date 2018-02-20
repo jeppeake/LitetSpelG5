@@ -46,38 +46,32 @@ struct RenderSystem : public System<RenderSystem> {
 			transform = entity.component<Transform>();
 			playerPos = transform->pos;
 			playerOrientation = transform.get()->orientation;
-			playerDir = glm::mat3(playerOrientation) * glm::vec3(0, 0, 1);
-			playerUp = glm::mat3(playerOrientation) * glm::vec3(0, 1, 0);
+			playerDir = playerOrientation * glm::vec3(0, 0, 1);
+			playerUp = playerOrientation * glm::vec3(0, 1, 0);
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 
-			Transform cam = *transform.get();
-			glm::vec3 offset(0, 4*0.5, -9*0.5);
-			offset = glm::toMat3(normalize(cam.orientation))*offset;
-			//cam.pos += offset;
+			Camera cam;
 
-			Transform p_cam = player->camera.getTransform();
-
-			//double v = length(physics->velocity)*0.001;
-			double f_pos = 0.05;
-			double f_orien = 0.0;
-			p_cam.pos += 0.99f*(physics->velocity - physics->acceleration*float(dt))*float(dt);
-			p_cam.pos = glm::mix(p_cam.pos, cam.pos, float(1.0 - glm::pow(f_pos, dt)));
-			p_cam.orientation = glm::mix(p_cam.orientation, cam.orientation, float(1.0 - glm::pow(f_orien, dt)));
-
-			p_cam.orientation =  p_cam.orientation * glm::rotate(glm::quat(), glm::radians(0.f), glm::vec3(1,0,0));
-
-			player->camera.setTransform(p_cam);
-
-			p_cam.pos += offset;
-			Camera c = player->camera;
-			c.setTransform(p_cam);
-
-			cullingCamera = c;
-			if (Input::isKeyDown(GLFW_KEY_Q)) {
-				c.setTransform(Transform(glm::vec3(24000, 20000, 24000), glm::quat(0, 0, -0.707, 0.707)));
+			glm::vec3 v;
+			if (length(physics->velocity) > 0.0001f) {
+				v = normalize(physics->velocity);
 			}
 
-			Renderer::getRenderer().setCamera(c);
+			glm::mat4 lookAt = glm::lookAt(playerPos, playerPos - playerDir, glm::vec3(0, 1, 0));
+
+			Transform camTrans;
+			camTrans.orientation = glm::inverse(glm::quat_cast(lookAt));
+			camTrans.pos = playerPos;
+
+			glm::vec3 offset(0, 1, -5.5);
+
+			offset = playerOrientation * offset;
+			camTrans.pos += offset;
+
+			cam.setTransform(camTrans);
+
+			cullingCamera = cam;
+			Renderer::getRenderer().setCamera(cam);
 		}
 
 		ComponentHandle<ModelComponent> model;
