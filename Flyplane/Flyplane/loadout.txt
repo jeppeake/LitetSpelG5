@@ -1,8 +1,10 @@
-assets\Presets\Planes\laken.txt
-assets\Presets\Weapons\missile2.txt
+assets\Presets\Planes\Starfighter.txt
 assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile2.txt
 assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile2.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 0

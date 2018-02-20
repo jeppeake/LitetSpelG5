@@ -184,6 +184,7 @@
     <ClInclude Include="ButtonAction.h" />
     <ClInclude Include="buttonhandler.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="cameraoncomponent.h" />
     <ClInclude Include="changepageaction.h" />
     <ClInclude Include="changeplaneaction.h" />
     <ClInclude Include="changeskinaction.h" />
