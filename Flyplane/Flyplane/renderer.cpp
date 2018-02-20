@@ -7,6 +7,10 @@
 #include <iostream>
 #include "window.h"
 #include "assetloader.h"
+#define FISHROD 0
+#define STINGER 1
+#define ROCKETPOD 2
+
 
 using namespace std;
 
@@ -79,7 +83,7 @@ Renderer::Renderer() {
 	hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
-	missileMatrix = glm::ortho(-1.5, 1.5, -1.5, 1.5);
+	missileMatrix[FISHROD] = glm::ortho(-1.5, 1.5, -1.5, 1.5);
 }
 
 Renderer::~Renderer() {
@@ -134,7 +138,20 @@ void Renderer::RenderWeapon() {
 	missile->texture.bind(0);
 	for (int i = 0; i < missile->model_meshes.size(); i++) {
 		missile->model_meshes[i].first->bind();
-		this->missileShader.uniform("matrix", missileMatrix);
+		/*std::cout << "missile" << missile << std::endl;
+		std::cout << "fishrod" << AssetLoader::getLoader().getModel("fishrod") << std::endl;
+		std::cout << "stinger" << AssetLoader::getLoader().getModel("stinger") << std::endl;
+		std::cout << "rocketpod" << AssetLoader::getLoader().getModel("rocketpod") << std::endl;
+		std::cout << "gunpod" << AssetLoader::getLoader().getModel("gunpod") << std::endl;*/
+		if (missile == AssetLoader::getLoader().getModel("fishrod")) {
+			this->missileShader.uniform("matrix", missileMatrix[FISHROD]);
+			//cout << "fishrod" << endl;
+		}
+		else {
+			this->missileShader.uniform("matrix", glm::mat4(5));
+			//cout << "not fishrod" << endl;
+		}
+		
 		glDrawElements(GL_TRIANGLES, missile->model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 	glViewport(0, 0, s.x, s.y);
