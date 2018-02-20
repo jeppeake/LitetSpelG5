@@ -29,11 +29,12 @@ struct RenderSystem : public System<RenderSystem> {
 
 	Camera cullingCamera;
 	Radar radar;
+	bool playing = true;
 
 	RenderSystem()
 	{}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
-		bool playing = false;
+		
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
 		
@@ -44,8 +45,6 @@ struct RenderSystem : public System<RenderSystem> {
 		float hp;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
-
-			playing = true;
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
 			playerPos = transform->pos;
