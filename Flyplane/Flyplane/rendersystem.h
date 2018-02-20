@@ -19,6 +19,7 @@
 #include "radar.h"
 #include "aicomponent.h"
 #include "particlecomponent.h"
+#include "healthcomponent.h"
 
 using namespace entityx;
 
@@ -34,10 +35,12 @@ struct RenderSystem : public System<RenderSystem> {
 		bool playing = false;
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
+		
 		glm::vec3 playerPos;
 		glm::vec3 playerDir;
 		glm::vec3 playerUp;
 		glm::quat playerOrientation;
+		float hp;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
 
@@ -49,7 +52,8 @@ struct RenderSystem : public System<RenderSystem> {
 			playerDir = glm::mat3(playerOrientation) * glm::vec3(0, 0, 1);
 			playerUp = glm::mat3(playerOrientation) * glm::vec3(0, 1, 0);
 			ComponentHandle<Physics> physics = entity.component<Physics>();
-
+			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
+			hp = hpComponent->health / hpComponent->maxHP;
 			Transform cam = *transform.get();
 			glm::vec3 offset(0, 4*0.5, -9*0.5);
 			offset = glm::toMat3(normalize(cam.orientation))*offset;
@@ -162,6 +166,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().orientation = playerOrientation;
 			radar.draw((float)dt);
 			Renderer::getRenderer().RenderCrosshair();
+			Renderer::getRenderer().RenderHPBar(hp);
 		}
 			
 	}

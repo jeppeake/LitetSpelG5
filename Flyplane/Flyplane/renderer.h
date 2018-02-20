@@ -38,6 +38,9 @@ private:
 	CrossHair crosshair;
 	EnemyMarker markers;
 	Cloud clouds;
+	Texture hpbar;
+	Texture hpTexture;
+	glm::mat4 hpMatrix;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
@@ -65,6 +68,7 @@ public:
 	void RenderScene();
 	void RenderCrosshair();
 	void RenderClouds();
+	void RenderHPBar(float hp);
 	Camera getCamera() &;
 	void setCamera(const Camera& camera);
 	void addMarker(glm::vec3 pos, float scale);
