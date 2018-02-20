@@ -16,6 +16,7 @@
 #include "soundsystem.h"
 #include "gameoversystem.h"
 #include "particlesystem.h"
+#include "camerasystem.h"
 
 #include "aicomponent.h"
 #include "aisystem.h"
@@ -269,6 +270,7 @@ void PlayingState::init()
 	ex.systems.add<HealthSystem>(this);
 	ex.systems.add<GameOver>(this);
 	ex.systems.add<ParticleSystem>();
+	ex.systems.add<CameraSystem>();
 	ex.systems.configure();
 
 	/*
@@ -492,6 +494,7 @@ void PlayingState::update(double dt)
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<ParticleSystem>(dt);
+		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		glm::vec2 window = Window::getWindow().size();
 		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
@@ -499,6 +502,7 @@ void PlayingState::update(double dt)
 		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
 	else {
+		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		if (!playerAlive) {
 			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
