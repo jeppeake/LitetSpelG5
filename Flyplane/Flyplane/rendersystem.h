@@ -55,8 +55,8 @@ struct RenderSystem : public System<RenderSystem> {
 			ComponentHandle<Physics> physics = entity.component<Physics>();
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
 			hp = hpComponent->health / hpComponent->maxHP;
-			
-			//cam.pos += offset;
+
+
 
 			Camera cam;
 
