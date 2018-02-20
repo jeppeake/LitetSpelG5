@@ -16,6 +16,8 @@ uniform vec2 heightmapSize;
 
 uniform vec3 cameraPos;
 
+uniform vec3 scale;
+
 float noise(vec2 pos);
 
 float detail(vec2 pos) {
@@ -60,48 +62,34 @@ void main() {
 		visibility = 1.0;
 	}
 
-	
-	vec4 h;
-	h[0] = detail(vPos.xz + vec2(0, -1));
-	h[1] = detail(vPos.xz + vec2(-1, 0));
-	h[2] = detail(vPos.xz + vec2(1, 0));
-	h[3] = detail(vPos.xz + vec2(0, 1));
-	vec3 Normal;
-	Normal.z = h[0] - h[3];
-	Normal.x = h[1] - h[2];
-	Normal.y = 0.15;
-	Normal = normalize(Normal);
-	
 	vec3 sun = vec3(0, 1, 1);
 	sun = normalize(sun);
-	vec3 n = normalize(vNormal + Normal);
+	vec3 n = normalize(vNormal);
 
-	
+	vec3 color = texture(materialmap, vec2(vTex.x, vTex.y)).rgb;
 
-	vec3 color1 = texture(material1, vec2(vTex.x, 1 - vTex.y)).rgb; 
-	vec3 color2 = texture(material2, vec2(vTex.x, 1 - vTex.y)).rgb;
-	vec3 color3 = texture(material3, vec2(vTex.x, 1 - vTex.y)).rgb;
+	color = 1.1*vec3(0.376, 0.702, 0.22);
+	vec3 matNormal = sampleNormal(vTex);
 
-	vec3 color = vec3(0);
-	color += color1*vMaterials.x;
-	color += color2*vMaterials.y;
-	color += color3*vMaterials.z;
+	if(vPos.y + 300*(noise(vPos.xz*0.05)+noise(vPos.xz*0.01)) > 3500) {
+		color = vec3(1);
+	}
 
-	color = texture(materialmap, vec2(vTex.x, vTex.y)).rgb; 
+	if(dot(matNormal, vec3(0,1,0)) < 0.35) {
+		color = vec3(0.3);
+	}
+
 
 	float result = dot(sun, n);
 	result = clamp(result, 0, 1);
-
-	//gl_FragColor = vec4(color * result * visibility * 0.7 + color * 0.3, 1);
 
 	float dist = length(cameraPos - vPos);
 	float fog = pow(clamp(dist/48000.0, 0.0, 1.0), 1.5);
 	vec3 fogColor = 0.95*vec3(100.0/255,149.0/255,234.0/255);
 
+	color = color * result * visibility * 0.7 + color * 0.3;
 	color = mix(color, vec3(fogColor), fog);
-
-	gl_FragColor = vec4(color, 1.0);
-	//gl_FragColor = vec4(vMaterials, 1.0);
+	gl_FragColor = vec4(color, 1);
 }
 
 
