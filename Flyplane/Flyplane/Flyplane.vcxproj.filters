@@ -411,11 +411,17 @@
     <ClInclude Include="timevisualizer.h">
       <Filter>UTILS</Filter>
     </ClInclude>
+    <ClInclude Include="cameraoncomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
     <ClInclude Include="addParticleEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="healthcomponent.h">
       <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="camerasystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

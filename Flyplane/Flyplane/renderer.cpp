@@ -6,6 +6,7 @@
 #include <glm\vec3.hpp>
 #include <iostream>
 #include "window.h"
+#include "assetloader.h"
 
 using namespace std;
 
@@ -122,6 +123,14 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 	}
 }
 
+void Renderer::RenderWeapon() {
+	auto s = Window::getWindow().size();
+	glViewport(s.x - 300, 0, 150, 150);
+	guiShader.use();
+	
+	//AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(500, 500), glm::vec3(1, 1, 0), 1.4);
+}
+
 Timer t;
 
 
@@ -202,6 +211,9 @@ void Renderer::RenderScene() {
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
+	//Render weapon
+	if (missile)
+		RenderWeapon();
 
 	markers.clear();
 	list.clear();
@@ -230,6 +242,14 @@ void Renderer::RenderClouds() {
 void Renderer::RenderHPBar(float hp) {
 	renderTexture(hpbar, hpMatrix);
 	renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+}
+
+void Renderer::setWeaponModel(Model * mptr) {
+	missile = mptr;
+}
+
+void Renderer::setAmmo(int ammo) {
+	weaponAmmo = ammo;
 }
 
 Camera Renderer::getCamera() &

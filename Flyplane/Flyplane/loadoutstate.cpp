@@ -65,17 +65,19 @@ void LoadoutState::init() {
 	ex.systems.add<RotatePreviewSystem>();
 	ex.systems.configure();
 
+	Renderer::getRenderer().setHeightmap(nullptr);
+
 	timer.restart();
 
 	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonback.wav", "buttonback");
 
-	bHandler.addButton(new Button("Planes", glm::vec2(50, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, planes), "buttonforward"));
-	bHandler.addButton(new Button("Weapons", glm::vec2(250, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, weapons), "buttonforward"));
-	bHandler.addButton(new Button("Skins", glm::vec2(480, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
-	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
-	bHandler.addButton(new Button("Save loadout", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
+	bHandler.addButton(new Button("PLANES", glm::vec2(50, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, planes), "buttonforward"));
+	bHandler.addButton(new Button("WEAPONS", glm::vec2(250, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, weapons), "buttonforward"));
+	bHandler.addButton(new Button("SKINS", glm::vec2(480, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
+	bHandler.addButton(new Button("BACK TO MENU", glm::vec2(100, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
+	bHandler.addButton(new Button("SAVE LOADOUT", glm::vec2(400, 600), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
 	
 	
 	//Load all planes in plane preset folder
@@ -121,7 +123,7 @@ void LoadoutState::changePlane(unsigned int selected)
 	glm::vec2 pPos = glm::vec2(50, 150);
 	weaponSlotsBHandler.clearButtons();
 	for (int i = 0; i < planePresets[selected].wepPos.size(); i++) {
-		weaponSlotsBHandler.addButton(new Button("Empty", pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangeWeaponAction(this, i), "buttonforward"));
+		weaponSlotsBHandler.addButton(new Button("EMPTY", pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangeWeaponAction(this, i), "buttonforward"));
 		pickedWeapons.push_back(NO_WEAPON);
 	}
 	skinsBHandler.clearButtons();
@@ -217,7 +219,7 @@ void LoadoutState::update(double dt) {
 	double step = 30;
 
 	if (planePicked) {
-		AssetLoader::getLoader().getMenutext()->drawText(planePresets[selected].name, infoPos, glm::vec3(1, 1, 1), 1);
+		AssetLoader::getLoader().getBigtext()->drawText(planePresets[selected].name, infoPos, glm::vec3(1, 1, 1), 1);
 		AssetLoader::getLoader().getText()->drawText("Description: " + planePresets[selected].description, infoPos - glm::vec2(0, step * 1), glm::vec3(1, 1, 1), infoScale*0.75);
 		AssetLoader::getLoader().getText()->drawText("Normal speed: " + std::to_string(planePresets[selected].normalspeed), infoPos - glm::vec2(0, step * 2), glm::vec3(1, 1, 1), infoScale);
 		AssetLoader::getLoader().getText()->drawText("Boost speed: " + std::to_string(planePresets[selected].boostspeed), infoPos - glm::vec2(0, step * 3), glm::vec3(1, 1, 1), infoScale);

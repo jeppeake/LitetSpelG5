@@ -5,6 +5,7 @@
 #include "soundcomponent.h"
 #include "transform.h"
 #include "playercomponent.h"
+#include "flightcomponent.h"
 #include "input.h"
 
 using namespace entityx;
@@ -47,20 +48,34 @@ struct SoundSystem : public System<SoundSystem> {
 		}
 		
 		ComponentHandle<PlayerComponent> player;
+		ComponentHandle<FlightComponent> flyplane;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			sound = entity.component<SoundComponent>();
 			transform = entity.component<Transform>();
+			flyplane = entity.component<FlightComponent>();
+			
 
 			SoundComponent* s = sound.get();
 			Transform t = *transform.get();
 
-			if (Input::isKeyDown(GLFW_KEY_W)) {
-				//s->sound.setPitch(s->sound.getPitch() + 0.001f);
+			/*if (Input::isKeyDown(GLFW_KEY_W)) {
+				s->sound.setPitch(s->sound.getPitch() + 0.001f);
 			}
 			else if (Input::isKeyDown(GLFW_KEY_S)) {
-				//s->sound.setPitch(s->sound.getPitch() - 0.001f);
+				s->sound.setPitch(s->sound.getPitch() - 0.001f);
 			}
-			//std::cout << "Pitch: " << s->sound.getPitch() << std::endl;
+			std::cout << "Pitch: " << s->sound.getPitch() << std::endl;*/
+
+			if (flyplane) {
+				//FlightComponent* a = flyplane.get();
+				float pitch = 0;
+
+				pitch = glm::clamp((flyplane.get()->throttle - flyplane.get()->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
+				//std::cout << "Pitch: " << pitch << std::endl;
+				s->sound.setPitch(pitch);
+			}
+
+
 			//s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
 			sf::Listener::setPosition(t.pos.x, t.pos.y, t.pos.z);
 			glm::vec3 vec = glm::toMat3(t.orientation) * glm::vec3(0.0, 0.0, 1.0);

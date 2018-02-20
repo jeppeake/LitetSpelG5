@@ -16,6 +16,7 @@
 #include "soundsystem.h"
 #include "gameoversystem.h"
 #include "particlesystem.h"
+#include "camerasystem.h"
 
 #include "aicomponent.h"
 #include "aisystem.h"
@@ -77,6 +78,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <HealthComponent>(100.0);
 		auto handle = entity.assign<ParticleComponent>();
 		ex.events.emit<AddParticleEvent>(TRAIL, handle);
+		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 		std::vector<Behaviour*> behaviours;
 
 		std::vector<glm::vec3> plotter;
@@ -156,6 +158,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity_p.assign <ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 	entity_p.assign <PlayerComponent>();
+	entity_p.assign <CameraOnComponent>();
 	entity_p.assign <FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 	entity_p.assign <CollisionComponent>();
 	entity_p.assign<SoundComponent>(*flyingSB);
@@ -163,7 +166,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
-
+	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
@@ -268,6 +271,7 @@ void PlayingState::init()
 	ex.systems.add<HealthSystem>(this);
 	ex.systems.add<GameOver>(this);
 	ex.systems.add<ParticleSystem>();
+	ex.systems.add<CameraSystem>();
 	ex.systems.configure();
 
 	/*
@@ -491,6 +495,7 @@ void PlayingState::update(double dt)
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<ParticleSystem>(dt);
+		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		glm::vec2 window = Window::getWindow().size();
 		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
@@ -498,6 +503,7 @@ void PlayingState::update(double dt)
 		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
 	else {
+		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		if (!playerAlive) {
 			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
