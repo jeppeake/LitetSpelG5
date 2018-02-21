@@ -45,18 +45,8 @@ void main()
 		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.1, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].g += Lives[gid] / 3.0 * dt;
-		Colors[gid].a = 1 - clamp(Lives[gid], 0.0, 1.0);
+		Colors[gid].g += Lives[gid] / 16.0;
+		Colors[gid].a -= clamp(Lives[gid] * dt, 0.0, 1.0);
 	}
 	Lives[gid] += dt;
-	/*
-	if(Lives[gid] >= life + 0.1*life*rand(float(gid)))
-	{
-		Lives[gid] -= life;
-		Positions[gid].xyz = spawn + vec3(rand(gid),rand(-gid),rand(gid * 2 - 1)) *abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
-
-		vec3 vel = noise3(gid);
-		Velocities[gid].xyz = 50 * vec3(rand(gid),rand(-gid),rand(gid * 2 - 1)) + 3 * normalize(vel);
-	}
-	*/
 }
