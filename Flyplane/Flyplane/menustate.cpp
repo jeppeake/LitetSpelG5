@@ -33,6 +33,8 @@
 #include "entity_close.h"
 #include "ground_close_front.h"
 
+#include "mission.h"
+
 entityx::Entity entity3;
 
 void MenuState::spawnEnemies(int nr) {
@@ -83,6 +85,7 @@ MenuState::~MenuState() {
 }
 
 void MenuState::init() {
+
 	vignette.load("assets/Textures/vignette.png");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hover.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hammerclick.wav", "buttonforward");

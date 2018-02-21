@@ -137,9 +137,12 @@ struct RenderSystem : public System<RenderSystem> {
 				glm::vec3 enemyPos = entity.component<Transform>()->pos;
 				float length = glm::distance(enemyPos, playerPos);
 				glm::vec3 color = glm::vec3(1, 0, 0);
+				if (entity.has_component<FormationComponent>()) {
+					color = glm::vec3(1, 0, 1);
+				}
 				if (entity.has_component<Target>()) {
 					if (entity.component<Target>().get()->is_targeted) {
-						color = glm::vec3(0, 1, 0);
+						color += glm::vec3(-0.5, 0.9, -0.5);
 					}
 				}
 
