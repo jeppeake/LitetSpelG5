@@ -125,13 +125,14 @@ struct RenderSystem : public System<RenderSystem> {
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{
 				p->render();
 			}
 		}
-
 		if (playing) {
 			ComponentHandle<AIComponent> ai;
 

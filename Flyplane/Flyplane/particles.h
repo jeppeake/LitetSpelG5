@@ -7,6 +7,8 @@
 #include "computeShader.h"
 #include "addParticleEvent.h"
 #include "timer.h"
+#include "texture.h"
+#include "assetloader.h"
 class Particles
 {
 private:
@@ -14,6 +16,7 @@ private:
 	unsigned numParticles;
 	GLuint gPos, gColor, gLife, gVel, VAO;
 	ComputeShader compute;
+	Texture *text = nullptr;
 public:
 	Timer t;
 	Particles(unsigned particles, float _effectTime = 0);
@@ -24,6 +27,21 @@ public:
 	void setTimer(float _effectTime)
 	{
 		effectTime = _effectTime;
+	}
+	//Kommer kanske sen...
+	void setTexture(const std::string &name)
+	{
+		text = AssetLoader::getLoader().getTexture(name);
+		if (!text)
+		{
+			AssetLoader::getLoader().loadTexture("assets/Textures/" + name + ".png", name);
+			text = AssetLoader::getLoader().getTexture(name);
+			if (!text)
+			{
+				std::cout << "Failed to load texture for particles.. \n";
+				text = nullptr;
+			}
+		}
 	}
 	void update();
 	void render();
