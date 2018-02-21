@@ -20,8 +20,8 @@ private:
 public:
 	AssetLoader() {
 		text = new Text("assets/fonts/arial.ttf", 48);
-		menutext = new Text("assets/fonts/warisover.ttf", 36);
-		bigtext = new Text("assets/fonts/warisover.ttf", 48);
+		menutext = new Text("assets/fonts/war2.ttf", 36);
+		bigtext = new Text("assets/fonts/war2.ttf", 48);
 		highscoreText = new Text("assets/fonts/consola.ttf", 36);
 	}
 	~AssetLoader() {}

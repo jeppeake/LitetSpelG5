@@ -20,7 +20,7 @@ void main() {
 	vNormal = cross(v1, v2);
 	for(int i = 0; i < 3; i++) {
 		vPos = Pos[i];
-		vNormal = Normal[i];
+		//vNormal = Normal[i];
 		vTex = Tex[i];
 		vMaterials = Materials[i];
 		gl_Position = gl_in[i].gl_Position;

@@ -13,7 +13,7 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/buttonback.wav", "loadingmusic");
 
 
-	bHandler.addButton(new Button("Start", glm::vec2(Window::getWindow().size().x - 200, Window::getWindow().size().y - 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new StartGameAction(this), "buttonforward"));
+	//bHandler.addButton(new Button("Start", glm::vec2(Window::getWindow().size().x - 200, Window::getWindow().size().y - 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new StartGameAction(this), "buttonforward"));
 	fi.load("assets/textures/loadingscreen.png");
 
 
@@ -67,7 +67,7 @@ void LoadingState::update(double dt) {
 	if (!done)
 		AssetLoader::getLoader().getBigtext()->drawText("Loading " + current + "...", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
 	else
-		AssetLoader::getLoader().getBigtext()->drawText("Loading done!", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
+		AssetLoader::getLoader().getBigtext()->drawText("Loading done. Press enter to start.", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
 	if (done) {
 		if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
 			startGame();
