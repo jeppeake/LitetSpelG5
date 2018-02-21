@@ -58,20 +58,11 @@ struct SoundSystem : public System<SoundSystem> {
 			SoundComponent* s = sound.get();
 			Transform t = *transform.get();
 
-			/*if (Input::isKeyDown(GLFW_KEY_W)) {
-				s->sound.setPitch(s->sound.getPitch() + 0.001f);
-			}
-			else if (Input::isKeyDown(GLFW_KEY_S)) {
-				s->sound.setPitch(s->sound.getPitch() - 0.001f);
-			}
-			std::cout << "Pitch: " << s->sound.getPitch() << std::endl;*/
-
 			if (flyplane) {
-				//FlightComponent* a = flyplane.get();
+				FlightComponent* f = flyplane.get();
 				float pitch = 0;
 
-				pitch = glm::clamp((flyplane.get()->throttle - flyplane.get()->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
-				//std::cout << "Pitch: " << pitch << std::endl;
+				pitch = glm::clamp((f->throttle - f->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
 				s->sound.setPitch(pitch);
 			}
 
