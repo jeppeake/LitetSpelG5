@@ -45,6 +45,9 @@ private:
 	Texture hpTexture;
 	glm::mat4 hpMatrix;
 
+	Texture indicator;
+	glm::mat4 heightMatrix;
+
 	int weaponAmmo;
 	Model *missile = nullptr;
 	glm::mat4 missileVPMatrix;
@@ -80,6 +83,7 @@ public:
 	void RenderCrosshair();
 	void RenderClouds();
 	void RenderHPBar(float hp);
+	void RenderHeightIndicator(float height);
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;
