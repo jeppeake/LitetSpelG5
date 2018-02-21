@@ -11,6 +11,7 @@
 #include "factioncomponents.h"
 #include <entityx/entityx.h>
 #include "missilecomponent.h"
+#include "playingstate.h"
 #include <map>
 
 class CollisionSystem : public entityx::System<CollisionSystem>

@@ -114,6 +114,9 @@
     <ClCompile Include="timevisualizer.cpp">
       <Filter>UTILS</Filter>
     </ClCompile>
+    <ClCompile Include="mission.cpp">
+      <Filter>Missions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -423,6 +426,12 @@
     <ClInclude Include="camerasystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="mission.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="missionsystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -552,6 +561,9 @@
     </Filter>
     <Filter Include="Graphics\Shaders\particles">
       <UniqueIdentifier>{cdc6dbc7-8244-4b83-a334-9cbed9cfe506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Missions">
+      <UniqueIdentifier>{453888e5-478d-46e4-9d2d-8f2b83f85b2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

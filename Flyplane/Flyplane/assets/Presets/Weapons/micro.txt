@@ -35,3 +35,5 @@ exploderadius
 15
 damage
 90
+droptime
+0
