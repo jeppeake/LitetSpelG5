@@ -28,18 +28,28 @@ void main()
 	if(Positions[gid].xyz == vec3(0))
 	{
 		Positions[gid].xyz = spawn;
-		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
+		Lives[gid] = 0;
 		Colors[gid].xyz = vec3(1.0,0.0,0.0);
+
+		vec3 vel;
+		vel.x = rand(gid);
+		vel.y = rand(gid + 1000);
+		vel.z = rand(gid + 2000);
+		vel = normalize(vel);
+
+
+		Velocities[gid].xyz = 200 * rand(gid + 3000) * vel;
 	}
 	else
 	{
-		Velocities[gid].xyz -= Velocities[gid].xyz * dt;
+		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.1, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
 		Colors[gid].g += Lives[gid] / 3.0 * dt;
-		Colors[gid].a -= dt / 3.0;
+		Colors[gid].a = 1 - clamp(Lives[gid], 0.0, 1.0);
 	}
 	Lives[gid] += dt;
+	/*
 	if(Lives[gid] >= life + 0.1*life*rand(float(gid)))
 	{
 		Lives[gid] -= life;
@@ -48,4 +58,5 @@ void main()
 		vec3 vel = noise3(gid);
 		Velocities[gid].xyz = 50 * vec3(rand(gid),rand(-gid),rand(gid * 2 - 1)) + 3 * normalize(vel);
 	}
+	*/
 }

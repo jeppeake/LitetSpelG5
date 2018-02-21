@@ -76,7 +76,7 @@ public:
 				explosionShader.uniform("spawn", transform->pos);
 				explosionShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
-			explosionShader.uniform("life", 10.f);
+			explosionShader.uniform("life", 1.f);
 			explosionShader.uniform("dt", float(dt));
 			break;
 		case ENGINE_TRAIL:
