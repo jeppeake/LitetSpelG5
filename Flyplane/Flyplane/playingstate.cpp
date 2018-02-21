@@ -55,8 +55,11 @@
 #include "healthcomponent.h"
 #include "healthsystem.h"
 
+#include "mission.h"
+#include "missionsystem.h"
+
 //entityx::Entity entity;
-entityx::Entity entity_p;
+
 entityx::Entity entity_formation;
 entityx::Entity entity2;
 
@@ -180,7 +183,7 @@ void PlayingState::loadLoadout()
 			AssetLoader::getLoader().loadModel(wp.model, wp.name);
 			AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
 
-			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage);
+			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
 
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 		}
@@ -217,6 +220,7 @@ void PlayingState::init()
 
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
+
 
 
 	/*sf::SoundBuffer* flyingSB;
@@ -271,6 +275,7 @@ void PlayingState::init()
 	ex.systems.add<GameOver>(this);
 	ex.systems.add<ParticleSystem>();
 	ex.systems.add<CameraSystem>();
+	ex.systems.add<MissionSystem>(this);
 	ex.systems.configure();
 
 	/*
@@ -284,7 +289,7 @@ void PlayingState::init()
 	
 	loadLoadout();
 
-	entity2 = ex.entities.create();
+	/*entity2 = ex.entities.create();
 	float x = 0;
 	float z = 100;
 	glm::vec3 pos(x, 4500, z);
@@ -302,13 +307,13 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 4500, 2500));
 	plotter.push_back(glm::vec3(0, 4500, 0));
 
-	spawnEnemies(5);
+	//spawnEnemies(5);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
 	entity2.assign<AIComponent>(behaviours, true, true, false);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
-	entity2.assign <HealthComponent>(100.0);
+	entity2.assign <HealthComponent>(100.0);*/
 
 
 	int enemies = 0;
@@ -475,7 +480,7 @@ void PlayingState::update(double dt)
 
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
-			spawnEnemies(2);
+			//spawnEnemies(2);
 		}
 
 		timerMultiplier -= dt;
@@ -493,6 +498,7 @@ void PlayingState::update(double dt)
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
+		ex.systems.update<MissionSystem>(dt);
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);

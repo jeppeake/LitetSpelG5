@@ -1,10 +1,10 @@
 assets\Presets\Planes\Starfighter.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 0
