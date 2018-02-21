@@ -59,7 +59,11 @@ struct RenderSystem : public System<RenderSystem> {
 			if (entity.has_component<Equipment>()) {
 				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
 				Renderer::getRenderer().setWeaponModel(equipment->special[equipment->selected].model);
-				Renderer::getRenderer().setAmmo(equipment->special[equipment->selected].stats.ammo);
+				int ammo = 0;
+				for (int i = 0; i < equipment->special.size(); i++) {
+					ammo += equipment->special[i].stats.ammo;
+				}
+				Renderer::getRenderer().setAmmo(ammo);
 			}
 		}
 

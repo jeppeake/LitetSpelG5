@@ -7,10 +7,20 @@
 #include "playercomponent.h"
 #include "flightcomponent.h"
 #include "input.h"
+#include "assetloader.h"
 
 using namespace entityx;
 
 struct SoundSystem : public System<SoundSystem> {
+private:
+	sf::Sound driftSound;
+
+public:
+	SoundSystem() {
+		driftSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("wind"));
+		driftSound.setRelativeToListener(true);
+		driftSound.setPosition(0, 0, 0);
+	}
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<SoundComponent> sound;
@@ -58,21 +68,22 @@ struct SoundSystem : public System<SoundSystem> {
 			SoundComponent* s = sound.get();
 			Transform t = *transform.get();
 
-			/*if (Input::isKeyDown(GLFW_KEY_W)) {
-				s->sound.setPitch(s->sound.getPitch() + 0.001f);
-			}
-			else if (Input::isKeyDown(GLFW_KEY_S)) {
-				s->sound.setPitch(s->sound.getPitch() - 0.001f);
-			}
-			std::cout << "Pitch: " << s->sound.getPitch() << std::endl;*/
-
 			if (flyplane) {
-				//FlightComponent* a = flyplane.get();
+				FlightComponent* f = flyplane.get();
 				float pitch = 0;
 
-				pitch = glm::clamp((flyplane.get()->throttle - flyplane.get()->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
-				//std::cout << "Pitch: " << pitch << std::endl;
+				pitch = glm::clamp((f->throttle - f->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
 				s->sound.setPitch(pitch);
+
+				std::cout << "Drift: " << f->drift << std::endl;
+				if (f->drift > 0.2) {
+					if (driftSound.getStatus() != driftSound.Playing) {
+						driftSound.play();
+					}
+				}
+				else {
+					driftSound.stop();
+				}
 			}
 
 

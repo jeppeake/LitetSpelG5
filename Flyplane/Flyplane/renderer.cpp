@@ -7,6 +7,7 @@
 #include <iostream>
 #include "window.h"
 #include "assetloader.h"
+#include "input.h"
 #define FISHROD 0
 #define STINGER 1
 #define ROCKETPOD 2
@@ -83,7 +84,8 @@ Renderer::Renderer() {
 	hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
-	missileMatrix[FISHROD] = glm::ortho(-1.5, 1.5, -1.5, 1.5);
+	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);// glm::ortho(-0.05f, 0.05f, -0.05f, 0.05f, -1.0f, 1.0f) * glm::perspective(glm::radians(80.0f), 1.0f, .01f, 220.0f); //glm::ortho(-3.0f, 3.0f, -3.0f, 3.0f, -5.0f, 10.0f) * glm::rotate(4.0f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
+	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));//glm::translate(glm::vec3(0.7, 0, -200)) * glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 }
 
 Renderer::~Renderer() {
@@ -133,27 +135,26 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 void Renderer::RenderWeapon() {
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 300, 0, 150, 150);
-	//renderTexture(hpbar, glm::translate(glm::vec3(0, 0, 0)));
+	
 	this->missileShader.use();
 	missile->texture.bind(0);
-	for (int i = 0; i < missile->model_meshes.size(); i++) {
-		missile->model_meshes[i].first->bind();
-		/*std::cout << "missile" << missile << std::endl;
-		std::cout << "fishrod" << AssetLoader::getLoader().getModel("fishrod") << std::endl;
-		std::cout << "stinger" << AssetLoader::getLoader().getModel("stinger") << std::endl;
-		std::cout << "rocketpod" << AssetLoader::getLoader().getModel("rocketpod") << std::endl;
-		std::cout << "gunpod" << AssetLoader::getLoader().getModel("gunpod") << std::endl;*/
-		if (missile == AssetLoader::getLoader().getModel("fishrod")) {
-			this->missileShader.uniform("matrix", missileMatrix[FISHROD]);
-			//cout << "fishrod" << endl;
-		}
-		else {
-			this->missileShader.uniform("matrix", glm::mat4(5));
-			//cout << "not fishrod" << endl;
-		}
-		
-		glDrawElements(GL_TRIANGLES, missile->model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
+	missile->model_meshes[0].first->bind();
+
+	float scale = 1.0f / missile->getBoundingRadius();
+
+	if (scale > 10000) {
+		scale = 0.8;
 	}
+
+	this->missileShader.uniform("ViewProjMatrix", missileVPMatrix);
+	float angle = time.elapsed();
+
+	if (angle > 2 * 3.14) {
+		time.restart();
+	}
+	this->missileShader.uniform("modelMatrix", missileModelMatrix * glm::rotate(angle, glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(scale)));
+	glDrawElements(GL_TRIANGLES, missile->model_meshes[0].first->numIndices(), GL_UNSIGNED_INT, 0);
+
 	glViewport(0, 0, s.x, s.y);
 	AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(s.x - 400, 20), glm::vec3(1, 1, 0), 0.4);
 }
@@ -213,6 +214,7 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	if (hm != NULL) {
+		terrain_shader.uniform("time", (float)globalTime.elapsed());
 		terrain_shader.uniform("cameraPos", camera.getTransform().pos);
 		hm->bind(terrain_shader);
 		for (int i = 0; i < patches.size(); i++) {
