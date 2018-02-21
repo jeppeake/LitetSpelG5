@@ -7,6 +7,7 @@
 #include <iostream>
 #include "window.h"
 #include "assetloader.h"
+#include "input.h"
 #define FISHROD 0
 #define STINGER 1
 #define ROCKETPOD 2
