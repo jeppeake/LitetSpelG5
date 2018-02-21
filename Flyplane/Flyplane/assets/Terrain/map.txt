@@ -1,6 +1,7 @@
 20 20 20
 31
 3
+2000
 assets/Terrain/smallmap2/heightmap_smallmap2.png
 assets/Terrain/smallmap2/attribute_smallmap2.png
 assets/Textures/bog.png

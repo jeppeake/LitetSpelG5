@@ -32,6 +32,8 @@ private:
 	int numPatchVerts = 7;
 	int maxLevels = 3;
 	
+	float waterHeight = 0;
+
 	GLuint heightmapTex = 0;
 
 	GLuint ebos[9];
