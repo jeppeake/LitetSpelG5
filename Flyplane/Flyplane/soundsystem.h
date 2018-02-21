@@ -7,10 +7,22 @@
 #include "playercomponent.h"
 #include "flightcomponent.h"
 #include "input.h"
+#include "assetloader.h"
 
 using namespace entityx;
 
 struct SoundSystem : public System<SoundSystem> {
+private:
+	sf::Sound driftSound;
+	sf::SoundBuffer soundBuffer;
+
+public:
+	SoundSystem() {
+		soundBuffer.loadFromFile("assets/Sound/wind1.wav");
+		driftSound.setBuffer(soundBuffer);
+		driftSound.setRelativeToListener(true);
+		driftSound.setPosition(0, 0, 0);
+	}
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<SoundComponent> sound;
@@ -64,6 +76,16 @@ struct SoundSystem : public System<SoundSystem> {
 
 				pitch = glm::clamp((f->throttle - f->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
 				s->sound.setPitch(pitch);
+
+				std::cout << "Drift: " << f->drift << std::endl;
+				if (f->drift > 0.2) {
+					if (driftSound.getStatus() != driftSound.Playing) {
+						driftSound.play();
+					}
+				}
+				else {
+					driftSound.stop();
+				}
 			}
 
 

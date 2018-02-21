@@ -50,6 +50,7 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
 	AssetLoader::getLoader().loadSound("assets/Sound/explosion.wav", "explosion");
 	AssetLoader::getLoader().loadSound("assets/Sound/newTink.wav", "tink");
+	AssetLoader::getLoader().loadSound("assets/Sound/wind1.wav", "wind");
 
 	done = true;
 }
