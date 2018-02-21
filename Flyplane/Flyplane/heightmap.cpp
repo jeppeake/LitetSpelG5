@@ -84,7 +84,7 @@ void Heightmap::loadMap(const std::string &maptxt) {
 			double terrainHeight = sample * mult;
 
 			if (terrainHeight <= waterHeight) {
-				sample = waterHeight / mult;
+				//sample = waterHeight / mult;
 				terrainHeight = waterHeight;
 			}
 			

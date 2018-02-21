@@ -48,6 +48,7 @@ private:
 	Model *missile = nullptr;
 	glm::mat4 missileMatrix[4];
 
+	Timer globalTime;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
@@ -55,7 +56,6 @@ private:
 
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
-	void Render(Heightmap &map);
 	void RenderShadow(Model &model, Transform &trans);
 	void RenderWeapon();
 public:

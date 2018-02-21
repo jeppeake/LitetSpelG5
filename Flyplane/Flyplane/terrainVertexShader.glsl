@@ -12,7 +12,12 @@ uniform vec2 offset;
 uniform vec2 patch_size;
 uniform vec3 scale;
 
+uniform float waterHeight;
+
+uniform float time;
+
 out vec3 Pos;
+out vec3 GeometryPos;
 out vec3 Normal;
 out vec2 Tex;
 out vec3 Materials;
@@ -21,6 +26,7 @@ out vec3 Color;
 float rand(vec2 p);
 
 float noise(vec2 n);
+float noise(vec3 p);
 
 float sampleHeightmap(vec2 uv, vec2 offset) {
 	float result = 0;
@@ -54,7 +60,7 @@ void main() {
 	vec2 pos2d = uv*patch_size + offset;
 	vec2 hmUV = pos2d/heightmapSize;
 
-	float height = sampleHeightmap(hmUV);
+	float height = sampleHeightmap(hmUV);// 
 
 	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y) + heightmapPos;
 
@@ -74,14 +80,12 @@ void main() {
 	Normal = mix(Normal, n, 0.35);
 	*/
 
-	
+
 	Color = 1.1*vec3(0.376, 0.702, 0.22);
 	float snowHeight = 3000 + 1100*(noise(pos.xz*0.001));
 	if(pos.y > snowHeight) {
 		Color = vec3(1);
 	}
-
-	
 	if(dot(Normal, vec3(0,1,0)) < 0.38) {
 		Color = vec3(0.4);
 	}
@@ -90,6 +94,23 @@ void main() {
 	Tex = pos2d;
 	Tex = hmUV;
 	Pos = pos;
+	if(pos.y <= waterHeight) {
+
+		float val = (waterHeight - pos.y)/1500;
+		val = pow(clamp(val, 0.0, 1.0), 0.3);
+		
+
+		pos.y = waterHeight;
+		Pos = pos;
+
+		float p = 2;
+		float noise;
+		noise += pow(noise(vec3(pos.xz*0.005 + vec2(time*0.2, time*0.5), time*0.1)), p);
+		noise += 0.3*pow(noise(vec3(pos.xz*0.01 + time, time)), p);
+		noise += 0.08*pow(noise(vec3(pos.xz*0.02 + 2*time, 2*time)), p);
+		pos.y += val*150*noise;
+	}
+	GeometryPos = pos;
 	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }
 
@@ -101,4 +122,30 @@ float noise(vec2 n) {
 	const vec2 d = vec2(0.0, 1.0);
 	vec2 b = floor(n), f = smoothstep(vec2(0.0), vec2(1.0), fract(n));
 	return mix(mix(rand(b), rand(b + d.yx), f.x), mix(rand(b + d.xy), rand(b + d.yy), f.x), f.y);
+}
+
+float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
+
+float noise(vec3 p){
+    vec3 a = floor(p);
+    vec3 d = p - a;
+    d = d * d * (3.0 - 2.0 * d);
+
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy);
+    vec4 k2 = perm(k1.xyxy + b.zzww);
+
+    vec4 c = k2 + a.zzzz;
+    vec4 k3 = perm(c);
+    vec4 k4 = perm(c + 1.0);
+
+    vec4 o1 = fract(k3 * (1.0 / 41.0));
+    vec4 o2 = fract(k4 * (1.0 / 41.0));
+
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+    return o4.y * d.y + o4.x * (1.0 - d.y) - 1.0;
 }
