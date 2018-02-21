@@ -1,0 +1,42 @@
+Missions
+
+Spawna fiender
+Spawna hus
+Assigna en "ledare"
+Ge ledaren ett mål
+Sätta ledaren som formation till alla andra
+Assigna condition till hus (förstör eller försvara)
+positioner
+tid (att klara mission på)
+Visa text
+
+
+commands:
+
+-formation
+[1/0]			(int bool)
+
+-spawnenemy
+[pos.x pos.y pos.z]	(doubles)
+[loadout]		(.txt)
+
+-makeleader		(mark last spawned enemy as leader)
+
+-spawnhouse
+[1/0]			(int bool, random)
+[pos.x pos.z]		(doubles, y coord from heightAt, can be random)
+[modelname]		(string)		
+[0,1,2]			(condition; 0 = nothing, 1 = destroy, 2 = defend)
+
+-settimer
+[sekunder]		(double)
+
+-huntplayerdist
+[distance]		(double)
+
+-firingdistance	
+[distance]		(double)
+
+-text
+[popup text]		(string)
+

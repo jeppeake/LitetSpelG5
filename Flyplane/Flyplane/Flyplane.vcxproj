@@ -150,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menustate.cpp" />
+    <ClCompile Include="mission.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
@@ -229,6 +230,8 @@
     <ClInclude Include="map.h" />
     <ClInclude Include="menustate.h" />
     <ClInclude Include="missilecomponent.h" />
+    <ClInclude Include="mission.h" />
+    <ClInclude Include="missionsystem.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="namestate.h" />

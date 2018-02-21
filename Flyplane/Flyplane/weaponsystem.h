@@ -52,7 +52,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
-		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage);
+		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage, weapon->stats.droptime);
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
 		auto handle = missile.assign<ParticleComponent>();
@@ -233,7 +233,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			trans = entity.component<Transform>();
 			physics = entity.component<Physics>();
 			projectile = entity.component<Projectile>();
-			if (projectile->timer.elapsed() > 0.3) {
+			if (projectile->timer.elapsed() > missile->droptime) {
 				glm::vec3 v = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 10.0);
 				float bestDot = -1;
 				double bestScore = -1;

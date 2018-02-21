@@ -84,7 +84,10 @@ Renderer::Renderer() {
 	hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
-	missileMatrix[FISHROD] = glm::ortho(-1.5, 1.5, -1.5, 1.5);
+	indicator.loadTexture("assets/textures/indicator.png", 1);
+	heightMatrix = glm::translate(glm::vec3(-0.8, 0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
+	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 }
 
 Renderer::~Renderer() {
@@ -134,27 +137,26 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 void Renderer::RenderWeapon() {
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 300, 0, 150, 150);
-	//renderTexture(hpbar, glm::translate(glm::vec3(0, 0, 0)));
+	
 	this->missileShader.use();
 	missile->texture.bind(0);
-	for (int i = 0; i < missile->model_meshes.size(); i++) {
-		missile->model_meshes[i].first->bind();
-		/*std::cout << "missile" << missile << std::endl;
-		std::cout << "fishrod" << AssetLoader::getLoader().getModel("fishrod") << std::endl;
-		std::cout << "stinger" << AssetLoader::getLoader().getModel("stinger") << std::endl;
-		std::cout << "rocketpod" << AssetLoader::getLoader().getModel("rocketpod") << std::endl;
-		std::cout << "gunpod" << AssetLoader::getLoader().getModel("gunpod") << std::endl;*/
-		if (missile == AssetLoader::getLoader().getModel("fishrod")) {
-			this->missileShader.uniform("matrix", missileMatrix[FISHROD]);
-			//cout << "fishrod" << endl;
-		}
-		else {
-			this->missileShader.uniform("matrix", glm::mat4(5));
-			//cout << "not fishrod" << endl;
-		}
-		
-		glDrawElements(GL_TRIANGLES, missile->model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
+	missile->model_meshes[0].first->bind();
+
+	float scale = 1.0f / missile->getBoundingRadius();
+
+	if (scale > 10000) {
+		scale = 0.8;
 	}
+
+	this->missileShader.uniform("ViewProjMatrix", missileVPMatrix);
+	float angle = time.elapsed();
+
+	if (angle > 2 * 3.14) {
+		time.restart();
+	}
+	this->missileShader.uniform("modelMatrix", missileModelMatrix * glm::rotate(angle, glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(scale)));
+	glDrawElements(GL_TRIANGLES, missile->model_meshes[0].first->numIndices(), GL_UNSIGNED_INT, 0);
+
 	glViewport(0, 0, s.x, s.y);
 	AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(s.x - 400, 20), glm::vec3(1, 1, 0), 0.4);
 }
@@ -271,6 +273,10 @@ void Renderer::RenderClouds() {
 void Renderer::RenderHPBar(float hp) {
 	renderTexture(hpbar, hpMatrix);
 	renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+}
+
+void Renderer::RenderHeightIndicator(float height) {
+	renderTexture(indicator, heightMatrix);
 }
 
 void Renderer::setWeaponModel(Model * mptr) {

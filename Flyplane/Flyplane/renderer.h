@@ -12,6 +12,7 @@
 #include "crosshair.h"
 #include "enemymarker.h"
 #include "cloud.h"
+#include "timer.h"
 
 struct RenderObject {
 	Model* model;
@@ -44,9 +45,14 @@ private:
 	Texture hpTexture;
 	glm::mat4 hpMatrix;
 
+	Texture indicator;
+	glm::mat4 heightMatrix;
+
 	int weaponAmmo;
 	Model *missile = nullptr;
-	glm::mat4 missileMatrix[4];
+	glm::mat4 missileVPMatrix;
+	glm::mat4 missileModelMatrix;
+	Timer time;
 
 	Timer globalTime;
 
@@ -77,6 +83,7 @@ public:
 	void RenderCrosshair();
 	void RenderClouds();
 	void RenderHPBar(float hp);
+	void RenderHeightIndicator(float height);
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;
