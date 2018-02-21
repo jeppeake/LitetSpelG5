@@ -133,7 +133,6 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 }
 
 void Renderer::RenderWeapon() {
-	glEnable(GL_DEPTH_TEST); //
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 300, 0, 150, 150);
 	

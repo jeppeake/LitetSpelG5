@@ -47,12 +47,11 @@ private:
 
 	int weaponAmmo;
 	Model *missile = nullptr;
-	glm::mat4 missileMatrix[4];
-
-	Timer globalTime;
 	glm::mat4 missileVPMatrix;
 	glm::mat4 missileModelMatrix;
 	Timer time;
+
+	Timer globalTime;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
