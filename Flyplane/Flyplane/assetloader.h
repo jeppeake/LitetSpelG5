@@ -2,7 +2,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "model.h"
-#include "soundsystem.h"
+#include "soundcomponent.h"
 #include "heightmap.h"
 #include "text.hpp"
 #include "texture.h"

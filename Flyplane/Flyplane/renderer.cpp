@@ -7,6 +7,7 @@
 #include <iostream>
 #include "window.h"
 #include "assetloader.h"
+#include "input.h"
 #define FISHROD 0
 #define STINGER 1
 #define ROCKETPOD 2
@@ -214,6 +215,7 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	if (hm != NULL) {
+		terrain_shader.uniform("time", (float)globalTime.elapsed());
 		terrain_shader.uniform("cameraPos", camera.getTransform().pos);
 		hm->bind(terrain_shader);
 		for (int i = 0; i < patches.size(); i++) {

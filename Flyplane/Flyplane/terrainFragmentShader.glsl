@@ -6,6 +6,7 @@ in vec3 vPos;
 in vec3 vNormal;
 in vec2 vTex;
 in vec3 vMaterials;
+flat in vec3 vColor;
 
 uniform sampler2D heightmap;
 uniform sampler2D materialmap;
@@ -13,6 +14,9 @@ uniform sampler2D material1;
 uniform sampler2D material2;
 uniform sampler2D material3;
 uniform vec2 heightmapSize;
+
+// in world
+uniform float waterHeight;
 
 uniform vec3 cameraPos;
 
@@ -47,6 +51,41 @@ vec3 sampleNormal(vec2 hmUV) {
 	n.y = 1.0/255.0;
 	return normalize(n);
 }
+struct Material {
+	vec3 color;
+	float specular;
+};
+
+Material chooseMat(vec3 pos, vec3 normal) {
+	Material result;
+	result.color = 1.1*vec3(0.376, 0.702, 0.22);
+	result.specular = 0;
+
+	float snowHeight = 3000 + 1100*(noise(pos.xz*0.001));
+
+	// snow
+	if(pos.y > snowHeight) {
+		result.color = vec3(1);
+	}
+
+	// rock wall
+	if(dot(normal, vec3(0,1,0)) < 0.4) {
+		result.color = vec3(0.4);
+	}
+
+	// sand
+	if(pos.y <= waterHeight+50) {
+		result.color = vec3(194, 178, 128)/255.0;
+	}
+
+	// water
+	if(pos.y <= waterHeight) {
+		result.color = vec3(30, 90, 190)/255.0;
+		result.specular = 1;
+	}
+
+	return result;
+}
 
 void main() {
 	vec3 shadowCoord = (shadowMatrix * vec4(vPos, 1)).xyz;
@@ -62,47 +101,39 @@ void main() {
 		visibility = 1.0;
 	}
 
+	//vec3 color = texture(materialmap, vec2(vTex.x, vTex.y)).rgb;
+	vec3 matNormal = sampleNormal(vTex);
+
+
+	Material mat = chooseMat(vPos, matNormal);
+	vec3 color = mat.color;
+
+	// for triangle colors
+	//color = vColor;
+	
+
 	vec3 sun = vec3(0, 1, 1);
 	sun = normalize(sun);
 	vec3 n = normalize(vNormal);
 
-	vec3 color = texture(materialmap, vec2(vTex.x, vTex.y)).rgb;
+	float diffuse = clamp(dot(sun, n), 0, 1);
 
-	color = 1.1*vec3(0.376, 0.702, 0.22);
-	vec3 matNormal = sampleNormal(vTex);
-
-	float snowHeight = 2500 + 300*(noise(vPos.xz*0.05)+noise(vPos.xz*0.01));
-
-	if(vPos.y > snowHeight) {
-		color = vec3(1);
-	}
-
-	if(dot(matNormal, vec3(0,1,0)) < 0.4) {
-		color = vec3(0.4);
-	}
-
-	/*
-	float range = 200;
-	float val = (snowHeight - vPos.y)/range;
-	val = clamp(val, 0.0, 1.0);
-
-	color = mix(vec3(1), color, val);
-
-	val = (dot(matNormal, vec3(0,1,0)) - 0.35)/0.1;
-	val = clamp(val, 0.0, 1.0);
-	color = mix(vec3(0.4), color, val);
-	*/
+	vec3 look = normalize(cameraPos - vPos);
+	vec3 h = normalize(look + sun);
+	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 700.0);
 
 
-	float result = dot(sun, n);
-	result = clamp(result, 0, 1);
+	vec3 lighting;
+	lighting += color * diffuse * visibility * 0.7;
+	lighting += color * specular * visibility * mat.specular;
+	lighting += color * 0.3;
+
 
 	float dist = length(cameraPos - vPos);
 	float fog = pow(clamp(dist/48000.0, 0.0, 1.0), 1.5);
 	vec3 fogColor = 0.95*vec3(100.0/255,149.0/255,234.0/255);
 
-	color = color * result * visibility * 0.7 + color * 0.3;
-	color = mix(color, vec3(fogColor), fog);
+	color = mix(lighting, vec3(fogColor), fog);
 	gl_FragColor = vec4(color, 1);
 }
 

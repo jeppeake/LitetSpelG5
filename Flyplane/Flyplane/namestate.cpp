@@ -1,5 +1,6 @@
 #include "namestate.h"
 #include "loadingstate.h"
+#include "input.h"
 
 
 void NameState::checkForInput() {
