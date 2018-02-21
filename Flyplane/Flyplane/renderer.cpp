@@ -84,8 +84,8 @@ Renderer::Renderer() {
 	hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
-	indicator.loadTexture("assets/texture/indicator.png", 1);
-	heightMatrix = glm::translate(glm::vec3(-0.8, 0, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+	indicator.loadTexture("assets/textures/indicator.png", 1);
+	heightMatrix = glm::translate(glm::vec3(-0.8, 0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
 	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 }
