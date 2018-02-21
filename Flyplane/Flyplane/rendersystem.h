@@ -127,6 +127,8 @@ struct RenderSystem : public System<RenderSystem> {
 		ComponentHandle<ParticleComponent> particles;
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0);
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{
