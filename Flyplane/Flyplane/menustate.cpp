@@ -84,9 +84,9 @@ MenuState::~MenuState() {
 
 void MenuState::init() {
 	vignette.load("assets/Textures/vignette.png");
-	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
-	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
-	AssetLoader::getLoader().loadSound("Assets/Sound/buttonback.wav", "buttonback");
+	AssetLoader::getLoader().loadSound("Assets/Sound/hover.wav", "buttonsound");
+	AssetLoader::getLoader().loadSound("Assets/Sound/hammerclick.wav", "buttonforward");
+	AssetLoader::getLoader().loadSound("Assets/Sound/hammerclick.wav", "buttonback");
 	AssetLoader::getLoader().loadSound("assets/Sound/buttonback.wav", "loadingmusic");
 	bHandler.addButton(new Button("START", glm::vec2(100, 100), glm::vec2(100,36), glm::vec3(1,1,1), glm::vec3(0.5, 0.5, 0.5), new StartLoadingAction(this), "buttonforward"));
 	bHandler.addButton(new Button("LOADOUT", glm::vec2(100, 150), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new LoadoutAction(this), "buttonforward"));
@@ -147,7 +147,7 @@ void MenuState::init() {
 	entity3 = ex.entities.create();
 	float x = 0;
 	float z = 100;
-	glm::vec3 pos(x, 7000, z);
+	glm::vec3 pos(x, 2500, z);
 	glm::quat orien(1, 0, 0, 0);
 	entity3.assign<Transform>(pos, normalize(orien));
 	entity3.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
@@ -162,10 +162,10 @@ void MenuState::init() {
 	std::vector<Behaviour*> behaviours;
 
 	std::vector<glm::vec3> plotter;
-	plotter.push_back(glm::vec3(1000, 7000, 1000));
-	plotter.push_back(glm::vec3(-1000, 7000, 1000));
-	plotter.push_back(glm::vec3(-1000, 7500, 500));
-	plotter.push_back(glm::vec3(1000, 7500, 500));
+	plotter.push_back(glm::vec3(1000, 2500, 1000));
+	plotter.push_back(glm::vec3(-1000, 2500, 1000));
+	plotter.push_back(glm::vec3(-1000, 2500, 500));
+	plotter.push_back(glm::vec3(1000, 2500, 500));
 
 	
 	//behaviours.push_back(new Constant_Turn(0));

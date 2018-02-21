@@ -1,8 +1,8 @@
-20 40 20
+20 20 20
 31
-8
-assets/Terrain/braheightmap.png
-assets/Terrain/bratextur.png
+3
+assets/Terrain/smallmap2/heightmap_smallmap2.png
+assets/Terrain/smallmap2/attribute_smallmap2.png
 assets/Textures/bog.png
 assets/Textures/grass.png
 assets/Textures/water.png

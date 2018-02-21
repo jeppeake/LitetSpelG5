@@ -46,7 +46,8 @@ private:
 
 	int weaponAmmo;
 	Model *missile = nullptr;
-	glm::mat4 missileMatrix;
+	glm::mat4 missileMatrix[4];
+
 
 	Heightmap* hm;
 	std::vector<Patch> patches;

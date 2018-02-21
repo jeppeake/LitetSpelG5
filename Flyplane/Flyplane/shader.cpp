@@ -20,8 +20,7 @@ void checkLinkError(GLuint id, const std::string& paths)
 		std::cout << "Error in:\n" << paths << "\n" << errorstr << "\n";
 
 		glDeleteProgram(id);
-		system("pause");
-		exit(1);
+		//system("pause");
 	}
 }
 
@@ -60,13 +59,8 @@ GLuint compileShader(GLenum type, const std::string& name)
 		std::cout << "Error in '" << name << "':\n" << errorstr << "\n";
 
 		glDeleteShader(shader);
-		system("pause");
-		exit(1);
+		//system("pause");
 	}
-
-
-
-
 
 	return shader;
 }
@@ -88,6 +82,10 @@ ShaderProgram::~ShaderProgram()
 
 void ShaderProgram::create(const std::string & vert, const std::string & geom, const std::string & frag)
 {
+	paths.vert = vert;
+	paths.geom = geom;
+	paths.frag = frag;
+
 	vs = compileShader(GL_VERTEX_SHADER, vert);
 	gs = compileShader(GL_GEOMETRY_SHADER, geom);
 	fs = compileShader(GL_FRAGMENT_SHADER, frag);
@@ -103,6 +101,9 @@ void ShaderProgram::create(const std::string & vert, const std::string & geom, c
 
 void ShaderProgram::create(const std::string & vert, const std::string & frag)
 {
+	paths.vert = vert;
+	paths.geom = "";
+	paths.frag = frag;
 	GLuint vs = compileShader(GL_VERTEX_SHADER, vert);
 	GLuint fs = compileShader(GL_FRAGMENT_SHADER, frag);
 
@@ -112,6 +113,21 @@ void ShaderProgram::create(const std::string & vert, const std::string & frag)
 	glLinkProgram(id);
 
 	checkLinkError(id, vert + "\n" + frag);
+}
+
+void ShaderProgram::reload() {
+	glDeleteShader(vs);
+	glDeleteShader(gs);
+	glDeleteShader(fs);
+	glDeleteProgram(id);
+
+	std::cout << "[DEBUG] Reloading Shaders\n";
+
+	if (paths.geom == "") {
+		create(paths.vert, paths.frag);
+	} else {
+		create(paths.vert, paths.geom, paths.frag);
+	}
 }
 
 void ShaderProgram::use()
