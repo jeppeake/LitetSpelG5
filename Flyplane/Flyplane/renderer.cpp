@@ -277,6 +277,9 @@ void Renderer::RenderHPBar(float hp) {
 
 void Renderer::RenderHeightIndicator(float height) {
 	renderTexture(indicator, heightMatrix);
+	glDisable(GL_DEPTH_TEST);
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)height), glm::vec2(143, 390), glm::vec3(0, 1, 0), 0.3);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setWeaponModel(Model * mptr) {
