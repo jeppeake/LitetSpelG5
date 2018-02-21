@@ -2,6 +2,7 @@
 #include "window.h"
 #include "playingstate.h"
 #include "ButtonAction.h"
+#include "input.h"
 
 void ButtonHandler::handleButtonClicks() {
 	for (auto button : buttons) {

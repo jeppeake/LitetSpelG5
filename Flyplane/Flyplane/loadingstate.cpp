@@ -4,6 +4,7 @@
 #include "loadingstate.h"
 #include "playingstate.h"
 #include "startgameaction.h"
+#include "input.h"
 
 void LoadingState::init() {
 	AssetLoader::getLoader().clearTerrains();

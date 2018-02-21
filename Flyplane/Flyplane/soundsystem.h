@@ -14,12 +14,10 @@ using namespace entityx;
 struct SoundSystem : public System<SoundSystem> {
 private:
 	sf::Sound driftSound;
-	sf::SoundBuffer soundBuffer;
 
 public:
 	SoundSystem() {
-		soundBuffer.loadFromFile("assets/Sound/wind1.wav");
-		driftSound.setBuffer(soundBuffer);
+		driftSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("wind"));
 		driftSound.setRelativeToListener(true);
 		driftSound.setPosition(0, 0, 0);
 	}
