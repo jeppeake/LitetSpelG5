@@ -12,6 +12,7 @@
 #include "crosshair.h"
 #include "enemymarker.h"
 #include "cloud.h"
+#include "timer.h"
 
 struct RenderObject {
 	Model* model;
@@ -46,8 +47,9 @@ private:
 
 	int weaponAmmo;
 	Model *missile = nullptr;
-	glm::mat4 missileMatrix[4];
-
+	glm::mat4 missileVPMatrix;
+	glm::mat4 missileModelMatrix;
+	Timer time;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
