@@ -47,6 +47,7 @@ void Heightmap::loadMap(const std::string &maptxt) {
 	f >> scale.x >> scale.y >> scale.z;
 	f >> numPatchVerts;
 	f >> maxLevels;
+	f >> waterHeight;
 	f >> heightmap;
 	f >> materialmap;
 	f >> mat1 >> mat2 >> mat3;
@@ -56,8 +57,6 @@ void Heightmap::loadMap(const std::string &maptxt) {
 	textures[1].loadTexture(mat2);
 	textures[2].loadTexture(mat3);
 
-
-	
 
 	std::vector<unsigned char> img;
 	unsigned error = lodepng::decode(img, width, height, heightmap, LCT_RGBA, 16U);
@@ -80,22 +79,21 @@ void Heightmap::loadMap(const std::string &maptxt) {
 			uint16_t red = (a << 8) | b;
 			double sample = red;
 
-			//(img[i] / 255.0)*double(std::numeric_limits<unsigned int>::max());
+
+			double mult = scale.y*255.0 / double(std::numeric_limits<uint16_t>::max());
+			double terrainHeight = sample * mult;
+
+			if (terrainHeight <= waterHeight) {
+				sample = waterHeight / mult;
+				terrainHeight = waterHeight;
+			}
 			
 			heights.push_back(sample);
 
 			float x = scale.x*ix + pos.x;
-			float y = scale.y*sample*255.0/double(std::numeric_limits<uint16_t>::max()) + pos.y;
+			float y = terrainHeight + pos.y;
 			float z = scale.z*iy + pos.z;
 			vertices.emplace_back(x, y, z);
-
-			/*
-			int house = img[i + 1];
-			if (house > 0) {
-				std::cout << "Adding house\n";
-				houses.emplace_back(glm::vec3(x, y, z), house);
-			}
-			*/
 		}
 	}
 
@@ -173,7 +171,8 @@ void Heightmap::bind(ShaderProgram& shader) {
 	shader.uniform("scale", scale);
 	shader.uniform("heightmapSize", getSize());
 	shader.uniform("heightmapPos", pos);
-	
+	shader.uniform("waterHeight", waterHeight + pos.y);
+
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 

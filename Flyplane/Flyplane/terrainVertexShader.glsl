@@ -16,6 +16,7 @@ out vec3 Pos;
 out vec3 Normal;
 out vec2 Tex;
 out vec3 Materials;
+out vec3 Color;
 
 float rand(vec2 p);
 
@@ -53,15 +54,12 @@ void main() {
 	vec2 pos2d = uv*patch_size + offset;
 	vec2 hmUV = pos2d/heightmapSize;
 
-	float height = sampleHeightmap(hmUV); 
-	//height = 0;
-	//height = -patch_size.x/1400.0;
+	float height = sampleHeightmap(hmUV);
 
 	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y) + heightmapPos;
 
 	Normal = sampleNormal(hmUV);
 	
-
 
 	/*
 	float pi = 3.1415;
@@ -69,14 +67,24 @@ void main() {
 	Normal.x = 0.5*sin(h)+0.5;
 	Normal.y = 0.5*sin(h + 2*pi/3)+0.5;
 	Normal.z = 0.5*sin(h + 4*pi/3)+0.5;
-	
-	//Normal = vec3(modelMatrix * vec4(normal, 0));
 	vec3 n;
 	n.x = fract(rand(pos.xz*100));
 	n.y = fract(rand(pos.xz*100 + vec2(1000, 1000)));
 	n.z = fract(rand(pos.xz*100 + vec2(2000, 2000)));
 	Normal = mix(Normal, n, 0.35);
 	*/
+
+	
+	Color = 1.1*vec3(0.376, 0.702, 0.22);
+	float snowHeight = 3000 + 1100*(noise(pos.xz*0.001));
+	if(pos.y > snowHeight) {
+		Color = vec3(1);
+	}
+
+	
+	if(dot(Normal, vec3(0,1,0)) < 0.38) {
+		Color = vec3(0.4);
+	}
 
 	Materials = texture(materialmap, hmUV).rgb;
 	Tex = pos2d;

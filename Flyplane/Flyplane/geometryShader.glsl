@@ -7,11 +7,13 @@ in vec3 Pos[];
 in vec3 Normal[];
 in vec2 Tex[];
 in vec3 Materials[];
+in vec3 Color[];
 
 out vec3 vPos;
 out vec3 vNormal;
 out vec2 vTex;
 out vec3 vMaterials;
+flat out vec3 vColor;
 
 
 void main() {
@@ -22,6 +24,7 @@ void main() {
 		vPos = Pos[i];
 		//vNormal = Normal[i];
 		vTex = Tex[i];
+		vColor = Color[i];
 		vMaterials = Materials[i];
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();
