@@ -164,6 +164,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="SAIB.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="speedindicator.cpp" />
     <ClCompile Include="terrain_close.h" />
     <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
     <ClInclude Include="crosshair.h" />
+    <ClInclude Include="dropcomponent.h" />
     <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
@@ -222,6 +224,7 @@
     <ClInclude Include="highscore.h" />
     <ClInclude Include="highscoreaction.h" />
     <ClInclude Include="highscorestate.h" />
+    <ClInclude Include="housecomponent.h" />
     <ClInclude Include="hunt_player.h" />
     <ClInclude Include="hunt_target.h" />
     <ClInclude Include="input.h" />
@@ -265,6 +268,7 @@
     <ClInclude Include="soundbuffers.h" />
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
+    <ClInclude Include="speedindicator.h" />
     <ClInclude Include="startgameaction.h" />
     <ClInclude Include="startloadingaction.h" />
     <ClInclude Include="targetcomponent.h" />

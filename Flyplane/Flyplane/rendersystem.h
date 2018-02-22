@@ -43,6 +43,7 @@ struct RenderSystem : public System<RenderSystem> {
 		glm::vec3 playerUp;
 		glm::quat playerOrientation;
 		float hp;
+		float speed;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
 			player = entity.component<PlayerComponent>();
@@ -64,6 +65,14 @@ struct RenderSystem : public System<RenderSystem> {
 					ammo += equipment->special[i].stats.ammo;
 				}
 				Renderer::getRenderer().setAmmo(ammo);
+			}
+			if (entity.has_component<FlightComponent>())
+			{
+				speed = entity.component<FlightComponent>()->current_speed;
+			}
+			else
+			{
+				speed = 0;
 			}
 		}
 
@@ -166,7 +175,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().RenderCrosshair();
 			Renderer::getRenderer().RenderHPBar(hp);
 			Renderer::getRenderer().RenderHeightIndicator(playerPos.y);
-			Renderer::getRenderer().RenderSpeedometer(200.0f);
+			Renderer::getRenderer().RenderSpeedometer(speed);
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
