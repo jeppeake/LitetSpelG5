@@ -22,6 +22,10 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				if (entity.has_component<FlightComponent>())
 				{
 					entity.remove<FlightComponent>();
+					if (entity.has_component<Target>())
+					{
+						entity.remove<Target>();
+					}
 				}
 				auto handle = entity.component<ParticleComponent>();
 				if (!handle)
@@ -29,6 +33,9 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 					handle = entity.assign<ParticleComponent>();
 				}
 				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
+				events.emit<RemoveParticleEvent>(TRAIL, handle);
+				events.emit<RemoveParticleEvent>(ENGINE_TRAIL, handle);
+				events.emit<AddParticleEvent>(DEAD_TRAIL, handle);
 			}
 		}
 	}

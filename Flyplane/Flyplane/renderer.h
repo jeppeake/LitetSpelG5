@@ -13,6 +13,7 @@
 #include "enemymarker.h"
 #include "cloud.h"
 #include "timer.h"
+#include "heightindicator.h"
 
 struct RenderObject {
 	Model* model;
@@ -27,6 +28,7 @@ private:
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
 	ShaderProgram missileShader;
+	ShaderProgram heightShader;
 
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
@@ -47,6 +49,9 @@ private:
 
 	Texture indicator;
 	glm::mat4 heightMatrix;
+	HeightIndicator heightIndicator;
+
+	glm::mat4 speedMatrix;
 
 	int weaponAmmo;
 	Model *missile = nullptr;
@@ -84,6 +89,7 @@ public:
 	void RenderClouds();
 	void RenderHPBar(float hp);
 	void RenderHeightIndicator(float height);
+	void RenderSpeedometer(float speed);
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;

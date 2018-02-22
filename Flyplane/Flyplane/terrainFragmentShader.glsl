@@ -142,10 +142,15 @@ void main() {
 
 
 	float dist = length(cameraPos - vPos);
-	float fog = pow(clamp(dist/48000.0, 0.0, 1.0), 1.5);
+	float fog = pow(clamp(dist/60000.0, 0.0, 1.0), 2);
 	vec3 fogColor = 0.95*vec3(100.0/255,149.0/255,234.0/255);
 
+	float thickFog = pow(clamp(dist/150000.0, 0.0, 1.0), 2);
+	vec3 thickFogColor = vec3(100.0/255,149.0/255,234.0/255);
+
 	color = mix(lighting, vec3(fogColor), fog);
+	color = mix(color, vec3(thickFogColor), thickFog);
+
 	gl_FragColor = vec4(color, 1);
 	//gl_FragColor = vec4(matNormal, 1);
 }
