@@ -30,7 +30,7 @@ public:
 		explosionShader.create("explosionCompute.glsl");
 		engineTrailShader.create("engineTrail.glsl");
 		deadTrailShader.create("deadTrail.glsl");
-		sparkShader.create("spark.glsl");
+		sparkShader.create("sparks.glsl");
 		program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
 		for (int i = 0; i < 200; i++) {
@@ -93,7 +93,7 @@ public:
 			sparkShader.use();
 			if (transform) {
 				sparkShader.uniform("spawn", transform->pos);
-				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, -1));
+				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, 0));
 			}
 			sparkShader.uniform("life", 1.f);
 			sparkShader.uniform("dt", float(dt));

@@ -1,0 +1,45 @@
+1
+
+formation
+1
+
+spawnhouse
+1
+500.4 -500
+hus1
+1
+
+spawnenemy
+33.45 200 -69.37
+loadout.txt
+
+spawnenemy
+89.45 200 -89.37
+loadout.txt
+
+spawnenemy
+43.45 200 -99.37
+loadout.txt
+
+spawnenemy
+15.45 200 -50.37
+loadout.txt
+
+spawnenemy
+55.45 200 -55.37
+loadout.txt
+
+settimer
+50
+
+huntplayerdist
+3000
+
+firingdistance
+500
+
+points
+500
+
+text
+Destroy the very evil nazi building before they build the dangerous bomb!

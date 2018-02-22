@@ -18,7 +18,7 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				health->isDead = true;
 				std::cout << "Entity got killed." << "\n";
 				if (entity.has_component<PointComponent>())
-					state->addPoints(entity.component<PointComponent>().get()->points);
+					state->addPoints(entity.component<PointComponent>()->points);
 				if (entity.has_component<FlightComponent>())
 				{
 					entity.remove<FlightComponent>();
