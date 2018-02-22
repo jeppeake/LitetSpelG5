@@ -66,7 +66,14 @@ struct RenderSystem : public System<RenderSystem> {
 				}
 				Renderer::getRenderer().setAmmo(ammo);
 			}
-			 speed = entity.component<FlightComponent>()->current_speed;
+			if (entity.has_component<FlightComponent>())
+			{
+				speed = entity.component<FlightComponent>()->current_speed;
+			}
+			else
+			{
+				speed = 0;
+			}
 		}
 
 		ComponentHandle<CameraOnComponent> cameraOn;
