@@ -18,7 +18,17 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				std::cout << "Entity got killed." << "\n";
 				if (entity.has_component<PointComponent>())
 					state->addPoints(entity.component<PointComponent>().get()->points);
-				entity.destroy();
+				if (entity.has_component<FlightComponent>())
+				{
+					entity.remove<FlightComponent>();
+					entity.remove<HealthComponent>();
+				}
+				auto handle = entity.component<ParticleComponent>();
+				if (!handle)
+				{
+					handle = entity.assign<ParticleComponent>();
+				}
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
 			}
 		}
 	}
