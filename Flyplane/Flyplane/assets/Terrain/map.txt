@@ -1,7 +1,7 @@
-30 8000 30
+10 3000 10
 63
 5
-2000
+1000
 assets/Terrain/coolmap/heightmap_coolmap.png
 assets/Terrain/coolmap/biome_coolmap.png
 assets/Textures/bog.png

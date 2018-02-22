@@ -14,6 +14,7 @@ out vec3 vPos;
 out vec3 vNormal;
 out vec2 vTex;
 out vec3 vMaterials;
+out vec3 vGeometryPos;
 flat out vec3 vColor;
 
 
@@ -24,6 +25,7 @@ void main() {
 	for(int i = 0; i < 3; i++) {
 		vPos = Pos[i];
 		//vNormal = Normal[i];
+		vGeometryPos = GeometryPos[i];
 		vTex = Tex[i];
 		vColor = Color[i];
 		vMaterials = Materials[i];
