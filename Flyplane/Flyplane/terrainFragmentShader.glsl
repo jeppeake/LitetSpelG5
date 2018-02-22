@@ -159,9 +159,9 @@ void main() {
 	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 1000.0);
 
 
-	vec3 lighting;
+	vec3 lighting = vec3(0);
 	lighting += color * diffuse * visibility * 0.7 * (1.3 - mat.specular);
-	lighting += specular * visibility * mat.specular * 0.8;
+	lighting += specular * visibility * mat.specular;
 	lighting += color * 0.3;
 
 
