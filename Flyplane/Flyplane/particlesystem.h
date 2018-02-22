@@ -93,7 +93,7 @@ public:
 			sparkShader.use();
 			if (transform) {
 				sparkShader.uniform("spawn", transform->pos);
-				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, -1));
+				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, 0));
 			}
 			sparkShader.uniform("life", 1.f);
 			sparkShader.uniform("dt", float(dt));
