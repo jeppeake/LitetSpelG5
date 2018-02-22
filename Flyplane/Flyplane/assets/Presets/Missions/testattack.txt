@@ -1,8 +1,5 @@
 1
 
-formation
-1
-
 spawnhouse
 1
 500.4 -500
@@ -10,23 +7,23 @@ hus1
 1
 
 spawnenemy
-33.45 200 -69.37
+500.4 210 -500
 loadout.txt
 
 spawnenemy
-89.45 200 -89.37
+500.4 220 -500
 loadout.txt
 
 spawnenemy
-43.45 200 -99.37
+500.4 230 -500
 loadout.txt
 
 spawnenemy
-15.45 200 -50.37
+500.4 240 -500
 loadout.txt
 
 spawnenemy
-55.45 200 -55.37
+55.45 250 -500
 loadout.txt
 
 settimer

@@ -22,6 +22,8 @@
 #include "cameraoncomponent.h"
 #include "healthcomponent.h"
 
+#include "missionmarker.h"
+
 using namespace entityx;
 
 
@@ -146,6 +148,7 @@ struct RenderSystem : public System<RenderSystem> {
 		}
 		if (playing) {
 			ComponentHandle<AIComponent> ai;
+			ComponentHandle<MissionMarker> mmarker;
 
 			for (Entity entity : es.entities_with_components(ai, transform)) {
 				radar.addPlane(*transform.get());
@@ -154,9 +157,6 @@ struct RenderSystem : public System<RenderSystem> {
 					glm::vec3 enemyPos = entity.component<Transform>()->pos;
 					float length = glm::distance(enemyPos, playerPos);
 					glm::vec3 color = glm::vec3(1, 0, 0);
-					if (entity.has_component<FormationComponent>()) {
-						color = glm::vec3(1, 0, 1);
-					}
 					if (entity.has_component<Target>()) {
 						if (entity.component<Target>().get()->is_targeted) {
 							color += glm::vec3(-0.5, 0.9, -0.5);
@@ -164,7 +164,22 @@ struct RenderSystem : public System<RenderSystem> {
 					}
 
 					length = 5.0 + length / 100.0f;
-					Renderer::getRenderer().addMarker(enemyPos, color, length);
+					if (!entity.has_component<MissionMarker>())
+						Renderer::getRenderer().addMarker(enemyPos, color, length);
+				}
+			}
+			for (Entity entity : es.entities_with_components(mmarker, transform)) {
+				if (entity.has_component<MissionMarker>())
+				{
+					glm::vec3 color = mmarker->color;
+					if (entity.has_component<Target>()) {
+						if (entity.component<Target>().get()->is_targeted) {
+							color += glm::vec3(-0.5, 0.9, -0.5);
+						}
+					}
+					float length = glm::distance(transform->pos, playerPos);
+					length = 5.0 + length / 100.0f;
+					Renderer::getRenderer().addMarker(transform->pos, color, length);
 				}
 			}
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
