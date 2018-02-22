@@ -123,9 +123,12 @@ private:
 		switch (drop.component<DropComponent>()->type) {
 		case DropComponent::Health:
 			player.component<HealthComponent>()->health += drop.component<DropComponent>()->amount;
-			player.component<HealthComponent>()->health = (player.component<HealthComponent>()->health > player.component<HealthComponent>()->maxHP) ? player.component<HealthComponent>()->maxHP : player.component<HealthComponent>()->health;
+			if (player.component<HealthComponent>()->health > player.component<HealthComponent>()->maxHP) {
+				player.component<HealthComponent>()->health = player.component<HealthComponent>()->maxHP;
+			}
 			break;
 		case DropComponent::Weapon:
+			player.component<Equipment>()->special[0].stats.ammo++;
 			break;
 		}
 	}

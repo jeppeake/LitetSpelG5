@@ -122,7 +122,7 @@ void PlayingState::spawnDrop() {
 	entity.assign<Transform>(glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, 1000), glm::quat(1, 0, 0, 0));
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 	entity.assign<CollisionComponent>();
-	entity.assign<DropComponent>(50);
+	entity.assign<DropComponent>(50, DropComponent::Weapon);
 	//entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
 }
 
@@ -492,6 +492,7 @@ void PlayingState::update(double dt)
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
 			spawnEnemies(2);
+			spawnDrop();
 		}
 
 		timerMultiplier -= dt;
