@@ -55,8 +55,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				formLeader.component<FormationComponent>().remove();
 			}
 		}
-		enemyList.clear();
 		cleanUpMarkers();
+		enemyList.clear();
 		failed = true;
 	}
 
