@@ -11,7 +11,9 @@
 #include "factioncomponents.h"
 #include <entityx/entityx.h>
 #include "missilecomponent.h"
+#include "dropcomponent.h"
 #include "playingstate.h"
+#include "housecomponent.h"
 #include <map>
 
 class CollisionSystem : public entityx::System<CollisionSystem>
@@ -121,6 +123,20 @@ private:
 		}
 	}
 
+	void handleDrop(entityx::Entity player, entityx::Entity drop) {
+		std::cout << "Picked up drop!" << std::endl;
+
+		switch (drop.component<DropComponent>()->type) {
+		case DropComponent::Health:
+			player.component<HealthComponent>()->health += drop.component<DropComponent>()->amount;
+			player.component<HealthComponent>()->health = (player.component<HealthComponent>()->health > player.component<HealthComponent>()->maxHP) ? player.component<HealthComponent>()->maxHP : player.component<HealthComponent>()->health;
+			break;
+		case DropComponent::Weapon:
+			break;
+		}
+	}
+
+	
 	void handleCollision(entityx::Entity a, entityx::Entity b, entityx::EventManager &es) {
 		handleHealth(a, b, es);
 		handleHealth(b, a, es);
@@ -132,6 +148,15 @@ private:
 
 		if (a.has_component<FlightComponent>() && b.has_component<FlightComponent>()) {
 			to_remove[a.id()] = a;
+			to_remove[b.id()] = b;
+		}
+		else if (a.has_component<DropComponent>()) {
+			//std::cout << "Collision with drop" << std::endl;
+			handleDrop(b, a);
+			to_remove[a.id()] = a;
+		}
+		else if (b.has_component<DropComponent>()) {
+			handleDrop(a, b);
 			to_remove[b.id()] = b;
 		}
 	}
@@ -173,9 +198,6 @@ public:
 	};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
-		auto size = to_remove.size();
-
-
 		Heightmap* map = nullptr;
 		entityx::ComponentHandle<Terrain> terr;
 		entityx::Entity terrain;
@@ -212,9 +234,16 @@ public:
 						checkCollision(entity, other,events);
 					}
 				}
+				else if (entity.has_component<DropComponent>()) {
+						entityx::ComponentHandle<PlayerComponent> player;
+						for (entityx::Entity other : es.entities_with_components(collision, transform, model, player)) {
+							checkCollision(entity, other, events);
+						}
+					
+				}
 			}
 			
-			if (!map) {
+			if (!map && entity.has_component<HouseComponent>()) {
 				continue;
 			}
 			auto boxes = *model->mptr->getBoundingBoxes();

@@ -18,6 +18,7 @@
 #include "particlesystem.h"
 #include "camerasystem.h"
 
+#include "dropcomponent.h"
 #include "aicomponent.h"
 #include "aisystem.h"
 #include "behaviour.h"
@@ -114,6 +115,15 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Equipment>(primary, secondary);
 		entity.assign<PointComponent>(100);
 	}
+}
+
+void PlayingState::spawnDrop() {
+	auto entity = ex.entities.create();
+	entity.assign<Transform>(glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, 1000), glm::quat(1, 0, 0, 0));
+	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+	entity.assign<CollisionComponent>();
+	entity.assign<DropComponent>(50);
+	//entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
 }
 
 void PlayingState::drawHighscore() {
@@ -237,7 +247,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
-	AssetLoader::getLoader().loadModel("assets/buildings/911.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -414,6 +424,7 @@ void PlayingState::init()
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
 
+	spawnDrop();
 }
 
 void PlayingState::update(double dt)

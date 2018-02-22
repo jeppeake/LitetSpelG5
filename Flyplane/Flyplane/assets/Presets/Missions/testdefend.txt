@@ -1,8 +1,5 @@
 0
 
-formation
-1
-
 spawnhouse
 1
 33.4 -80
@@ -10,35 +7,38 @@ hus1
 2
 
 spawnenemy
-33.45 4000 -69.37
+33.4 1000 -82
 loadout.txt
 
 makeleader
 
 spawnenemy
-89.45 4100 -89.37
+33.4 1000 -82
 loadout.txt
 
 //spawnenemy
-43.45 3900 -99.37
+33.4 3900 -82
 loadout.txt
 
 //spawnenemy
-15.45 4400 -50.37
+33.4 4400 -82
 loadout.txt
 
 //spawnenemy
-55.45 3800 -55.37
+33.4 3800 -82
 loadout.txt
 
 settimer
 20.45
 
 huntplayerdist
-10009:49 2018-02-22
+1000
 
 firingdistance
-100
+500
+
+points
+1000
 
 text
 Crap! An angry russian dude wants to crash into the house, kill him before he gets too close!
