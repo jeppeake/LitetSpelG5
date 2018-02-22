@@ -13,6 +13,8 @@ Visa text
 
 commands:
 
+[mission type]		(int, 0 = defend house, 1 = attack house, 2 = kill all enemies in group)
+
 -formation
 [1/0]			(int bool)
 

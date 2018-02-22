@@ -75,7 +75,7 @@ public:
 				pitch = glm::clamp((f->throttle - f->airBrake), -0.2f, 1.f) * 0.8f + 1.0f;
 				s->sound.setPitch(pitch);
 
-				std::cout << "Drift: " << f->drift << std::endl;
+				//std::cout << "Drift: " << f->drift << std::endl;
 				if (f->drift > 0.2) {
 					if (driftSound.getStatus() != driftSound.Playing) {
 						driftSound.play();
