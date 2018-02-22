@@ -33,6 +33,7 @@ private:
 	sf::SoundBuffer* missileSB;
 
 	void spawnEnemies(int nr);
+	void spawnDrop();
 	void drawHighscore();
 
 	std::string name;

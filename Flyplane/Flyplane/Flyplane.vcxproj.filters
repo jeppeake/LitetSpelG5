@@ -432,6 +432,9 @@
     <ClInclude Include="missionsystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="dropcomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
