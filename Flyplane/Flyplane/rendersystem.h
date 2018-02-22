@@ -182,15 +182,9 @@ struct RenderSystem : public System<RenderSystem> {
 					Renderer::getRenderer().addMarker(transform->pos, color, length);
 				}
 			}
-			Renderer::getRenderer().RenderClouds();
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
-			Renderer::getRenderer().setCrosshairPos(newPos);
-			Renderer::getRenderer().orientation = playerOrientation;
 			radar.draw((float)dt);
-			Renderer::getRenderer().RenderCrosshair();
-			Renderer::getRenderer().RenderHPBar(hp);
-			Renderer::getRenderer().RenderHeightIndicator(playerPos.y);
-			Renderer::getRenderer().RenderSpeedometer(speed);
+			Renderer::getRenderer().RenderGui(hp, playerPos.y, speed, newPos, playerOrientation);
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
