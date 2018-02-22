@@ -1,3 +1,5 @@
+0
+
 formation
 1
 
@@ -17,15 +19,15 @@ spawnenemy
 89.45 4100 -89.37
 loadout.txt
 
-spawnenemy
+//spawnenemy
 43.45 3900 -99.37
 loadout.txt
 
-spawnenemy
+//spawnenemy
 15.45 4400 -50.37
 loadout.txt
 
-spawnenemy
+//spawnenemy
 55.45 3800 -55.37
 loadout.txt
 
@@ -33,10 +35,10 @@ settimer
 20.45
 
 huntplayerdist
-100
+10009:49 2018-02-22
 
 firingdistance
 100
 
 text
-Nu går allt åt helvete
+Crap! An angry russian dude wants to crash into the house, kill him before he gets too close!
