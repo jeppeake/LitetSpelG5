@@ -22,6 +22,7 @@ Renderer::Renderer() {
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
+	this->heightShader.create("heightindicatorVS.glsl", "heightindicatorFS.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -85,7 +86,10 @@ Renderer::Renderer() {
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
 	indicator.loadTexture("assets/textures/indicator.png", 1);
-	heightMatrix = glm::translate(glm::vec3(-0.8, 0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+	heightMatrix = glm::translate(glm::vec3(-0.8, -0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+
+	speedMatrix = glm::translate(glm::vec3(0.8, -0.1, 0)) * glm::rotate(3.14f, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+
 	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 }
@@ -276,9 +280,25 @@ void Renderer::RenderHPBar(float hp) {
 }
 
 void Renderer::RenderHeightIndicator(float height) {
-	renderTexture(indicator, heightMatrix);
 	glDisable(GL_DEPTH_TEST);
-	AssetLoader::getLoader().getText()->drawText(std::to_string((int)height), glm::vec2(143, 390), glm::vec3(0, 1, 0), 0.3);
+	float realHeight = (height - 14000) * 2;
+	renderTexture(indicator, heightMatrix);
+	heightShader.use();
+	heightShader.uniform("value", realHeight / 21500.0f);
+	heightIndicator.Bind();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realHeight), glm::vec2(143, 318), glm::vec3(0, 1, 0), 0.3);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::RenderSpeedometer(float speed) {
+	glDisable(GL_DEPTH_TEST);
+	renderTexture(indicator, speedMatrix);
+	float realSpeed = speed * 2 * 3.6;
+
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100, 318), glm::vec3(0, 1, 0), 0.3);
 	glEnable(GL_DEPTH_TEST);
 }
 

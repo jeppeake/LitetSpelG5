@@ -140,6 +140,7 @@
     <ClCompile Include="enemymarker.cpp" />
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="fullscreenimage.cpp" />
+    <ClCompile Include="heightindicator.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="highscorestate.cpp" />
@@ -217,10 +218,12 @@
     <ClInclude Include="entity_close.h" />
     <ClInclude Include="healthcomponent.h" />
     <ClInclude Include="healthsystem.h" />
+    <ClInclude Include="heightindicator.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
     <ClInclude Include="highscoreaction.h" />
     <ClInclude Include="highscorestate.h" />
+    <ClInclude Include="housecomponent.h" />
     <ClInclude Include="hunt_player.h" />
     <ClInclude Include="hunt_target.h" />
     <ClInclude Include="input.h" />
@@ -252,6 +255,7 @@
     <ClInclude Include="presetloader.h" />
     <ClInclude Include="previewcomponenet.h" />
     <ClInclude Include="radar.h" />
+    <ClInclude Include="removeParticleEvent.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
@@ -278,6 +282,7 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="deadTrail.glsl" />
     <None Include="enemymarkerFS.glsl" />
     <None Include="enemymarkerGS.glsl" />
     <None Include="enemymarkerVS.glsl" />
@@ -289,6 +294,8 @@
     <None Include="geometryShader.glsl" />
     <None Include="guiFragmentShader.glsl" />
     <None Include="guiVertexShader.glsl" />
+    <None Include="heightindicatorFS.glsl" />
+    <None Include="heightindicatorVS.glsl" />
     <None Include="missileFS.glsl" />
     <None Include="missileVS.glsl" />
     <None Include="partFrag.glsl" />
@@ -299,6 +306,7 @@
     <None Include="radarVS.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
+    <None Include="sparks.glsl" />
     <None Include="terrainFragmentShader.glsl" />
     <None Include="terrainVertexShader.glsl" />
     <None Include="particletrail.glsl" />

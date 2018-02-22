@@ -247,7 +247,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
-	AssetLoader::getLoader().loadModel("assets/buildings/911.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -491,7 +491,7 @@ void PlayingState::update(double dt)
 
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
-			//spawnEnemies(2);
+			spawnEnemies(2);
 		}
 
 		timerMultiplier -= dt;
@@ -509,10 +509,11 @@ void PlayingState::update(double dt)
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
-		ex.systems.update<MissionSystem>(dt);
+		
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		ex.systems.update<MissionSystem>(dt);
 		glm::vec2 window = Window::getWindow().size();
 		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
 		if (pointObject.time >  0)

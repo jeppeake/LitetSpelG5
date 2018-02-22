@@ -1,8 +1,8 @@
-150 110 150
-31
+50 50 50
+63
 5
-14000
-assets/Terrain/largemap/heightmap_largemap.png
+5000
+assets/Terrain/coolmap/heightmap_coolmap.png
 assets/Terrain/smallmap2/attribute_smallmap2.png
 assets/Textures/bog.png
 assets/Textures/grass.png

@@ -1,0 +1,44 @@
+0
+
+spawnhouse
+1
+33.4 -80
+hus1
+2
+
+spawnenemy
+33.4 1000 -82
+loadout.txt
+
+makeleader
+
+spawnenemy
+33.4 1000 -82
+loadout.txt
+
+//spawnenemy
+33.4 3900 -82
+loadout.txt
+
+//spawnenemy
+33.4 4400 -82
+loadout.txt
+
+//spawnenemy
+33.4 3800 -82
+loadout.txt
+
+settimer
+20.45
+
+huntplayerdist
+1000
+
+firingdistance
+500
+
+points
+1000
+
+text
+Crap! An angry russian dude wants to crash into the house, kill him before he gets too close!

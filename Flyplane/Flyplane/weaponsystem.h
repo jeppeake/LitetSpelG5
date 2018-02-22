@@ -204,7 +204,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 				target->is_targeted = false;
 				double score = (dot * target->heat) / glm::length(dir);
-				if (score > bestScore && entity.component<Target>().get()->faction != target->faction) {
+				if (score > bestScore && entity.has_component<Target>() && entity.component<Target>()->faction != target->faction) {
 					bestDot = dot;
 					bestScore = score;
 					cure = enemy;
