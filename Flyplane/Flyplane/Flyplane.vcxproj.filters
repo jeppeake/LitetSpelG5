@@ -432,6 +432,9 @@
     <ClInclude Include="missionsystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="removeParticleEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -520,6 +523,9 @@
     </None>
     <None Include="missileFS.glsl">
       <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="deadTrail.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

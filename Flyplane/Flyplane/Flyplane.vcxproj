@@ -251,6 +251,7 @@
     <ClInclude Include="presetloader.h" />
     <ClInclude Include="previewcomponenet.h" />
     <ClInclude Include="radar.h" />
+    <ClInclude Include="removeParticleEvent.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
@@ -277,6 +278,7 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="deadTrail.glsl" />
     <None Include="enemymarkerFS.glsl" />
     <None Include="enemymarkerGS.glsl" />
     <None Include="enemymarkerVS.glsl" />
