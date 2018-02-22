@@ -46,10 +46,12 @@ vec3 sampleNormal(vec2 hmUV) {
 	h[2] = sampleHeightmap(hmUV, vec2(1, 0));
 	h[3] = sampleHeightmap(hmUV, vec2(0, 1));
 
+	float ratioX = scale.x/scale.y;
+	float ratioZ = scale.z/scale.y;
 	vec3 n;
-	n.z = scale.z*(h[0] - h[3]);
-	n.x = scale.x*(h[1] - h[2]);
-	n.y = 1;// scale.y; //*1.0/65535.0
+	n.z = ratioZ * (h[0] - h[3]);
+	n.x = ratioX * (h[1] - h[2]);
+	n.y = 2 * ratioX*ratioZ;
 	return normalize(n);
 }
 
@@ -62,37 +64,50 @@ vec3 rgb(float r, float g, float b) {
 	return vec3(r, g, b) / 255.0;
 }
 
-Material chooseMat(vec3 pos, vec3 normal) {
+
+const vec3 colorSnow = vec3(1);
+const vec3 colorGrass = rgb(151, 169, 79);
+const vec3 colorDarkGrass = 0.6*rgb(151, 169, 79);
+const vec3 colorSand = rgb(194, 178, 128);
+const vec3 colorRock = rgb(81,79,86);
+const vec3 colorWater = rgb(30, 90, 190);
+
+
+Material chooseMat(vec3 pos, vec3 normal, float biome) {
 	Material result;
-	result.color = rgb(199,159,72);
+	result.color = colorGrass;
 	result.specular = 0;
 	float leaning = dot(normal, vec3(0,1,0));
 
-	float snowHeight = 21000 + 500*(noise(pos.xz*0.001));
+	float snowHeight = scale.y*0.8 - 500*(noise(pos.xz*0.001));
 
-	
-	if(leaning < 0.6) {
-		result.color = rgb(153,102,47);
+	// leaning grass
+	if(leaning < 0.9) {
+		result.color = colorDarkGrass;
 	}
 
 	// snow
 	if(pos.y > snowHeight) {
-		result.color = vec3(1);
+		result.color = colorSnow;
 	}
 
 	// sand
 	if(pos.y <= waterHeight+50 + 50*noise(pos.xz*0.0001) && leaning > 0.6) {
-		result.color = vec3(194, 178, 128)/255.0;
+		result.color = colorSand;
 	}
+
+	result.color = mix(result.color, colorSand, biome);
 	
 	// rock wall
-	if(leaning < 0.35) {
-		result.color = rgb(81,79,86);
+	if(leaning < 0.5) {
+		result.color = colorRock;
 	}
+
+	
 
 	// water
 	if(pos.y <= waterHeight+5) {
-		result.color = vec3(30, 90, 190)/255.0;
+		result.color = colorWater;
 		result.specular = 1;
 	}
 
@@ -113,11 +128,11 @@ void main() {
 		visibility = 1.0;
 	}
 
-	//vec3 color = texture(materialmap, vec2(vTex.x, vTex.y)).rgb;
+	float biome = texture(materialmap, vec2(vTex.x, vTex.y)).r;
 	vec3 matNormal = sampleNormal(vTex);
 
 
-	Material mat = chooseMat(vPos, matNormal);
+	Material mat = chooseMat(vPos, matNormal, biome);
 	vec3 color = mat.color;
 
 	// for triangle colors
@@ -143,9 +158,9 @@ void main() {
 
 	float dist = length(cameraPos - vPos);
 	float fog = pow(clamp(dist/60000.0, 0.0, 1.0), 2);
-	vec3 fogColor = 0.95*vec3(100.0/255,149.0/255,234.0/255);
+	vec3 fogColor = 0.9*vec3(100.0/255,149.0/255,234.0/255);
 
-	float thickFog = pow(clamp(dist/150000.0, 0.0, 1.0), 2);
+	float thickFog = pow(clamp(dist/120000.0, 0.0, 1.0), 2);
 	vec3 thickFogColor = vec3(100.0/255,149.0/255,234.0/255);
 
 	color = mix(lighting, vec3(fogColor), fog);
