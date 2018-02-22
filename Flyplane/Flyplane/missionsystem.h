@@ -4,6 +4,7 @@
 #include "mission.h"
 #include "playingstate.h"
 #include <experimental/filesystem>
+#include "housecomponent.h"
 
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
@@ -47,16 +48,33 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 1), 0.3);
 			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
 				glm::vec2((Window::getWindow().size().x / 2) - 75, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
-			if (formLeader.component<HealthComponent>()->isDead) {
-				state->addPoints(1000);
-				active = false;
-				timer.restart();
-			}
-			if (target.valid() && formLeader.valid()) {
-				if (glm::distance(target.component<Transform>().get()->pos, formLeader.component<Transform>().get()->pos) <= 300) {
-					fail();
+			if (curMission.type == MISSIONTYPE_DEFEND) {
+				//win condition
+				if (formLeader.component<HealthComponent>()->isDead) {
+					state->addPoints(curMission.points);
+					active = false;
+					timer.restart();
+				}
+				//fail condition
+				if (target.valid() && formLeader.valid()) {
+					if (glm::distance(target.component<Transform>().get()->pos, formLeader.component<Transform>().get()->pos) <= 100) {
+						fail();
+					}
 				}
 			}
+			else if (curMission.type == MISSIONTYPE_ATTACK) {
+				//win condition
+				if (target.valid() && state->entity_p.valid()) {
+					//if(target.component<HealthComponent>()->isDead) to use when collisions are working
+					if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
+						state->addPoints(curMission.points);
+						active = false;
+						timer.restart();
+					}
+				}
+			}
+			
+			//universal fail condition
 			if (timer.elapsed() >= mTime) {
 				fail();
 			}
@@ -80,21 +98,20 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				for (HouseInfo house : missions[i].houses) {
 					auto entity = es.create();
 					entity.assign<ModelComponent>(house.model);
-					entity.assign<Transform>(glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x,0.f,house.pos.z))+10,house.pos.z));
-					entity.assign<HealthComponent>(100);
+					entity.assign<Transform>(glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x,0.f,house.pos.z))+200,house.pos.z));
+					entity.component<Transform>()->scale = glm::vec3(1.0f);
+					//entity.assign<HealthComponent>(100);
 					
 					if (house.condition == CONDITION_DEFEND) {
 						entity.assign<Target>(FACTION_PLAYER, 100);
 						entity.assign<FactionPlayer>();
-						target = entity;
 					}
 					else if (house.condition == CONDITION_DESTROY) {
 						entity.assign<Target>(FACTION_AI, 100);
 						entity.assign<FactionEnemy>();
 					}
-						
-				
-
+					target = entity;
+					entity.assign<HouseComponent>();
 					entity.assign<CollisionComponent>();
 				}
 
@@ -105,7 +122,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					float x = enemy.pos.x;
 					float z = enemy.pos.z;
 
-					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
+					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
@@ -179,15 +196,17 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					std::vector<Behaviour*> behaviours;
 
 					std::vector<glm::vec3> plotter;
-					plotter.push_back(glm::vec3(2500, 4500, 0));
-					plotter.push_back(glm::vec3(2500, 4500, 2500));
-					plotter.push_back(glm::vec3(0, 4500, 2500));
-					plotter.push_back(glm::vec3(0, 4500, 0));
+					glm::vec3 housepos = target.component<Transform>()->pos;
+					plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z + 200));
+					plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z - 200));
+					plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z - 200));
+					plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z + 200));
 
 					//behaviours.push_back(new Constant_Turn(0));
 
-
-					//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+					if (mi.type == MISSIONTYPE_ATTACK) {
+						behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+					}
 					behaviours.push_back(new Hunt_Target(5, new Enemy_Close(mi.huntPlayerDist), state->entity_p, 0.05f, mi.firingDistance));
 					//behaviours.push_back(new Hunt_Target(3, new Always_True(), target, 0.05, 500.f));
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));

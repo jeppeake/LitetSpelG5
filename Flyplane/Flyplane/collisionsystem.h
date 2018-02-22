@@ -12,6 +12,7 @@
 #include <entityx/entityx.h>
 #include "missilecomponent.h"
 #include "playingstate.h"
+#include "housecomponent.h"
 #include <map>
 
 class CollisionSystem : public entityx::System<CollisionSystem>
@@ -207,7 +208,7 @@ public:
 				}
 			}
 			
-			if (!map) {
+			if (!map && entity.has_component<HouseComponent>()) {
 				continue;
 			}
 			auto boxes = *model->mptr->getBoundingBoxes();

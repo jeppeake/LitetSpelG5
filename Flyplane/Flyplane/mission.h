@@ -35,6 +35,7 @@ struct Mission {
 	double time;
 	double huntPlayerDist = 2000;
 	double firingDistance = 500;
+	double points = 100;
 	std::vector<EnemyInfo> enemies;
 	std::vector<HouseInfo> houses;
 	std::string file;
@@ -112,6 +113,10 @@ struct Mission {
 			if (str.compare("text") == 0) {
 				std::getline(f, str);
 				missiontext = str;
+			}
+			if (str.compare("points") == 0) {
+				std::getline(f, str);
+				points = std::stod(str);
 			}
 		}
 	}
