@@ -1,0 +1,9 @@
+150 110 150
+31
+5
+14000
+assets/Terrain/largemap/heightmap_largemap.png
+assets/Terrain/smallmap2/attribute_smallmap2.png
+assets/Textures/bog.png
+assets/Textures/grass.png
+assets/Textures/water.png
