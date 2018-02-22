@@ -330,8 +330,9 @@ void Renderer::setCamera(const Camera & camera)
 	this->camera = camera;
 	auto pos = camera.getTransform().pos;
 	//pos += glm::toMat3(camera.getTransform().orientation)*glm::vec3(0,0, 1000.f);
-	glm::mat4 proj = glm::ortho<float>(-1000.f, 1000.f, -1000.f, 1000.f, 0.f, 2000.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 1000.0f + pos.y, pos.z), pos, glm::vec3(0, 1, 0));
+	float halfSize = 50.f;
+	glm::mat4 proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 500.f);
+	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 250.0f + pos.y, pos.z), pos, glm::vec3(1, 0, 0));
 	this->shadowMatrix = proj * view;
 }
 

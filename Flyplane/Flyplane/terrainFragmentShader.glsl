@@ -129,8 +129,8 @@ void main() {
 	if(x < 0 || x > 1 || y < 0 || y > 1) {
 		visibility = 1.0;
 	}
-	if(z < 1) {
-		visibility = 0.5;
+	if(z > 1) {
+		visibility = 1.0;
 	}
 
 	float biome = texture(materialmap, vec2(vTex.x, vTex.y)).r;
