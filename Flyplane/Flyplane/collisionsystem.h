@@ -125,8 +125,7 @@ private:
 			state->addPoints(b.component<PointComponent>().get()->points);*/
 
 		if (a.has_component<FlightComponent>() && b.has_component<FlightComponent>()) {
-			to_remove[a.id()] = a;
-			to_remove[b.id()] = b;
+
 		}
 	}
 
@@ -248,11 +247,6 @@ public:
 		{
 			if (e.second.has_component<AIComponent>()) {
 				std::cout << "COLLISION DEATH\n";
-			}
-			auto handle = e.second.component<ParticleComponent>();
-			if (handle)
-			{
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 5);
 			}
 			e.second.destroy();
 		}

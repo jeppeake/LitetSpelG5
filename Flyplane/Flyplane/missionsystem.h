@@ -10,14 +10,24 @@ using namespace entityx;
 
 struct MissionSystem : public entityx::System<MissionSystem> {
 	bool active = false;
+	bool failed = false;
 	std::vector<Mission> missions;
 	unsigned int iActive = 0;
 	PlayingState* state;
 	Timer timer;
+	Timer failTimer;
 	double downtime = 2;
 	double mTime = 10;
 	Entity target;
 	Entity formLeader;
+	Mission curMission;
+
+	void fail() {
+		failTimer.restart();
+		std::cout << "Mission failed \n";
+		active = false;
+		failed = true;
+	}
 
 	MissionSystem(PlayingState *state) : state(state) {
 		std::string path = "assets/Presets/Missions";
@@ -32,17 +42,39 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	}
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		if (active) {
-			if (timer.elapsed() >= mTime) {
-				std::cout << "Mission failed \n";
-				timer.restart();
+			glClear(GL_DEPTH_BUFFER_BIT);
+			AssetLoader::getLoader().getText()->drawText(curMission.missiontext,
+				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 1), 0.3);
+			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
+				glm::vec2((Window::getWindow().size().x / 2) - 75, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
+			if (formLeader.component<HealthComponent>()->isDead) {
+				state->addPoints(1000);
 				active = false;
+				timer.restart();
+			}
+			if (target.valid() && formLeader.valid()) {
+				if (glm::distance(target.component<Transform>().get()->pos, formLeader.component<Transform>().get()->pos) <= 300) {
+					fail();
+				}
+			}
+			if (timer.elapsed() >= mTime) {
+				fail();
+			}
+		}
+		else if (failed) {
+			AssetLoader::getLoader().getText()->drawText("You failed the mission! D:",
+				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 0.3);
+			if (failTimer.elapsed() > 5) {
+				timer.restart();
+				failed = false;
 			}
 		}
 		else {
 			if (timer.elapsed() >= downtime) {
-				//spawn mission entities
+				//select a random mission
 				int i = rand() % missions.size();
 				Mission mi = missions[i];
+				curMission = mi;
 
 				//spawn houses
 				for (HouseInfo house : missions[i].houses) {
@@ -53,10 +85,15 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					
 					if (house.condition == CONDITION_DEFEND) {
 						entity.assign<Target>(FACTION_PLAYER, 100);
+						entity.assign<FactionPlayer>();
 						target = entity;
 					}
-					else if (house.condition == CONDITION_DESTROY)
+					else if (house.condition == CONDITION_DESTROY) {
 						entity.assign<Target>(FACTION_AI, 100);
+						entity.assign<FactionEnemy>();
+					}
+						
+				
 
 					entity.assign<CollisionComponent>();
 				}
@@ -69,8 +106,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					float z = enemy.pos.z;
 
 					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
-					glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
-					entity.assign<Transform>(pos, normalize(orien));
+					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
@@ -121,7 +157,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 				int count = 0;
 				for (EnemyInfo enemy : missions[i].enemies) {
-					if (missions[i].iLeader == count) {
+					if (missions[i].iLeader == count && mi.formation) {
 						count++;
 						continue;
 					}
@@ -131,8 +167,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					float z = enemy.pos.z;
 
 					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
-					glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
-					entity.assign<Transform>(pos, normalize(orien));
+					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
@@ -157,7 +192,9 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					//behaviours.push_back(new Hunt_Target(3, new Always_True(), target, 0.05, 500.f));
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
-					behaviours.push_back(new Form_On_Formation(6, new Always_True(), formLeader));
+					if (mi.formation) {
+						behaviours.push_back(new Form_On_Formation(6, new Always_True(), formLeader));
+					}
 
 					entity.assign<AIComponent>(behaviours, true, true, false);
 					entity.assign<CollisionComponent>();

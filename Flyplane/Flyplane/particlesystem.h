@@ -130,6 +130,24 @@ public:
 			for (int i = 0; i < 20; i++) {
 				pool.emplace_back(5000);
 			}
+			for (int i = 0; i < pool.size(); i++) {
+				if (!pool[i].used) {
+					pool[i].used = true;
+					free = &pool[i];
+					break;
+				}
+				searchIndex = (searchIndex + 1) % pool.size();
+			}
+			if (free) {
+				free->program = &program;
+				free->type = event.type;
+				free->t.restart();
+				free->setTimer(event.effectLength);
+				resetShader.use();
+				free->setComputeShader(resetShader);
+				free->update();
+				handle->systems.push_back(free);
+			}
 			std::cout << "[WARNING] out of particles in pool, creating new!\n";
 		}
 	}
