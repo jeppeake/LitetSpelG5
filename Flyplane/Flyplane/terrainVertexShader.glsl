@@ -84,7 +84,7 @@ void main() {
 
 
 	Color = 1.1*vec3(0.376, 0.702, 0.22);
-	float snowHeight = 3000 + 1100*(noise(pos.xz*0.001));
+cha	float snowHeight = 3000 + 500*(noise(pos.xz*0.001));
 	if(pos.y > snowHeight) {
 		Color = vec3(1);
 	}
@@ -98,8 +98,8 @@ void main() {
 	Pos = pos;
 	if(pos.y <= waterHeight) {
 
-		float val = (waterHeight - pos.y)/1500.0;
-		val = pow(clamp(val, 0.0, 1.0), 0.5);
+		float val = smoothstep(0, 2000, waterHeight - pos.y);
+		val = pow(val, 1);
 		
 
 		pos.y = waterHeight;
@@ -108,10 +108,13 @@ void main() {
 		float p = 2;
 		float sumNoise = 0.0;
 		sumNoise += pow(noise(vec3(pos.xz*0.005 + time*0.2, time*0.2)), p);
-		sumNoise += 0.3*pow(noise(vec3(pos.xz*0.01 + time*0.3, time*0.3)), p);
-		sumNoise += 0.08*pow(noise(vec3(pos.xz*0.02 + time*0.4, time*0.3)), p);
-		sumNoise += 0.01*pow(noise(vec3(pos.xz*0.5 + time*0.4, time*0.3)), p);
-		pos.y += val*150.0*sumNoise;
+		sumNoise += 0.4*pow(noise(vec3(pos.xz*0.01 + time*0.3, time*0.3)), p);
+		sumNoise += 0.2*pow(noise(vec3(pos.xz*0.02 + time*0.4, time*0.3)), p);
+		sumNoise += 0.1*pow(noise(vec3(pos.xz*0.04 + time*0.5, time*0.3)), p);
+		sumNoise += 0.05*pow(noise(vec3(pos.xz*0.08 + time*0.6, time*0.3)), p);
+		sumNoise += 0.025*pow(noise(vec3(pos.xz*0.16 + time*0.7, time*0.3)), p);
+		sumNoise += 0.0125*pow(noise(vec3(pos.xz*0.32 + time*0.8, time*0.3)), p);
+		pos.y += val*500.0*sumNoise;
 	}
 	
 	GeometryPos = pos;

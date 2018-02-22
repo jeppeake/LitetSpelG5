@@ -107,7 +107,7 @@ Material chooseMat(vec3 pos, vec3 normal, float biome, float geomHeight) {
 	
 
 	// water
-	if(pos.y <= waterHeight+5) {
+	if(pos.y <= waterHeight+2) {
 		float val = 0;
 		val = smoothstep(1000.0, -10.0, waterHeight - pos.y);
 		val = pow(val, 60);
@@ -161,7 +161,7 @@ void main() {
 
 	vec3 lighting;
 	lighting += color * diffuse * visibility * 0.7 * (1.3 - mat.specular);
-	lighting += color * specular * visibility * mat.specular;
+	lighting += specular * visibility * mat.specular * 0.8;
 	lighting += color * 0.3;
 
 

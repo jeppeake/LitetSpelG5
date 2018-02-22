@@ -1,6 +1,6 @@
 5 1500 5
-63
-5
+31
+7
 500
 assets/Terrain/coolmap/heightmap_coolmap.png
 assets/Terrain/coolmap/biome_coolmap.png
