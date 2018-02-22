@@ -125,7 +125,8 @@ private:
 			state->addPoints(b.component<PointComponent>().get()->points);*/
 
 		if (a.has_component<FlightComponent>() && b.has_component<FlightComponent>()) {
-
+			to_remove[a.id()] = a;
+			to_remove[b.id()] = b;
 		}
 	}
 
