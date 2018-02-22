@@ -539,6 +539,9 @@
     <None Include="heightindicatorFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="sparks.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
