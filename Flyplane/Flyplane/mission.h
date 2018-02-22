@@ -13,6 +13,10 @@
 #define CONDITION_DESTROY 1
 #define CONDITION_DEFEND 2
 
+#define MISSIONTYPE_DEFEND 0
+#define MISSIONTYPE_ATTACK 1
+#define MISSIONTYPE_KILLALL 2
+
 struct EnemyInfo {
 	glm::vec3 pos;
 	std::string loadoutFile;
@@ -34,6 +38,7 @@ struct Mission {
 	std::vector<EnemyInfo> enemies;
 	std::vector<HouseInfo> houses;
 	std::string file;
+	unsigned int type = MISSIONTYPE_DEFEND;
 	std::string missiontext = "";
 
 	void loadMission(std::string missionFile) {
@@ -42,6 +47,8 @@ struct Mission {
 		std::ifstream f(missionFile);
 		std::string str;
 
+		std::getline(f, str);
+		type = std::stoi(str);
 
 		while (std::getline(f, str)) {
 			if (str.compare("formation") == 0) {
@@ -64,6 +71,7 @@ struct Mission {
 				continue;
 			}
 			if (str.compare("makeleader") == 0) {
+				formation = true;
 				iLeader = enemies.size() - 1;
 				continue;
 			}

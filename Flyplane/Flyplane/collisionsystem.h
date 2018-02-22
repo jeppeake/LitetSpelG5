@@ -249,11 +249,6 @@ public:
 			if (e.second.has_component<AIComponent>()) {
 				std::cout << "COLLISION DEATH\n";
 			}
-			auto handle = e.second.component<ParticleComponent>();
-			if (handle)
-			{
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 5);
-			}
 			e.second.destroy();
 		}
 		to_remove = {};

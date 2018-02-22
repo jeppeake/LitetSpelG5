@@ -480,7 +480,7 @@ void PlayingState::update(double dt)
 
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
-			//spawnEnemies(2);
+			spawnEnemies(2);
 		}
 
 		timerMultiplier -= dt;
@@ -498,10 +498,11 @@ void PlayingState::update(double dt)
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
-		ex.systems.update<MissionSystem>(dt);
+		
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		ex.systems.update<MissionSystem>(dt);
 		glm::vec2 window = Window::getWindow().size();
 		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
 		if (pointObject.time >  0)
