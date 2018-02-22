@@ -8,9 +8,6 @@
 #include "window.h"
 #include "assetloader.h"
 #include "input.h"
-#define FISHROD 0
-#define STINGER 1
-#define ROCKETPOD 2
 
 
 using namespace std;
@@ -247,19 +244,28 @@ void Renderer::RenderScene() {
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
-	//Render weapon
-	if (weaponAmmo)
-		RenderWeapon();
 
 	markers.clear();
 	list.clear();
 	mapList.clear();
 }
 
-void Renderer::RenderCrosshair() {
+void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
+	RenderClouds();
+	RenderCrosshair(crosshairPos, orientation);
+	RenderHPBar(hp);
+	RenderHeightIndicator(height);
+	RenderSpeedometer(speed);
+
+	//Render weapon
+	if (weaponAmmo)
+		RenderWeapon();
+}
+
+void Renderer::RenderCrosshair(glm::vec3 pos, glm::quat orientation) {
 	guiShader.use();
-	glm::mat4 pos = camera.getProjMatrix() * camera.getViewMatrix() * crosshair.getMatrix();
-	guiShader.uniform("matrix", pos * glm::mat4(orientation) * glm::rotate(3.14f / 4, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(50, 50, 1)));
+	glm::mat4 position = camera.getProjMatrix() * camera.getViewMatrix() * glm::translate(pos);
+	guiShader.uniform("matrix", position * glm::mat4(orientation) * glm::rotate(3.14f / 4, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(50, 50, 1)));
 	guiShader.uniform("texSampler", 0);
 	crosshair.Bind();
 	glDisable(GL_CULL_FACE);
@@ -356,14 +362,14 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 	//glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::setCrosshairPos(glm::vec3 pos) {
+/*void Renderer::setCrosshairPos(glm::vec3 pos) {
 	crosshair.setMatrix(glm::translate(pos));
 }
 
 glm::mat4& Renderer::getCrosshairPos()
 {
 	return crosshair.getMatrix();
-}
+}*/
 
 void Renderer::update(float dt)
 {

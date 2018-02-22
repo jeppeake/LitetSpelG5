@@ -445,6 +445,9 @@
     <ClInclude Include="removeParticleEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="missionmarker.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
     <ClInclude Include="dropcomponent.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>

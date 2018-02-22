@@ -71,6 +71,10 @@ private:
 	void Render(RenderObject& obj);
 	void RenderShadow(Model &model, Transform &trans);
 	void RenderWeapon();
+	void RenderCrosshair(glm::vec3 pos, glm::quat orientation);
+	void RenderHPBar(float hp);
+	void RenderHeightIndicator(float height);
+	void RenderSpeedometer(float speed);
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -87,11 +91,8 @@ public:
 	}
 	
 	void RenderScene();
-	void RenderCrosshair();
+	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);
 	void RenderClouds();
-	void RenderHPBar(float hp);
-	void RenderHeightIndicator(float height);
-	void RenderSpeedometer(float speed);
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;
@@ -99,9 +100,9 @@ public:
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
-	void setCrosshairPos(glm::vec3 pos);
-	glm::mat4& getCrosshairPos();
-	glm::quat orientation;
+	//void setCrosshairPos(glm::vec3 pos);
+	//glm::mat4& getCrosshairPos();
+	//glm::quat orientation;
 	// DEBUG
 	void update(float dt);
 };

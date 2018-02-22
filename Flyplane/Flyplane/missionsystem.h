@@ -5,6 +5,7 @@
 #include "playingstate.h"
 #include <experimental/filesystem>
 #include "housecomponent.h"
+#include "missionmarker.h"
 
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
@@ -22,11 +23,40 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	Entity target;
 	Entity formLeader;
 	Mission curMission;
+	std::vector<Entity> enemyList;
+
+	void cleanUpMarkers() {
+		enemyList.clear();
+		if (formLeader.valid()) {
+			if (formLeader.has_component<MissionMarker>()) {
+				formLeader.component<MissionMarker>().remove();
+			}
+		}
+		if (target.valid()) {
+			if (target.has_component<MissionMarker>()) {
+				target.component<MissionMarker>().remove();
+			}
+		}
+		for (Entity enemy : enemyList) {
+			if (enemy.valid()) {
+				if (enemy.has_component<MissionMarker>()) {
+					enemy.component<MissionMarker>().remove();
+				}
+			}
+		}
+	}
 
 	void fail() {
 		failTimer.restart();
 		std::cout << "Mission failed \n";
 		active = false;
+		if (formLeader.valid()) {
+			if (formLeader.has_component<FormationComponent>()) {
+				formLeader.component<FormationComponent>().remove();
+			}
+		}
+		cleanUpMarkers();
+		enemyList.clear();
 		failed = true;
 	}
 
@@ -44,16 +74,16 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		if (active) {
 			glClear(GL_DEPTH_BUFFER_BIT);
-			AssetLoader::getLoader().getText()->drawText(curMission.missiontext,
-				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 1), 0.3);
-			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
-				glm::vec2((Window::getWindow().size().x / 2) - 75, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
+			glm::vec3 textColor = glm::vec3(1, 0, 0);
+
 			if (curMission.type == MISSIONTYPE_DEFEND) {
 				//win condition
+				textColor = MARKER_DEFEND;
 				if (formLeader.component<HealthComponent>()->isDead) {
 					state->addPoints(curMission.points);
 					active = false;
 					timer.restart();
+					cleanUpMarkers();
 				}
 				//fail condition
 				if (target.valid() && formLeader.valid()) {
@@ -63,6 +93,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 			}
 			else if (curMission.type == MISSIONTYPE_ATTACK) {
+				textColor = MARKER_KILL;
 				//win condition
 				if (target.valid() && state->entity_p.valid()) {
 					//if(target.component<HealthComponent>()->isDead) to use when collisions are working
@@ -70,9 +101,43 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						state->addPoints(curMission.points);
 						active = false;
 						timer.restart();
+						cleanUpMarkers();
 					}
 				}
 			}
+			else if (curMission.type == MISSIONTYPE_KILLALL) {
+				textColor = MARKER_KILL;
+				int alive = 0;
+				for (Entity enemy : enemyList) {
+					if (enemy.valid()) {
+						if (!enemy.component<HealthComponent>()->isDead) {
+							alive++;
+						}
+						else {
+							if (enemy.has_component<MissionMarker>()) {
+								enemy.component<MissionMarker>().remove();
+							}
+						}
+					}
+				}
+				//draw enemies left
+				AssetLoader::getLoader().getText()->drawText(std::to_string(enemyList.size() - alive) + '/' + std::to_string(enemyList.size()),
+					glm::vec2((Window::getWindow().size().x / 2) - 75, Window::getWindow().size().y - 260), glm::vec3(1, 0, 0), 0.3);
+
+				//win condition
+				if (alive == 0) {
+					state->addPoints(curMission.points);
+					active = false;
+					cleanUpMarkers();
+					enemyList.clear();
+					timer.restart();
+				}
+			}
+			//draw mission text
+			AssetLoader::getLoader().getText()->drawText(curMission.missiontext,
+				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), textColor, 0.3);
+			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
+				glm::vec2((Window::getWindow().size().x / 2) - 25, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
 			
 			//universal fail condition
 			if (timer.elapsed() >= mTime) {
@@ -80,7 +145,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			}
 		}
 		else if (failed) {
-			AssetLoader::getLoader().getText()->drawText("You failed the mission! D:",
+			AssetLoader::getLoader().getText()->drawText("You failed the mission!",
 				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 0.3);
 			if (failTimer.elapsed() > 5) {
 				timer.restart();
@@ -105,14 +170,17 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					if (house.condition == CONDITION_DEFEND) {
 						entity.assign<Target>(FACTION_PLAYER, 100);
 						entity.assign<FactionPlayer>();
+						entity.assign<MissionMarker>(MARKER_DEFEND);
 					}
 					else if (house.condition == CONDITION_DESTROY) {
 						entity.assign<Target>(FACTION_AI, 100);
 						entity.assign<FactionEnemy>();
+						entity.assign<MissionMarker>(MARKER_KILL);
 					}
 					target = entity;
 					entity.assign<HouseComponent>();
 					entity.assign<CollisionComponent>();
+					
 				}
 
 				//spawn leader
@@ -135,6 +203,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					std::vector<Behaviour*> behaviours;
 
 					entity.assign<FormationComponent>(100);
+					entity.assign<MissionMarker>(MARKER_KILL);
 
 					std::vector<glm::vec3> plotter;
 					plotter.push_back(glm::vec3(2500, 4500, 0));
@@ -166,6 +235,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<Equipment>(primary, secondary);
 					entity.assign<PointComponent>(100);
 					formLeader = entity;
+					enemyList.push_back(entity);
 				}
 
 
@@ -183,7 +253,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					float x = enemy.pos.x;
 					float z = enemy.pos.z;
 
-					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
+					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
@@ -195,16 +265,18 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 					std::vector<Behaviour*> behaviours;
 
-					std::vector<glm::vec3> plotter;
-					glm::vec3 housepos = target.component<Transform>()->pos;
-					plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z + 200));
-					plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z - 200));
-					plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z - 200));
-					plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z + 200));
+					
 
 					//behaviours.push_back(new Constant_Turn(0));
 
 					if (mi.type == MISSIONTYPE_ATTACK) {
+						std::vector<glm::vec3> plotter;
+
+						glm::vec3 housepos = target.component<Transform>()->pos;
+						plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z + 200));
+						plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z - 200));
+						plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z - 200));
+						plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z + 200));
 						behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 					}
 					behaviours.push_back(new Hunt_Target(5, new Enemy_Close(mi.huntPlayerDist), state->entity_p, 0.05f, mi.firingDistance));
@@ -215,6 +287,9 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						behaviours.push_back(new Form_On_Formation(6, new Always_True(), formLeader));
 					}
 
+					if (mi.type == MISSIONTYPE_KILLALL) {
+						entity.assign<MissionMarker>(MARKER_KILL);
+					}
 					entity.assign<AIComponent>(behaviours, true, true, false);
 					entity.assign<CollisionComponent>();
 					entity.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("takeoff"));
@@ -230,7 +305,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 					entity.assign<Equipment>(primary, secondary);
 					entity.assign<PointComponent>(100);
-
+					enemyList.push_back(entity);
 
 					count++;
 				}

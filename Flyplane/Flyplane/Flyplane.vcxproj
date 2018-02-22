@@ -236,6 +236,7 @@
     <ClInclude Include="menustate.h" />
     <ClInclude Include="missilecomponent.h" />
     <ClInclude Include="mission.h" />
+    <ClInclude Include="missionmarker.h" />
     <ClInclude Include="missionsystem.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
