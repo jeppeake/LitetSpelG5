@@ -231,7 +231,7 @@ public:
 				else if (entity.has_component<DropComponent>()) {
 						entityx::ComponentHandle<PlayerComponent> player;
 						for (entityx::Entity other : es.entities_with_components(collision, transform, model, player)) {
-							checkCollision(entity, other);
+							checkCollision(entity, other, events);
 						}
 					
 				}
