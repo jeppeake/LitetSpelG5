@@ -14,6 +14,7 @@
 #include "cloud.h"
 #include "timer.h"
 #include "heightindicator.h"
+#include "speedindicator.h"
 
 struct RenderObject {
 	Model* model;
@@ -52,6 +53,7 @@ private:
 	HeightIndicator heightIndicator;
 
 	glm::mat4 speedMatrix;
+	SpeedIndicator speedIndicator;
 
 	int weaponAmmo;
 	Model *missile = nullptr;

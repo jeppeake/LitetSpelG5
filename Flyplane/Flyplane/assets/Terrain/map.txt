@@ -1,9 +1,9 @@
-50 50 50
+30 8000 30
 63
 5
-5000
+2000
 assets/Terrain/coolmap/heightmap_coolmap.png
-assets/Terrain/smallmap2/attribute_smallmap2.png
+assets/Terrain/coolmap/biome_coolmap.png
 assets/Textures/bog.png
 assets/Textures/grass.png
 assets/Textures/water.png

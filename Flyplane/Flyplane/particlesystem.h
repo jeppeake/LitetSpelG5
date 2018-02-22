@@ -30,7 +30,7 @@ public:
 		explosionShader.create("explosionCompute.glsl");
 		engineTrailShader.create("engineTrail.glsl");
 		deadTrailShader.create("deadTrail.glsl");
-		sparkShader.create("spark.glsl");
+		sparkShader.create("sparks.glsl");
 		program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
 		for (int i = 0; i < 200; i++) {

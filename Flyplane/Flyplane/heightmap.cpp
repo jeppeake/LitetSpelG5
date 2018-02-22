@@ -80,7 +80,7 @@ void Heightmap::loadMap(const std::string &maptxt) {
 			double sample = red;
 
 
-			double mult = scale.y*255.0 / double(std::numeric_limits<uint16_t>::max());
+			double mult = scale.y / double(std::numeric_limits<uint16_t>::max());
 			double terrainHeight = sample * mult;
 
 			if (terrainHeight <= waterHeight) {

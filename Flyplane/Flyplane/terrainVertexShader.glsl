@@ -62,7 +62,7 @@ void main() {
 
 	float height = sampleHeightmap(hmUV);// 
 
-	vec3 pos = scale*vec3(pos2d.x, 255.0*height, pos2d.y) + heightmapPos;
+	vec3 pos = scale*vec3(pos2d.x, height, pos2d.y) + heightmapPos;
 
 	Normal = sampleNormal(hmUV);
 	

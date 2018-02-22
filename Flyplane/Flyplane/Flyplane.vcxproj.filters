@@ -120,6 +120,7 @@
     <ClCompile Include="heightindicator.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="speedindicator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -446,6 +447,12 @@
     </ClInclude>
     <ClInclude Include="missionmarker.h">
       <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="dropcomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="speedindicator.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
