@@ -47,7 +47,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 1), 0.3);
 			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
 				glm::vec2((Window::getWindow().size().x / 2) - 75, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
-			if (!formLeader.valid()) {
+			if (formLeader.component<HealthComponent>()->isDead) {
 				state->addPoints(1000);
 				active = false;
 				timer.restart();

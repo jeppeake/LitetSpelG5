@@ -14,7 +14,8 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 	entityx::ComponentHandle<HealthComponent> health;
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		for (Entity entity : es.entities_with_components(health)) {
-			if (health->health <= 0) {
+			if (health->health <= 0 && !health->isDead) {
+				health->isDead = true;
 				std::cout << "Entity got killed." << "\n";
 				if (entity.has_component<PointComponent>())
 					state->addPoints(entity.component<PointComponent>().get()->points);
