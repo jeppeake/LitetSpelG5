@@ -281,7 +281,7 @@ void Renderer::RenderHPBar(float hp) {
 
 void Renderer::RenderHeightIndicator(float height) {
 	glDisable(GL_DEPTH_TEST);
-	float realHeight = (height - 14000) * 2;
+	float realHeight = (height - 5000);// *2;
 	renderTexture(indicator, heightMatrix);
 	heightShader.use();
 	heightShader.uniform("value", realHeight / 21500.0f);
@@ -296,7 +296,11 @@ void Renderer::RenderHeightIndicator(float height) {
 void Renderer::RenderSpeedometer(float speed) {
 	glDisable(GL_DEPTH_TEST);
 	renderTexture(indicator, speedMatrix);
-	float realSpeed = speed * 2 * 3.6;
+	float realSpeed = speed * 3.6;//* 2
+	heightShader.use();
+	heightShader.uniform("value", realSpeed / 1800.0f);
+	speedIndicator.Bind();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100, 318), glm::vec3(0, 1, 0), 0.3);
 	glEnable(GL_DEPTH_TEST);
