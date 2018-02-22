@@ -74,7 +74,7 @@ const vec3 colorRock = rgb(81,79,86);
 const vec3 colorWater = rgb(30, 90, 190);
 
 
-Material chooseMat(vec3 pos, vec3 normal, float biome) {
+Material chooseMat(vec3 pos, vec3 normal, float biome, float geomHeight) {
 	Material result;
 	result.color = colorGrass;
 	result.specular = 0;
@@ -108,8 +108,12 @@ Material chooseMat(vec3 pos, vec3 normal, float biome) {
 
 	// water
 	if(pos.y <= waterHeight+5) {
-		result.color = colorWater;
+		float val = 0;
+		val = smoothstep(1000.0, -10.0, waterHeight - pos.y);
+		val = pow(val, 60);
+		result.color = mix(colorWater, result.color, val);
 		result.specular = 1;
+		
 	}
 
 	return result;
@@ -120,7 +124,7 @@ void main() {
 	float depth = texture(shadowMap, shadowCoord.xy).r;
 	float visibility = 1.0;
 	
-	if(depth < shadowCoord.z - 0.001) {
+	if(depth <= shadowCoord.z) {
 		visibility = 0.0;
 	}
 	float x = shadowCoord.x;
@@ -137,7 +141,7 @@ void main() {
 	vec3 matNormal = sampleNormal(vTex);
 
 
-	Material mat = chooseMat(vPos, matNormal, biome);
+	Material mat = chooseMat(vPos, matNormal, biome, vGeometryPos.y);
 	vec3 color = mat.color;
 
 	// for triangle colors
@@ -165,7 +169,7 @@ void main() {
 	float fog = pow(clamp(dist/30000.0, 0.0, 1.0), 2);
 	vec3 fogColor = 0.9*vec3(100.0/255,149.0/255,234.0/255);
 
-	float thickFog = pow(clamp(dist/50000.0, 0.0, 1.0), 2);
+	float thickFog = pow(clamp(dist/30000.0, 0.0, 1.0), 2);
 	vec3 thickFogColor = vec3(100.0/255,149.0/255,234.0/255);
 
 	color = mix(lighting, vec3(fogColor), fog);

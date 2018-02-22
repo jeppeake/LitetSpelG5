@@ -53,7 +53,7 @@ void Window::open(int width, int height)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	
+	glfwWindowHint(GLFW_SAMPLES, 2);
 
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (!window)

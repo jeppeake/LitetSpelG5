@@ -62,6 +62,8 @@ void main() {
 
 	float height = sampleHeightmap(hmUV);// 
 
+	//height = noise(vec3(pos2d, 0));
+
 	vec3 pos = scale*vec3(pos2d.x, height, pos2d.y) + heightmapPos;
 
 	Normal = sampleNormal(hmUV);
@@ -96,21 +98,22 @@ void main() {
 	Pos = pos;
 	if(pos.y <= waterHeight) {
 
-		float val = (waterHeight - pos.y)/1500;
+		float val = (waterHeight - pos.y)/1500.0;
 		val = pow(clamp(val, 0.0, 1.0), 0.5);
 		
 
 		pos.y = waterHeight;
-		Pos = pos;
+		//Pos = pos;
 
 		float p = 2;
-		float sumNoise;
+		float sumNoise = 0.0;
 		sumNoise += pow(noise(vec3(pos.xz*0.005 + time*0.2, time*0.2)), p);
 		sumNoise += 0.3*pow(noise(vec3(pos.xz*0.01 + time*0.3, time*0.3)), p);
 		sumNoise += 0.08*pow(noise(vec3(pos.xz*0.02 + time*0.4, time*0.3)), p);
 		sumNoise += 0.01*pow(noise(vec3(pos.xz*0.5 + time*0.4, time*0.3)), p);
-		pos.y += val*150*sumNoise;
+		pos.y += val*150.0*sumNoise;
 	}
+	
 	GeometryPos = pos;
 	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }
