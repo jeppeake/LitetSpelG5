@@ -284,7 +284,7 @@ void Renderer::RenderHeightIndicator(float height) {
 	float realHeight = (height - 5000);// *2;
 	renderTexture(indicator, heightMatrix);
 	heightShader.use();
-	heightShader.uniform("value", realHeight / 21500.0f);
+	heightShader.uniform("value", realHeight / 23000.0f);
 	heightIndicator.Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
