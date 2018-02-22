@@ -294,7 +294,12 @@ void Renderer::RenderHeightIndicator(float height) {
 }
 
 void Renderer::RenderSpeedometer(float speed) {
+	glDisable(GL_DEPTH_TEST);
 	renderTexture(indicator, speedMatrix);
+	float realSpeed = speed * 2 * 3.6;
+
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100, 318), glm::vec3(0, 1, 0), 0.3);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setWeaponModel(Model * mptr) {
