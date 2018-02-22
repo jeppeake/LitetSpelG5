@@ -166,6 +166,7 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().RenderCrosshair();
 			Renderer::getRenderer().RenderHPBar(hp);
 			Renderer::getRenderer().RenderHeightIndicator(playerPos.y);
+			Renderer::getRenderer().RenderSpeedometer(200.0f);
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
