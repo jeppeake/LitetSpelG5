@@ -61,6 +61,7 @@ public:
 		switch (p->type) {
 		case TRAIL:
 			p->setComputeShader(trailShader);
+			p->setTexture("N/A");
 			trailShader.use();
 			if (transform) {
 				trailShader.uniform("spawn", transform->pos);
@@ -71,6 +72,7 @@ public:
 			break;
 		case EXPLOSION:
 			p->setComputeShader(explosionShader);
+			p->setTexture("explosion");
 			explosionShader.use();
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
@@ -81,6 +83,7 @@ public:
 			break;
 		case ENGINE_TRAIL:
 			p->setComputeShader(engineTrailShader);
+			p->setTexture("engine_fire");
 			engineTrailShader.use();
 			if (transform) {
 				engineTrailShader.uniform("spawn", transform->pos);

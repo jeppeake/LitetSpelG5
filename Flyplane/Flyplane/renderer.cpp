@@ -84,8 +84,10 @@ Renderer::Renderer() {
 	hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
-	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);// glm::ortho(-0.05f, 0.05f, -0.05f, 0.05f, -1.0f, 1.0f) * glm::perspective(glm::radians(80.0f), 1.0f, .01f, 220.0f); //glm::ortho(-3.0f, 3.0f, -3.0f, 3.0f, -5.0f, 10.0f) * glm::rotate(4.0f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
-	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));//glm::translate(glm::vec3(0.7, 0, -200)) * glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
+	indicator.loadTexture("assets/textures/indicator.png", 1);
+	heightMatrix = glm::translate(glm::vec3(-0.8, 0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
+	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 }
 
 Renderer::~Renderer() {
@@ -271,6 +273,13 @@ void Renderer::RenderClouds() {
 void Renderer::RenderHPBar(float hp) {
 	renderTexture(hpbar, hpMatrix);
 	renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+}
+
+void Renderer::RenderHeightIndicator(float height) {
+	renderTexture(indicator, heightMatrix);
+	glDisable(GL_DEPTH_TEST);
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)height), glm::vec2(143, 390), glm::vec3(0, 1, 0), 0.3);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setWeaponModel(Model * mptr) {

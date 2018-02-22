@@ -125,13 +125,16 @@ struct RenderSystem : public System<RenderSystem> {
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0);
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{
 				p->render();
 			}
 		}
-
 		if (playing) {
 			ComponentHandle<AIComponent> ai;
 
@@ -160,6 +163,7 @@ struct RenderSystem : public System<RenderSystem> {
 			radar.draw((float)dt);
 			Renderer::getRenderer().RenderCrosshair();
 			Renderer::getRenderer().RenderHPBar(hp);
+			Renderer::getRenderer().RenderHeightIndicator(playerPos.y);
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));

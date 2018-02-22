@@ -27,7 +27,7 @@ void main()
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
-		Positions[gid].xyz = spawn;
+		Positions[gid].xyz = spawn + 10 * normalize(vec3(10 * rand(gid * gid),3 * rand(gid - 1337), 4 * rand(gid * 13)));
 		Lives[gid] = 0;
 		Colors[gid].xyz = vec3(1.0,0.0,0.0);
 

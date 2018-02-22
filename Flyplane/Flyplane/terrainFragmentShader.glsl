@@ -38,6 +38,7 @@ float sampleHeightmap(vec2 uv, vec2 offset) {
 float sampleHeightmap(vec2 uv) {
 	return sampleHeightmap(uv, vec2(0));
 }
+
 vec3 sampleNormal(vec2 hmUV) {
 	vec4 h;
 	h[0] = sampleHeightmap(hmUV, vec2(0, -1));
@@ -46,40 +47,51 @@ vec3 sampleNormal(vec2 hmUV) {
 	h[3] = sampleHeightmap(hmUV, vec2(0, 1));
 
 	vec3 n;
-	n.z = h[0] - h[3];
-	n.x = h[1] - h[2];
-	n.y = 1.0/255.0;
+	n.z = scale.z*(h[0] - h[3]);
+	n.x = scale.x*(h[1] - h[2]);
+	n.y = 1;// scale.y; //*1.0/65535.0
 	return normalize(n);
 }
+
 struct Material {
 	vec3 color;
 	float specular;
 };
 
+vec3 rgb(float r, float g, float b) {
+	return vec3(r, g, b) / 255.0;
+}
+
 Material chooseMat(vec3 pos, vec3 normal) {
 	Material result;
-	result.color = 1.1*vec3(0.376, 0.702, 0.22);
+	result.color = rgb(199,159,72);
 	result.specular = 0;
+	float leaning = dot(normal, vec3(0,1,0));
 
-	float snowHeight = 3000 + 1100*(noise(pos.xz*0.001));
+	float snowHeight = 21000 + 500*(noise(pos.xz*0.001));
+
+	
+	if(leaning < 0.6) {
+		result.color = rgb(153,102,47);
+	}
 
 	// snow
 	if(pos.y > snowHeight) {
 		result.color = vec3(1);
 	}
 
-	// rock wall
-	if(dot(normal, vec3(0,1,0)) < 0.4) {
-		result.color = vec3(0.4);
-	}
-
 	// sand
-	if(pos.y <= waterHeight+50) {
+	if(pos.y <= waterHeight+50 + 50*noise(pos.xz*0.0001) && leaning > 0.6) {
 		result.color = vec3(194, 178, 128)/255.0;
+	}
+	
+	// rock wall
+	if(leaning < 0.35) {
+		result.color = rgb(81,79,86);
 	}
 
 	// water
-	if(pos.y <= waterHeight) {
+	if(pos.y <= waterHeight+5) {
 		result.color = vec3(30, 90, 190)/255.0;
 		result.specular = 1;
 	}
@@ -120,11 +132,11 @@ void main() {
 
 	vec3 look = normalize(cameraPos - vPos);
 	vec3 h = normalize(look + sun);
-	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 700.0);
+	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 1000.0);
 
 
 	vec3 lighting;
-	lighting += color * diffuse * visibility * 0.7;
+	lighting += color * diffuse * visibility * 0.7 * (1.3 - mat.specular);
 	lighting += color * specular * visibility * mat.specular;
 	lighting += color * 0.3;
 
@@ -135,6 +147,7 @@ void main() {
 
 	color = mix(lighting, vec3(fogColor), fog);
 	gl_FragColor = vec4(color, 1);
+	//gl_FragColor = vec4(matNormal, 1);
 }
 
 

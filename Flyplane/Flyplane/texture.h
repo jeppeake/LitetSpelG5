@@ -9,4 +9,5 @@ private:
 public:
 	bool loadTexture(const std::string& file, int format = 0);
 	void bind(unsigned int slot) const;
+	unsigned getID();
 };
