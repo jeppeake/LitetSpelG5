@@ -17,6 +17,7 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader explosionShader;
 	ComputeShader engineTrailShader;
 	ComputeShader deadTrailShader;
+	ComputeShader sparkShader;
 	ShaderProgram program;
 public:
 	void configure(entityx::EventManager &eventManager) {
@@ -29,6 +30,7 @@ public:
 		explosionShader.create("explosionCompute.glsl");
 		engineTrailShader.create("engineTrail.glsl");
 		deadTrailShader.create("deadTrail.glsl");
+		sparkShader.create("spark.glsl");
 		program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
 		for (int i = 0; i < 200; i++) {
@@ -84,6 +86,17 @@ public:
 			}
 			explosionShader.uniform("life", 1.f);
 			explosionShader.uniform("dt", float(dt));
+			break;
+		case SPARKS:
+			p->setComputeShader(sparkShader);
+			p->setTexture("N/A");
+			sparkShader.use();
+			if (transform) {
+				sparkShader.uniform("spawn", transform->pos);
+				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, -1));
+			}
+			sparkShader.uniform("life", 1.f);
+			sparkShader.uniform("dt", float(dt));
 			break;
 		case ENGINE_TRAIL:
 			p->setComputeShader(engineTrailShader);

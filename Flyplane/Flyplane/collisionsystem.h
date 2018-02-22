@@ -23,7 +23,7 @@ private:
 
 	std::map<entityx::Entity::Id, entityx::Entity> to_remove;
 
-	void checkOBBvsPoint(entityx::Entity a, entityx::Entity b)
+	void checkOBBvsPoint(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)
 	{
 		auto a_trans = a.component<Transform>();
 		auto a_model = a.component<ModelComponent>();
@@ -46,14 +46,14 @@ private:
 			{
 				if (a_boxes[i].intersect(b_trans->pos))
 				{
-					handleCollision(a, b);
+					handleCollision(a, b, es);
 					return;
 				}
 			}
 		}
 	}
 
-	void checkOBBvsOBB(entityx::Entity a, entityx::Entity b)
+	void checkOBBvsOBB(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)
 	{
 		auto a_trans = a.component<Transform>();
 		auto a_model = a.component<ModelComponent>();
@@ -84,7 +84,7 @@ private:
 				{
 					if (a_boxes[i].intersect(b_boxes[j]))
 					{
-						handleCollision(a, b);
+						handleCollision(a, b, es);
 						return;
 					}
 				}
@@ -92,7 +92,7 @@ private:
 		}
 	}
 
-	void handleHealth(entityx::Entity a, entityx::Entity b) {
+	void handleHealth(entityx::Entity a, entityx::Entity b, entityx::EventManager &es) {
 		if (a.has_component<HealthComponent>()) {
 			auto health = a.component<HealthComponent>();
 
@@ -110,14 +110,21 @@ private:
 
 				if (b.has_component<FactionPlayer>()) {
 					hitSound.play();
+					auto handle = a.component<ParticleComponent>();
+					if (!handle)
+					{
+						handle = a.assign<ParticleComponent>();
+					}
+					es.emit<AddParticleEvent>(SPARKS, handle);
+					
 				}
 			}
 		}
 	}
 
-	void handleCollision(entityx::Entity a, entityx::Entity b) {
-		handleHealth(a, b);
-		handleHealth(b, a);
+	void handleCollision(entityx::Entity a, entityx::Entity b, entityx::EventManager &es) {
+		handleHealth(a, b, es);
+		handleHealth(b, a, es);
 
 		/*if (a.has_component<PointComponent>())
 			state->addPoints(a.component<PointComponent>().get()->points);
@@ -130,7 +137,7 @@ private:
 		}
 	}
 
-	void checkCollision(entityx::Entity a, entityx::Entity b) 
+	void checkCollision(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)
 	{
 		if (a.id() == b.id())
 			return;
@@ -143,15 +150,15 @@ private:
 
 		if (!a_boxes.empty() && !b_boxes.empty())
 		{
-			checkOBBvsOBB(a, b);
+			checkOBBvsOBB(a, b, es);
 		}
 		else if (!a_boxes.empty() && b_boxes.empty())
 		{
-			checkOBBvsPoint(a, b);
+			checkOBBvsPoint(a, b, es);
 		} 
 		else if (a_boxes.empty() && !b_boxes.empty())
 		{
-			checkOBBvsPoint(b, a);
+			checkOBBvsPoint(b, a, es);
 		}
 	}
 public:
@@ -191,11 +198,11 @@ public:
 			if (entity.has_component<Projectile>()) {
 				if (entity.has_component<FactionPlayer>()) {
 					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, AIComponent>()) {
-						checkCollision(entity, other);
+						checkCollision(entity, other, events);
 					}
 				} else if (entity.has_component<FactionEnemy>()) {
 					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, PlayerComponent>()) {
-						checkCollision(entity, other);
+						checkCollision(entity, other, events);
 					}
 				} else {
 					// ???
@@ -203,7 +210,7 @@ public:
 			} else {
 				if (entity.has_component<FlightComponent>()) {
 					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FlightComponent>()) {
-						checkCollision(entity, other);
+						checkCollision(entity, other,events);
 					}
 				}
 			}
