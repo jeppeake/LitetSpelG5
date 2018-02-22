@@ -22,6 +22,10 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				if (entity.has_component<FlightComponent>())
 				{
 					entity.remove<FlightComponent>();
+					if (entity.has_component<Target>())
+					{
+						entity.remove<Target>();
+					}
 				}
 				auto handle = entity.component<ParticleComponent>();
 				if (!handle)
