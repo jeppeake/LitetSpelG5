@@ -6,6 +6,7 @@ in vec3 vPos;
 in vec3 vNormal;
 in vec2 vTex;
 in vec3 vMaterials;
+in vec3 vGeometryPos;
 flat in vec3 vColor;
 
 uniform sampler2D heightmap;
@@ -115,7 +116,7 @@ Material chooseMat(vec3 pos, vec3 normal, float biome) {
 }
 
 void main() {
-	vec3 shadowCoord = (shadowMatrix * vec4(vPos, 1)).xyz;
+	vec3 shadowCoord = (shadowMatrix * vec4(vGeometryPos, 1)).xyz;
 	float depth = texture(shadowMap, shadowCoord.xy).r;
 	float visibility = 1.0;
 	
@@ -124,8 +125,12 @@ void main() {
 	}
 	float x = shadowCoord.x;
 	float y = shadowCoord.y;
+	float z = shadowCoord.z;
 	if(x < 0 || x > 1 || y < 0 || y > 1) {
 		visibility = 1.0;
+	}
+	if(z < 1) {
+		visibility = 0.5;
 	}
 
 	float biome = texture(materialmap, vec2(vTex.x, vTex.y)).r;
@@ -157,16 +162,17 @@ void main() {
 
 
 	float dist = length(cameraPos - vPos);
-	float fog = pow(clamp(dist/60000.0, 0.0, 1.0), 2);
+	float fog = pow(clamp(dist/30000.0, 0.0, 1.0), 2);
 	vec3 fogColor = 0.9*vec3(100.0/255,149.0/255,234.0/255);
 
-	float thickFog = pow(clamp(dist/120000.0, 0.0, 1.0), 2);
+	float thickFog = pow(clamp(dist/50000.0, 0.0, 1.0), 2);
 	vec3 thickFogColor = vec3(100.0/255,149.0/255,234.0/255);
 
 	color = mix(lighting, vec3(fogColor), fog);
 	color = mix(color, vec3(thickFogColor), thickFog);
 
 	gl_FragColor = vec4(color, 1);
+	//gl_FragColor = vec4(color, 1);
 	//gl_FragColor = vec4(matNormal, 1);
 }
 
