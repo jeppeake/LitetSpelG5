@@ -113,6 +113,12 @@ private:
 				if (b.has_component<FactionPlayer>()) {
 					hitSound.play();
 				}
+				auto handle = a.component<ParticleComponent>();
+				if (!handle)
+				{
+					handle = a.assign<ParticleComponent>();
+				}
+				es.emit<AddParticleEvent>(SPARKS, handle, 3);
 			}
 		}
 	}
