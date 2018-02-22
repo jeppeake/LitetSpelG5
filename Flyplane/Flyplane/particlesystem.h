@@ -3,6 +3,7 @@
 #include <iostream>
 #include "particlecomponent.h"
 #include "addParticleEvent.h"
+#include "removeParticleEvent.h"
 #include <entityx\entityx.h>
 #include <entityx\Event.h>
 
@@ -15,16 +16,19 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader trailShader;
 	ComputeShader explosionShader;
 	ComputeShader engineTrailShader;
+	ComputeShader deadTrailShader;
 	ShaderProgram program;
 public:
 	void configure(entityx::EventManager &eventManager) {
 		eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 		eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 		eventManager.subscribe<AddParticleEvent>(*this);
+		eventManager.subscribe<RemoveParticleEvent>(*this);
 		resetShader.create("particlereset.glsl");
 		trailShader.create("particletrail.glsl");
 		explosionShader.create("explosionCompute.glsl");
 		engineTrailShader.create("engineTrail.glsl");
+		deadTrailShader.create("deadTrail.glsl");
 		program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
 		for (int i = 0; i < 200; i++) {
@@ -92,6 +96,17 @@ public:
 			engineTrailShader.uniform("life", 1.f);
 			engineTrailShader.uniform("dt", float(dt));
 			break;
+		case DEAD_TRAIL:
+			p->setComputeShader(deadTrailShader);
+			p->setTexture("N/A");
+			deadTrailShader.use();
+			if (transform) {
+				deadTrailShader.uniform("spawn", transform->pos);
+				deadTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+			}
+			deadTrailShader.uniform("life", 10.f);
+			deadTrailShader.uniform("dt", float(dt));
+			break;
 		default:
 			// plz no
 			break;
@@ -149,6 +164,21 @@ public:
 				handle->systems.push_back(free);
 			}
 			std::cout << "[WARNING] out of particles in pool, creating new!\n";
+		}
+	}
+	void receive(const RemoveParticleEvent& event)
+	{
+		auto handle = event.component;
+		for (unsigned i = 0; i < handle->systems.size(); i++)
+		{
+			if (handle->systems[i]->type == event.type)
+			{
+				handle->systems[i]->used = false;
+				handle->systems[i]->t.restart();
+				handle->systems.erase(handle->systems.begin() + i);
+				i--;
+				break;
+			}
 		}
 	}
 	void receive(const entityx::EntityDestroyedEvent& event) {
