@@ -444,6 +444,9 @@
     <ClInclude Include="removeParticleEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="missionmarker.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
