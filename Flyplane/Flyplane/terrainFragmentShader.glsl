@@ -130,10 +130,7 @@ void main() {
 	float x = shadowCoord.x;
 	float y = shadowCoord.y;
 	float z = shadowCoord.z;
-	if(x < 0 || x > 1 || y < 0 || y > 1) {
-		visibility = 1.0;
-	}
-	if(z > 1) {
+	if(x < 0 || x > 1 || y < 0 || y > 1 || z > 1) {
 		visibility = 1.0;
 	}
 

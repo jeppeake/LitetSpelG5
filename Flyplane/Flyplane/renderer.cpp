@@ -122,7 +122,8 @@ void Renderer::Render(RenderObject& obj) {
 	Render(*obj.model, obj.trans);
 }
 
-
+/*
+// Old
 void Renderer::RenderShadow(Model & model, Transform & trans) {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glm::mat4 modelMatrix = glm::translate(trans.pos) * glm::toMat4(trans.orientation);
@@ -134,6 +135,8 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
+*/
+
 
 void Renderer::RenderWeapon() {
 	auto s = Window::getWindow().size();
@@ -172,24 +175,32 @@ void Renderer::RenderScene() {
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//Render shadow
-	
 	for (int i = 0; i < list.size(); i++) {
 		glm::mat4 modelMatrix = glm::translate(list[i].trans.pos) * glm::toMat4(list[i].trans.orientation) * glm::scale(list[i].trans.scale);
 
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
-			shadow.uniform("MVP", shadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
+			shadow.uniform("MVP", planeShadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
 	}
 	/*
-	for (int i = 0; i < mapList.size(); i++) {
-		mapList[i]->bind();
-		glm::mat4 trans = glm::translate(mapList[i]->pos);
-		this->shadow.uniform("MVP", shadowMatrix*trans);
-		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
+	terrainShadow.use();
+	if (hm != NULL) {
+		terrainShadow.uniform("time", (float)globalTime.elapsed());
+		terrainShadow.uniform("cameraPos", camera.getTransform().pos);
+		hm->bind(terrainShadow);
+		for (int i = 0; i < patches.size(); i++) {
+			int indices = patches[i].indices;
+			hm->bindIndices(indices);
+
+			terrainShadow.uniform("offset", patches[i].offset);
+			terrainShadow.uniform("patch_size", glm::vec2(patches[i].size));
+			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
+		}
 	}
 	*/
+
 
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -198,20 +209,23 @@ void Renderer::RenderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shader.use();
 	shader.uniform("texSampler", 0);
+
 	shader.uniform("shadowMap", 1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
+
 	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
 	shader.uniform("ViewProjMatrix", viewProjMatrix);
-	shader.uniform("shadowMatrix", m * shadowMatrix);
+	shader.uniform("shadowMatrix", m * planeShadowMatrix);
 	shader.uniform("cameraPos", camera.getTransform().pos);
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
 	}
+
+
 	//Render terrain
 	terrain_shader.use();
-	terrain_shader.uniform("shadowMatrix", m * shadowMatrix);
-	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
+	terrain_shader.uniform("shadowMatrix", m * planeShadowMatrix);
 	terrain_shader.uniform("ViewProjMatrix", viewProjMatrix);
 
 	terrain_shader.uniform("shadowMap", 1);
@@ -338,11 +352,21 @@ void Renderer::setCamera(const Camera & camera)
 {
 	this->camera = camera;
 	auto pos = camera.getTransform().pos;
-	//pos += glm::toMat3(camera.getTransform().orientation)*glm::vec3(0,0, 1000.f);
+	
+	glm::vec3 sunDir = normalize(glm::vec3(0, 1, 1));
+
 	float halfSize = 50.f;
 	glm::mat4 proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 500.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 250.0f + pos.y, pos.z), pos, glm::vec3(1, 0, 0));
-	this->shadowMatrix = proj * view;
+	glm::mat4 view = glm::lookAt(pos + 250.f*sunDir, pos, glm::vec3(0, 1, 0));
+
+	this->planeShadowMatrix = proj * view;
+
+	halfSize = 2000.f;
+	pos += camera.getTransform().orientation*glm::vec3(0, 0, 1000.f);
+	proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 2000.f);
+	view = glm::lookAt(pos + 1000.f*sunDir, pos, glm::vec3(0, 1, 0));
+
+	this->terrainShadowMatrix = proj * view;
 }
 
 void Renderer::addMarker(glm::vec3 pos, float scale) {
