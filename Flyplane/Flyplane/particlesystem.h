@@ -68,6 +68,7 @@ public:
 		case TRAIL:
 			p->setComputeShader(trailShader);
 			p->setTexture("N/A");
+			p->setSize(0.1);
 			trailShader.use();
 			if (transform) {
 				trailShader.uniform("spawn", transform->pos);
@@ -79,6 +80,7 @@ public:
 		case EXPLOSION:
 			p->setComputeShader(explosionShader);
 			p->setTexture("explosion");
+			p->setSize(0.05);
 			explosionShader.use();
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
@@ -90,6 +92,7 @@ public:
 		case SPARKS:
 			p->setComputeShader(sparkShader);
 			p->setTexture("N/A");
+			p->setSize(0.01);
 			sparkShader.use();
 			if (transform) {
 				sparkShader.uniform("spawn", transform->pos);
@@ -101,6 +104,7 @@ public:
 		case ENGINE_TRAIL:
 			p->setComputeShader(engineTrailShader);
 			p->setTexture("engine_fire");
+			p->setSize(0.05);
 			engineTrailShader.use();
 			if (transform) {
 				engineTrailShader.uniform("spawn", transform->pos);
@@ -112,6 +116,7 @@ public:
 		case DEAD_TRAIL:
 			p->setComputeShader(deadTrailShader);
 			p->setTexture("N/A");
+			p->setSize(0.1);
 			deadTrailShader.use();
 			if (transform) {
 				deadTrailShader.uniform("spawn", transform->pos);

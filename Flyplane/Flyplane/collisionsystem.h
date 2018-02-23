@@ -222,15 +222,14 @@ public:
 		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
 		{
 
-
 			// Collision with other entitites 
 			if (entity.has_component<Projectile>()) {
 				if (entity.has_component<FactionPlayer>()) {
-					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, AIComponent>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FactionEnemy>()) {
 						checkCollision(entity, other, events);
 					}
 				} else if (entity.has_component<FactionEnemy>()) {
-					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, PlayerComponent>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FactionPlayer>()) {
 						checkCollision(entity, other, events);
 					}
 				} else {
