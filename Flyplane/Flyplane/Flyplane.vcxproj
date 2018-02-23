@@ -225,6 +225,7 @@
     <ClInclude Include="highscoreaction.h" />
     <ClInclude Include="highscorestate.h" />
     <ClInclude Include="housecomponent.h" />
+    <ClInclude Include="huntStatic.h" />
     <ClInclude Include="hunt_player.h" />
     <ClInclude Include="hunt_target.h" />
     <ClInclude Include="input.h" />

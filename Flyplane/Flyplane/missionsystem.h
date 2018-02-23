@@ -6,6 +6,7 @@
 #include <experimental/filesystem>
 #include "housecomponent.h"
 #include "missionmarker.h"
+#include "huntStatic.h"
 
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
@@ -87,7 +88,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 				//fail condition
 				if (target.valid() && formLeader.valid()) {
-					if (glm::distance(target.component<Transform>().get()->pos, formLeader.component<Transform>().get()->pos) <= 100) {
+					if (target.component<HealthComponent>()->isDead) {
+						target.destroy();
 						fail();
 					}
 				}
@@ -96,10 +98,11 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				textColor = MARKER_KILL;
 				//win condition
 				if (target.valid() && state->entity_p.valid()) {
-					//if(target.component<HealthComponent>()->isDead) to use when collisions are working
-					if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
+					if(target.component<HealthComponent>()->isDead) {
+					//if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
 						state->addPoints(curMission.points);
 						active = false;
+						target.destroy();
 						timer.restart();
 						cleanUpMarkers();
 					}
@@ -220,8 +223,9 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 					//behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
-					behaviours.push_back(new Follow_Target(7,new Always_True(), target));
-					//behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
+					behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
+					//behaviours.push_back(new Follow_Target(7,new Always_True(), target));
+					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
 					entity.assign<AIComponent>(behaviours, true, true, false);
