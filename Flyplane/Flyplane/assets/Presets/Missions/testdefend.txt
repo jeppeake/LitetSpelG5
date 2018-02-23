@@ -8,13 +8,13 @@ hus1
 
 spawnenemy
 33.4 1000 -82
-loadout.txt
+ryss.txt
 
 makeleader
 
 spawnenemy
 33.4 1000 -82
-loadout.txt
+ryss.txt
 
 //spawnenemy
 33.4 3900 -82

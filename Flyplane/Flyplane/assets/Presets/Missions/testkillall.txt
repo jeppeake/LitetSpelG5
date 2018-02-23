@@ -2,15 +2,15 @@
 
 spawnenemy
 53.4 1000 -52
-loadout.txt
+amerikan.txt
 
 spawnenemy
 33.4 1000 -52
-loadout.txt
+amerikan.txt
 
 spawnenemy
 23.4 1000 -72
-loadout.txt
+amerikan.txt
 
 settimer
 100
@@ -25,4 +25,4 @@ points
 5000
 
 text
-Very dangerous men in planes approaching, kill them all for a juicy Christmas bonus!
+Very dangerous americans in planes approaching, kill them all for a juicy Christmas bonus!
