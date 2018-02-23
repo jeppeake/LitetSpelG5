@@ -23,8 +23,8 @@ Text * AssetLoader::getHighscoreText() &
 void AssetLoader::loadModel(const std::string &filename, const std::string &name) {
 	auto find = models.find(name);
 	if (find == models.end()) {
-		Model model;
-		models[name] = model;
+		//Model model;
+		//models[name] = model;
 		models[name].load(filename);
 	}
 }
@@ -32,8 +32,8 @@ void AssetLoader::loadModel(const std::string &filename, const std::string &name
 void AssetLoader::loadTexture(const std::string filename, const std::string name) {
 	auto find = textures.find(name);
 	if (find == textures.end()) {
-		Texture texture;
-		textures[name] = texture;
+		//Texture texture;
+		//textures[name] = texture;
 		bool success = textures[name].loadTexture(filename);
 	}
 }
@@ -41,7 +41,7 @@ void AssetLoader::loadTexture(const std::string filename, const std::string name
 void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &name) {
 	auto find = heightmaps.find(name);
 	if (find == heightmaps.end()) {
-		Heightmap hmap;
+		//Heightmap hmap;
 		heightmaps[name].loadMap(maptxt);
 	}
 }
@@ -49,8 +49,8 @@ void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &na
 void AssetLoader::loadSound(const std::string &filename, const std::string &name) {
 	auto find = sounds.find(name);
 	if (find == sounds.end()) {
-		sf::SoundBuffer sb;
-		sounds[name] = sb;
+		//sf::SoundBuffer sb;
+		//sounds[name] = sb;
 		if (!sounds[name].loadFromFile(filename))
 			std::cout << "AssetLoader error: sound " << filename << " couldn't load." << std::endl;
 	}

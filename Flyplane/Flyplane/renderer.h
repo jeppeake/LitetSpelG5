@@ -26,6 +26,7 @@ class Renderer {
 private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
+	ShaderProgram terrainShadow;
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
@@ -35,7 +36,8 @@ private:
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
 	GLuint depthTexture;
-	glm::mat4 shadowMatrix;
+	glm::mat4 planeShadowMatrix;
+	glm::mat4 terrainShadowMatrix;
 	glm::mat4 debugMVP;
 	Camera camera;
 	std::vector<RenderObject> list;
@@ -70,7 +72,10 @@ private:
 
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
-	void RenderShadow(Model &model, Transform &trans);
+
+	// old
+	//void RenderShadow(Model &model, Transform &trans);
+
 	void RenderWeapon();
 	void RenderCrosshair(glm::vec3 pos, glm::quat orientation);
 	void RenderHPBar(float hp);
