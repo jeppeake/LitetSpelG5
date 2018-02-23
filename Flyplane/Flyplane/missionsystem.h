@@ -26,7 +26,6 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	std::vector<Entity> enemyList;
 
 	void cleanUpMarkers() {
-		enemyList.clear();
 		if (formLeader.valid()) {
 			if (formLeader.has_component<MissionMarker>()) {
 				formLeader.component<MissionMarker>().remove();
@@ -44,6 +43,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 			}
 		}
+		enemyList.clear();
 	}
 
 	void fail() {
@@ -179,6 +179,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}
 					target = entity;
 					entity.assign<HouseComponent>();
+					entity.assign<HealthComponent>(300);
 					entity.assign<CollisionComponent>();
 					
 				}
