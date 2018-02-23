@@ -17,6 +17,7 @@ private:
 	GLuint gPos, gColor, gLife, gVel, VAO;
 	ComputeShader compute;
 	Texture *text = nullptr;
+	float size = 0.1;
 public:
 	Timer t;
 	Particles(unsigned particles, float _effectTime = 0);
@@ -27,6 +28,10 @@ public:
 	void setTimer(float _effectTime)
 	{
 		effectTime = _effectTime;
+	}
+	void setSize(float size)
+	{
+		this->size = size;
 	}
 	//Kommer kanske sen...
 	void setTexture(const std::string &name)
