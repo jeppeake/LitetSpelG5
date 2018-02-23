@@ -209,7 +209,7 @@ void MenuState::update(double dt) {
 	ex.systems.update<AISystem>(dt);
 	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
-	ex.systems.update<WeaponSystem>(dt);
+	//ex.systems.update<WeaponSystem>(dt);
 	//ex.systems.update<SoundSystem>(dt);
 	ex.systems.update<ParticleSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);

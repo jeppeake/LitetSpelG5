@@ -44,8 +44,8 @@ struct RenderSystem : public System<RenderSystem> {
 		glm::vec3 playerDir;
 		glm::vec3 playerUp;
 		glm::quat playerOrientation;
-		float hp;
-		float speed;
+		float hp = 100.f;
+		float speed = 10.f;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
 			player = entity.component<PlayerComponent>();

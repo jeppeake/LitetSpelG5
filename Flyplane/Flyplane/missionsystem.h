@@ -84,6 +84,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					state->addPoints(curMission.points);
 					active = false;
 					timer.restart();
+					target.destroy();
 					cleanUpMarkers();
 				}
 				//fail condition
