@@ -455,6 +455,9 @@
     <ClInclude Include="speedindicator.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="huntStatic.h">
+      <Filter>Behaviours</Filter>
+    </ClInclude>
     <ClInclude Include="hpindicator.h">
       <Filter>GUI</Filter>
     </ClInclude>

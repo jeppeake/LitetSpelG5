@@ -103,7 +103,7 @@ void MenuState::init() {
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Fishrod/fishrod.fbx", "fishrod");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("Weapons/Missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
-	AssetLoader::getLoader().loadModel("assets/buildings/911.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "hus1");
 
 	AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 

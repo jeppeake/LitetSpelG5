@@ -6,6 +6,7 @@
 #include <experimental/filesystem>
 #include "housecomponent.h"
 #include "missionmarker.h"
+#include "huntStatic.h"
 
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
@@ -26,7 +27,6 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	std::vector<Entity> enemyList;
 
 	void cleanUpMarkers() {
-		enemyList.clear();
 		if (formLeader.valid()) {
 			if (formLeader.has_component<MissionMarker>()) {
 				formLeader.component<MissionMarker>().remove();
@@ -44,6 +44,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 			}
 		}
+		enemyList.clear();
 	}
 
 	void fail() {
@@ -87,7 +88,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 				//fail condition
 				if (target.valid() && formLeader.valid()) {
-					if (glm::distance(target.component<Transform>().get()->pos, formLeader.component<Transform>().get()->pos) <= 100) {
+					if (target.component<HealthComponent>()->isDead) {
+						target.destroy();
 						fail();
 					}
 				}
@@ -96,10 +98,11 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				textColor = MARKER_KILL;
 				//win condition
 				if (target.valid() && state->entity_p.valid()) {
-					//if(target.component<HealthComponent>()->isDead) to use when collisions are working
-					if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
+					if(target.component<HealthComponent>()->isDead) {
+					//if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
 						state->addPoints(curMission.points);
 						active = false;
+						target.destroy();
 						timer.restart();
 						cleanUpMarkers();
 					}
@@ -179,6 +182,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}
 					target = entity;
 					entity.assign<HouseComponent>();
+					entity.assign<HealthComponent>(300);
 					entity.assign<CollisionComponent>();
 					
 				}
@@ -196,10 +200,14 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 					entity.assign<Target>(10.0, FACTION_AI);
+					entity.assign<FactionEnemy>();
 					entity.assign<HealthComponent>(100.0);
+					
+
 					auto handle = entity.assign<ParticleComponent>();
 					events.emit<AddParticleEvent>(TRAIL, handle);
 					events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
+
 					std::vector<Behaviour*> behaviours;
 
 					entity.assign<FormationComponent>(100);
@@ -215,8 +223,9 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 					//behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
-					behaviours.push_back(new Follow_Target(7,new Always_True(), target));
-					//behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
+					behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
+					//behaviours.push_back(new Follow_Target(7,new Always_True(), target));
+					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
 					entity.assign<AIComponent>(behaviours, true, true, false);
@@ -259,6 +268,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 					entity.assign<Target>(10.0, FACTION_AI);
+					entity.assign<FactionEnemy>();
 					entity.assign<HealthComponent>(100.0);
 					auto handle = entity.assign<ParticleComponent>();
 					events.emit<AddParticleEvent>(TRAIL, handle);

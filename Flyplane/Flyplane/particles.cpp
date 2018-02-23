@@ -96,8 +96,7 @@ void Particles::update()
 
 void Particles::render()
 {
-	
-	float size = 0.1f;
+
 
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();
