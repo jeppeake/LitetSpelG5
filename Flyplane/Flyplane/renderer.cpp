@@ -331,8 +331,20 @@ void Renderer::setCamera(const Camera & camera)
 	auto pos = camera.getTransform().pos;
 	//pos += glm::toMat3(camera.getTransform().orientation)*glm::vec3(0,0, 1000.f);
 	float halfSize = 50.f;
+	
 	glm::mat4 proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 500.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 250.0f + pos.y, pos.z), pos, glm::vec3(1, 0, 0));
+	/*
+	glm::vec3 sunDir = normalize(glm::vec3(0, 1, 1));
+	glm::vec3 lookDir = camera.getTransform().orientation * glm::vec3(0, 0, 1);
+
+	auto size = Window::getWindow().size();
+	glm::mat4 proj = glm::perspective(camera.getFov(), size.x / size.y, 2.f, 1000.f);
+	glm::mat4 view = 
+
+	glm::vec4 projSunDir = proj * glm::vec4(sunDir, 0);
+	*/
+
 	this->shadowMatrix = proj * view;
 }
 
