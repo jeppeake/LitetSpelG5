@@ -80,6 +80,8 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
+		entity.assign<FactionEnemy>();
+
 		auto handle = entity.assign<ParticleComponent>();
 		ex.events.emit<AddParticleEvent>(TRAIL, handle);
 		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
@@ -177,6 +179,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<SoundComponent>(*flyingSB);
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
+	entity_p.assign<FactionPlayer>();
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
