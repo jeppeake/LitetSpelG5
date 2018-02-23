@@ -79,7 +79,7 @@ Renderer::Renderer() {
 	glBindVertexArray(0);
 
 	hpbar.loadTexture("assets/textures/hpbar.png");
-	hpTexture.loadTexture("assets/textures/hp.png", 1);
+	//hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
 	indicator.loadTexture("assets/textures/indicator.png", 1);
@@ -282,21 +282,29 @@ void Renderer::RenderClouds() {
 }
 
 void Renderer::RenderHPBar(float hp) {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	renderTexture(hpbar, hpMatrix);
-	renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+	//renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+	heightShader.use();
+	heightShader.uniform("value", glm::vec2((1 - hp) / 2.0f, 0));
+	hpIndicator.Bind();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::RenderHeightIndicator(float height) {
 	glDisable(GL_DEPTH_TEST);
-	float realHeight = (height - 5000);// *2;
+	float realHeight = (height);// -5000);// *2;
 	renderTexture(indicator, heightMatrix);
 	heightShader.use();
-	heightShader.uniform("value", realHeight / 23000.0f);
+	heightShader.uniform("value", glm::vec2(0, realHeight / 23000.0f));
 	heightIndicator.Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	
-	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realHeight), glm::vec2(143, 318), glm::vec3(0, 1, 0), 0.3);
+	auto s = Window::getWindow().size();
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realHeight), glm::vec2(143 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720 );
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -305,11 +313,12 @@ void Renderer::RenderSpeedometer(float speed) {
 	renderTexture(indicator, speedMatrix);
 	float realSpeed = speed * 3.6;//* 2
 	heightShader.use();
-	heightShader.uniform("value", realSpeed / 1800.0f);
+	heightShader.uniform("value", glm::vec2(0, realSpeed / 1800.0f));
 	speedIndicator.Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100, 318), glm::vec3(0, 1, 0), 0.3);
+	auto s = Window::getWindow().size();
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720);
 	glEnable(GL_DEPTH_TEST);
 }
 

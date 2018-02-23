@@ -121,6 +121,7 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="speedindicator.cpp" />
+    <ClCompile Include="hpindicator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -452,6 +453,9 @@
       <Filter>Systems\Components</Filter>
     </ClInclude>
     <ClInclude Include="speedindicator.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="hpindicator.h">
       <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
