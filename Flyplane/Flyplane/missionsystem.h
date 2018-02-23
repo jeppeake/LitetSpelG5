@@ -26,7 +26,6 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	std::vector<Entity> enemyList;
 
 	void cleanUpMarkers() {
-		enemyList.clear();
 		if (formLeader.valid()) {
 			if (formLeader.has_component<MissionMarker>()) {
 				formLeader.component<MissionMarker>().remove();
@@ -44,6 +43,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 			}
 		}
+		enemyList.clear();
 	}
 
 	void fail() {
@@ -179,6 +179,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}
 					target = entity;
 					entity.assign<HouseComponent>();
+					entity.assign<HealthComponent>(300);
 					entity.assign<CollisionComponent>();
 					
 				}
@@ -196,10 +197,14 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 					entity.assign<Target>(10.0, FACTION_AI);
+					entity.assign<FactionEnemy>();
 					entity.assign<HealthComponent>(100.0);
+					
+
 					auto handle = entity.assign<ParticleComponent>();
 					events.emit<AddParticleEvent>(TRAIL, handle);
 					events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
+
 					std::vector<Behaviour*> behaviours;
 
 					entity.assign<FormationComponent>(100);
@@ -259,6 +264,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 					entity.assign<Target>(10.0, FACTION_AI);
+					entity.assign<FactionEnemy>();
 					entity.assign<HealthComponent>(100.0);
 					auto handle = entity.assign<ParticleComponent>();
 					events.emit<AddParticleEvent>(TRAIL, handle);
