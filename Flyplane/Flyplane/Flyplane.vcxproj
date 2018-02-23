@@ -144,6 +144,7 @@
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="highscorestate.cpp" />
+    <ClCompile Include="hpindicator.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loadingstate.cpp" />
     <ClCompile Include="loadoutstate.cpp" />
@@ -225,6 +226,8 @@
     <ClInclude Include="highscoreaction.h" />
     <ClInclude Include="highscorestate.h" />
     <ClInclude Include="housecomponent.h" />
+    <ClInclude Include="huntStatic.h" />
+    <ClInclude Include="hpindicator.h" />
     <ClInclude Include="hunt_player.h" />
     <ClInclude Include="hunt_target.h" />
     <ClInclude Include="input.h" />

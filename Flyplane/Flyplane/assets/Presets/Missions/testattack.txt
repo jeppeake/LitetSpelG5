@@ -8,23 +8,23 @@ hus1
 
 spawnenemy
 500.4 210 -500
-loadout.txt
+tysk.txt
 
 spawnenemy
 500.4 220 -500
-loadout.txt
+tysk.txt
 
 spawnenemy
 500.4 230 -500
-loadout.txt
+tysk.txt
 
 spawnenemy
 500.4 240 -500
-loadout.txt
+tysk.txt
 
 spawnenemy
 55.45 250 -500
-loadout.txt
+tysk.txt
 
 settimer
 50

@@ -15,6 +15,7 @@
 #include "timer.h"
 #include "heightindicator.h"
 #include "speedindicator.h"
+#include "hpindicator.h"
 
 struct RenderObject {
 	Model* model;
@@ -45,7 +46,7 @@ private:
 	Cloud clouds;
 
 	Texture hpbar;
-	Texture hpTexture;
+	HPIndicator hpIndicator;
 	glm::mat4 hpMatrix;
 
 	Texture indicator;

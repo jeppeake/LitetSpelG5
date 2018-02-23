@@ -8,4 +8,9 @@ struct Equipment {
 	unsigned int selected = 0;
 	std::vector<Weapon> primary;
 	std::vector<Weapon> special;
+
+	void addSpecialWeapon(Weapon weapon) {
+		special[0] = weapon;
+		selected = 0;
+	}
 };

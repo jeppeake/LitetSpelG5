@@ -6,6 +6,7 @@
 #include <experimental/filesystem>
 #include "housecomponent.h"
 #include "missionmarker.h"
+#include "huntStatic.h"
 
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
@@ -87,7 +88,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 				//fail condition
 				if (target.valid() && formLeader.valid()) {
-					if (glm::distance(target.component<Transform>().get()->pos, formLeader.component<Transform>().get()->pos) <= 100) {
+					if (target.component<HealthComponent>()->isDead) {
+						target.destroy();
 						fail();
 					}
 				}
@@ -96,10 +98,11 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				textColor = MARKER_KILL;
 				//win condition
 				if (target.valid() && state->entity_p.valid()) {
-					//if(target.component<HealthComponent>()->isDead) to use when collisions are working
-					if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
+					if(target.component<HealthComponent>()->isDead) {
+					//if (glm::distance(target.component<Transform>().get()->pos, state->entity_p.component<Transform>().get()->pos) <= 100) {
 						state->addPoints(curMission.points);
 						active = false;
+						target.destroy();
 						timer.restart();
 						cleanUpMarkers();
 					}
@@ -134,8 +137,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				}
 			}
 			//draw mission text
-			AssetLoader::getLoader().getText()->drawText(curMission.missiontext,
-				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), textColor, 0.3);
+			double textSize = 0.6;
+			double x = (Window::getWindow().size().x / 2) - 9 * curMission.missiontext.length()/2;
+			AssetLoader::getLoader().getMenutext()->drawText(curMission.missiontext,
+				glm::vec2(x, Window::getWindow().size().y - 200), textColor, textSize);
 			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
 				glm::vec2((Window::getWindow().size().x / 2) - 25, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
 			
@@ -191,11 +196,18 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					float x = enemy.pos.x;
 					float z = enemy.pos.z;
 
+					std::ifstream file("assets/Presets/AI/" + enemy.loadoutFile);
+					std::string str;
+
+					PlanePreset pp;
+					std::getline(file, str);
+					pp.load(str);
+
 					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
+					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
+					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 					entity.assign<Target>(10.0, FACTION_AI);
 					entity.assign<FactionEnemy>();
 					entity.assign<HealthComponent>(100.0);
@@ -220,8 +232,9 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 					//behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
-					behaviours.push_back(new Follow_Target(7,new Always_True(), target));
-					//behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
+					behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
+					//behaviours.push_back(new Follow_Target(7,new Always_True(), target));
+					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
 					entity.assign<AIComponent>(behaviours, true, true, false);
@@ -229,15 +242,30 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("takeoff"));
 					entity.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("machinegun"));
 
+					std::vector<Weapon> weapons;
+
+					for (int i = 0; i < pp.wepPos.size(); i++) {
+						std::getline(file, str);
+						if (str.compare("0") != 0) {
+							WeaponPreset wp;
+							wp.load(str);
+
+							AssetLoader::getLoader().loadModel(wp.model, wp.name);
+							AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
+
+							WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
+
+							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
+						}
+					}
+
 					WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 					std::vector<Weapon> primary;
-					std::vector<Weapon> secondary;
-					secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
-					secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 
 					primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
-					entity.assign<Equipment>(primary, secondary);
+					
+					entity.assign<Equipment>(primary, weapons);
 					entity.assign<PointComponent>(100);
 					formLeader = entity;
 					enemyList.push_back(entity);
@@ -258,14 +286,22 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					float x = enemy.pos.x;
 					float z = enemy.pos.z;
 
+					std::ifstream file("assets/Presets/AI/" + enemy.loadoutFile);
+					std::string str;
+
+					PlanePreset pp;
+					std::getline(file, str);
+					pp.load(str);
+
 					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
-					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-					entity.assign<FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
+					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
+					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 					entity.assign<Target>(10.0, FACTION_AI);
 					entity.assign<FactionEnemy>();
 					entity.assign<HealthComponent>(100.0);
+
 					auto handle = entity.assign<ParticleComponent>();
 					events.emit<AddParticleEvent>(TRAIL, handle);
 					events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
@@ -301,15 +337,29 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("takeoff"));
 					entity.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("machinegun"));
 
+					std::vector<Weapon> weapons;
+
+					for (int i = 0; i < pp.wepPos.size(); i++) {
+						std::getline(file, str);
+						if (str.compare("0") != 0) {
+							WeaponPreset wp;
+							wp.load(str);
+
+							AssetLoader::getLoader().loadModel(wp.model, wp.name);
+							AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
+
+							WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
+
+							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
+						}
+					}
+
 					WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 					std::vector<Weapon> primary;
-					std::vector<Weapon> secondary;
-					secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
-					secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 
 					primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
-					entity.assign<Equipment>(primary, secondary);
+					entity.assign<Equipment>(primary, weapons);
 					entity.assign<PointComponent>(100);
 					enemyList.push_back(entity);
 
