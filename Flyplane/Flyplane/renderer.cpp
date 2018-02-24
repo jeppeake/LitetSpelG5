@@ -16,6 +16,7 @@ Renderer::Renderer() {
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
+	this->terrainShadow.create("terrainShadowVert.glsl", "shadowFragmentShader.glsl");
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
@@ -23,16 +24,15 @@ Renderer::Renderer() {
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	
+
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 4*1024, 4*1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowSize.x, shadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
@@ -40,6 +40,29 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
+
+
+	glGenFramebuffers(1, &terrainFrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
+
+	glGenTextures(1, &terrainDepthTexture);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, terrainShadowSize.x, terrainShadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, terrainDepthTexture, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "framebuffer broken" << endl;
+
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
@@ -49,7 +72,6 @@ Renderer::Renderer() {
 	);
 	
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	float vertexbuffer[] = {
 		-1.0,  1.0, 0.0,
@@ -89,21 +111,31 @@ Renderer::Renderer() {
 
 	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
+
+
+	sunDir = normalize(glm::vec3(0, 2, 1));
 }
 
 Renderer::~Renderer() {
 
 }
 
-void Renderer::addToList(Model* model, Transform trans) {
-	list.push_back({ model, trans });
+void Renderer::addToList(Model* model, Transform trans, bool isStatic) {
+	if (isStatic) {
+		listStatics.push_back({ model, trans });
+	} else {
+		list.push_back({ model, trans });
+	}
 }
 
 
 
-void Renderer::addToList(const std::vector<Patch>& patches) {
+void Renderer::setTerrainPatches(const std::vector<Patch>& patches) {
 	this->patches = patches;
-	//mapList.push_back(map);
+}
+
+void Renderer::setTerrainPatchesShadow(const std::vector<Patch>& patches) {
+	this->shadowPatches = patches;
 }
 
 void Renderer::Render(Model &model, Transform &trans) {
@@ -169,9 +201,10 @@ Timer t;
 
 
 void Renderer::RenderScene() {
+
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	shadow.use();
-	glViewport(0, 0, 4*1024, 4*1024);
+	glViewport(0, 0, shadowSize.x, shadowSize.y);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//Render shadow
@@ -184,22 +217,39 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
 	}
-	/*
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, terrainShadowSize.x, terrainShadowSize.y);
+
+	for (int i = 0; i < listStatics.size(); i++) {
+		auto& current = listStatics[i];
+		glm::mat4 modelMatrix = glm::translate(current.trans.pos) * glm::toMat4(current.trans.orientation) * glm::scale(current.trans.scale);
+
+		for (int j = 0; j < current.model->model_meshes.size(); j++) {
+			current.model->model_meshes[j].first->bind();
+			shadow.uniform("MVP", terrainShadowMatrix * modelMatrix * current.model->model_meshes[j].second);
+			glDrawElements(GL_TRIANGLES, current.model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
+		}
+	}
+
+
 	terrainShadow.use();
 	if (hm != NULL) {
 		terrainShadow.uniform("time", (float)globalTime.elapsed());
-		terrainShadow.uniform("cameraPos", camera.getTransform().pos);
+		terrainShadow.uniform("ViewProjMatrix", this->terrainShadowMatrix);
 		hm->bind(terrainShadow);
-		for (int i = 0; i < patches.size(); i++) {
-			int indices = patches[i].indices;
+		for (int i = 0; i < shadowPatches.size(); i++) {
+			int indices = shadowPatches[i].indices;
 			hm->bindIndices(indices);
 
-			terrainShadow.uniform("offset", patches[i].offset);
-			terrainShadow.uniform("patch_size", glm::vec2(patches[i].size));
+			terrainShadow.uniform("offset", shadowPatches[i].offset);
+			terrainShadow.uniform("patch_size", glm::vec2(shadowPatches[i].size));
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
 		}
 	}
-	*/
+
 
 
 	//Render scene
@@ -214,23 +264,38 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 
+	shader.uniform("terrainShadowMap", 6);
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
+
 	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
 	shader.uniform("ViewProjMatrix", viewProjMatrix);
 	shader.uniform("shadowMatrix", m * planeShadowMatrix);
+	shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
 	shader.uniform("cameraPos", camera.getTransform().pos);
+	shader.uniform("sunDir", sunDir);
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
+	}
+	for (int i = 0; i < listStatics.size(); i++) {
+		Render(listStatics[i]);
 	}
 
 
 	//Render terrain
 	terrain_shader.use();
 	terrain_shader.uniform("shadowMatrix", m * planeShadowMatrix);
+	terrain_shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
 	terrain_shader.uniform("ViewProjMatrix", viewProjMatrix);
+	terrain_shader.uniform("sunDir", sunDir);
 
 	terrain_shader.uniform("shadowMap", 1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+	terrain_shader.uniform("terrainShadowMap", 6);
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
 	if (hm != NULL) {
 		terrain_shader.uniform("time", (float)globalTime.elapsed());
 		terrain_shader.uniform("cameraPos", camera.getTransform().pos);
@@ -261,6 +326,7 @@ void Renderer::RenderScene() {
 
 	markers.clear();
 	list.clear();
+	listStatics.clear();
 	mapList.clear();
 }
 
@@ -351,21 +417,34 @@ Camera Renderer::getCamera() &
 void Renderer::setCamera(const Camera & camera)
 {
 	this->camera = camera;
-	auto pos = camera.getTransform().pos;
+	auto t = camera.getTransform();
+	auto pos = t.pos;
 	
-	glm::vec3 sunDir = normalize(glm::vec3(0, 1, 1));
-
+	
 	float halfSize = 50.f;
 	glm::mat4 proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 500.f);
-	glm::mat4 view = glm::lookAt(pos + 250.f*sunDir, pos, glm::vec3(0, 1, 0));
+	glm::mat4 view = glm::lookAt(pos + 200.f*sunDir, pos, glm::vec3(0, 1, 0));
 
 	this->planeShadowMatrix = proj * view;
 
-	halfSize = 2000.f;
-	pos += camera.getTransform().orientation*glm::vec3(0, 0, 1000.f);
-	proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 2000.f);
-	view = glm::lookAt(pos + 1000.f*sunDir, pos, glm::vec3(0, 1, 0));
 
+	
+	glm::vec2 minmax(0, 100);
+	if (hm) {
+		minmax = hm->getMinMaxHeights();
+	}
+
+	halfSize = 2000.f;
+	float h = (minmax.y - minmax.x)/sunDir.y;
+	float a = glm::acos(sunDir.y);
+	float extra = halfSize / glm::tan(glm::half_pi<float>() - a);
+
+
+
+	pos = glm::vec3(pos.x, minmax.x, pos.z);
+	proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, - h - extra, extra);
+	view = glm::lookAt(pos + sunDir, pos, glm::vec3(0, 1, 0));
+	
 	this->terrainShadowMatrix = proj * view;
 }
 
@@ -408,6 +487,7 @@ glm::mat4& Renderer::getCrosshairPos()
 void Renderer::update(float dt)
 {
 	if (Input::isKeyPressed(GLFW_KEY_F8)) {
+		this->shader.reload();
 		this->terrain_shader.reload();
 	}
 }

@@ -1,9 +1,7 @@
 #version 420
 layout(location = 0) in vec2 uv;
-uniform mat4 modelMatrix;
+
 uniform mat4 ViewProjMatrix;
-uniform mat4 shadowMatrix;
-uniform mat4 terrainShadowMatrix;
 
 uniform sampler2D heightmap;
 uniform sampler2D materialmap;
@@ -18,17 +16,7 @@ uniform float waterHeight;
 
 uniform float time;
 
-out vec3 Pos;
-out vec3 GeometryPos;
-out vec3 Normal;
-out vec2 Tex;
-out vec3 Materials;
-out vec3 Color;
-out vec3 ShadowSpace;
-out vec3 TerrainShadowSpace;
-
 float rand(vec2 p);
-
 float noise(vec2 n);
 float noise(vec3 p);
 
@@ -36,7 +24,6 @@ float sampleHeightmap(vec2 uv, vec2 offset) {
 	float result = 0;
 	uv += offset/heightmapSize;
 	result += texture(heightmap, uv).r;
-	//result += 0.1*(noise(uv*3) + 0.5*noise(uv*10.0));
 	return result;
 }
 
@@ -44,70 +31,19 @@ float sampleHeightmap(vec2 uv) {
 	return sampleHeightmap(uv, vec2(0));
 }
 
-
-vec3 sampleNormal(vec2 hmUV) {
-	vec4 h;
-	h[0] = sampleHeightmap(hmUV, vec2(0, -1));
-	h[1] = sampleHeightmap(hmUV, vec2(-1, 0));
-	h[2] = sampleHeightmap(hmUV, vec2(1, 0));
-	h[3] = sampleHeightmap(hmUV, vec2(0, 1));
-
-	vec3 n;
-	n.z = h[0] - h[3];
-	n.x = h[1] - h[2];
-	n.y = 1.0/255.0;
-	return normalize(n);
-}
-
-
 void main() {
 	vec2 pos2d = uv*patch_size + offset;
 	vec2 hmUV = pos2d/heightmapSize;
 
-	float height = sampleHeightmap(hmUV);// 
-
-	//height = noise(vec3(pos2d, 0));
+	float height = sampleHeightmap(hmUV);
 
 	vec3 pos = scale*vec3(pos2d.x, height, pos2d.y) + heightmapPos;
 
-	Normal = sampleNormal(hmUV);
-	
-
-	/*
-	float pi = 3.1415;
-	float h = pi*log(patch_size.x/heightmapSize.x);
-	Normal.x = 0.5*sin(h)+0.5;
-	Normal.y = 0.5*sin(h + 2*pi/3)+0.5;
-	Normal.z = 0.5*sin(h + 4*pi/3)+0.5;
-	vec3 n;
-	n.x = fract(rand(pos.xz*100));
-	n.y = fract(rand(pos.xz*100 + vec2(1000, 1000)));
-	n.z = fract(rand(pos.xz*100 + vec2(2000, 2000)));
-	Normal = mix(Normal, n, 0.35);
-	*/
-
-
-	Color = 1.1*vec3(0.376, 0.702, 0.22);
-	float snowHeight = 3000 + 500*(noise(pos.xz*0.001));
-	if(pos.y > snowHeight) {
-		Color = vec3(1);
-	}
-	if(dot(Normal, vec3(0,1,0)) < 0.38) {
-		Color = vec3(0.4);
-	}
-
-	Materials = texture(materialmap, hmUV).rgb;
-	Tex = pos2d;
-	Tex = hmUV;
-	Pos = pos;
 	if(pos.y <= waterHeight) {
-
 		float val = smoothstep(0, 2000, waterHeight - pos.y);
 		val = pow(val, 1);
 		
-
 		pos.y = waterHeight;
-		//Pos = pos;
 
 		float p = 2;
 		float sumNoise = 0.0;
@@ -120,13 +56,11 @@ void main() {
 		sumNoise += 0.0125*pow(noise(vec3(pos.xz*0.32 + time*0.8, time*0.3)), p);
 		pos.y += val*500.0*sumNoise;
 	}
-	
-	GeometryPos = pos;
-
-	ShadowSpace = (shadowMatrix * vec4(pos, 1.0)).xyz;
-	TerrainShadowSpace = (terrainShadowMatrix * vec4(pos, 1.0)).xyz;
 	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }
+
+
+
 
 
 float rand(vec2 n) { 

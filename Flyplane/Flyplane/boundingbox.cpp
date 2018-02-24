@@ -31,7 +31,7 @@ bool BoundingBox::intersect(BoundingBox & box)
 	//std::cout << "Start OBB-OBB intersection test\n";
 	glm::vec3 sides[3];
 	for (int i = 0; i < 3; i++) // maybe add scale in calculation
-		sides[i] = glm::toMat3(transform.orientation)*this->sides[i];
+		sides[i] = transform.orientation*this->sides[i];
 
 	glm::vec3 normals[3];
 	glm::vec3 corners[8];

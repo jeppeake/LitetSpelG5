@@ -21,7 +21,7 @@
 #include "particlecomponent.h"
 #include "cameraoncomponent.h"
 #include "healthcomponent.h"
-
+#include "input.h"
 #include "missionmarker.h"
 
 using namespace entityx;
@@ -97,7 +97,9 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
-			Renderer::getRenderer().addToList(model->mptr, *transform.get());
+			bool isStatic = !entity.has_component<Physics>();
+
+			Renderer::getRenderer().addToList(model->mptr, *transform.get(), isStatic);
 
 			/*player = entity.component<PlayerComponent>();
 			ComponentHandle<Projectile> projectile = entity.component<Projectile>();
@@ -111,9 +113,12 @@ struct RenderSystem : public System<RenderSystem> {
 
 		ComponentHandle<Terrain> terrain;
 		for (Entity entity : es.entities_with_components(terrain)) {
-			terrain = entity.component<Terrain>();
+
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
-			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(cullingCamera));
+			Renderer::getRenderer().setTerrainPatches(terrain->hmptr->buildPatches(cullingCamera));
+
+			auto mat = Renderer::getRenderer().getTerrainShadowMatrix();
+			Renderer::getRenderer().setTerrainPatchesShadow(terrain->hmptr->buildPatchesOrtho(mat, cullingCamera));
 		}
 		
 

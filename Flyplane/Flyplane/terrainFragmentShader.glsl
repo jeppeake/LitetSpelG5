@@ -1,14 +1,19 @@
 #version 420
 
 uniform sampler2D shadowMap;
-uniform mat4 shadowMatrix;
+uniform sampler2D terrainShadowMap;
+
 in vec3 vPos;
 in vec3 vNormal;
 in vec2 vTex;
 in vec3 vMaterials;
 in vec3 vGeometryPos;
+in vec3 vShadowSpace;
+in vec3 vTerrainShadowSpace;
 flat in vec3 vColor;
 
+
+uniform vec3 sunDir;
 uniform sampler2D heightmap;
 uniform sampler2D materialmap;
 uniform sampler2D material1;
@@ -119,20 +124,50 @@ Material chooseMat(vec3 pos, vec3 normal, float biome, float geomHeight) {
 	return result;
 }
 
-void main() {
-	vec3 shadowCoord = (shadowMatrix * vec4(vGeometryPos, 1)).xyz;
-	float depth = texture(shadowMap, shadowCoord.xy).r;
+float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset) {
+	float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
 	float visibility = 1.0;
 	
-	if(depth <= shadowCoord.z) {
-		visibility = 0.0;
+	vec3 normal = vNormal;
+	vec3 sun = sunDir;
+	float cosa = clamp(dot(normal, sun), 0.0, 1.0);
+	float bias = 0.005*tan(acos(cosa));
+	bias = clamp(bias, 0.0, 0.01);
+
+	if(depth < shadowCoord.z-bias) {
+		visibility = 0.1;
 	}
 	float x = shadowCoord.x;
 	float y = shadowCoord.y;
 	float z = shadowCoord.z;
 	if(x < 0 || x > 1 || y < 0 || y > 1 || z > 1) {
 		visibility = 1.0;
+		visibility = 0.5;
 	}
+	return visibility;
+}
+
+float shadow(vec3 shadowCoord, sampler2D sampler) {
+	float result = 0;
+
+	const int hsize = 2;
+	for(int i = -hsize; i <= hsize; i++) {
+		for(int j = -hsize; j <= hsize; j++) {
+			result += testShadow(shadowCoord, sampler, ivec2(i,j));
+		}
+	}
+	float samples = pow(float(hsize)*2.0+1.0, 2);
+
+	return result / samples;
+}
+
+void main() {
+	float visibility1 = shadow(vShadowSpace, shadowMap);
+	float visibility2 = shadow(vTerrainShadowSpace, terrainShadowMap);
+	float visibility = min(visibility1, visibility2);
+
+	visibility = visibility2;
+
 
 	float biome = texture(materialmap, vec2(vTex.x, vTex.y)).r;
 	vec3 matNormal = sampleNormal(vTex);
@@ -140,13 +175,9 @@ void main() {
 
 	Material mat = chooseMat(vPos, matNormal, biome, vGeometryPos.y);
 	vec3 color = mat.color;
-
-	// for triangle colors
-	//color = vColor;
 	
 
-	vec3 sun = vec3(0, 1, 1);
-	sun = normalize(sun);
+	vec3 sun = normalize(sunDir);
 	vec3 n = normalize(vNormal);
 
 	float diffuse = clamp(dot(sun, n), 0, 1);
@@ -173,8 +204,6 @@ void main() {
 	color = mix(color, vec3(thickFogColor), thickFog);
 
 	gl_FragColor = vec4(color, 1);
-	//gl_FragColor = vec4(color, 1);
-	//gl_FragColor = vec4(matNormal, 1);
 }
 
 

@@ -1,26 +1,61 @@
 #version 420
 uniform sampler2D texSampler;
+
 uniform sampler2D shadowMap;
+uniform sampler2D terrainShadowMap;
+
 uniform mat4 shadowMatrix;
 uniform vec3 cameraPos;
+
+uniform vec3 sunDir;
 
 in vec3 Pos;
 in vec3 Normal;
 in vec2 Tex;
+in vec3 ShadowSpace;
+in vec3 TerrainShadowSpace;
 
 
-void main() {
-	vec3 shadowCoord = (shadowMatrix * vec4(Pos, 1)).xyz;
-	float depth = texture(shadowMap, shadowCoord.xy).r;
+float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset, float c) {
+	float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
 	float visibility = 1.0;
-	if(depth < shadowCoord.z - 0.001) {
-		visibility = 0.0;
+	
+	vec3 normal = normalize(Normal);
+	vec3 sun = sunDir;
+	float cosa = clamp(dot(normal, sun), 0.0, 1.0);
+	float bias = c*tan(acos(cosa));
+	//bias = clamp(bias, 0.0, 0.01);
+
+	if(depth < shadowCoord.z-bias) {
+		visibility = 0.1;
 	}
 	float x = shadowCoord.x;
 	float y = shadowCoord.y;
-	if(x < 0 || x > 1 || y < 0 || y > 1) {
+	float z = shadowCoord.z;
+	if(x < 0 || x > 1 || y < 0 || y > 1 || z > 1) {
 		visibility = 1.0;
 	}
+	return visibility;
+}
+
+float shadow(vec3 shadowCoord, sampler2D sampler, float c) {
+	float result = 0;
+
+	const int hsize = 2;
+	for(int i = -hsize; i <= hsize; i++) {
+		for(int j = -hsize; j <= hsize; j++) {
+			result += testShadow(shadowCoord, sampler, ivec2(i,j), c);
+		}
+	}
+	float samples = pow(float(hsize)*2.0+1.0, 2);
+
+	return result / samples;
+}
+
+void main() {
+	float visibility1 = shadow(ShadowSpace, shadowMap, 0.0002);
+	float visibility2 = shadow(TerrainShadowSpace, terrainShadowMap, 0.005);
+	float visibility = min(visibility1, visibility2);
 
 
 	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;

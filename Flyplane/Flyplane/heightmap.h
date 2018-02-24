@@ -41,6 +41,7 @@ private:
 	GLuint vao = 0;
 
 	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig);
+	void recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, BoundingBox& frustum, glm::dvec3 orig);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;
@@ -66,6 +67,9 @@ public:
 		return glm::vec2(width, height);
 	}
 
+	glm::vec2 getMinMaxHeights();
+
+	std::vector<Patch> buildPatchesOrtho(glm::mat4 viewProj, Camera c);
 	std::vector<Patch> buildPatches(Camera camera);
 
 	std::vector<House> getHouses() {

@@ -562,6 +562,9 @@
     <None Include="sparks.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
+    <None Include="terrainShadowVert.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">

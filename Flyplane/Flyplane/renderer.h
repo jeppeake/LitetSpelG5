@@ -36,11 +36,19 @@ private:
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
 	GLuint depthTexture;
+
+	GLuint terrainFrameBuffer;
+	GLuint terrainDepthTexture;
 	glm::mat4 planeShadowMatrix;
 	glm::mat4 terrainShadowMatrix;
+
+	glm::ivec2 shadowSize{ 4 * 1024, 4 * 1024 };
+	glm::ivec2 terrainShadowSize{ 16 * 1024, 16*1024 };
+
 	glm::mat4 debugMVP;
 	Camera camera;
 	std::vector<RenderObject> list;
+	std::vector<RenderObject> listStatics;
 	std::vector<Heightmap*> mapList;
 	glm::mat4 m;
 	CrossHair crosshair;
@@ -68,6 +76,10 @@ private:
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
+	std::vector<Patch> shadowPatches;
+
+
+	glm::vec3 sunDir;
 
 
 	void Render(Model &model, Transform &trans);
@@ -90,8 +102,9 @@ public:
 	}
 	Renderer();
 	~Renderer();
-	void addToList(Model* model, Transform trans);
-	void addToList(const std::vector<Patch>& patches);
+	void addToList(Model* model, Transform trans, bool isStatic = false);
+	void setTerrainPatches(const std::vector<Patch>& patches);
+	void setTerrainPatchesShadow(const std::vector<Patch>& patches);
 	void setHeightmap(Heightmap* hm) {
 		this->hm = hm;
 	}
@@ -106,6 +119,11 @@ public:
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
+
+	glm::mat4 getTerrainShadowMatrix() {
+		return this->terrainShadowMatrix;
+	}
+
 	//void setCrosshairPos(glm::vec3 pos);
 	//glm::mat4& getCrosshairPos();
 	//glm::quat orientation;

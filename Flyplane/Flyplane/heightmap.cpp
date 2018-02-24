@@ -14,6 +14,7 @@
 #include "shader.h"
 #include <stdlib.h>
 #include <entityx/entityx.h>
+
 int index(int x, int y, int width) {
 	return x + y * width;
 }
@@ -238,6 +239,82 @@ void Heightmap::unbindIndices() {
 
 
 
+glm::vec2 Heightmap::getMinMaxHeights() {
+	glm::vec2 result;
+	result.x = pos.y + waterHeight;
+	result.y = pos.y + scale.y;
+
+	return result;
+}
+
+std::vector<Patch> Heightmap::buildPatchesOrtho(glm::mat4 viewProj, Camera c) {
+	std::vector<Patch> result;
+
+	Transform t;
+	BoundingBox bb;
+
+	glm::mat4 inv = inverse(viewProj);
+
+	glm::vec4 sides[6];
+	sides[0] = glm::vec4(1, 0, 0, 0);
+	sides[1] = glm::vec4(0, 1, 0, 0);
+	sides[2] = glm::vec4(0, 0, 1, 0);
+
+	for (int i = 0; i < 3; i++) {
+		sides[i + 3] = -sides[i];
+	}
+	sides[5] = glm::vec4(0, 0, 0, 0);
+
+	for (int i = 0; i < 6; i++) {
+		sides[i] = inv * sides[i];
+	}
+
+	
+
+	for (int i = 0; i < 3; i++) {
+		float len = 0.5f*(length(sides[i + 3]) + length(sides[i]));
+		bb.sides[i] = len * normalize(sides[i]);
+	}
+
+	bb.center = glm::vec3(0);
+
+	glm::mat3 rot;
+	for (int i = 0; i < 3; i++)
+		rot[i] = normalize(sides[i]);
+	t.orientation = glm::toQuat(rot);
+
+	glm::vec3 center = (inv * glm::vec4(0, 0, 1, 1) + inv * glm::vec4(0, 0, 0, 1))*0.5f;
+	t.pos = center;
+	
+	bb.setTransform(t);
+
+	/*
+	std::cout << "Center: " << center.x << ", " << center.y << ", " << center.z << "\n";
+	for (int i = 0; i < 3; i++)
+		std::cout << "bb.sides[" << i << "]: " << bb.sides[i].x << ", " << bb.sides[i].y << ", " << bb.sides[i].z << "\n";
+
+	for (int i = 0; i < 3; i++) {
+		glm::vec3 rotated = t.orientation * bb.sides[i];
+		std::cout << "bb.sides[" << i << "] rotated: " << rotated.x << ", " << rotated.y << ", " << rotated.z << "\n";
+	}
+	system("pause");
+	*/
+
+	//glm::vec2 offset(-(3.f*width / 2.f));
+	//float patchSize = 2 * width;
+
+	//glm::vec2 offset(-(width / 2.f));
+	//float patchSize = width;
+
+	glm::vec2 offset(0);
+	float patchSize = width / 2.f;
+
+	recursiveBuildPatchesOrtho(result, patchSize, offset, 2, bb, c.getTransform().pos);
+
+	return result;
+}
+
+
 std::vector<Patch> Heightmap::buildPatches(Camera camera) {
 	std::vector<Patch> result;
 
@@ -351,7 +428,9 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 					centerBottom = scale * centerBottom + this->pos;
 
 					glm::vec3 centerTop = centerBottom;
-					centerTop.y += 255.f * scale.y;
+
+					// REMOVED "255.f*", CHECK IF WORKS!!!
+					centerTop.y += scale.y;
 
 					bool cornerIntersection = true;
 					for (int j = 0; j < 4; j++) {
@@ -367,6 +446,80 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 			}
 
 			if (intersection)
+				patches.emplace_back(patchSize, new_offset, indices);
+		}
+	}
+}
+
+
+void Heightmap::recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, BoundingBox & frustum, glm::dvec3 orig) {
+	glm::vec2 pos((orig.x - this->pos.x) / scale.x, (orig.z - this->pos.z) / scale.z);
+
+	// better read as "left divides" etc
+	bool divideLeft = false;
+	bool divideRight = false;
+	bool divideTop = false;
+	bool divideBottom = false;
+
+	float neighbourSize = patchSize * 2.f;
+	float len = glm::root_two<float>() * neighbourSize*2.f;
+	float dist;
+	glm::vec2 center;
+
+	auto checkDivide = [&](glm::vec2 d) {
+		glm::vec2 off = offset;
+		off += neighbourSize * d;
+		center = off + neighbourSize * glm::vec2(0.5f);
+		dist = length(pos - center);
+		return dist < len;
+	};
+
+	divideLeft = checkDivide(glm::vec2(-1, 0));
+	divideRight = checkDivide(glm::vec2(1, 0));
+	divideTop = checkDivide(glm::vec2(0, -1));
+	divideBottom = checkDivide(glm::vec2(0, 1));
+
+	for (int i = 0; i < 4; i++) {
+		int x = i % 2;
+		int y = i / 2;
+
+
+		glm::vec2 center = offset + patchSize * glm::vec2(x + 0.5f, y + 0.5f);
+
+		float dist = length(pos - center);
+		float len = glm::root_two<float>() * patchSize*2.f;
+
+		bool is_close = dist < len;
+
+		glm::vec2 new_offset = offset;
+		new_offset.x += x * patchSize;
+		new_offset.y += y * patchSize;
+
+		int indices = chooseIndices(x, y, divideLeft, divideTop, divideRight, divideBottom);
+
+		if (level < maxLevels && is_close) {
+			// should divide
+			recursiveBuildPatchesOrtho(patches, patchSize*0.5f, new_offset, level + 1, frustum, orig);
+		} else {
+
+			bool intersection = false;
+
+			Transform t;
+			BoundingBox patch;
+
+			
+
+			t.orientation = glm::quat();
+			t.pos = scale*glm::vec3(center.x, 0.5f, center.y) + this->pos;
+			patch.setTransform(t);
+			patch.center = glm::vec3(0);
+
+			patch.sides[0] = glm::vec3(patchSize*0.5, 0, 0);
+			patch.sides[1] = glm::vec3(0, scale.y*0.5f, 0);
+			patch.sides[2] = glm::vec3(0, 0, patchSize*0.5);
+
+			
+			if (patch.intersect(frustum))
 				patches.emplace_back(patchSize, new_offset, indices);
 		}
 	}

@@ -314,6 +314,7 @@
     <None Include="shadowVertexShader.glsl" />
     <None Include="sparks.glsl" />
     <None Include="terrainFragmentShader.glsl" />
+    <None Include="terrainShadowVert.glsl" />
     <None Include="terrainVertexShader.glsl" />
     <None Include="particletrail.glsl" />
     <None Include="textFrag.glsl" />

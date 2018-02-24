@@ -31,17 +31,17 @@ struct CameraSystem : public System<CameraSystem> {
 				}
 			}
 
-			auto flight = entity.component<FlightComponent>();
 			float boostSpeed = 250.f;
 			float baseSpeed = 175.f;
 			float brakeSpeed = 100.f;
+			auto flight = entity.component<FlightComponent>();
 			if (flight) {
 				boostSpeed = flight->boost_speed;
 				baseSpeed = flight->base_speed;
 				brakeSpeed = flight->brake_speed;
 			}
 
-			glm::vec3 offset(0, 1, -5.5);
+			glm::vec3 offset(0, 2, -3.5);
 
 			Transform camTrans = cameraOn->camera.getTransform();
 
