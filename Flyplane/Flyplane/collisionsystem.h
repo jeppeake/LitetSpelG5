@@ -138,8 +138,8 @@ private:
 			}
 			break;
 		case DropComponent::Weapon:
-			
-			player.component<Equipment>()->addSpecialWeapon(Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), m, m, glm::vec3(0, -0.2, 0.3), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0,0,1)), true, true));
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), m, m, glm::vec3(0, -2.2, 0.3), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0,0,1)), true, true));
 			break;
 		}
 	}
