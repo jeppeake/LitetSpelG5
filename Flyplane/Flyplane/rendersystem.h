@@ -87,11 +87,18 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 		}
 
+
+		// set heightmap pointer before setting camera in renderer
+		ComponentHandle<Terrain> terrain;
+		for (Entity entity : es.entities_with_components(terrain)) {
+			Renderer::getRenderer().setHeightmap(terrain->hmptr);
+		}
 		ComponentHandle<CameraOnComponent> cameraOn;
 		for (Entity entity : es.entities_with_components(cameraOn)) {
 			cullingCamera = cameraOn->camera;
 			Renderer::getRenderer().setCamera(cameraOn->camera);
 		}
+
 
 		ComponentHandle<ModelComponent> model;
 		for (Entity entity : es.entities_with_components(model, transform)) {
@@ -111,14 +118,16 @@ struct RenderSystem : public System<RenderSystem> {
 			}*/
 		}
 
-		ComponentHandle<Terrain> terrain;
-		for (Entity entity : es.entities_with_components(terrain)) {
 
+		for (Entity entity : es.entities_with_components(terrain)) {
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
 			Renderer::getRenderer().setTerrainPatches(terrain->hmptr->buildPatches(cullingCamera));
 
 			auto mat = Renderer::getRenderer().getTerrainShadowMatrix();
 			Renderer::getRenderer().setTerrainPatchesShadow(terrain->hmptr->buildPatchesOrtho(mat, cullingCamera));
+
+			// for debugging shadow patches
+			//Renderer::getRenderer().setTerrainPatches(terrain->hmptr->buildPatchesOrtho(mat, cullingCamera));
 		}
 		
 

@@ -49,7 +49,10 @@ private:
 	Camera camera;
 	std::vector<RenderObject> list;
 	std::vector<RenderObject> listStatics;
-	std::vector<Heightmap*> mapList;
+
+	// old
+	//std::vector<Heightmap*> mapList;
+
 	glm::mat4 m;
 	CrossHair crosshair;
 	EnemyMarker markers;

@@ -258,30 +258,32 @@ std::vector<Patch> Heightmap::buildPatchesOrtho(glm::mat4 viewProj, Camera c) {
 	glm::vec4 sides[6];
 	sides[0] = glm::vec4(1, 0, 0, 0);
 	sides[1] = glm::vec4(0, 1, 0, 0);
-	sides[2] = glm::vec4(0, 0, 1, 0);
+	sides[2] = glm::vec4(0, 0, 1, 1);
 
 	for (int i = 0; i < 3; i++) {
 		sides[i + 3] = -sides[i];
 	}
-	sides[5] = glm::vec4(0, 0, 0, 0);
+	sides[5] = glm::vec4(0, 0, -1, 1);
 
 	for (int i = 0; i < 6; i++) {
 		sides[i] = inv * sides[i];
 	}
 
-	
+	/*
+	for (int i = 0; i < 6; i++)
+		std::cout << "sides[" << i << "]: " << sides[i].x << ", " << sides[i].y << ", " << sides[i].z << "\n";
+	*/
+
 
 	for (int i = 0; i < 3; i++) {
 		float len = 0.5f*(length(sides[i + 3]) + length(sides[i]));
 		bb.sides[i] = len * normalize(sides[i]);
 	}
+	float len = length(sides[2] - sides[5]);
+	bb.sides[2] = len * normalize(sides[2] - sides[5]);
+
 
 	bb.center = glm::vec3(0);
-
-	glm::mat3 rot;
-	for (int i = 0; i < 3; i++)
-		rot[i] = normalize(sides[i]);
-	t.orientation = glm::toQuat(rot);
 
 	glm::vec3 center = (inv * glm::vec4(0, 0, 1, 1) + inv * glm::vec4(0, 0, 0, 1))*0.5f;
 	t.pos = center;
@@ -290,15 +292,20 @@ std::vector<Patch> Heightmap::buildPatchesOrtho(glm::mat4 viewProj, Camera c) {
 
 	/*
 	std::cout << "Center: " << center.x << ", " << center.y << ", " << center.z << "\n";
+
+	
 	for (int i = 0; i < 3; i++)
 		std::cout << "bb.sides[" << i << "]: " << bb.sides[i].x << ", " << bb.sides[i].y << ", " << bb.sides[i].z << "\n";
-
+	
 	for (int i = 0; i < 3; i++) {
 		glm::vec3 rotated = t.orientation * bb.sides[i];
 		std::cout << "bb.sides[" << i << "] rotated: " << rotated.x << ", " << rotated.y << ", " << rotated.z << "\n";
 	}
-	system("pause");
 	*/
+
+
+	//system("pause");
+
 
 	//glm::vec2 offset(-(3.f*width / 2.f));
 	//float patchSize = 2 * width;
@@ -508,15 +515,15 @@ void Heightmap::recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float pa
 			BoundingBox patch;
 
 			
-
-			t.orientation = glm::quat();
+			
+			//t.orientation = glm::quat();
 			t.pos = scale*glm::vec3(center.x, 0.5f, center.y) + this->pos;
 			patch.setTransform(t);
 			patch.center = glm::vec3(0);
 
-			patch.sides[0] = glm::vec3(patchSize*0.5, 0, 0);
-			patch.sides[1] = glm::vec3(0, scale.y*0.5f, 0);
-			patch.sides[2] = glm::vec3(0, 0, patchSize*0.5);
+			patch.sides[0] = scale * glm::vec3(patchSize*0.5f, 0, 0);
+			patch.sides[1] = scale * glm::vec3(0, 0, patchSize*0.5f);
+			patch.sides[2] = scale * glm::vec3(0, 0.5f, 0);
 
 			
 			if (patch.intersect(frustum))

@@ -27,7 +27,7 @@ float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset, float c) {
 	//bias = clamp(bias, 0.0, 0.01);
 
 	if(depth < shadowCoord.z-bias) {
-		visibility = 0.1;
+		visibility = 0.0;
 	}
 	float x = shadowCoord.x;
 	float y = shadowCoord.y;
@@ -54,7 +54,7 @@ float shadow(vec3 shadowCoord, sampler2D sampler, float c) {
 
 void main() {
 	float visibility1 = shadow(ShadowSpace, shadowMap, 0.0002);
-	float visibility2 = shadow(TerrainShadowSpace, terrainShadowMap, 0.005);
+	float visibility2 = shadow(TerrainShadowSpace, terrainShadowMap, 0.0);
 	float visibility = min(visibility1, visibility2);
 
 

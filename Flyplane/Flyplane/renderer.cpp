@@ -113,7 +113,7 @@ Renderer::Renderer() {
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 
 
-	sunDir = normalize(glm::vec3(0, 2, 1));
+	sunDir = normalize(glm::vec3(0, 1, 2));
 }
 
 Renderer::~Renderer() {
@@ -327,7 +327,9 @@ void Renderer::RenderScene() {
 	markers.clear();
 	list.clear();
 	listStatics.clear();
-	mapList.clear();
+
+	// old
+	//mapList.clear();
 }
 
 void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
@@ -432,17 +434,34 @@ void Renderer::setCamera(const Camera & camera)
 	glm::vec2 minmax(0, 100);
 	if (hm) {
 		minmax = hm->getMinMaxHeights();
+		
 	}
+	//std::cout << "minmax: " << minmax.x << ", " << minmax.y << "\n";
+	//std::cout << "pos: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
 
-	halfSize = 2000.f;
+	halfSize = 1500.f + 1.2f*pos.y;
+
+	//std::cout << "halfSize: " << halfSize << "\n";
+
+
+	float xHalfSize = halfSize;
+	float yHalfSize = halfSize * sunDir.y;
+
 	float h = (minmax.y - minmax.x)/sunDir.y;
 	float a = glm::acos(sunDir.y);
-	float extra = halfSize / glm::tan(glm::half_pi<float>() - a);
+	float extra = yHalfSize / glm::tan(glm::half_pi<float>() - a);
+
+	
 
 
+	//std::cout << "h:     " << h << "\n";
+	//std::cout << "extra: " << extra << "\n";
 
-	pos = glm::vec3(pos.x, minmax.x, pos.z);
-	proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, - h - extra, extra);
+	glm::vec3 offset = t.orientation * glm::vec3(0, 0, 0.4f*halfSize);
+	offset.y = 0;
+
+	pos = glm::vec3(pos.x, minmax.x, pos.z) + offset;
+	proj = glm::ortho<float>(-xHalfSize, xHalfSize, -yHalfSize, yHalfSize, - h - extra, extra);
 	view = glm::lookAt(pos + sunDir, pos, glm::vec3(0, 1, 0));
 	
 	this->terrainShadowMatrix = proj * view;
@@ -486,6 +505,8 @@ glm::mat4& Renderer::getCrosshairPos()
 
 void Renderer::update(float dt)
 {
+	//sunDir = glm::rotate(glm::quat(), 0.1f*dt, glm::vec3(0, 0, 1)) * sunDir;
+
 	if (Input::isKeyPressed(GLFW_KEY_F8)) {
 		this->shader.reload();
 		this->terrain_shader.reload();

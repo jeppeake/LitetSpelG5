@@ -3,6 +3,8 @@
 uniform sampler2D shadowMap;
 uniform sampler2D terrainShadowMap;
 
+out vec4 outColor;
+
 in vec3 vPos;
 in vec3 vNormal;
 in vec2 vTex;
@@ -85,7 +87,7 @@ Material chooseMat(vec3 pos, vec3 normal, float biome, float geomHeight) {
 	result.specular = 0;
 	float leaning = dot(normal, vec3(0,1,0));
 
-	float snowHeight = scale.y*0.8 - 500*(noise(pos.xz*0.001));
+	float snowHeight = scale.y*0.8 - scale.y*0.2*(noise(pos.xz*0.001));
 
 	// leaning grass
 	if(leaning < 0.9) {
@@ -135,17 +137,26 @@ float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset) {
 	bias = clamp(bias, 0.0, 0.01);
 
 	if(depth < shadowCoord.z-bias) {
-		visibility = 0.1;
+		visibility = 0.05;
 	}
 	float x = shadowCoord.x;
 	float y = shadowCoord.y;
 	float z = shadowCoord.z;
 	if(x < 0 || x > 1 || y < 0 || y > 1 || z > 1) {
 		visibility = 1.0;
-		visibility = 0.5;
 	}
+
+
 	return visibility;
 }
+
+float kernel[5*5] = {
+	0.003765,	0.015019,	0.023792,	0.015019,	0.003765,
+	0.015019,	0.059912,	0.094907,	0.059912,	0.015019,
+	0.023792,	0.094907,	0.150342,	0.094907,	0.023792,
+	0.015019,	0.059912,	0.094907,	0.059912,	0.015019,
+	0.003765,	0.015019,	0.023792,	0.015019,	0.003765
+};
 
 float shadow(vec3 shadowCoord, sampler2D sampler) {
 	float result = 0;
@@ -153,21 +164,31 @@ float shadow(vec3 shadowCoord, sampler2D sampler) {
 	const int hsize = 2;
 	for(int i = -hsize; i <= hsize; i++) {
 		for(int j = -hsize; j <= hsize; j++) {
-			result += testShadow(shadowCoord, sampler, ivec2(i,j));
+			result += kernel[(i+hsize) + (j+hsize)*5]*testShadow(shadowCoord, sampler, ivec2(i,j));
 		}
 	}
 	float samples = pow(float(hsize)*2.0+1.0, 2);
 
-	return result / samples;
+	return result;
 }
 
 void main() {
 	float visibility1 = shadow(vShadowSpace, shadowMap);
 	float visibility2 = shadow(vTerrainShadowSpace, terrainShadowMap);
 	float visibility = min(visibility1, visibility2);
+	
+	
+	float x = vTerrainShadowSpace.x;
+	float y = vTerrainShadowSpace.y;
+	float padding = 0.1;
+	float falloff = smoothstep(1, 1-padding, x);
+	falloff *= smoothstep(0, padding, x);
+	falloff *= smoothstep(1, 1-padding, y);
+	falloff *= smoothstep(0, padding, y);
+	visibility = mix(1, visibility, falloff);
 
-	visibility = visibility2;
 
+	//visibility = visibility2;
 
 	float biome = texture(materialmap, vec2(vTex.x, vTex.y)).r;
 	vec3 matNormal = sampleNormal(vTex);
@@ -186,11 +207,10 @@ void main() {
 	vec3 h = normalize(look + sun);
 	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 1000.0);
 
-
 	vec3 lighting = vec3(0);
-	lighting += color * diffuse * visibility * 0.7 * (1.3 - mat.specular);
+	lighting += color * diffuse * visibility * 0.8 * (1.3 - mat.specular);
 	lighting += specular * visibility * mat.specular;
-	lighting += color * 0.3;
+	lighting += color * 0.2;
 
 
 	float dist = length(cameraPos - vPos);
@@ -203,7 +223,13 @@ void main() {
 	color = mix(lighting, vec3(fogColor), fog);
 	color = mix(color, vec3(thickFogColor), thickFog);
 
-	gl_FragColor = vec4(color, 1);
+	outColor = vec4(color, 1);
+
+	//outColor = vec4(vec3(falloff), 1);
+	//outColor = vec4(vec3(vTerrainShadowSpace.z), 1);
+
+	float depth = texture(terrainShadowMap, vTerrainShadowSpace.xy).r;
+	//outColor = vec4(vec3(depth), 1);
 }
 
 
