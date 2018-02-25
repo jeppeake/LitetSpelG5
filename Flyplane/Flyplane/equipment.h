@@ -10,7 +10,11 @@ struct Equipment {
 	std::vector<Weapon> special;
 
 	void addSpecialWeapon(Weapon weapon) {
-		special[0] = weapon;
-		selected = 0;
+		std::cout << "size of special: " << special.size() << std::endl;
+		//if (special.size() == 0)
+		selected = special.size() - 1;
+		special.push_back(weapon);
+		//special[0] = weapon;
+		//selected = 0;
 	}
 };
