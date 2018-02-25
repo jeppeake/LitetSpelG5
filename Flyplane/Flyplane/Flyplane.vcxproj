@@ -140,6 +140,7 @@
     <ClCompile Include="enemymarker.cpp" />
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="fullscreenimage.cpp" />
+    <ClCompile Include="globaltimer.cpp" />
     <ClCompile Include="heightindicator.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="form_on_formation.h" />
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
+    <ClInclude Include="globaltimer.h" />
     <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="entity_close.h" />
     <ClInclude Include="healthcomponent.h" />

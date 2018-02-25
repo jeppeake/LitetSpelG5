@@ -8,7 +8,7 @@
 #include "window.h"
 #include "assetloader.h"
 #include "input.h"
-
+#include "globaltimer.h"
 
 using namespace std;
 
@@ -237,7 +237,7 @@ void Renderer::RenderScene() {
 
 	terrainShadow.use();
 	if (hm != NULL) {
-		terrainShadow.uniform("time", (float)globalTime.elapsed());
+		terrainShadow.uniform("time", (float)GlobalTimer::elapsed());
 		terrainShadow.uniform("ViewProjMatrix", this->terrainShadowMatrix);
 		hm->bind(terrainShadow);
 		for (int i = 0; i < shadowPatches.size(); i++) {
@@ -297,7 +297,7 @@ void Renderer::RenderScene() {
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
 	if (hm != NULL) {
-		terrain_shader.uniform("time", (float)globalTime.elapsed());
+		terrain_shader.uniform("time", (float)GlobalTimer::elapsed());
 		terrain_shader.uniform("cameraPos", camera.getTransform().pos);
 		hm->bind(terrain_shader);
 		for (int i = 0; i < patches.size(); i++) {

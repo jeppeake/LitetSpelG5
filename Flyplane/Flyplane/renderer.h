@@ -75,8 +75,6 @@ private:
 	glm::mat4 missileModelMatrix;
 	Timer time;
 
-	Timer globalTime;
-
 	Heightmap* hm;
 	std::vector<Patch> patches;
 	std::vector<Patch> shadowPatches;

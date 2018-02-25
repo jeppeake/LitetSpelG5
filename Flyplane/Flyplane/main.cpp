@@ -11,6 +11,7 @@
 #include <sfml\Audio.hpp>
 #include "timevisualizer.h"
 #include "highscore.h"
+#include "globaltimer.h"
 
 int main(void)
 {	
@@ -34,6 +35,7 @@ int main(void)
 
 
 		//TimeVisualizer::startTiming("everything");
+		GlobalTimer::update();
 
 		Renderer::getRenderer().update(dt);
 		engine->update(dt);

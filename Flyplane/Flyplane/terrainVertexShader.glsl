@@ -60,6 +60,34 @@ vec3 sampleNormal(vec2 hmUV) {
 }
 
 
+float calcWaterHeight(vec3 pos) {
+	float multi = 150.0;
+	float h1 = -300.0;
+	float h2 = 1000.0;
+
+	float result = waterHeight;
+
+	float val = smoothstep(h1, h2, waterHeight - pos.y);
+	val = pow(val, 1.5);
+
+	
+	float p = 2;
+	float sumNoise = 0.0;
+	for(int i = 0; i < 7; i++) {
+		float fi = float(i)+1;
+		vec2 plane = pow(fi, 1.5)*0.005 * vec2(pos.x, pos.z) + time*0.2*(1+fi);
+		float ns = noise(vec3(plane, time*0.2));
+		ns = pow(ns, p);
+		ns /= pow(fi, 1.6);
+		sumNoise += ns;
+	}
+
+	result += val*multi*sumNoise;
+
+	return result;
+}
+
+
 void main() {
 	vec2 pos2d = uv*patch_size + offset;
 	vec2 hmUV = pos2d/heightmapSize;
@@ -70,7 +98,7 @@ void main() {
 
 	vec3 pos = scale*vec3(pos2d.x, height, pos2d.y) + heightmapPos;
 
-	Normal = sampleNormal(hmUV);
+	//Normal = sampleNormal(hmUV);
 	
 
 	/*
@@ -100,25 +128,10 @@ void main() {
 	Tex = pos2d;
 	Tex = hmUV;
 	Pos = pos;
-	if(pos.y <= waterHeight) {
 
-		float val = smoothstep(0, 2000, waterHeight - pos.y);
-		val = pow(val, 1);
-		
-
-		pos.y = waterHeight;
-		//Pos = pos;
-
-		float p = 2;
-		float sumNoise = 0.0;
-		sumNoise += pow(noise(vec3(pos.xz*0.005 + time*0.2, time*0.2)), p);
-		sumNoise += 0.4*pow(noise(vec3(pos.xz*0.01 + time*0.3, time*0.3)), p);
-		sumNoise += 0.2*pow(noise(vec3(pos.xz*0.02 + time*0.4, time*0.3)), p);
-		sumNoise += 0.1*pow(noise(vec3(pos.xz*0.04 + time*0.5, time*0.3)), p);
-		sumNoise += 0.05*pow(noise(vec3(pos.xz*0.08 + time*0.6, time*0.3)), p);
-		sumNoise += 0.025*pow(noise(vec3(pos.xz*0.16 + time*0.7, time*0.3)), p);
-		sumNoise += 0.0125*pow(noise(vec3(pos.xz*0.32 + time*0.8, time*0.3)), p);
-		pos.y += val*500.0*sumNoise;
+	float currWaterHeight = calcWaterHeight(pos);
+	if(pos.y <= currWaterHeight) {
+		pos.y = currWaterHeight;
 	}
 	
 	GeometryPos = pos;
@@ -138,8 +151,8 @@ float noise(vec2 n) {
 	return mix(mix(rand(b), rand(b + d.yx), f.x), mix(rand(b + d.xy), rand(b + d.yy), f.x), f.y);
 }
 
-float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+float mod289(float x){return x - floor(x / 289.0) * 289.0;}
+vec4 mod289(vec4 x){return x - floor(x / 289.0) * 289.0;}
 vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
 
 float noise(vec3 p){
@@ -155,8 +168,8 @@ float noise(vec3 p){
     vec4 k3 = perm(c);
     vec4 k4 = perm(c + 1.0);
 
-    vec4 o1 = fract(k3 * (1.0 / 41.0));
-    vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o1 = fract(k3 / 41.0);
+    vec4 o2 = fract(k4 / 41.0);
 
     vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
     vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);

@@ -10,10 +10,12 @@
 #include "collisioncomponent.h"
 #include "timer.h"
 #include "camera.h"
+#include "globaltimer.h"
 #include <fstream>
 #include "shader.h"
 #include <stdlib.h>
 #include <entityx/entityx.h>
+
 
 int index(int x, int y, int width) {
 	return x + y * width;
@@ -82,17 +84,19 @@ void Heightmap::loadMap(const std::string &maptxt) {
 
 
 			double mult = scale.y / double(std::numeric_limits<uint16_t>::max());
-			double terrainHeight = sample * mult;
+			double terrainHeight = sample * mult + pos.y;
 
+			/*
 			if (terrainHeight <= waterHeight) {
 				//sample = waterHeight / mult;
 				terrainHeight = waterHeight;
 			}
+			*/
 			
 			heights.push_back(sample);
 
 			float x = scale.x*ix + pos.x;
-			float y = terrainHeight + pos.y;
+			float y = terrainHeight;
 			float z = scale.z*iy + pos.z;
 			vertices.emplace_back(x, y, z);
 		}
@@ -172,7 +176,7 @@ void Heightmap::bind(ShaderProgram& shader) {
 	shader.uniform("scale", scale);
 	shader.uniform("heightmapSize", getSize());
 	shader.uniform("heightmapPos", pos);
-	shader.uniform("waterHeight", waterHeight + pos.y);
+	shader.uniform("waterHeight", waterHeight);
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -195,38 +199,56 @@ void Heightmap::unbind() {
 }
 
 double Heightmap::heightAt(glm::vec3 _pos) {
-	double height = 0;
+	glm::vec3 groundPos = _pos;
+
+	
+	double result = 0;
 	_pos -= pos;
 	int x = (int)(_pos.x / scale.x);
 	int z = (int)(_pos.z / scale.z);
 
 
-	if (x < 0 || x >= width-1 || z < 0 || z >= this->height-1)
-		return height;
+	if (x < 0)
+		x = 0;
+	if (x >= width - 1)
+		x = width - 2;
+	if (z < 0)
+		z = 0;
+	if (z >= height - 1)
+		z = height - 2;
+
 
 	glm::vec3 v1 = vertices[index(x, z, width)];
 	glm::vec3 v2 = vertices[index(x+1, z, width)];
 	glm::vec3 v3 = vertices[index(x, z+1, width)];
 	glm::vec3 v4 = vertices[index(x+1, z+1, width)];
 
+
 	float sqX = (_pos.x / scale.x) - x;
 	float sqZ = (_pos.z / scale.z) - z;
 
-
 	if ((sqX + sqZ) < 1)
 	{
-		height = v1.y;
-		height += (v2.y - v1.y) * sqX;
-		height += (v3.y - v1.y) * sqZ;
+		result = v1.y;
+		result += (v2.y - v1.y) * sqX;
+		result += (v3.y - v1.y) * sqZ;
 	}
 	else
 	{
-		height = v4.y;
-		height += (v2.y - v4.y) * (1.0f - sqZ);
-		height += (v3.y - v4.y) * (1.0f - sqX);
+		result = v4.y;
+		result += (v2.y - v4.y) * (1.0f - sqZ);
+		result += (v3.y - v4.y) * (1.0f - sqX);
 	}
 
-	return height;
+
+	groundPos.y = result;
+
+	float currWaterHeight = heightOfWater(groundPos);
+	if (result <= currWaterHeight) {
+		result = currWaterHeight;
+	}
+	
+	return result;
 }
 
 void Heightmap::bindIndices(int i) {
@@ -570,6 +592,62 @@ int chooseIndices(int x, int y, bool divideLeft, bool divideTop, bool divideRigh
 	return indices;
 }
 
+float mod289(float x) { return x - glm::floor(x / 289.0f) * 289.0f; }
+glm::vec4 mod289(glm::vec4 x) { return x - glm::floor(x / 289.0f) * 289.0f; }
+glm::vec4 perm(glm::vec4 x) { return mod289(((x * 34.0f) + 1.0f) * x); }
+float noise(glm::vec3 p) {
+	glm::vec3 a = glm::floor(p);
+	glm::vec3 d = p - a;
+	d = d * d * (3.0f - 2.0f * d);
+
+	glm::vec4 b = glm::vec4(a.x, a.x, a.y, a.y) + glm::vec4(0.0, 1.0, 0.0, 1.0);
+	glm::vec4 k1 = perm(glm::vec4(b.x, b.y, b.x, b.y));
+	glm::vec4 k2 = perm(glm::vec4(k1.x, k1.y, k1.x, k1.y) + glm::vec4(b.z, b.z, b.w, b.w));
+
+	glm::vec4 c = k2 + glm::vec4(a.z);
+	glm::vec4 k3 = perm(c);
+	glm::vec4 k4 = perm(c + 1.0f);
+
+	glm::vec4 o1 = glm::fract(k3 / 41.0f);
+	glm::vec4 o2 = glm::fract(k4 / 41.0f);
+
+	glm::vec4 o3 = o2 * d.z + o1 * (1.0f - d.z);
+	glm::vec2 o4 = glm::vec2(o3.y, o3.w) * d.x + glm::vec2(o3.x, o3.z) * (1.0f - d.x);
+
+	return o4.y * d.y + o4.x * (1.0f - d.y) - 1.0f;
+}
+
+float Heightmap::heightOfWater(glm::vec3 pos) {
+	float multi = 150.0f;
+	float h1 = -300.0f;
+	float h2 = 1000.0f;
+
+
+	float time = GlobalTimer::elapsed();
+
+	float result = waterHeight;
+
+	float val = glm::smoothstep(h1, h2, waterHeight - pos.y);
+	val = glm::pow(val, 1.5f);
+
+	float p = 2;
+	float sumNoise = 0.0f;
+	for (int i = 0; i < 7; i++) {
+		float fi = float(i) + 1;
+		glm::vec2 plane = glm::pow(fi, 1.5f) * 0.005f * glm::vec2(pos.x, pos.z) + time * 0.2f*(1.f + fi);
+		float ns = noise(glm::vec3(plane, time*0.2f));
+		ns = glm::pow(ns, p);
+		ns /= glm::pow(fi, 1.6f);
+		sumNoise += ns;
+	}
+
+	//result += 50 * glm::sin(pos.x*0.01f + time);
+	result += val*multi*sumNoise;
+
+	return result;
+}
+
+
 // pls
 void Heightmap::createIndices(int x, int y, int i) {
 	if (x % 2 == y % 2) {
@@ -641,3 +719,5 @@ void Heightmap::createIndices(int x, int y, int i) {
 		}
 	}
 }
+
+

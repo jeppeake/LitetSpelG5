@@ -42,6 +42,7 @@ private:
 
 	void recursiveBuildPatches(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, glm::dvec3 normals[4], glm::dvec3 orig);
 	void recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, BoundingBox& frustum, glm::dvec3 orig);
+	float heightOfWater(glm::vec3 pos);
 	void createIndices(int x, int y, int i);
 public:
 	std::vector<glm::vec3> vertices;

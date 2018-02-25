@@ -122,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="speedindicator.cpp" />
     <ClCompile Include="hpindicator.cpp" />
+    <ClCompile Include="globaltimer.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -460,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="hpindicator.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="globaltimer.h">
+      <Filter>UTILS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
