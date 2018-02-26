@@ -8,6 +8,9 @@
 #include "missionmarker.h"
 #include "huntStatic.h"
 
+#include <iomanip>
+#include <cmath>
+#include <limits>
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
 
@@ -69,7 +72,26 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			std::cout << "Loading mission: " << curPath << "\n";
 			Mission m;
 			m.loadMission(curPath);
+
+			for (int i = 0; i < m.enemies.size(); i++) {
+				std::ifstream file("assets/Presets/AI/" + m.enemies[0].loadoutFile);
+				std::string str;
+
+				PlanePreset pp;
+				std::getline(file, str);
+				pp.load(str);
+				for (int j = 0; j < pp.wepPos.size(); j++) {
+					std::getline(file, str);
+					if (str.compare("0") != 0) {
+						WeaponPreset wp;
+						wp.load(str);
+					}
+				}
+			}
+
 			missions.push_back(m);
+
+
 		}
 	}
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -145,8 +167,12 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			AssetLoader::getLoader().getMenutext()->drawText(curMission.missiontext,
 				glm::vec2(x, Window::getWindow().size().y - 200), textColor, textSize);
 
-			std::string txt = "Time left: " + std::to_string(curMission.time - timer.elapsed());
-			x = (Window::getWindow().size().x / 2) - 9 * txt.length() / 2;
+			std::ostringstream oss;
+			oss << std::setprecision(4) << curMission.time - timer.elapsed();
+			std::string str = oss.str();
+			std::string ex = "20.00";
+			std::string txt = str;
+			x = (Window::getWindow().size().x / 2) - 9 * ex.length() / 2;
 			AssetLoader::getLoader().getText()->drawText(txt,
 				glm::vec2(x, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
 			
@@ -178,12 +204,12 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(house.model);
 					glm::vec3 pos = glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
 					if (house.random) {
-						pos = pos + glm::vec3(rand() % 200, 0, rand() % 200);
-						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z));
+						pos = pos + glm::vec3((rand() % 600)-300, 0, (rand() % 600)-300);
+						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 100;
 					}
+					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
 					entity.assign<Transform>(pos);
 					entity.component<Transform>()->scale = glm::vec3(1.0f);
-					//entity.assign<HealthComponent>(100);
 					
 					if (house.condition == CONDITION_DEFEND) {
 						entity.assign<Target>(FACTION_PLAYER, 100);
