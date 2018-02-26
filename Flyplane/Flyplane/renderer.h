@@ -43,7 +43,7 @@ private:
 	glm::mat4 terrainShadowMatrix;
 
 	glm::ivec2 shadowSize{ 4 * 1024, 4 * 1024 };
-	glm::ivec2 terrainShadowSize{ 16 * 1024, 16*1024 };
+	glm::ivec2 terrainShadowSize{ 4 * 1024, 4*1024 };
 
 	glm::mat4 debugMVP;
 	Camera camera;
@@ -110,6 +110,10 @@ public:
 		this->hm = hm;
 	}
 	
+	void RenderPlaneShadow();
+
+	void RenderTerrainShadow();
+
 	void RenderScene();
 	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);
 	void RenderClouds();
