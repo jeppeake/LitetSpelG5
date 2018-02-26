@@ -6,6 +6,7 @@
 #include "heightmap.h"
 #include "text.hpp"
 #include "texture.h"
+#include "weapon.h"
 
 class AssetLoader {
 private:
@@ -13,6 +14,7 @@ private:
 	std::unordered_map<std::string, Texture> textures;
 	std::unordered_map<std::string, Heightmap> heightmaps;
 	std::unordered_map<std::string, sf::SoundBuffer> sounds;
+	std::unordered_map<std::string, Weapon> weapons;
 	Text *text = nullptr;
 	Text *menutext = nullptr;
 	Text *bigtext = nullptr;
@@ -40,6 +42,7 @@ public:
 	void loadHeightmap(const std::string &maptxt, const std::string &name);
 	void loadSound(const std::string &filename, const std::string &name);
 	void loadTexture(const std::string filename, const std::string name);
+	void loadWeapon(const std::string filename, const std::string name);
 	void clearTerrains() {
 		this->heightmaps.clear();
 	}
@@ -47,4 +50,5 @@ public:
 	Texture* getTexture(const std::string name);
 	Heightmap* getHeightmap(const std::string name);
 	sf::SoundBuffer* getSoundBuffer(const std::string filename);
+	Weapon* getWeapon(const std::string name);
 };
