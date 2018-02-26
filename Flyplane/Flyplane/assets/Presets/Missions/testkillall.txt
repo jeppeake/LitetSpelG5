@@ -1,0 +1,28 @@
+2
+
+spawnenemy
+53.4 1000 -52
+amerikan.txt
+
+spawnenemy
+33.4 1000 -52
+amerikan.txt
+
+spawnenemy
+23.4 1000 -72
+amerikan.txt
+
+settimer
+100
+
+huntplayerdist
+1000
+
+firingdistance
+500
+
+points
+5000
+
+text
+Very dangerous americans in planes approaching, kill them all for a juicy Christmas bonus!

@@ -1,0 +1,8 @@
+assets\Presets\Planes\Spectre.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+0
+0
+0
+0
+0

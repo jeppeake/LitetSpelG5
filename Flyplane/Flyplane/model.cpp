@@ -133,8 +133,8 @@ void Model::load(const std::string & file)
 		//aiProcess_GenNormals |
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
-		aiProcess_OptimizeMeshes |
-		aiProcess_OptimizeGraph |
+		//aiProcess_OptimizeMeshes |
+		//aiProcess_OptimizeGraph |
 		aiProcess_SortByPType |
 		//aiProcess_PreTransformVertices |
 		aiProcess_ImproveCacheLocality

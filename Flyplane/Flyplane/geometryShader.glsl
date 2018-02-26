@@ -7,21 +7,33 @@ in vec3 Pos[];
 in vec3 Normal[];
 in vec2 Tex[];
 in vec3 Materials[];
+in vec3 Color[];
+in vec3 GeometryPos[];
+in vec3 ShadowSpace[];
+in vec3 TerrainShadowSpace[];
 
 out vec3 vPos;
 out vec3 vNormal;
 out vec2 vTex;
 out vec3 vMaterials;
+out vec3 vGeometryPos;
+out vec3 vShadowSpace;
+out vec3 vTerrainShadowSpace;
+flat out vec3 vColor;
 
 
 void main() {
-	vec3 v1 = Pos[0] - Pos[1];
-	vec3 v2 = Pos[0] - Pos[2];
-	vNormal = cross(v1, v2);
+	vec3 v1 = GeometryPos[0] - GeometryPos[1];
+	vec3 v2 = GeometryPos[0] - GeometryPos[2];
+	vNormal = normalize(cross(v1, v2));
 	for(int i = 0; i < 3; i++) {
 		vPos = Pos[i];
 		//vNormal = Normal[i];
+		vGeometryPos = GeometryPos[i];
+		vShadowSpace = ShadowSpace[i];
+		vTerrainShadowSpace = TerrainShadowSpace[i];
 		vTex = Tex[i];
+		vColor = Color[i];
 		vMaterials = Materials[i];
 		gl_Position = gl_in[i].gl_Position;
 		EmitVertex();

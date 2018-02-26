@@ -96,12 +96,17 @@ void Particles::update()
 
 void Particles::render()
 {
-	float size = 0.1f;
+
 
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();
 	program->use();
 	glBindVertexArray(VAO);
+	if (text)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		text->bind(GL_TEXTURE0);
+	}
 	program->uniform("view", camera.getViewMatrix());
 	program->uniform("projection", camera.getProjMatrix());
 	program->uniform("cPos", transform.pos);

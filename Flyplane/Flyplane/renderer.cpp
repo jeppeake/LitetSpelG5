@@ -7,10 +7,8 @@
 #include <iostream>
 #include "window.h"
 #include "assetloader.h"
-#define FISHROD 0
-#define STINGER 1
-#define ROCKETPOD 2
-
+#include "input.h"
+#include "globaltimer.h"
 
 using namespace std;
 
@@ -18,22 +16,23 @@ Renderer::Renderer() {
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
 	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
+	this->terrainShadow.create("terrainShadowVert.glsl", "shadowFragmentShader.glsl");
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
+	this->heightShader.create("heightindicatorVS.glsl", "heightindicatorFS.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	
+
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 4*1024, 4*1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowSize.x, shadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
@@ -41,6 +40,29 @@ Renderer::Renderer() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "framebuffer broken" << endl;
 
+
+
+	glGenFramebuffers(1, &terrainFrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
+
+	glGenTextures(1, &terrainDepthTexture);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, terrainShadowSize.x, terrainShadowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, terrainDepthTexture, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "framebuffer broken" << endl;
+
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	m = glm::mat4(
 		0.5, 0.0, 0.0, 0.0,
@@ -50,7 +72,6 @@ Renderer::Renderer() {
 	);
 	
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	float vertexbuffer[] = {
 		-1.0,  1.0, 0.0,
@@ -80,25 +101,41 @@ Renderer::Renderer() {
 	glBindVertexArray(0);
 
 	hpbar.loadTexture("assets/textures/hpbar.png");
-	hpTexture.loadTexture("assets/textures/hp.png", 1);
+	//hpTexture.loadTexture("assets/textures/hp.png", 1);
 	hpMatrix = glm::translate(glm::vec3(-0.8, -0.8, 0)) * glm::scale(glm::vec3(0.15, 0.05, 1));
 
-	missileMatrix[FISHROD] = glm::ortho(-1.5, 1.5, -1.5, 1.5);
+	indicator.loadTexture("assets/textures/indicator.png", 1);
+	heightMatrix = glm::translate(glm::vec3(-0.8, -0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+
+	speedMatrix = glm::translate(glm::vec3(0.8, -0.1, 0)) * glm::rotate(3.14f, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(0.1, 0.5, 1));
+
+	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
+	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
+
+
+	sunDir = normalize(glm::vec3(0, 1, 2));
 }
 
 Renderer::~Renderer() {
 
 }
 
-void Renderer::addToList(Model* model, Transform trans) {
-	list.push_back({ model, trans });
+void Renderer::addToList(Model* model, Transform trans, bool isStatic) {
+	if (isStatic) {
+		listStatics.push_back({ model, trans });
+	} else {
+		list.push_back({ model, trans });
+	}
 }
 
 
 
-void Renderer::addToList(const std::vector<Patch>& patches) {
+void Renderer::setTerrainPatches(const std::vector<Patch>& patches) {
 	this->patches = patches;
-	//mapList.push_back(map);
+}
+
+void Renderer::setTerrainPatchesShadow(const std::vector<Patch>& patches) {
+	this->shadowPatches = patches;
 }
 
 void Renderer::Render(Model &model, Transform &trans) {
@@ -117,7 +154,8 @@ void Renderer::Render(RenderObject& obj) {
 	Render(*obj.model, obj.trans);
 }
 
-
+/*
+// Old
 void Renderer::RenderShadow(Model & model, Transform & trans) {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glm::mat4 modelMatrix = glm::translate(trans.pos) * glm::toMat4(trans.orientation);
@@ -129,62 +167,97 @@ void Renderer::RenderShadow(Model & model, Transform & trans) {
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
 }
+*/
+
 
 void Renderer::RenderWeapon() {
 	auto s = Window::getWindow().size();
 	glViewport(s.x - 300, 0, 150, 150);
-	//renderTexture(hpbar, glm::translate(glm::vec3(0, 0, 0)));
+	
 	this->missileShader.use();
 	missile->texture.bind(0);
-	for (int i = 0; i < missile->model_meshes.size(); i++) {
-		missile->model_meshes[i].first->bind();
-		/*std::cout << "missile" << missile << std::endl;
-		std::cout << "fishrod" << AssetLoader::getLoader().getModel("fishrod") << std::endl;
-		std::cout << "stinger" << AssetLoader::getLoader().getModel("stinger") << std::endl;
-		std::cout << "rocketpod" << AssetLoader::getLoader().getModel("rocketpod") << std::endl;
-		std::cout << "gunpod" << AssetLoader::getLoader().getModel("gunpod") << std::endl;*/
-		if (missile == AssetLoader::getLoader().getModel("fishrod")) {
-			this->missileShader.uniform("matrix", missileMatrix[FISHROD]);
-			//cout << "fishrod" << endl;
-		}
-		else {
-			this->missileShader.uniform("matrix", glm::mat4(5));
-			//cout << "not fishrod" << endl;
-		}
-		
-		glDrawElements(GL_TRIANGLES, missile->model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
+	missile->model_meshes[0].first->bind();
+
+	float scale = 1.0f / missile->getBoundingRadius();
+
+	if (scale > 10000) {
+		scale = 0.8;
 	}
+
+	this->missileShader.uniform("ViewProjMatrix", missileVPMatrix);
+	float angle = time.elapsed();
+
+	if (angle > 2 * 3.14) {
+		time.restart();
+	}
+	this->missileShader.uniform("modelMatrix", missileModelMatrix * glm::rotate(angle, glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(scale)));
+	glDrawElements(GL_TRIANGLES, missile->model_meshes[0].first->numIndices(), GL_UNSIGNED_INT, 0);
+
 	glViewport(0, 0, s.x, s.y);
-	AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(weaponAmmo), glm::vec2(s.x - 400, 20), glm::vec3(1, 1, 0), 0.4);
+	AssetLoader::getLoader().getText()->drawText(std::to_string(weaponAmmo), glm::vec2(s.x - 300, 20), glm::vec3(1, 1, 0), 0.4);
 }
 
 Timer t;
 
 
-void Renderer::RenderScene() {
+void Renderer::RenderPlaneShadow() {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	shadow.use();
-	glViewport(0, 0, 4*1024, 4*1024);
+	glViewport(0, 0, shadowSize.x, shadowSize.y);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//Render shadow
-	/*
 	for (int i = 0; i < list.size(); i++) {
 		glm::mat4 modelMatrix = glm::translate(list[i].trans.pos) * glm::toMat4(list[i].trans.orientation) * glm::scale(list[i].trans.scale);
 
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
-			shadow.uniform("MVP", shadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
+			shadow.uniform("MVP", planeShadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
 	}
-	for (int i = 0; i < mapList.size(); i++) {
-		mapList[i]->bind();
-		glm::mat4 trans = glm::translate(mapList[i]->pos);
-		this->shadow.uniform("MVP", shadowMatrix*trans);
-		glDrawElements(GL_TRIANGLES, (GLuint)mapList[i]->indices.size(), GL_UNSIGNED_INT, 0);
+}
+
+void Renderer::RenderTerrainShadow() {
+	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	shadow.use();
+	glViewport(0, 0, terrainShadowSize.x, terrainShadowSize.y);
+
+	for (int i = 0; i < listStatics.size(); i++) {
+		auto& current = listStatics[i];
+		glm::mat4 modelMatrix = glm::translate(current.trans.pos) * glm::toMat4(current.trans.orientation) * glm::scale(current.trans.scale);
+
+		for (int j = 0; j < current.model->model_meshes.size(); j++) {
+			current.model->model_meshes[j].first->bind();
+			shadow.uniform("MVP", terrainShadowMatrix * modelMatrix * current.model->model_meshes[j].second);
+			glDrawElements(GL_TRIANGLES, current.model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
+		}
 	}
-	*/
+
+
+	terrainShadow.use();
+	if (hm != NULL) {
+		terrainShadow.uniform("time", (float)GlobalTimer::elapsed());
+		terrainShadow.uniform("ViewProjMatrix", this->terrainShadowMatrix);
+		hm->bind(terrainShadow);
+		for (int i = 0; i < shadowPatches.size(); i++) {
+			int indices = shadowPatches[i].indices;
+			hm->bindIndices(indices);
+
+			terrainShadow.uniform("offset", shadowPatches[i].offset);
+			terrainShadow.uniform("patch_size", glm::vec2(shadowPatches[i].size));
+			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
+		}
+	}
+}
+
+void Renderer::RenderScene() {
+
+	RenderPlaneShadow();
+
+	RenderTerrainShadow();
+
 
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -193,26 +266,45 @@ void Renderer::RenderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shader.use();
 	shader.uniform("texSampler", 0);
+
 	shader.uniform("shadowMap", 1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+	shader.uniform("terrainShadowMap", 6);
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
+
 	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
 	shader.uniform("ViewProjMatrix", viewProjMatrix);
-	shader.uniform("shadowMatrix", m * shadowMatrix);
+	shader.uniform("shadowMatrix", m * planeShadowMatrix);
+	shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
 	shader.uniform("cameraPos", camera.getTransform().pos);
+	shader.uniform("sunDir", sunDir);
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
 	}
+	for (int i = 0; i < listStatics.size(); i++) {
+		Render(listStatics[i]);
+	}
+
+
 	//Render terrain
 	terrain_shader.use();
-	terrain_shader.uniform("shadowMatrix", m * shadowMatrix);
-	//terrain_shader.uniform("shadowMatrix", shadowMatrix);
+	terrain_shader.uniform("shadowMatrix", m * planeShadowMatrix);
+	terrain_shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
 	terrain_shader.uniform("ViewProjMatrix", viewProjMatrix);
+	terrain_shader.uniform("sunDir", sunDir);
 
 	terrain_shader.uniform("shadowMap", 1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+	terrain_shader.uniform("terrainShadowMap", 6);
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
 	if (hm != NULL) {
+		terrain_shader.uniform("time", (float)GlobalTimer::elapsed());
 		terrain_shader.uniform("cameraPos", camera.getTransform().pos);
 		hm->bind(terrain_shader);
 		for (int i = 0; i < patches.size(); i++) {
@@ -238,19 +330,31 @@ void Renderer::RenderScene() {
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
 
-	//Render weapon
-	if (weaponAmmo)
-		RenderWeapon();
 
 	markers.clear();
 	list.clear();
-	mapList.clear();
+	listStatics.clear();
+
+	// old
+	//mapList.clear();
 }
 
-void Renderer::RenderCrosshair() {
+void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
+	RenderClouds();
+	RenderCrosshair(crosshairPos, orientation);
+	RenderHPBar(hp);
+	RenderHeightIndicator(height);
+	RenderSpeedometer(speed);
+
+	//Render weapon
+	if (weaponAmmo)
+		RenderWeapon();
+}
+
+void Renderer::RenderCrosshair(glm::vec3 pos, glm::quat orientation) {
 	guiShader.use();
-	glm::mat4 pos = camera.getProjMatrix() * camera.getViewMatrix() * crosshair.getMatrix();
-	guiShader.uniform("matrix", pos * glm::mat4(orientation) * glm::rotate(3.14f / 4, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(50, 50, 1)));
+	glm::mat4 position = camera.getProjMatrix() * camera.getViewMatrix() * glm::translate(pos);
+	guiShader.uniform("matrix", position * glm::mat4(orientation) * glm::rotate(3.14f / 4, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(50, 50, 1)));
 	guiShader.uniform("texSampler", 0);
 	crosshair.Bind();
 	glDisable(GL_CULL_FACE);
@@ -267,8 +371,44 @@ void Renderer::RenderClouds() {
 }
 
 void Renderer::RenderHPBar(float hp) {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	renderTexture(hpbar, hpMatrix);
-	renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+	//renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
+	heightShader.use();
+	heightShader.uniform("value", glm::vec2((1 - hp) / 2.0f, 0));
+	hpIndicator.Bind();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::RenderHeightIndicator(float height) {
+	glDisable(GL_DEPTH_TEST);
+	float realHeight = (height);// -5000);// *2;
+	renderTexture(indicator, heightMatrix);
+	heightShader.use();
+	heightShader.uniform("value", glm::vec2(0, realHeight / 23000.0f));
+	heightIndicator.Bind();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	auto s = Window::getWindow().size();
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realHeight), glm::vec2(143 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720 );
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::RenderSpeedometer(float speed) {
+	glDisable(GL_DEPTH_TEST);
+	renderTexture(indicator, speedMatrix);
+	float realSpeed = speed * 3.6;//* 2
+	heightShader.use();
+	heightShader.uniform("value", glm::vec2(0, realSpeed / 1800.0f));
+	speedIndicator.Bind();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	auto s = Window::getWindow().size();
+	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setWeaponModel(Model * mptr) {
@@ -286,11 +426,52 @@ Camera Renderer::getCamera() &
 void Renderer::setCamera(const Camera & camera)
 {
 	this->camera = camera;
-	auto pos = camera.getTransform().pos;
-	pos += glm::toMat3(camera.getTransform().orientation)*glm::vec3(0,0, 1000.f);
-	glm::mat4 proj = glm::ortho<float>(-2000.f, 2000.f, -2000.f, 2000.f, 0.f, 4000.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(pos.x, 2000.0f, 2000.0f + pos.z), glm::vec3(pos.x, 0, pos.z), glm::vec3(0, 1, 0));
-	this->shadowMatrix = proj * view;
+	auto t = camera.getTransform();
+	auto pos = t.pos;
+	
+	
+	float halfSize = 50.f;
+	glm::mat4 proj = glm::ortho<float>(-halfSize, halfSize, -halfSize, halfSize, 0.f, 500.f);
+	glm::mat4 view = glm::lookAt(pos + 200.f*sunDir, pos, glm::vec3(0, 1, 0));
+
+	this->planeShadowMatrix = proj * view;
+
+
+	
+	glm::vec2 minmax(0, 100);
+	if (hm) {
+		minmax = hm->getMinMaxHeights();
+		
+	}
+	//std::cout << "minmax: " << minmax.x << ", " << minmax.y << "\n";
+	//std::cout << "pos: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
+
+	halfSize = 1500.f + 1.2f*pos.y;
+
+	//std::cout << "halfSize: " << halfSize << "\n";
+
+
+	float xHalfSize = halfSize;
+	float yHalfSize = halfSize * sunDir.y;
+
+	float h = (minmax.y - minmax.x)/sunDir.y;
+	float a = glm::acos(sunDir.y);
+	float extra = yHalfSize / glm::tan(glm::half_pi<float>() - a);
+
+	
+
+
+	//std::cout << "h:     " << h << "\n";
+	//std::cout << "extra: " << extra << "\n";
+
+	glm::vec3 offset = t.orientation * glm::vec3(0, 0, 0.4f*halfSize);
+	offset.y = 0;
+
+	pos = glm::vec3(pos.x, minmax.x, pos.z) + offset;
+	proj = glm::ortho<float>(-xHalfSize, xHalfSize, -yHalfSize, yHalfSize, - h - extra, extra);
+	view = glm::lookAt(pos + sunDir, pos, glm::vec3(0, 1, 0));
+	
+	this->terrainShadowMatrix = proj * view;
 }
 
 void Renderer::addMarker(glm::vec3 pos, float scale) {
@@ -320,18 +501,21 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 	//glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::setCrosshairPos(glm::vec3 pos) {
+/*void Renderer::setCrosshairPos(glm::vec3 pos) {
 	crosshair.setMatrix(glm::translate(pos));
 }
 
 glm::mat4& Renderer::getCrosshairPos()
 {
 	return crosshair.getMatrix();
-}
+}*/
 
 void Renderer::update(float dt)
 {
+	//sunDir = glm::rotate(glm::quat(), 0.1f*dt, glm::vec3(0, 0, 1)) * sunDir;
+
 	if (Input::isKeyPressed(GLFW_KEY_F8)) {
+		this->shader.reload();
 		this->terrain_shader.reload();
 	}
 }

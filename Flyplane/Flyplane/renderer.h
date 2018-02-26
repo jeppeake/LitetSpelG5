@@ -12,6 +12,10 @@
 #include "crosshair.h"
 #include "enemymarker.h"
 #include "cloud.h"
+#include "timer.h"
+#include "heightindicator.h"
+#include "speedindicator.h"
+#include "hpindicator.h"
 
 struct RenderObject {
 	Model* model;
@@ -22,42 +26,74 @@ class Renderer {
 private:
 	ShaderProgram shader;
 	ShaderProgram terrain_shader;
+	ShaderProgram terrainShadow;
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
 	ShaderProgram missileShader;
+	ShaderProgram heightShader;
 
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
 	GLuint depthTexture;
-	glm::mat4 shadowMatrix;
+
+	GLuint terrainFrameBuffer;
+	GLuint terrainDepthTexture;
+	glm::mat4 planeShadowMatrix;
+	glm::mat4 terrainShadowMatrix;
+
+	glm::ivec2 shadowSize{ 4 * 1024, 4 * 1024 };
+	glm::ivec2 terrainShadowSize{ 4 * 1024, 4*1024 };
+
 	glm::mat4 debugMVP;
 	Camera camera;
 	std::vector<RenderObject> list;
-	std::vector<Heightmap*> mapList;
+	std::vector<RenderObject> listStatics;
+
+	// old
+	//std::vector<Heightmap*> mapList;
+
 	glm::mat4 m;
 	CrossHair crosshair;
 	EnemyMarker markers;
 	Cloud clouds;
 
 	Texture hpbar;
-	Texture hpTexture;
+	HPIndicator hpIndicator;
 	glm::mat4 hpMatrix;
+
+	Texture indicator;
+	glm::mat4 heightMatrix;
+	HeightIndicator heightIndicator;
+
+	glm::mat4 speedMatrix;
+	SpeedIndicator speedIndicator;
 
 	int weaponAmmo;
 	Model *missile = nullptr;
-	glm::mat4 missileMatrix[4];
-
+	glm::mat4 missileVPMatrix;
+	glm::mat4 missileModelMatrix;
+	Timer time;
 
 	Heightmap* hm;
 	std::vector<Patch> patches;
+	std::vector<Patch> shadowPatches;
+
+
+	glm::vec3 sunDir;
 
 
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
-	void Render(Heightmap &map);
-	void RenderShadow(Model &model, Transform &trans);
+
+	// old
+	//void RenderShadow(Model &model, Transform &trans);
+
 	void RenderWeapon();
+	void RenderCrosshair(glm::vec3 pos, glm::quat orientation);
+	void RenderHPBar(float hp);
+	void RenderHeightIndicator(float height);
+	void RenderSpeedometer(float speed);
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -67,16 +103,20 @@ public:
 	}
 	Renderer();
 	~Renderer();
-	void addToList(Model* model, Transform trans);
-	void addToList(const std::vector<Patch>& patches);
+	void addToList(Model* model, Transform trans, bool isStatic = false);
+	void setTerrainPatches(const std::vector<Patch>& patches);
+	void setTerrainPatchesShadow(const std::vector<Patch>& patches);
 	void setHeightmap(Heightmap* hm) {
 		this->hm = hm;
 	}
 	
+	void RenderPlaneShadow();
+
+	void RenderTerrainShadow();
+
 	void RenderScene();
-	void RenderCrosshair();
+	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);
 	void RenderClouds();
-	void RenderHPBar(float hp);
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;
@@ -84,9 +124,14 @@ public:
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
-	void setCrosshairPos(glm::vec3 pos);
-	glm::mat4& getCrosshairPos();
-	glm::quat orientation;
+
+	glm::mat4 getTerrainShadowMatrix() {
+		return this->terrainShadowMatrix;
+	}
+
+	//void setCrosshairPos(glm::vec3 pos);
+	//glm::mat4& getCrosshairPos();
+	//glm::quat orientation;
 	// DEBUG
 	void update(float dt);
 };

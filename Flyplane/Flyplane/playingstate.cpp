@@ -18,6 +18,7 @@
 #include "particlesystem.h"
 #include "camerasystem.h"
 
+#include "dropcomponent.h"
 #include "aicomponent.h"
 #include "aisystem.h"
 #include "behaviour.h"
@@ -57,8 +58,11 @@
 #include "healthcomponent.h"
 #include "healthsystem.h"
 
+#include "mission.h"
+#include "missionsystem.h"
+
 //entityx::Entity entity;
-entityx::Entity entity_p;
+
 entityx::Entity entity_formation;
 entityx::Entity entity2;
 
@@ -78,6 +82,8 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
+		entity.assign<FactionEnemy>();
+
 		auto handle = entity.assign<ParticleComponent>();
 		ex.events.emit<AddParticleEvent>(TRAIL, handle);
 		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
@@ -113,6 +119,15 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Equipment>(primary, secondary);
 		entity.assign<PointComponent>(100);
 	}
+}
+
+void PlayingState::spawnDrop() {
+	auto entity = ex.entities.create();
+	entity.assign<Transform>(glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, 1000), glm::quat(1, 0, 0, 0));
+	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+	entity.assign<CollisionComponent>();
+	entity.assign<DropComponent>(50, DropComponent::Weapon);
+	//entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
 }
 
 void PlayingState::drawHighscore() {
@@ -166,6 +181,7 @@ void PlayingState::loadLoadout()
 	entity_p.assign<SoundComponent>(*flyingSB);
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
+	entity_p.assign<FactionPlayer>();
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
@@ -182,7 +198,7 @@ void PlayingState::loadLoadout()
 			AssetLoader::getLoader().loadModel(wp.model, wp.name);
 			AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
 
-			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage);
+			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
 
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 		}
@@ -195,6 +211,7 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
+	entity_p.assign <Equipment>(pweapons, weapons, pp.wepPos);
 	std::vector<Turret> turrets;
 	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 0.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
 	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
@@ -227,6 +244,7 @@ void PlayingState::init()
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 
 
+
 	/*sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
 	sf::SoundBuffer* machinegunSB;*/
@@ -241,7 +259,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Stinger/stinger.fbx", "stinger");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
-	AssetLoader::getLoader().loadModel("assets/buildings/911.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -279,6 +297,7 @@ void PlayingState::init()
 	ex.systems.add<GameOver>(this);
 	ex.systems.add<ParticleSystem>();
 	ex.systems.add<CameraSystem>();
+	ex.systems.add<MissionSystem>(this);
 	ex.systems.configure();
 
 	/*
@@ -292,7 +311,7 @@ void PlayingState::init()
 	
 	loadLoadout();
 
-	entity2 = ex.entities.create();
+	/*entity2 = ex.entities.create();
 	float x = 0;
 	float z = 100;
 	glm::vec3 pos(x, 4500, z);
@@ -310,13 +329,13 @@ void PlayingState::init()
 	plotter.push_back(glm::vec3(0, 4500, 2500));
 	plotter.push_back(glm::vec3(0, 4500, 0));
 
-	spawnEnemies(5);
+	//spawnEnemies(5);
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
 	entity2.assign<AIComponent>(behaviours, true, true, false);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
-	entity2.assign <HealthComponent>(100.0);
+	entity2.assign <HealthComponent>(100.0);*/
 
 
 	int enemies = 0;
@@ -417,6 +436,7 @@ void PlayingState::init()
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
 
+	spawnDrop();
 }
 
 void PlayingState::update(double dt)
@@ -483,7 +503,8 @@ void PlayingState::update(double dt)
 
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
-			spawnEnemies(5);
+			spawnEnemies(2);
+			spawnDrop();
 		}
 
 		timerMultiplier -= dt;
@@ -501,9 +522,11 @@ void PlayingState::update(double dt)
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
+		
 		ex.systems.update<ParticleSystem>(dt);
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		ex.systems.update<MissionSystem>(dt);
 		glm::vec2 window = Window::getWindow().size();
 		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
 		if (pointObject.time >  0)

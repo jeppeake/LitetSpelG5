@@ -33,6 +33,8 @@
 #include "entity_close.h"
 #include "ground_close_front.h"
 
+#include "mission.h"
+
 entityx::Entity entity3;
 
 void MenuState::spawnEnemies(int nr) {
@@ -83,6 +85,7 @@ MenuState::~MenuState() {
 }
 
 void MenuState::init() {
+
 	vignette.load("assets/Textures/vignette.png");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hover.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hammerclick.wav", "buttonforward");
@@ -99,7 +102,8 @@ void MenuState::init() {
 	AssetLoader::getLoader().loadModel("assets/Weapons/Guns/37mm_gunpod/37mm_gunpod.fbx", "gunpod");
 	AssetLoader::getLoader().loadModel("assets/Weapons/Missiles/Fishrod/fishrod.fbx", "fishrod");
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
-	AssetLoader::getLoader().loadModel("assets/buildings/911.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("Weapons/Missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
+	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "hus1");
 
 	AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -205,7 +209,7 @@ void MenuState::update(double dt) {
 	ex.systems.update<AISystem>(dt);
 	ex.systems.update<FlightSystem>(dt);
 	ex.systems.update<PhysicsSystem>(dt);
-	ex.systems.update<WeaponSystem>(dt);
+	//ex.systems.update<WeaponSystem>(dt);
 	//ex.systems.update<SoundSystem>(dt);
 	ex.systems.update<ParticleSystem>(dt);
 	ex.systems.update<RenderSystem>(dt);

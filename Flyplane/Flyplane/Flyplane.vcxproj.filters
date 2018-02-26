@@ -114,6 +114,17 @@
     <ClCompile Include="timevisualizer.cpp">
       <Filter>UTILS</Filter>
     </ClCompile>
+    <ClCompile Include="mission.cpp">
+      <Filter>Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="heightindicator.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="speedindicator.cpp" />
+    <ClCompile Include="hpindicator.cpp" />
+    <ClCompile Include="globaltimer.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -426,6 +437,39 @@
     <ClInclude Include="turret.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
+    <ClInclude Include="mission.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="missionsystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="housecomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="heightindicator.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="removeParticleEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="missionmarker.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="dropcomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="speedindicator.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="huntStatic.h">
+      <Filter>Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="hpindicator.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="globaltimer.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -515,6 +559,21 @@
     <None Include="missileFS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="deadTrail.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="heightindicatorVS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="heightindicatorFS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="sparks.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="terrainShadowVert.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
@@ -555,6 +614,9 @@
     </Filter>
     <Filter Include="Graphics\Shaders\particles">
       <UniqueIdentifier>{cdc6dbc7-8244-4b83-a334-9cbed9cfe506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Missions">
+      <UniqueIdentifier>{453888e5-478d-46e4-9d2d-8f2b83f85b2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

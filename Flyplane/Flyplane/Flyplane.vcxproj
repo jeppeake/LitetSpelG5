@@ -140,9 +140,12 @@
     <ClCompile Include="enemymarker.cpp" />
     <ClCompile Include="flightsystem.cpp" />
     <ClCompile Include="fullscreenimage.cpp" />
+    <ClCompile Include="globaltimer.cpp" />
+    <ClCompile Include="heightindicator.cpp" />
     <ClCompile Include="heightmap.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="highscorestate.cpp" />
+    <ClCompile Include="hpindicator.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loadingstate.cpp" />
     <ClCompile Include="loadoutstate.cpp" />
@@ -150,6 +153,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menustate.cpp" />
+    <ClCompile Include="mission.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
@@ -162,6 +166,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="SAIB.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="speedindicator.cpp" />
     <ClCompile Include="terrain_close.h" />
     <ClCompile Include="text.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -197,6 +202,7 @@
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
     <ClInclude Include="crosshair.h" />
+    <ClInclude Include="dropcomponent.h" />
     <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
@@ -211,14 +217,19 @@
     <ClInclude Include="form_on_formation.h" />
     <ClInclude Include="gameoversystem.h" />
     <ClInclude Include="follow_player.h" />
+    <ClInclude Include="globaltimer.h" />
     <ClInclude Include="ground_close_front.h" />
     <ClInclude Include="entity_close.h" />
     <ClInclude Include="healthcomponent.h" />
     <ClInclude Include="healthsystem.h" />
+    <ClInclude Include="heightindicator.h" />
     <ClInclude Include="heightmap.h" />
     <ClInclude Include="highscore.h" />
     <ClInclude Include="highscoreaction.h" />
     <ClInclude Include="highscorestate.h" />
+    <ClInclude Include="housecomponent.h" />
+    <ClInclude Include="huntStatic.h" />
+    <ClInclude Include="hpindicator.h" />
     <ClInclude Include="hunt_player.h" />
     <ClInclude Include="hunt_target.h" />
     <ClInclude Include="input.h" />
@@ -229,6 +240,9 @@
     <ClInclude Include="map.h" />
     <ClInclude Include="menustate.h" />
     <ClInclude Include="missilecomponent.h" />
+    <ClInclude Include="mission.h" />
+    <ClInclude Include="missionmarker.h" />
+    <ClInclude Include="missionsystem.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="namestate.h" />
@@ -248,6 +262,7 @@
     <ClInclude Include="presetloader.h" />
     <ClInclude Include="previewcomponenet.h" />
     <ClInclude Include="radar.h" />
+    <ClInclude Include="removeParticleEvent.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="projectilecomponent.h" />
     <ClInclude Include="restartaction.h" />
@@ -259,6 +274,7 @@
     <ClInclude Include="soundbuffers.h" />
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
+    <ClInclude Include="speedindicator.h" />
     <ClInclude Include="startgameaction.h" />
     <ClInclude Include="startloadingaction.h" />
     <ClInclude Include="targetcomponent.h" />
@@ -275,6 +291,7 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="deadTrail.glsl" />
     <None Include="enemymarkerFS.glsl" />
     <None Include="enemymarkerGS.glsl" />
     <None Include="enemymarkerVS.glsl" />
@@ -286,6 +303,8 @@
     <None Include="geometryShader.glsl" />
     <None Include="guiFragmentShader.glsl" />
     <None Include="guiVertexShader.glsl" />
+    <None Include="heightindicatorFS.glsl" />
+    <None Include="heightindicatorVS.glsl" />
     <None Include="missileFS.glsl" />
     <None Include="missileVS.glsl" />
     <None Include="partFrag.glsl" />
@@ -296,7 +315,9 @@
     <None Include="radarVS.glsl" />
     <None Include="shadowFragmentShader.glsl" />
     <None Include="shadowVertexShader.glsl" />
+    <None Include="sparks.glsl" />
     <None Include="terrainFragmentShader.glsl" />
+    <None Include="terrainShadowVert.glsl" />
     <None Include="terrainVertexShader.glsl" />
     <None Include="particletrail.glsl" />
     <None Include="textFrag.glsl" />

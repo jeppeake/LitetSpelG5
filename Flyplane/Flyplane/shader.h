@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <GL/glew.h>
 #include <string>
 #include <glm/glm.hpp>
@@ -22,7 +22,7 @@ class ShaderProgram
 
 	GLuint findUniformLocation(const std::string& name);
 
-	std::map<std::string, GLuint> uniform_locations;
+	std::unordered_map<std::string, GLuint> uniform_locations;
 public:
 	ShaderProgram();
 	~ShaderProgram();

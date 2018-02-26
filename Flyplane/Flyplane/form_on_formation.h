@@ -22,19 +22,25 @@ public:
 				std::cout << position.x << " : " << position.y << "\n";
 			}
 			glm::quat ori = formation.component<Transform>()->orientation;
-			glm::vec2 pos = formation.component<FormationComponent>()->positions.at(id);
-			glm::vec3 w_pos = ori * glm::vec3(pos.x, 0.f, pos.y);
-			glm::vec3 flyToPos = formation.component<Transform>()->pos + (w_pos * formation.component<FormationComponent>()->distance);
-			//std::cout << flyToPos.x << " : " << flyToPos.y << " : " << flyToPos.z << "\n";
-			com.steering = SAIB::flyTo(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, flyToPos);
-
-			glm::vec3 AI_front = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
-			glm::vec3 pt = flyToPos - AI.component<Transform>()->pos;
-			if (glm::length(pt) > 5.f) {
-				com.throttle = glm::pow(glm::clamp(length(pt), 0.f, 1000.f) / 1000.f, 2.f);
+			if (!formation.has_component<FormationComponent>()) {
+				terminated = true;
 			}
-			//std::cout << com.throttle << "\n";
-			std::cout << glm::length(player.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";
+			else {
+				glm::vec2 pos = formation.component<FormationComponent>()->positions.at(id);
+				glm::vec3 w_pos = ori * glm::vec3(pos.x, 0.f, pos.y);
+				glm::vec3 flyToPos = formation.component<Transform>()->pos + (w_pos * formation.component<FormationComponent>()->distance);
+				//std::cout << flyToPos.x << " : " << flyToPos.y << " : " << flyToPos.z << "\n";
+				com.steering = SAIB::flyTo(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, flyToPos);
+
+				glm::vec3 AI_front = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
+				glm::vec3 pt = flyToPos - AI.component<Transform>()->pos;
+				if (glm::length(pt) > 5.f) {
+					com.throttle = glm::pow(glm::clamp(length(pt), 0.f, 1000.f) / 1000.f, 2.f);
+				}
+				//std::cout << com.throttle << "\n";
+				std::cout << glm::length(player.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";
+			}
+			
 		}
 		else {
 			terminated = true;

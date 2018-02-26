@@ -4,6 +4,7 @@
 #include "loadingstate.h"
 #include "playingstate.h"
 #include "startgameaction.h"
+#include "input.h"
 
 void LoadingState::init() {
 	AssetLoader::getLoader().clearTerrains();
@@ -47,12 +48,14 @@ void LoadingState::init() {
 	update(0);
 	Window::getWindow().update();
 
-	AssetLoader::getLoader().loadSound("assets/Sound/airplane1.wav", "takeoff");
+	//AssetLoader::getLoader().loadSound("assets/Sound/airplane1.wav", "takeoff");
+	AssetLoader::getLoader().loadSound("assets/Sound/avion.wav", "takeoff");
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
 	AssetLoader::getLoader().loadSound("assets/Sound/explosion.wav", "explosion");
 	AssetLoader::getLoader().loadSound("assets/Sound/newTink.wav", "tink");
+	AssetLoader::getLoader().loadSound("assets/Sound/wind1.wav", "wind");
 
 	done = true;
 }

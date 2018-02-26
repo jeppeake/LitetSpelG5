@@ -33,6 +33,7 @@ private:
 	sf::SoundBuffer* missileSB;
 
 	void spawnEnemies(int nr);
+	void spawnDrop();
 	void drawHighscore();
 
 	std::string name;
@@ -40,6 +41,8 @@ private:
 	void loadLoadout();
 
 public:
+	entityx::Entity entity_p;
+
 	PlayingState(std::string name = "name") : name(name) {}
 	virtual ~PlayingState() {}
 

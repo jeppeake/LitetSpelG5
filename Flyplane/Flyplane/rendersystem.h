@@ -23,6 +23,8 @@
 #include "particlecomponent.h"
 #include "cameraoncomponent.h"
 #include "healthcomponent.h"
+#include "input.h"
+#include "missionmarker.h"
 
 using namespace entityx;
 
@@ -44,7 +46,8 @@ struct RenderSystem : public System<RenderSystem> {
 		glm::vec3 playerDir;
 		glm::vec3 playerUp;
 		glm::quat playerOrientation;
-		float hp;
+		float hp = 100.f;
+		float speed = 10.f;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
 			player = entity.component<PlayerComponent>();
@@ -62,24 +65,50 @@ struct RenderSystem : public System<RenderSystem> {
 				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
 				Renderer::getRenderer().setWeaponModel(equipment->special[equipment->selected].model);
 				int ammo = 0;
-				for (int i = 0; i < equipment->special.size(); i++) {
-					ammo += equipment->special[i].stats.ammo;
+				int count = 0;
+				unsigned int tempselect = equipment->selected;
+				while (count < equipment->special.size()) {
+					if (equipment->special[equipment->selected].model == equipment->special[tempselect].model)
+						ammo += equipment->special[tempselect].stats.ammo;
+					tempselect = (tempselect + 1) % equipment->special.size();
+					count++;
 				}
+
+				/*for (int i = 0; i < equipment->special.size(); i++) {
+					ammo += equipment->special[i].stats.ammo;
+				}*/
 				Renderer::getRenderer().setAmmo(ammo);
+			}
+			if (entity.has_component<FlightComponent>())
+			{
+				speed = entity.component<FlightComponent>()->current_speed;
+			}
+			else
+			{
+				speed = 0;
 			}
 		}
 
+
+		// set heightmap pointer before setting camera in renderer
+		ComponentHandle<Terrain> terrain;
+		for (Entity entity : es.entities_with_components(terrain)) {
+			Renderer::getRenderer().setHeightmap(terrain->hmptr);
+		}
 		ComponentHandle<CameraOnComponent> cameraOn;
 		for (Entity entity : es.entities_with_components(cameraOn)) {
 			cullingCamera = cameraOn->camera;
 			Renderer::getRenderer().setCamera(cameraOn->camera);
 		}
 
+
 		ComponentHandle<ModelComponent> model;
 		for (Entity entity : es.entities_with_components(model, transform)) {
 			model = entity.component<ModelComponent>();
 			transform = entity.component<Transform>();
-			Renderer::getRenderer().addToList(model->mptr, *transform.get());
+			bool isStatic = !entity.has_component<Physics>();
+
+			Renderer::getRenderer().addToList(model->mptr, *transform.get(), isStatic);
 
 			/*player = entity.component<PlayerComponent>();
 			ComponentHandle<Projectile> projectile = entity.component<Projectile>();
@@ -91,11 +120,16 @@ struct RenderSystem : public System<RenderSystem> {
 			}*/
 		}
 
-		ComponentHandle<Terrain> terrain;
+
 		for (Entity entity : es.entities_with_components(terrain)) {
-			terrain = entity.component<Terrain>();
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
-			Renderer::getRenderer().addToList(terrain->hmptr->buildPatches(cullingCamera));
+			Renderer::getRenderer().setTerrainPatches(terrain->hmptr->buildPatches(cullingCamera));
+
+			auto mat = Renderer::getRenderer().getTerrainShadowMatrix();
+			Renderer::getRenderer().setTerrainPatchesShadow(terrain->hmptr->buildPatchesOrtho(mat, cullingCamera));
+
+			// for debugging shadow patches
+			//Renderer::getRenderer().setTerrainPatches(terrain->hmptr->buildPatchesOrtho(mat, cullingCamera));
 		}
 		
 
@@ -142,38 +176,55 @@ struct RenderSystem : public System<RenderSystem> {
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0);
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{
 				p->render();
 			}
 		}
-
 		if (playing) {
 			ComponentHandle<AIComponent> ai;
+			ComponentHandle<MissionMarker> mmarker;
 
 			for (Entity entity : es.entities_with_components(ai, transform)) {
 				radar.addPlane(*transform.get());
-
-				glm::vec3 enemyPos = entity.component<Transform>()->pos;
-				float length = glm::distance(enemyPos, playerPos);
-				glm::vec3 color = glm::vec3(1, 0, 0);
-				if (entity.has_component<Target>()) {
-					if (entity.component<Target>().get()->is_targeted) {
-						color = glm::vec3(0, 1, 0);
+				if (entity.has_component<FlightComponent>())
+				{
+					glm::vec3 enemyPos = entity.component<Transform>()->pos;
+					float length = glm::distance(enemyPos, playerPos);
+					glm::vec3 color = glm::vec3(1, 0, 0);
+					if (entity.has_component<Target>()) {
+						if (entity.component<Target>().get()->is_targeted) {
+							color += glm::vec3(-0.5, 0.9, -0.5);
+						}
 					}
-				}
 
-				length = 5.0 + length / 100.0f;
-				Renderer::getRenderer().addMarker(enemyPos, color, length);
+					length = 5.0 + length / 100.0f;
+					if (!entity.has_component<MissionMarker>())
+						Renderer::getRenderer().addMarker(enemyPos, color, length);
+				}
 			}
-			Renderer::getRenderer().RenderClouds();
+			for (Entity entity : es.entities_with_components(mmarker, transform)) {
+				if (entity.has_component<MissionMarker>())
+				{
+					glm::vec3 color = mmarker->color;
+					if (entity.has_component<Target>()) {
+						if (entity.component<Target>().get()->is_targeted) {
+							color += glm::vec3(-0.5, 0.9, -0.5);
+						}
+					}
+					float length = glm::distance(transform->pos, playerPos);
+					length = 5.0 + length / 100.0f;
+					Renderer::getRenderer().addMarker(transform->pos, color, length);
+				}
+			}
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
-			Renderer::getRenderer().setCrosshairPos(newPos);
-			Renderer::getRenderer().orientation = playerOrientation;
 			radar.draw((float)dt);
-			Renderer::getRenderer().RenderCrosshair();
-			Renderer::getRenderer().RenderHPBar(hp);
+			Renderer::getRenderer().RenderGui(hp, playerPos.y, speed, newPos, playerOrientation);
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));

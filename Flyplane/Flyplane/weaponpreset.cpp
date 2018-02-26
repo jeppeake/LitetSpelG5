@@ -104,6 +104,11 @@ void WeaponPreset::load(std::string presetname)
 			damage = std::stod(str, NULL);
 			continue;
 		}
+		else if (str.compare("droptime") == 0) {
+			std::getline(f, str);
+			droptime = std::stod(str, NULL);
+			continue;
+		}
 	}
 }
 
