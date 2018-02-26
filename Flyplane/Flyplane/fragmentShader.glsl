@@ -16,8 +16,10 @@ in vec3 ShadowSpace;
 in vec3 TerrainShadowSpace;
 
 
-float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset, float c) {
-	float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
+float testShadow(vec3 shadowCoord, sampler2D sampler, float c) {
+//float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset, float c) {
+	//float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
+	float depth = texture(sampler, shadowCoord.xy).r;
 	float visibility = 1.0;
 	
 	vec3 normal = normalize(Normal);
@@ -39,17 +41,21 @@ float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset, float c) {
 }
 
 float shadow(vec3 shadowCoord, sampler2D sampler, float c) {
-	float result = 0;
+	//float result = 0;
 
+	/*
 	const int hsize = 2;
 	for(int i = -hsize; i <= hsize; i++) {
 		for(int j = -hsize; j <= hsize; j++) {
 			result += testShadow(shadowCoord, sampler, ivec2(i,j), c);
 		}
 	}
-	float samples = pow(float(hsize)*2.0+1.0, 2);
+	*/
+	//float samples = pow(float(hsize)*2.0+1.0, 2);
 
-	return result / samples;
+	return testShadow(shadowCoord, sampler, c);
+
+	//return result; // / samples;
 }
 
 void main() {

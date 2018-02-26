@@ -338,7 +338,7 @@ std::vector<Patch> Heightmap::buildPatchesOrtho(glm::mat4 viewProj, Camera c) {
 	glm::vec2 offset(0);
 	float patchSize = width / 2.f;
 
-	recursiveBuildPatchesOrtho(result, patchSize, offset, 2, bb, c.getTransform().pos);
+	recursiveBuildPatchesOrtho(result, patchSize, offset, 3, bb, c.getTransform().pos);
 
 	return result;
 }
