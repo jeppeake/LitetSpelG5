@@ -423,6 +423,9 @@
     <ClInclude Include="camerasystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="turret.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">

@@ -7,10 +7,10 @@ public:
 		this->cone = cone;
 		this->distance = distance;
 	}
-	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
+	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (target.valid()) {
-			glm::vec3 aimPos = SAIB::calculateInterdiction(target, AI);
+			glm::vec3 aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->primary.at(0).stats.speed, glm::vec3(), dt);
 			glm::vec3 AI_vector = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
 			glm::vec3 AI_position = AI.component<Transform>()->pos;
 			glm::vec3 aimVector = aimPos - AI_position;

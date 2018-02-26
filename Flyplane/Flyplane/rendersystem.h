@@ -7,6 +7,8 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 #include "renderer.h"
 #include "modelcomponent.h"
 #include "transform.h"
@@ -118,6 +120,21 @@ struct RenderSystem : public System<RenderSystem> {
 				newTrans.scale = equip->special[i].scale;
 
 				Renderer::getRenderer().addToList(equip->special[i].model, newTrans);
+			}
+			for (int i = 0; i < equip->turrets.size(); i++) {
+				Transform gunTrans;
+				gunTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->turrets[i].placement.offset;
+				gunTrans.orientation = transform->orientation *  equip->turrets[i].getGunOrientation();
+				gunTrans.scale = equip->turrets[i].placement.scale;
+
+				Transform turretTrans;
+				turretTrans.pos = transform->pos + glm::toMat3(transform->orientation) * equip->turrets[i].placement.offset;
+				//turretTrans.orientation = transform->orientation * glm::rotate(equip->turrets[i].placement.orientation, equip->turrets[i].placement.orientation * glm::vec3(0.f, 0.f, 1.f), equip->turrets[i].info.ET.x);
+				turretTrans.orientation = transform->orientation * equip->turrets[i].getMountOrientation();
+				turretTrans.scale = equip->turrets[i].placement.scale;
+
+				Renderer::getRenderer().addToList(equip->turrets[i].info.turret, turretTrans);
+				Renderer::getRenderer().addToList(equip->turrets[i].info.gun, gunTrans);
 			}
 		}
 

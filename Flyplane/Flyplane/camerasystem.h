@@ -27,11 +27,11 @@ struct CameraSystem : public System<CameraSystem> {
 				v = normalize(physics->velocity);
 			}
 
-			glm::vec3 offset(0, 1, -5.5);
+			glm::vec3 offset(0, 1, -10.5);
 
 			Transform camTrans = cameraOn->camera.getTransform();
 
-			double f = 0.0005;
+			double f = 0.005;
 			camTrans.orientation = glm::mix(camTrans.orientation, transform->orientation, float(1.0 - glm::pow(f, 2.0*dt)));
 
 			offset = camTrans.orientation * offset;

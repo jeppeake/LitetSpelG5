@@ -269,6 +269,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="turret.h" />
     <ClInclude Include="weaponpreset.h" />
     <ClInclude Include="weaponsystem.h" />
     <ClInclude Include="window.h" />
