@@ -1,4 +1,5 @@
 #include "assetloader.h"
+#include "weaponpreset.h"
 
 Text * AssetLoader::getText() &
 {
@@ -39,7 +40,19 @@ void AssetLoader::loadTexture(const std::string filename, const std::string name
 }
 
 void AssetLoader::loadWeapon(const std::string filename, const std::string name) {
-	weapons[name] = Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, 0.0, 0.0), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), true, true);
+	auto find = weapons.find(name);
+	if (find == weapons.end()) {
+		WeaponPreset wp;
+		wp.load(filename);
+
+		AssetLoader::getLoader().loadModel(wp.model, wp.name);
+		AssetLoader::getLoader().loadModel(wp.projModel, wp.projModel);
+
+		WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
+
+		std::cout << "name: " << wp.name << " modelPtr: " << AssetLoader::getLoader().getModel(wp.name) << std::endl;
+		weapons[name] = Weapon(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);//Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, 0.0, 0.0), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), true, true);
+	}
 }
 
 void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &name) {

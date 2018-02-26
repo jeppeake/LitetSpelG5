@@ -87,6 +87,9 @@ struct RenderSystem : public System<RenderSystem> {
 			{
 				speed = 0;
 			}
+
+
+			
 		}
 
 
@@ -94,6 +97,10 @@ struct RenderSystem : public System<RenderSystem> {
 		ComponentHandle<Terrain> terrain;
 		for (Entity entity : es.entities_with_components(terrain)) {
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
+
+
+
+			Renderer::getRenderer().setIsOutside(terrain->hmptr->isOutside(playerPos));
 		}
 		ComponentHandle<CameraOnComponent> cameraOn;
 		for (Entity entity : es.entities_with_components(cameraOn)) {
@@ -176,10 +183,12 @@ struct RenderSystem : public System<RenderSystem> {
 		Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
 		ComponentHandle<ParticleComponent> particles;
+		/*
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0);
+		*/
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{

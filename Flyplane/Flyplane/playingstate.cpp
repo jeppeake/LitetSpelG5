@@ -123,10 +123,10 @@ void PlayingState::spawnEnemies(int nr) {
 
 void PlayingState::spawnDrop() {
 	auto entity = ex.entities.create();
-	entity.assign<Transform>(glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, 1000), glm::quat(1, 0, 0, 0));
+	entity.assign<Transform>(glm::vec3(rand() % 1000 - 500, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, rand() % 1000 - 500), glm::quat(1, 0, 0, 0));
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 	entity.assign<CollisionComponent>();
-	entity.assign<DropComponent>(50, DropComponent::Weapon);
+	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
 	//entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
 }
 
@@ -189,7 +189,7 @@ void PlayingState::loadLoadout()
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
-
+	int nrOfWeapons = 0;
 	for (int i = 0; i < pp.wepPos.size(); i++) {
 		std::getline(file, str);
 		if (str.compare("0") != 0) {
@@ -202,6 +202,8 @@ void PlayingState::loadLoadout()
 			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
 
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
+
+			nrOfWeapons++;
 		}
 	}
 	std::getline(file, str);
@@ -218,7 +220,7 @@ void PlayingState::loadLoadout()
 	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
 	turrets.emplace_back(stats2, info, placement, WInfo, false);
 
-	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos);
+	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos, nrOfWeapons);
 	entity_p.assign <HealthComponent>(1000.0);
 
 	entityx::Entity terrain = ex.entities.create();
@@ -539,6 +541,7 @@ void PlayingState::update(double dt)
 			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
+		Renderer::getRenderer().RenderTransparent();
 		Window::getWindow().showCursor(true);
 		bHandler.drawButtons();
 		bHandler.handleButtonClicks();

@@ -79,6 +79,8 @@ private:
 	std::vector<Patch> patches;
 	std::vector<Patch> shadowPatches;
 
+	Texture transparent;
+	bool isOutside = false;
 
 	glm::vec3 sunDir;
 
@@ -94,6 +96,7 @@ private:
 	void RenderHPBar(float hp);
 	void RenderHeightIndicator(float height);
 	void RenderSpeedometer(float speed);
+	void RenderOutsideMessage();
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -116,6 +119,7 @@ public:
 
 	void RenderScene();
 	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);
+	void RenderTransparent();
 	void RenderClouds();
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
@@ -124,6 +128,12 @@ public:
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
+
+	
+
+	void setIsOutside(bool isOutside) {
+		this->isOutside = isOutside;
+	}
 
 	glm::mat4 getTerrainShadowMatrix() {
 		return this->terrainShadowMatrix;

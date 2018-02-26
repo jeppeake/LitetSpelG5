@@ -36,6 +36,7 @@ public:
 	//Kommer kanske sen...
 	void setTexture(const std::string &name)
 	{
+		/*
 		text = AssetLoader::getLoader().getTexture(name);
 		if (!text)
 		{
@@ -55,6 +56,7 @@ public:
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			}
 		}
+		*/
 	}
 	void update();
 	void render();

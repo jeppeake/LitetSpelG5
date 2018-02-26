@@ -251,6 +251,14 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 	return result;
 }
 
+bool Heightmap::isOutside(glm::vec3 pos) {
+	pos -= this->pos;
+	pos /= scale;
+	float x = pos.x;
+	float z = pos.z;
+	return x < 0 || x >= width || z < 0 || z >= height;
+}
+
 void Heightmap::bindIndices(int i) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[i]);
 }

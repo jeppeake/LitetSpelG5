@@ -95,5 +95,10 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		flight->i_throttle = throttle;
 		flight->i_airBrake = brake;
+
+
+
+
+		
 	}
 }
