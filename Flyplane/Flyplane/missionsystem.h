@@ -170,7 +170,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			std::ostringstream oss;
 			oss << std::setprecision(4) << curMission.time - timer.elapsed();
 			std::string str = oss.str();
-			std::string ex = "20.00";
+			std::string ex = "20.55";
 			std::string txt = str;
 			x = (Window::getWindow().size().x / 2) - 9 * ex.length() / 2;
 			AssetLoader::getLoader().getText()->drawText(txt,
