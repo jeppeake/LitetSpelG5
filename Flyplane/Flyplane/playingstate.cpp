@@ -123,7 +123,7 @@ void PlayingState::spawnEnemies(int nr) {
 
 void PlayingState::spawnDrop() {
 	auto entity = ex.entities.create();
-	entity.assign<Transform>(glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, 1000), glm::quat(1, 0, 0, 0));
+	entity.assign<Transform>(glm::vec3(rand() % 1000 - 500, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, rand() % 1000 - 500), glm::quat(1, 0, 0, 0));
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
