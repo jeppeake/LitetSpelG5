@@ -286,6 +286,8 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="turret.h" />
+    <ClInclude Include="turretpreset.h" />
+    <ClInclude Include="turretpreset.cpp" />
     <ClInclude Include="weaponpreset.h" />
     <ClInclude Include="weaponsystem.h" />
     <ClInclude Include="window.h" />

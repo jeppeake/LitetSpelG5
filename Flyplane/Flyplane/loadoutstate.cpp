@@ -41,6 +41,7 @@ void LoadoutState::updatePreview() {
 
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
+	std::vector<Turret> turrets;
 
 
 	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {

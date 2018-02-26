@@ -124,11 +124,7 @@ private:
 	}
 
 	void handleDrop(entityx::Entity player, entityx::Entity drop) {
-		std::cout << "Picked up drop!" << std::endl;
-		Model* m = AssetLoader::getLoader().getModel("fishrod");//AssetLoader::getLoader().getModel("ALAAT-10");
-
-		if (m == nullptr)
-			std::cout << "Broken, nullptr" << std::endl;
+		std::cout << "Picked up drop! ";
 
 		switch (drop.component<DropComponent>()->type) {
 		case DropComponent::Health:
@@ -136,11 +132,32 @@ private:
 			if (player.component<HealthComponent>()->health > player.component<HealthComponent>()->maxHP) {
 				player.component<HealthComponent>()->health = player.component<HealthComponent>()->maxHP;
 			}
+			std::cout << " Health!" << std::endl;
 			break;
-		case DropComponent::Weapon:
+		case DropComponent::Bigboi:
 			if (player.has_component<Equipment>())
-				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("weapon"));
-				//player.component<Equipment>()->addSpecialWeapon(Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), m, m, glm::vec3(0, 0.0, 0.0), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0,0,1)), true, true));
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Bigboi"));
+			std::cout << " Bigboi!" << std::endl;
+			break;
+		case DropComponent::Fishrod:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Fishrod"));
+			std::cout << " Fishrod!" << std::endl;
+			break;
+		case DropComponent::Micromissile:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Micromissile"));
+			std::cout << " Micromissile!" << std::endl;
+			break;
+		case DropComponent::Rocketpod:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Rocketpod"));
+			std::cout << " Rocketpod!" << std::endl;
+			break;
+		case DropComponent::Rodfish:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Rodfish"));
+			std::cout << " Rodfish!" << std::endl;
 			break;
 		}
 	}

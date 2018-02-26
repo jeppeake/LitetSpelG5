@@ -38,7 +38,13 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_GUNS.fbx", "spectre_gun");
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_MOUNT.fbx", "spectre_mount");
 
-	AssetLoader::getLoader().loadWeapon("empty", "weapon");
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/micro.txt", "Micromissile");
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/rocketpod.txt", "Rocketpod");
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/missile.txt", "Fishrod");
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/missile2.txt", "Rodfish");
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/missile3.txt", "Bigboi");
+	
+
 
 	current = "terrain";
 	update(0);

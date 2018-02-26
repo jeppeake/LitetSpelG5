@@ -2,7 +2,7 @@
 
 
 struct DropComponent {
-	static enum TypeOfDrop { Weapon, Health };
+	enum TypeOfDrop { Micromissile, Rocketpod, Fishrod, Rodfish, Bigboi, Health, NrOfItems };
 	DropComponent(float amount = 0, TypeOfDrop type = Health) : amount(amount), type(type) {}
 
 	TypeOfDrop type;

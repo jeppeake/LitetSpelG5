@@ -120,10 +120,14 @@
     <ClCompile Include="heightindicator.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="speedindicator.cpp" />
-    <ClCompile Include="hpindicator.cpp" />
     <ClCompile Include="globaltimer.cpp">
       <Filter>UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="hpindicator.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="speedindicator.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -469,6 +473,12 @@
     </ClInclude>
     <ClInclude Include="globaltimer.h">
       <Filter>UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="turretpreset.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="turretpreset.cpp">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
