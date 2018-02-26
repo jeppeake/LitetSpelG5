@@ -44,7 +44,7 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					Commands com;
 					glm::vec3 input;
 					if (b->getActive()) {
-						com = b->act(entity_player, entity_ai, entity_terrain, entity_closest);
+						com = b->act(entity_player, entity_ai, entity_terrain, entity_closest, dt);
 					}
 
 					ai_flight->setInput(com.steering);

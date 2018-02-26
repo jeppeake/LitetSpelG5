@@ -434,6 +434,9 @@
     <ClInclude Include="camerasystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="turret.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
     <ClInclude Include="mission.h">
       <Filter>Missions</Filter>
     </ClInclude>

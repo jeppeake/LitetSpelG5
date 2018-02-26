@@ -29,6 +29,8 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem> {
 
 
 	void calcAcceleration(ComponentHandle<Physics> physics) {
-		physics->acceleration = physics->g;
+		if (physics->gravity) {
+			physics->acceleration = physics->g;
+		}
 	}
 };

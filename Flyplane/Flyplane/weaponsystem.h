@@ -29,6 +29,27 @@ using namespace entityx;
 struct WeaponSystem : public entityx::System<WeaponSystem> {
 	Timer switchT;
 
+	void turretSpawnBullet(Transform* trans, Turret turret, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
+		entityx::Entity projectile = es.create();
+
+		projectile.assign<Transform>(trans->pos + trans->orientation * turret.placement.offset, trans->orientation * turret.getGunOrientation(), turret.weapon.projScale);
+
+		glm::vec3 dir = trans->orientation * turret.getGunOrientation() * glm::vec3(0.0, 0.0, 1.0);
+		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
+		glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
+		projectile.assign<Physics>(turret.stats.mass, 1, turret.stats.speed * glm::normalize(dir + randvec * 0.01f) + planeSpeed, glm::vec3());
+		projectile.component<Physics>()->gravity = false;
+		projectile.assign<ModelComponent>(turret.weapon.projModel);
+		projectile.assign<Projectile>(turret.stats.lifetime, parentFaction, turret.stats.damage);
+		projectile.assign<CollisionComponent>();
+
+		if (parentFaction == FACTION_PLAYER)
+			projectile.assign<FactionPlayer>();
+		else
+			projectile.assign<FactionEnemy>();
+		//projectile.assign<SoundComponent>(machinegunSB, false);
+	}
+
 	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
 		entityx::Entity projectile = es.create();
 		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
@@ -36,6 +57,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
 		glm::vec3 randvec = glm::normalize(glm::vec3(rand()%20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
 		projectile.assign<Physics>(weapon->stats.mass, 1, 200.f * glm::normalize(dir + randvec*0.01f) + planeSpeed, glm::vec3());
+		projectile.component<Physics>()->gravity = false;
 		projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
 		projectile.assign<CollisionComponent>();
@@ -84,6 +106,116 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			}
 
 			player = entity.component<PlayerComponent>();
+
+			//turret code start
+			for (int i = 0; i < equip->turrets.size(); i++) {
+
+				Entity entity_closest;
+				float closest = 1000000000.f;
+				float new_closest = 0.f;
+
+				ComponentHandle<FlightComponent> closest_flight;
+				ComponentHandle<Transform> closest_transform;
+				ComponentHandle<ModelComponent> closest_model;
+
+				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform)) {
+					glm::vec3 interdictionTest = SAIB::ADVInterdiction(entity_closest_search, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
+					//interdictionPoint = SAIB::calculateInterdiction(entity_closest_search, entity);
+
+					new_closest = glm::length(interdictionTest - trans->pos);
+					//std::cout << new_closest << "\n";
+					if (new_closest < closest && new_closest > 1.f) {//check if target is inside frustum
+
+						glm::vec2 traverseLimits = equip->turrets.at(i).info.traverseLimit;
+						glm::vec2 elevationLimits = equip->turrets.at(i).info.elevationLimit;
+
+						glm::vec3 turretFront = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 0.f, 1.f));
+						glm::vec3 turretUp = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 1.f, 0.f));
+						glm::vec3 turretLeft = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(1.f, 0.f, 0.f));
+
+						glm::vec3 pt = glm::normalize(interdictionTest - trans->pos);
+
+						glm::vec3 pt_trav = glm::normalize(pt - glm::proj(pt, turretUp));
+						//std::cout << pt.x << " : " << pt.y << " : " << pt.z << "	" << pt_trav.x << " : " << pt_trav.y << " : " << pt_trav.z << "\n";
+						float LRC = glm::degrees(glm::acos(glm::dot(pt_trav, turretLeft)));
+						float traverseAngle = glm::degrees(glm::acos(glm::dot(pt_trav, turretFront)));
+						float traverseLimit;
+						if (LRC < 90) {//left
+							traverseLimit = traverseLimits.x;
+						}
+						else {//right
+							traverseLimit = traverseLimits.y;
+						}
+
+						glm::vec3 pt_elev = glm::normalize(pt - glm::proj(pt, turretLeft));
+
+						float UDC = glm::degrees(glm::acos(glm::dot(pt_elev, turretUp)));
+						float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, turretFront)));
+						float elevationLimit;
+						if (UDC < 90) {//up
+							elevationLimit = elevationLimits.x;
+						}
+						else {//down
+							elevationLimit = elevationLimits.y;
+						}
+						//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
+						if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(new_closest) < closest && glm::length(new_closest) < equip->turrets.at(i).info.range) {
+							entity_closest = entity_closest_search;
+							closest = new_closest;
+						}
+					}
+				}
+				equip->turrets.at(i).shouldFire = false;
+				if (player && !equip->turrets.at(i).autoFire && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && equip->turrets.at(i).timer.elapsed() > equip->turrets.at(i).stats.cooldown && equip->turrets.at(i).stats.ammo > 0) {
+					equip->turrets.at(i).shouldFire = true;
+					equip->turrets.at(i).timer.restart();
+				}
+
+				if (entity_closest.valid()) {
+					glm::vec3 interdiction = SAIB::ADVInterdiction(entity_closest, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
+					//interdiction = SAIB::calculateInterdiction(entity_closest, entity);
+
+					glm::vec2 rotation = SAIB::turretRotateTowards(equip->turrets.at(i), interdiction, trans->orientation, trans->pos);
+
+					equip->turrets.at(i).info.ET += rotation * glm::radians(equip->turrets.at(i).info.turnrate) * float(dt);
+
+					glm::vec3 turret_aim = glm::normalize(trans->orientation * equip->turrets.at(i).getGunOrientation() * glm::vec3(0.f, 0.f, 1.f));
+					float to_aim = glm::dot(turret_aim, glm::normalize(interdiction - trans->pos));
+					//std::cout << to_aim << "\n";
+
+					if (equip->turrets.at(i).autoFire && to_aim > 0.999f && equip->turrets.at(i).timer.elapsed() > equip->turrets.at(i).stats.cooldown) {
+						equip->turrets.at(i).shouldFire = true;
+						equip->turrets.at(i).timer.restart();
+					} else if (equip->turrets.at(i).autoFire) {
+						equip->turrets.at(i).shouldFire = false;
+					}
+				}
+				else {
+					glm::vec3 aim = trans->pos + glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 0.f, 1.f));
+					glm::vec2 rotation = SAIB::turretRotateTowards(equip->turrets.at(i), aim, trans->orientation, trans->pos);
+					equip->turrets.at(i).info.ET += rotation * glm::radians(equip->turrets.at(i).info.turnrate) * float(dt);
+				}
+
+				unsigned int parentfaction = FACTION_PLAYER;
+
+				if (target) {
+					parentfaction = target->faction;
+					if (equip->turrets.at(i).shouldFire) {
+						turretSpawnBullet(trans.get(), equip->turrets.at(i), planeSpeed, es, parentfaction);
+						burstSound = entity.component<BurstSoundComponent>();
+						if (burstSound) {
+							BurstSoundComponent* s = burstSound.get();
+
+							if (s->sound.getStatus() != s->sound.Playing) {
+								s->sound.play();
+							}
+						}
+					}
+				}
+			}
+			
+
+			//turret code end
 
 			Weapon* weapon = &equip->special[equip->selected];
 		
@@ -152,7 +284,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				int preselect = equip->selected;
 
 				if (weapon->dissappear && weapon->stats.ammo <= 0) {
-					equip->special.erase(equip->special.begin() + equip->selected);
+					equip->removeSpecialWeapon();
+					//equip->special.erase(equip->special.begin() + equip->selected);
 					/*equip->selected = 0;
 					equip->special[equip->selected].timer.restart();*/
 				}

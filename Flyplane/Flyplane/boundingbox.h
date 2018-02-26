@@ -4,8 +4,11 @@ class Heightmap;
 struct BoundingBox {
 	glm::vec3 sides[3];
 	glm::vec3 center;
-	
+
+
 	Transform transform;
+	glm::vec3 corners[8];
+	glm::vec3 normals[3];
 
 	bool intersect(BoundingBox &box);
 	bool intersect(const glm::vec3& point);

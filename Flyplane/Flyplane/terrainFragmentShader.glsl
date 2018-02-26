@@ -126,8 +126,10 @@ Material chooseMat(vec3 pos, vec3 normal, float biome, float geomHeight) {
 	return result;
 }
 
-float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset) {
-	float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
+float testShadow(vec3 shadowCoord, sampler2D sampler) {
+//float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset) {
+	//float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
+	float depth = texture(sampler, shadowCoord.xy).r;
 	float visibility = 1.0;
 	
 	vec3 normal = vNormal;
@@ -159,6 +161,7 @@ float kernel[5*5] = {
 };
 
 float shadow(vec3 shadowCoord, sampler2D sampler) {
+	/*
 	float result = 0;
 
 	const int hsize = 2;
@@ -168,15 +171,16 @@ float shadow(vec3 shadowCoord, sampler2D sampler) {
 		}
 	}
 	float samples = pow(float(hsize)*2.0+1.0, 2);
-
+	
 	return result;
+	*/
+	return testShadow(shadowCoord, sampler);
 }
 
 void main() {
 	float visibility1 = shadow(vShadowSpace, shadowMap);
 	float visibility2 = shadow(vTerrainShadowSpace, terrainShadowMap);
 	float visibility = min(visibility1, visibility2);
-	
 	
 	float x = vTerrainShadowSpace.x;
 	float y = vTerrainShadowSpace.y;
@@ -228,7 +232,7 @@ void main() {
 	//outColor = vec4(vec3(falloff), 1);
 	//outColor = vec4(vec3(vTerrainShadowSpace.z), 1);
 
-	float depth = texture(terrainShadowMap, vTerrainShadowSpace.xy).r;
+	//float depth = texture(terrainShadowMap, vTerrainShadowSpace.xy).r;
 	//outColor = vec4(vec3(depth), 1);
 }
 

@@ -41,6 +41,8 @@
 #include "hunt_player.h"
 #include "form_on_formation.h"
 
+#include "turret.h"
+
 #include "menustate.h"
 #include "pointcomponent.h"
 #include <string>
@@ -77,7 +79,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<Transform>(pos, normalize(orien));
 		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
-		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
+		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
 		entity.assign<FactionEnemy>();
@@ -106,7 +108,7 @@ void PlayingState::spawnEnemies(int nr) {
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
 
-		WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
+		WeaponStats MGstats = WeaponStats(10000, 3, 350, 0.2, 0.02f, true);
 		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 		std::vector<Weapon> primary;
 		std::vector<Weapon> secondary;
@@ -204,12 +206,18 @@ void PlayingState::loadLoadout()
 	std::getline(file, str);
 	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
 
-	WeaponStats stats2 = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true, 50);
-	pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.25, 0.5), glm::vec3(0.25), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+	WeaponStats stats2 = WeaponStats(10000, 3, 350.f, 0.2, 0.005f, true, 8);
+	//pweapons.emplace_back(stats2, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.25, 0.5), glm::vec3(0.25), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	entity_p.assign <Equipment>(pweapons, weapons);
+	std::vector<Turret> turrets;
+	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 0.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
+	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
+	WeaponInfo WInfo(glm::vec3(3.f, 3.f, 6.f), AssetLoader::getLoader().getModel("bullet"));
+	turrets.emplace_back(stats2, info, placement, WInfo, false);
+
+	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos);
 	entity_p.assign <HealthComponent>(1000.0);
 
 	entityx::Entity terrain = ex.entities.create();
