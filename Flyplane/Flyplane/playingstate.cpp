@@ -540,6 +540,7 @@ void PlayingState::update(double dt)
 			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
+		Renderer::getRenderer().RenderTransparent();
 		Window::getWindow().showCursor(true);
 		bHandler.drawButtons();
 		bHandler.handleButtonClicks();
