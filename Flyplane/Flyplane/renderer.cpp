@@ -200,8 +200,7 @@ void Renderer::RenderWeapon() {
 Timer t;
 
 
-void Renderer::RenderScene() {
-
+void Renderer::RenderPlaneShadow() {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	shadow.use();
 	glViewport(0, 0, shadowSize.x, shadowSize.y);
@@ -217,10 +216,12 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, list[i].model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
 	}
+}
 
-
+void Renderer::RenderTerrainShadow() {
 	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	shadow.use();
 	glViewport(0, 0, terrainShadowSize.x, terrainShadowSize.y);
 
 	for (int i = 0; i < listStatics.size(); i++) {
@@ -249,7 +250,13 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
 		}
 	}
+}
 
+void Renderer::RenderScene() {
+
+	RenderPlaneShadow();
+
+	RenderTerrainShadow();
 
 
 	//Render scene

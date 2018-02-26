@@ -74,7 +74,7 @@ void Window::open(int width, int height)
 	glfwSetScrollCallback(window, scrollCallback);
 	glfwSetWindowSizeCallback(window, resizeCallback);
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
