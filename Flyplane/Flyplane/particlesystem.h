@@ -10,7 +10,7 @@
 class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::Receiver<ParticleSystem> {
 
 	size_t searchIndex = 0;
-	std::vector<Particles> pool;
+	std::vector<Particles*> pool;
 
 	ComputeShader resetShader;
 	ComputeShader trailShader;
@@ -18,7 +18,6 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader engineTrailShader;
 	ComputeShader deadTrailShader;
 	ComputeShader sparkShader;
-	ShaderProgram program;
 public:
 	void configure(entityx::EventManager &eventManager) {
 		eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
@@ -31,10 +30,9 @@ public:
 		engineTrailShader.create("engineTrail.glsl");
 		deadTrailShader.create("deadTrail.glsl");
 		sparkShader.create("sparks.glsl");
-		program.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
-		for (int i = 0; i < 200; i++) {
-			pool.emplace_back(5000);
+		for (int i = 0; i < 40; i++) {
+			pool.push_back(new Particles(5000));
 		}
 	}
 
@@ -55,8 +53,11 @@ public:
 
 			for (auto &p : particles->systems)
 			{
-				chooseUniforms(p, entity, dt);
-				p->update();
+				if (p->used) {
+					auto ptr = p;
+					chooseUniforms(ptr, entity, dt);
+					ptr->update();
+				}
 			}
 		}
 	}
@@ -66,8 +67,8 @@ public:
 		auto transform = entity.component<Transform>();
 		switch (p->type) {
 		case TRAIL:
-			p->setComputeShader(trailShader);
-			p->setTexture("N/A");
+			//p->setComputeShader(&trailShader);
+			//p->setTexture("N/A");
 			p->setSize(0.1);
 			trailShader.use();
 			if (transform) {
@@ -78,8 +79,8 @@ public:
 			trailShader.uniform("dt", float(dt));
 			break;
 		case EXPLOSION:
-			p->setComputeShader(explosionShader);
-			p->setTexture("explosion");
+			//p->setComputeShader(&explosionShader);
+			//p->setTexture("explosion");
 			p->setSize(0.05);
 			explosionShader.use();
 			if (transform) {
@@ -90,8 +91,8 @@ public:
 			explosionShader.uniform("dt", float(dt));
 			break;
 		case SPARKS:
-			p->setComputeShader(sparkShader);
-			p->setTexture("N/A");
+			//p->setComputeShader(&sparkShader);
+			//p->setTexture("N/A");
 			p->setSize(0.01);
 			sparkShader.use();
 			if (transform) {
@@ -102,8 +103,8 @@ public:
 			sparkShader.uniform("dt", float(dt));
 			break;
 		case ENGINE_TRAIL:
-			p->setComputeShader(engineTrailShader);
-			p->setTexture("engine_fire");
+			//p->setComputeShader(&engineTrailShader);
+			//p->setTexture("engine_fire");
 			p->setSize(0.05);
 			engineTrailShader.use();
 			if (transform) {
@@ -114,8 +115,8 @@ public:
 			engineTrailShader.uniform("dt", float(dt));
 			break;
 		case DEAD_TRAIL:
-			p->setComputeShader(deadTrailShader);
-			p->setTexture("N/A");
+			//p->setComputeShader(&deadTrailShader);
+			//p->setTexture("N/A");
 			p->setSize(0.1);
 			deadTrailShader.use();
 			if (transform) {
@@ -142,46 +143,48 @@ public:
 
 		Particles* free = nullptr;
 		for (int i = 0; i < pool.size(); i++) {
-			if (!pool[i].used) {
-				pool[i].used = true;
-				free = &pool[i];
+			if (!pool[i]->used) {
+				pool[i]->used = true;
+				free = pool[i];
 				break;
 			}
 			searchIndex = (searchIndex + 1) % pool.size();
 		}
 		if (free) {
-			free->program = &program;
+			//free->program = &program;
 			free->type = event.type;
 			free->t.restart();
 			free->setTimer(event.effectLength);
 			resetShader.use();
-			free->setComputeShader(resetShader);
+			//free->setComputeShader(&resetShader);
 			free->update();
 			handle->systems.push_back(free);
 		}
 		else {
+			std::cout << "[WARNING] out of particles in pool, creating new!\n";
 			for (int i = 0; i < 20; i++) {
-				pool.emplace_back(5000);
+				pool.push_back(new Particles(5000));
 			}
+			receive(event);
+			/*
 			for (int i = 0; i < pool.size(); i++) {
-				if (!pool[i].used) {
-					pool[i].used = true;
-					free = &pool[i];
+				if (!pool[i]->used) {
+					pool[i]->used = true;
+					free = pool[i];
 					break;
 				}
 				searchIndex = (searchIndex + 1) % pool.size();
 			}
 			if (free) {
-				free->program = &program;
+				//free->program = &program;
 				free->type = event.type;
 				free->t.restart();
 				free->setTimer(event.effectLength);
 				resetShader.use();
-				free->setComputeShader(resetShader);
+				//free->setComputeShader(&resetShader);
 				free->update();
 				handle->systems.push_back(free);
-			}
-			std::cout << "[WARNING] out of particles in pool, creating new!\n";
+			}*/
 		}
 	}
 	void receive(const RemoveParticleEvent& event)
@@ -203,11 +206,10 @@ public:
 		auto entity = event.entity;
 		auto handle = entity.component<ParticleComponent>();
 		if (handle) {
-			for (auto &s : handle->systems)
-			{
-				s->used = false;
-				s = nullptr;
+			for (size_t i = 0; i < handle->systems.size(); i++) {
+				handle->systems[i]->used = false;
 			}
+			//handle->systems.erase(handle->systems.begin(), handle->systems.begin() + handle->systems.size() - 1);
 			//handle->system = nullptr;
 		}
 	}

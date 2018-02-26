@@ -32,6 +32,7 @@ private:
 	ShaderProgram enemyMarkerShader;
 	ShaderProgram missileShader;
 	ShaderProgram heightShader;
+	ShaderProgram particleShader;
 
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
@@ -129,7 +130,7 @@ public:
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
 
-	
+	void renderParticles(Particles* p);
 
 	void setIsOutside(bool isOutside) {
 		this->isOutside = isOutside;

@@ -21,6 +21,7 @@ Renderer::Renderer() {
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
 	this->heightShader.create("heightindicatorVS.glsl", "heightindicatorFS.glsl");
+	this->particleShader.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -512,6 +513,10 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 
 	glEnable(GL_CULL_FACE);
 	//glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::renderParticles(Particles * p) {
+	p->render(particleShader);
 }
 
 /*void Renderer::setCrosshairPos(glm::vec3 pos) {

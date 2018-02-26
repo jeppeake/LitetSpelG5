@@ -18,6 +18,8 @@ Particles::Particles(unsigned particles, float _effectTime)
 	glGenBuffers(1, &gVel);
 	glGenVertexArrays(1, &VAO);
 
+	std::cout << "[DEBUG] Creating Particles, count: " << numParticles << ", id's: " << gPos << ", " << gColor << ", " << gLife << ", " << gVel << "\n";
+
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, gPos);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, numParticles * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	GLint access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
@@ -94,24 +96,24 @@ void Particles::update()
 	glUseProgram(0);
 }
 
-void Particles::render()
+void Particles::render(ShaderProgram& program)
 {
-
-
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();
-	program->use();
+	program.use();
 	glBindVertexArray(VAO);
+	/*
 	if (text)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		text->bind(GL_TEXTURE0);
 	}
-	program->uniform("view", camera.getViewMatrix());
-	program->uniform("projection", camera.getProjMatrix());
-	program->uniform("cPos", transform.pos);
-	program->uniform("cUp", transform.orientation * glm::vec3(0.0, 1.0, 0.0));
-	program->uniform("particleSize", size);
+	*/
+	program.uniform("view", camera.getViewMatrix());
+	program.uniform("projection", camera.getProjMatrix());
+	program.uniform("cPos", transform.pos);
+	program.uniform("cUp", transform.orientation * glm::vec3(0.0, 1.0, 0.0));
+	program.uniform("particleSize", size);
 	glDrawArrays(GL_POINTS, 0, numParticles);
 	glBindVertexArray(0);
 }

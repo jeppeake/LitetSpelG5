@@ -59,7 +59,8 @@ struct RenderSystem : public System<RenderSystem> {
 
 
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
-			hp = hpComponent->health / hpComponent->maxHP;
+			if(hpComponent)
+				hp = hpComponent->health / hpComponent->maxHP;
 
 			if (entity.has_component<Equipment>()) {
 				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
@@ -192,7 +193,7 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{
-				p->render();
+				Renderer::getRenderer().renderParticles(p);
 			}
 		}
 		if (playing) {
