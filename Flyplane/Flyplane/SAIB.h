@@ -33,4 +33,7 @@ namespace SAIB {//STANDARD ARTIFICIAL INTELLIGENCE BEHAVIOURS
 	float testTowards(glm::vec3 v1, glm::vec3 v2, glm::vec3 t);
 
 	glm::vec3 calculateInterdiction(entityx::Entity target, entityx::Entity interdictor);
+	glm::vec3 ADVInterdiction(entityx::Entity target, entityx::Entity interdictor, float projectileSpeed, glm::vec3 offset, entityx::TimeDelta dt);
+
+	glm::vec2 turretRotateTowards(Turret turret, glm::vec3 point, glm::quat rootOrientation, glm::vec3 rootPosition);
 }

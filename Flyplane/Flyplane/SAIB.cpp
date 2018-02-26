@@ -161,12 +161,21 @@ float SAIB::testAxis(glm::vec3 position, glm::quat orientation, glm::vec3 target
 
 float SAIB::test2Axis(glm::vec3 position, glm::quat orientation, glm::vec3 target, glm::vec3 rot_axis, glm::vec3 test_axis) {
 	glm::vec3 pt = glm::normalize(target - position);
+
 	float pow = glm::length(pt - test_axis) / 2;
 
 	glm::vec3 axis_plus_t = glm::rotate(test_axis, glm::radians(5.f), rot_axis);
 	glm::vec3 axis_minus_t = glm::rotate(test_axis, glm::radians(-5.f), rot_axis);
 
-	return testTowards(axis_plus_t, axis_minus_t, pt) * glm::pow(pow, 0.5);
+	float ret = testTowards(axis_plus_t, axis_minus_t, pt) * glm::pow(pow, 0.5);
+	if (ret < 0.f) {
+		ret = glm::clamp(ret, -1.f, -0.2f);
+	}
+	else {
+		ret = glm::clamp(ret, 0.2f, 1.0f);
+	}
+	//std::cout << ret << "\n";
+	return ret;
 }
 
 float SAIB::testTowards(glm::vec3 v1, glm::vec3 v2, glm::vec3 t) {
@@ -198,4 +207,54 @@ glm::vec3 SAIB::calculateInterdiction(entityx::Entity target, entityx::Entity in
 	glm::vec3 aimPos = target_position + (target_vector * target_speed * t);
 
 	return aimPos;
+}
+
+glm::vec3 SAIB::ADVInterdiction(entityx::Entity target, entityx::Entity interdictor, float projectileSpeed, glm::vec3 offset, entityx::TimeDelta dt) {
+
+	glm::vec3 relVel = target.component<Physics>()->velocity - interdictor.component<Physics>()->velocity;
+	glm::vec3 interdictorPos = interdictor.component<Transform>()->pos + (offset * interdictor.component<Transform>()->orientation);
+	glm::vec3 pt = target.component<Transform>()->pos - interdictorPos;
+	glm::vec3 tp = interdictorPos - target.component<Transform>()->pos;
+
+	float a = glm::dot(relVel, relVel) - (projectileSpeed * projectileSpeed);
+	float b = 2.f * glm::dot(relVel, pt);
+	float c = glm::dot(pt, pt);
+
+	float p = -b / (2.f * a);
+	float q = (float)(glm::sqrt((b * b) - (4.f * a * c))) / (2.f * a);
+
+	float t1 = p - q;
+	float t2 = p + q;
+	float t;
+
+	if (t1 > t2 && t2 > 0) {
+		t = t2;
+	}
+	else {
+		t = t1;
+	}
+
+	glm::vec3 aimPos = target.component<Transform>()->pos + (relVel * t);
+	return aimPos;
+}
+
+glm::vec2 SAIB::turretRotateTowards(Turret turret, glm::vec3 point, glm::quat rootOrientation, glm::vec3 rootPosition) {
+	glm::vec2 rotation;
+	glm::vec3 ORI_front = glm::normalize(rootOrientation * turret.placement.orientation * glm::vec3(0.f, 0.f, 1.f));
+	glm::vec3 ORI_up = glm::normalize(rootOrientation * turret.placement.orientation * glm::vec3(0.f, 1.f, 0.f));
+	glm::vec3 ORI_left = glm::normalize(rootOrientation * turret.placement.orientation * glm::vec3(1.f, 0.f, 0.f));
+
+	glm::vec3 mount_front = rootOrientation * turret.getMountOrientation() * glm::vec3(0.f, 0.f, 1.f);
+	glm::vec3 gun_front = rootOrientation * turret.getGunOrientation() * glm::vec3(0.f, 0.f, 1.f);
+
+	glm::vec3 pt = point - rootPosition;
+	glm::vec3 npt = normalize(pt);
+	//traverse
+	float traverse = test2Axis(rootPosition, rootOrientation * turret.getMountOrientation(), point, ORI_up, mount_front);
+	rotation.x = -traverse;
+	//elevation
+	float elevation = test2Axis(rootPosition, rootOrientation * turret.getGunOrientation(), point, ORI_left, gun_front);
+	rotation.y = -elevation;
+
+	return rotation;
 }
