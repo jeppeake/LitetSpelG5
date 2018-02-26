@@ -8,6 +8,9 @@
 #include "missionmarker.h"
 #include "huntStatic.h"
 
+#include <iomanip>
+#include <cmath>
+#include <limits>
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
 
@@ -19,7 +22,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	PlayingState* state;
 	Timer timer;
 	Timer failTimer;
-	double downtime = 2;
+	double downtime = 10;
 	double mTime = 10;
 	Entity target;
 	Entity formLeader;
@@ -69,7 +72,26 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			std::cout << "Loading mission: " << curPath << "\n";
 			Mission m;
 			m.loadMission(curPath);
+
+			for (int i = 0; i < m.enemies.size(); i++) {
+				std::ifstream file("assets/Presets/AI/" + m.enemies[0].loadoutFile);
+				std::string str;
+
+				PlanePreset pp;
+				std::getline(file, str);
+				pp.load(str);
+				for (int j = 0; j < pp.wepPos.size(); j++) {
+					std::getline(file, str);
+					if (str.compare("0") != 0) {
+						WeaponPreset wp;
+						wp.load(str);
+					}
+				}
+			}
+
 			missions.push_back(m);
+
+
 		}
 	}
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -78,17 +100,17 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			glm::vec3 textColor = glm::vec3(1, 0, 0);
 
 			if (curMission.type == MISSIONTYPE_DEFEND) {
-				//win condition
 				textColor = MARKER_DEFEND;
-				if (formLeader.component<HealthComponent>()->isDead) {
-					state->addPoints(curMission.points);
-					active = false;
-					timer.restart();
-					target.destroy();
-					cleanUpMarkers();
-				}
-				//fail condition
+				
 				if (target.valid() && formLeader.valid()) {
+					//win condition
+					if (formLeader.component<HealthComponent>()->isDead) {
+						state->addPoints(curMission.points);
+						active = false;
+						timer.restart();
+						target.destroy();
+						cleanUpMarkers();
+					} //fail condition
 					if (target.component<HealthComponent>()->isDead) {
 						target.destroy();
 						fail();
@@ -125,8 +147,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}
 				}
 				//draw enemies left
-				AssetLoader::getLoader().getText()->drawText(std::to_string(enemyList.size() - alive) + '/' + std::to_string(enemyList.size()),
-					glm::vec2((Window::getWindow().size().x / 2) - 75, Window::getWindow().size().y - 260), glm::vec3(1, 0, 0), 0.3);
+				std::string txt = std::to_string(enemyList.size() - alive) + '/' + std::to_string(enemyList.size());
+				double x = (Window::getWindow().size().x / 2) - 9 * txt.length() / 2;
+				AssetLoader::getLoader().getText()->drawText(txt,
+					glm::vec2(x, Window::getWindow().size().y - 260), glm::vec3(1, 0, 0), 0.3);
 
 				//win condition
 				if (alive == 0) {
@@ -142,8 +166,15 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			double x = (Window::getWindow().size().x / 2) - 9 * curMission.missiontext.length()/2;
 			AssetLoader::getLoader().getMenutext()->drawText(curMission.missiontext,
 				glm::vec2(x, Window::getWindow().size().y - 200), textColor, textSize);
-			AssetLoader::getLoader().getText()->drawText("Time left: " + std::to_string(curMission.time - timer.elapsed()),
-				glm::vec2((Window::getWindow().size().x / 2) - 25, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
+
+			std::ostringstream oss;
+			oss << std::setprecision(4) << curMission.time - timer.elapsed();
+			std::string str = oss.str();
+			std::string ex = "20.55";
+			std::string txt = str;
+			x = (Window::getWindow().size().x / 2) - 9 * ex.length() / 2;
+			AssetLoader::getLoader().getText()->drawText(txt,
+				glm::vec2(x, Window::getWindow().size().y - 230), glm::vec3(1, 0, 0), 0.3);
 			
 			//universal fail condition
 			if (timer.elapsed() >= mTime) {
@@ -151,8 +182,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			}
 		}
 		else if (failed) {
-			AssetLoader::getLoader().getText()->drawText("You failed the mission!",
-				glm::vec2((Window::getWindow().size().x / 2) - 200, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 0.3);
+			std::string txt = "You failed the mission!";
+			double x = (Window::getWindow().size().x / 2) - 9 * txt.length() / 2;
+			AssetLoader::getLoader().getText()->drawText(txt,
+				glm::vec2(x, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 0.3);
 			if (failTimer.elapsed() > 5) {
 				timer.restart();
 				failed = false;
@@ -169,9 +202,14 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				for (HouseInfo house : missions[i].houses) {
 					auto entity = es.create();
 					entity.assign<ModelComponent>(house.model);
-					entity.assign<Transform>(glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x,0.f,house.pos.z))+200,house.pos.z));
+					glm::vec3 pos = glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
+					if (house.random) {
+						pos = pos + glm::vec3((rand() % 600)-300, 0, (rand() % 600)-300);
+						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 100;
+					}
+					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
+					entity.assign<Transform>(pos);
 					entity.component<Transform>()->scale = glm::vec3(1.0f);
-					//entity.assign<HealthComponent>(100);
 					
 					if (house.condition == CONDITION_DEFEND) {
 						entity.assign<Target>(FACTION_PLAYER, 100);
@@ -312,10 +350,13 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					//behaviours.push_back(new Constant_Turn(0));
 
-					if (mi.type == MISSIONTYPE_ATTACK) {
+					if (mi.type == MISSIONTYPE_ATTACK || mi.type == MISSIONTYPE_KILLALL) {
 						std::vector<glm::vec3> plotter;
-
-						glm::vec3 housepos = target.component<Transform>()->pos;
+						glm::vec3 housepos = enemy.pos;
+						if (mi.type == MISSIONTYPE_ATTACK) {
+							housepos = target.component<Transform>()->pos;
+						}
+						
 						plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z + 200));
 						plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z - 200));
 						plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z - 200));

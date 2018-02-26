@@ -6,7 +6,7 @@ public:
 		this->plotter = plotter;
 		this->loop_mode = loop_mode;
 	}
-	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
+	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		if (glm::length(AI.component<Transform>()->pos - plotter.at(target)) < 100) {
 			target++;
 			//std::cout << "Target " << target << " reached.\n";

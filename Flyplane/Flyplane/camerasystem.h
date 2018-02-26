@@ -41,7 +41,7 @@ struct CameraSystem : public System<CameraSystem> {
 				brakeSpeed = flight->brake_speed;
 			}
 
-			glm::vec3 offset(0, 1, -5.5);
+			glm::vec3 offset(0, 1, -10.5);
 
 			Transform camTrans = cameraOn->camera.getTransform();
 
