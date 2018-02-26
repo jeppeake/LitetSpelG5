@@ -186,7 +186,7 @@ float SAIB::testTowards(glm::vec3 v1, glm::vec3 v2, glm::vec3 t) {
 	return ret;
 }
 
-glm::vec3 SAIB::calculateInterdiction(entityx::Entity target, entityx::Entity interdictor) {
+glm::vec3 SAIB::calculateInterdiction(entityx::Entity target, entityx::Entity interdictor) {//deprecated
 	glm::vec3 target_vector;
 	if (glm::length(target.component<Physics>()->velocity) > 0.0001) {
 		target_vector = glm::normalize(target.component<Physics>()->velocity);

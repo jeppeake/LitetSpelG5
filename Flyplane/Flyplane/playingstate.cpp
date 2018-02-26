@@ -162,6 +162,7 @@ void PlayingState::loadLoadout()
 	float y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500;
 	glm::vec3 pos(x, y, z);
 	glm::quat orien(1, 0, 0, 0);
+	//std::cout << orien.x << orien.y << orien.z << orien.w << "\n";
 	// ---	PLAYER	---
 	entity_p = ex.entities.create();
 	x = 500;
@@ -212,9 +213,9 @@ void PlayingState::loadLoadout()
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
 	std::vector<Turret> turrets;
-	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 0.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
+	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
 	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
-	WeaponInfo WInfo(glm::vec3(3.f, 3.f, 6.f), AssetLoader::getLoader().getModel("bullet"));
+	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
 	turrets.emplace_back(stats2, info, placement, WInfo, false);
 
 	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos);

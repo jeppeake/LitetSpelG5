@@ -470,6 +470,12 @@
     <ClInclude Include="globaltimer.h">
       <Filter>UTILS</Filter>
     </ClInclude>
+    <ClInclude Include="turretpreset.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="turretpreset.cpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
