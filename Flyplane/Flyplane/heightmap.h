@@ -61,6 +61,7 @@ public:
 	void bind(ShaderProgram& program);
 	void unbind();
 	double heightAt(glm::vec3 pos);
+	bool isOutside(glm::vec3 pos);
 	void bindIndices(int i);
 	void unbindIndices();
 	

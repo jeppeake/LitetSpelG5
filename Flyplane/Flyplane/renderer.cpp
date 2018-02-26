@@ -112,6 +112,7 @@ Renderer::Renderer() {
 	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 
+	transparent.loadTexture("assets/Textures/transparent.png", 1);
 
 	sunDir = normalize(glm::vec3(0, 1, 2));
 }
@@ -349,6 +350,15 @@ void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshai
 	//Render weapon
 	if (weaponAmmo)
 		RenderWeapon();
+
+	if (isOutside)
+		RenderOutsideMessage();
+}
+
+void Renderer::RenderTransparent() {
+	glDisable(GL_DEPTH_TEST);
+	renderTexture(transparent, glm::mat4());
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::RenderCrosshair(glm::vec3 pos, glm::quat orientation) {
@@ -408,6 +418,16 @@ void Renderer::RenderSpeedometer(float speed) {
 
 	auto s = Window::getWindow().size();
 	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::RenderOutsideMessage() {
+	glDisable(GL_DEPTH_TEST);
+
+	RenderTransparent();
+	auto s = Window::getWindow().size();
+	AssetLoader::getLoader().getText()->drawText("Plz return to the combat area!", glm::vec2(s.x*0.5, s.y*0.5), glm::vec3(1, 1, 1), 0.6 * s.y / 720.0);
+
 	glEnable(GL_DEPTH_TEST);
 }
 
