@@ -12,7 +12,7 @@ struct Equipment {
 	void addSpecialWeapon(Weapon weapon) {
 		std::cout << "size of special: " << special.size() << std::endl;
 		//if (special.size() == 0)
-		selected = special.size() - 1;
+		selected = special.size();
 		special.push_back(weapon);
 		//special[0] = weapon;
 		//selected = 0;
