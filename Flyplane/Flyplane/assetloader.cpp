@@ -38,10 +38,6 @@ void AssetLoader::loadTexture(const std::string filename, const std::string name
 	}
 }
 
-void AssetLoader::loadWeapon(const std::string filename, const std::string name) {
-	weapons[name] = Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), AssetLoader::getLoader().getModel("fishrod"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, 0.0, 0.0), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), true, true);
-}
-
 void AssetLoader::loadHeightmap(const std::string &maptxt, const std::string &name) {
 	auto find = heightmaps.find(name);
 	if (find == heightmaps.end()) {
@@ -94,15 +90,5 @@ sf::SoundBuffer* AssetLoader::getSoundBuffer(const std::string name) {
 		return &(find->second);
 	else
 		std::cout << "AssetLoader error: Could not find requested sound." << "\n";
-	return nullptr;
-}
-
-Weapon* AssetLoader::getWeapon(const std::string name) {
-	auto find = weapons.find(name);
-
-	if (find != weapons.end())
-		return &(find->second);
-	else
-		std::cout << "AssetLoader error: Could not find requested weapon." << "\n";
 	return nullptr;
 }

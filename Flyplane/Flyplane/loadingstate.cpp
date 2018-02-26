@@ -35,8 +35,6 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 
-	AssetLoader::getLoader().loadWeapon("empty", "weapon");
-
 	current = "terrain";
 	update(0);
 	Window::getWindow().update();
