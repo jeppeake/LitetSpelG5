@@ -540,13 +540,12 @@ void Heightmap::recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float pa
 			
 			//t.orientation = glm::quat();
 			t.pos = scale*glm::vec3(center.x, 0.5f, center.y) + this->pos;
-			patch.setTransform(t);
 			patch.center = glm::vec3(0);
-
 			patch.sides[0] = scale * glm::vec3(patchSize*0.5f, 0, 0);
 			patch.sides[1] = scale * glm::vec3(0, 0, patchSize*0.5f);
 			patch.sides[2] = scale * glm::vec3(0, 0.5f, 0);
 
+			patch.setTransform(t);
 			
 			if (patch.intersect(frustum))
 				patches.emplace_back(patchSize, new_offset, indices);

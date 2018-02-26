@@ -182,7 +182,6 @@ void main() {
 	float visibility2 = shadow(vTerrainShadowSpace, terrainShadowMap);
 	float visibility = min(visibility1, visibility2);
 	
-	
 	float x = vTerrainShadowSpace.x;
 	float y = vTerrainShadowSpace.y;
 	float padding = 0.1;
@@ -233,7 +232,7 @@ void main() {
 	//outColor = vec4(vec3(falloff), 1);
 	//outColor = vec4(vec3(vTerrainShadowSpace.z), 1);
 
-	float depth = texture(terrainShadowMap, vTerrainShadowSpace.xy).r;
+	//float depth = texture(terrainShadowMap, vTerrainShadowSpace.xy).r;
 	//outColor = vec4(vec3(depth), 1);
 }
 
