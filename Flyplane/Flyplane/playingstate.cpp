@@ -211,14 +211,13 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	entity_p.assign <Equipment>(pweapons, weapons, pp.wepPos);
 	std::vector<Turret> turrets;
 	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 0.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
 	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
 	WeaponInfo WInfo(glm::vec3(3.f, 3.f, 6.f), AssetLoader::getLoader().getModel("bullet"));
 	turrets.emplace_back(stats2, info, placement, WInfo, false);
 
-	entity_p.assign <Equipment>(pweapons, weapons, turrets);
+	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos);
 	entity_p.assign <HealthComponent>(1000.0);
 
 	entityx::Entity terrain = ex.entities.create();

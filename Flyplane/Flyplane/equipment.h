@@ -11,7 +11,7 @@ struct WeaponSlot {
 struct Equipment {
 	//projectile model, sound, range?, ammo, speed, 
 	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special) : primary(primary), special(special) {}
-	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special, std::vector<glm::vec3> weaponPos) : primary(primary), special(special) {
+	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special, std::vector<Turret> turrets, std::vector<glm::vec3> weaponPos) : primary(primary), turrets(turrets), special(special) {
 		for (int i = 0; i < weaponPos.size(); i++) {
 			weaponSlots.push_back({ weaponPos[i], true, i });
 		}
