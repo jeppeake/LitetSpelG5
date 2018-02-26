@@ -125,7 +125,7 @@ private:
 
 	void handleDrop(entityx::Entity player, entityx::Entity drop) {
 		std::cout << "Picked up drop!" << std::endl;
-		Model* m = AssetLoader::getLoader().getModel("gunpod");//AssetLoader::getLoader().getModel("ALAAT-10");
+		Model* m = AssetLoader::getLoader().getModel("fishrod");//AssetLoader::getLoader().getModel("ALAAT-10");
 
 		if (m == nullptr)
 			std::cout << "Broken, nullptr" << std::endl;
@@ -139,7 +139,7 @@ private:
 			break;
 		case DropComponent::Weapon:
 			if (player.has_component<Equipment>())
-				player.component<Equipment>()->addSpecialWeapon(Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), m, m, glm::vec3(0, -2.2, 0.3), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0,0,1)), true, true));
+				player.component<Equipment>()->addSpecialWeapon(Weapon(WeaponStats(1, 100, 500, 10, 1, false, 3, 50, 60, 600, 1), m, m, glm::vec3(0, 0.0, 0.0), glm::vec3(0.6), glm::vec3(0.6), glm::angleAxis(0.f, glm::vec3(0,0,1)), true, true));
 			break;
 		}
 	}
