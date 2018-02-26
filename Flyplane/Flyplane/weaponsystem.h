@@ -152,7 +152,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				int preselect = equip->selected;
 
 				if (weapon->dissappear && weapon->stats.ammo <= 0) {
-					equip->special.erase(equip->special.begin() + equip->selected);
+					equip->removeSpecialWeapon();
+					//equip->special.erase(equip->special.begin() + equip->selected);
 					/*equip->selected = 0;
 					equip->special[equip->selected].timer.restart();*/
 				}

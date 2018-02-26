@@ -209,7 +209,7 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	entity_p.assign <Equipment>(pweapons, weapons);
+	entity_p.assign <Equipment>(pweapons, weapons, pp.wepPos);
 	entity_p.assign <HealthComponent>(1000.0);
 
 	entityx::Entity terrain = ex.entities.create();
