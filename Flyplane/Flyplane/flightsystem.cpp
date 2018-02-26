@@ -63,12 +63,12 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		float driftFactor = (1.00000000001f + maxDrift - drift);
 
 		if (driftFactor < 0.02f) {
-			flight->driftReduction += 0.01;
-			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.9f);
+			flight->driftReduction += 0.005;
+			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.7f);
 		}
 		else {
-			flight->driftReduction -= 0.01f;
-			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.9f);
+			flight->driftReduction -= 0.005f;
+			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.7f);
 		}
 
 		float boostSpeed = flight->boost_speed;
@@ -112,7 +112,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		//physics->velocity = glm::toMat3(transform->orientation) * glm::vec3(0.0, 0.0, 1.0) * speed * driftFactor + physics->velocity * (drift - (drift * maxDrift));
 
 		float minSpeed = breakSpeed;
-		float gravFactor = (1.f - (glm::clamp(glm::length(physics->velocity), minSpeed, 0.f) / minSpeed)) * 0.1;
+		float gravFactor = (1.f - (glm::clamp(glm::length(physics->velocity), minSpeed, 0.f) / minSpeed)) * 0.005;
 
 		physics->velocity += physics->g * gravFactor;
 

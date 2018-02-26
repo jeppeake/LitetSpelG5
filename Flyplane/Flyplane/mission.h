@@ -26,6 +26,7 @@ struct HouseInfo {
 	glm::vec3 pos;
 	Model* model;
 	unsigned int condition; //0 = nothing, 1 = destroy, 2 = defend
+	bool random;
 };
 
 struct Mission {
@@ -83,11 +84,9 @@ struct Mission {
 				std::stringstream ss;
 				ss.str(str);
 				HouseInfo temp;
+				temp.random = random;
 				ss >> temp.pos.x;
 				ss >> temp.pos.z;
-				if (random) {
-
-				}
 				std::getline(f, str);
 				temp.model = AssetLoader::getLoader().getModel(str);
 				std::getline(f, str);

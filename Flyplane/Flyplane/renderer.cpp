@@ -341,10 +341,16 @@ void Renderer::RenderScene() {
 
 void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
 	RenderClouds();
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+
 	RenderCrosshair(crosshairPos, orientation);
 	RenderHPBar(hp);
 	RenderHeightIndicator(height);
 	RenderSpeedometer(speed);
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 
 	//Render weapon
 	if (weaponAmmo)
@@ -357,11 +363,7 @@ void Renderer::RenderCrosshair(glm::vec3 pos, glm::quat orientation) {
 	guiShader.uniform("matrix", position * glm::mat4(orientation) * glm::rotate(3.14f / 4, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(50, 50, 1)));
 	guiShader.uniform("texSampler", 0);
 	crosshair.Bind();
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::RenderClouds() {
@@ -371,21 +373,15 @@ void Renderer::RenderClouds() {
 }
 
 void Renderer::RenderHPBar(float hp) {
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
 	renderTexture(hpbar, hpMatrix);
-	//renderTexture(hpTexture, hpMatrix * glm::translate(glm::vec3(-1, 0, -0.01)) * glm::scale(glm::vec3(hp, 1, 1)) * glm::translate(glm::vec3(1, 0, 0)));
 	heightShader.use();
 	heightShader.uniform("value", glm::vec2((1 - hp) / 2.0f, 0));
 	hpIndicator.Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::RenderHeightIndicator(float height) {
-	glDisable(GL_DEPTH_TEST);
-	float realHeight = (height);// -5000);// *2;
+	float realHeight = (height);
 	renderTexture(indicator, heightMatrix);
 	heightShader.use();
 	heightShader.uniform("value", glm::vec2(0, realHeight / 23000.0f));
@@ -394,11 +390,9 @@ void Renderer::RenderHeightIndicator(float height) {
 
 	auto s = Window::getWindow().size();
 	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realHeight), glm::vec2(143 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720 );
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::RenderSpeedometer(float speed) {
-	glDisable(GL_DEPTH_TEST);
 	renderTexture(indicator, speedMatrix);
 	float realSpeed = speed * 3.6;//* 2
 	heightShader.use();
@@ -408,7 +402,6 @@ void Renderer::RenderSpeedometer(float speed) {
 
 	auto s = Window::getWindow().size();
 	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720);
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::setWeaponModel(Model * mptr) {

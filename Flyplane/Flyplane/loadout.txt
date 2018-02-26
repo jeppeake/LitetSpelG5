@@ -1,8 +1,8 @@
-assets\Presets\Planes\laken.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile2.txt
+assets\Presets\Planes\Spectre.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
 0

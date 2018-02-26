@@ -16,4 +16,5 @@ public:
 	glm::vec3 velocity = glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 rotation = glm::vec3(0.0, 0.0, 0.0);
 	float drift = 0;
+	bool gravity = true;
 };

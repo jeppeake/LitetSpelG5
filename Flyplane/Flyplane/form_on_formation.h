@@ -5,7 +5,7 @@ public:
 	Form_On_Formation(int priority, Condition* condition, entityx::Entity formation) : Behaviour(priority, condition) {
 		this->formation = formation;
 	}
-	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
+	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (formation.valid()) {
 			if (id == -1) {//add position on formation

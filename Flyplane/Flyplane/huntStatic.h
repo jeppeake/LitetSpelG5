@@ -7,7 +7,7 @@ public:
 		this->cone = cone;
 		this->distance = distance;
 	}
-	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest) {
+	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (target.valid()) {
 			glm::vec3 aimPos = target.component<Transform>()->pos;
