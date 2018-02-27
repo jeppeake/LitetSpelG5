@@ -212,6 +212,23 @@ void PlayingState::loadLoadout()
 			nrOfWeapons++;
 		}
 	}
+	std::vector<Turret> turrets;
+	if (pp.weapon != "nan") {
+		if (pp.turretWeapon) {//turret
+			TurretPreset TP;
+			TP.load(pp.weapon);
+			//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+			turrets.emplace_back(TP.getTurret());
+		}
+		else {//primary
+			WeaponPreset PW;
+			PW.load(pp.weapon);
+			//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+			WeaponStats stats = WeaponStats(PW.ammo, PW.lifetime, PW.speed, PW.mass, PW.cooldown, PW.infAmmo);
+			pweapons.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		}
+	}
+
 	std::getline(file, str);
 	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
 
@@ -220,11 +237,10 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	std::vector<Turret> turrets;
 	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
 	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
 	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
-	turrets.emplace_back(stats2, info, placement, WInfo, false);
+	//turrets.emplace_back(stats2, info, placement, WInfo, false);
 
 	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos, nrOfWeapons);
 	entity_p.assign <HealthComponent>(1000.0);
