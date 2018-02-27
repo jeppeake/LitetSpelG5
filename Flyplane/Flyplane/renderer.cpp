@@ -9,6 +9,8 @@
 #include "assetloader.h"
 #include "input.h"
 #include "globaltimer.h"
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -418,9 +420,14 @@ void Renderer::RenderSpeedometer(float speed) {
 void Renderer::RenderOutsideMessage() {
 	glDisable(GL_DEPTH_TEST);
 
+
+	std::stringstream ss;
+	ss << std::fixed << std::setprecision(1) << outsideTime;
+
 	RenderTransparent();
 	auto s = Window::getWindow().size();
-	AssetLoader::getLoader().getText()->drawText("Plz return to the combat area!", glm::vec2(s.x*0.5, s.y*0.5), glm::vec3(1, 1, 1), 0.6 * s.y / 720.0);
+	AssetLoader::getLoader().getText()->drawText("Return to the combat area!", glm::vec2(s.x*0.25, s.y*0.6), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x*0.5, s.y*0.5), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
 
 	glEnable(GL_DEPTH_TEST);
 }

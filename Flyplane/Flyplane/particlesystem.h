@@ -19,6 +19,14 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader deadTrailShader;
 	ComputeShader sparkShader;
 public:
+
+	~ParticleSystem() {
+		std::cout << "[DEBUG] ParticleSystem destructor called\n";
+		for (int i = 0; i < pool.size(); i++) {
+			delete pool[i];
+		}
+	}
+
 	void configure(entityx::EventManager &eventManager) {
 		eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 		eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
@@ -31,7 +39,7 @@ public:
 		deadTrailShader.create("deadTrail.glsl");
 		sparkShader.create("sparks.glsl");
 
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 50; i++) {
 			pool.push_back(new Particles(5000));
 		}
 	}

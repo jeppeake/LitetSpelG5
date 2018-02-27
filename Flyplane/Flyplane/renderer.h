@@ -82,6 +82,7 @@ private:
 
 	Texture transparent;
 	bool isOutside = false;
+	double outsideTime = -1;
 
 	glm::vec3 sunDir;
 
@@ -132,9 +133,11 @@ public:
 
 	void renderParticles(Particles* p);
 
-	void setIsOutside(bool isOutside) {
+	void setIsOutside(bool isOutside, double outsideTime = -2) {
 		this->isOutside = isOutside;
+		this->outsideTime = outsideTime;
 	}
+
 
 	glm::mat4 getTerrainShadowMatrix() {
 		return this->terrainShadowMatrix;
