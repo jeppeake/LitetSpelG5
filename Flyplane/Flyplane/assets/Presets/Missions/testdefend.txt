@@ -7,13 +7,13 @@ hus1
 2
 
 spawnenemy
-33.4 1000 -82
+3300.4 1000 -102
 ryss.txt
 
 makeleader
 
 spawnenemy
-33.4 1000 -82
+3300.4 1000 -82
 ryss.txt
 
 //spawnenemy

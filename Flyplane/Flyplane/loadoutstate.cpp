@@ -43,11 +43,20 @@ void LoadoutState::updatePreview() {
 	std::vector<Weapon> pweapons;
 	std::vector<Turret> turrets;
 	std::cout << "Weapon: " << this->planePresets[this->selected].weapon << " : " << this->planePresets[this->selected].turretWeapon << "\n";
-	if (this->planePresets[this->selected].weapon != "nan" && this->planePresets[this->selected].turretWeapon) {
-		TurretPreset TP;
-		TP.load(this->planePresets[this->selected].weapon);
-		std::cout << "Loading: " << this->planePresets[this->selected].weapon << "\n";
-		turrets.emplace_back(TP.getTurret());
+	if (this->planePresets[this->selected].weapon != "nan") {
+		if (this->planePresets[this->selected].turretWeapon) {//turret
+			TurretPreset TP;
+			TP.load(this->planePresets[this->selected].weapon);
+			//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+			turrets.emplace_back(TP.getTurret());
+		}
+		else {//primary
+			WeaponPreset PW;
+			PW.load(this->planePresets[this->selected].weapon);
+			//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+			WeaponStats stats = WeaponStats(PW.ammo, PW.lifetime, PW.speed, PW.mass, PW.cooldown, PW.infAmmo);
+			pweapons.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		}
 	}
 
 	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {

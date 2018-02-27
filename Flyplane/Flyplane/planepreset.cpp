@@ -51,7 +51,6 @@ void PlanePreset::load(std::string presetname)
 			std::string skinname = str;
 			std::getline(file, str);
 			AssetLoader::getLoader().loadTexture(str, skinname);
-			std::cout << "Loaded texture: " << skinname << ", " << str << "\n";
 			continue;
 		}
 		else if (str.compare("weppos") == 0) {
