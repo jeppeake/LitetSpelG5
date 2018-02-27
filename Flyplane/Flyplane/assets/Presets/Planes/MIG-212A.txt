@@ -45,7 +45,7 @@ weppos
 -0.1225
 -0.8
 primaryweapon
-assets/Presets/Weapons/MIG_gunpod.txt
+assets/Presets/primaryWeapons/MIG_gunpod.txt
 turretweapon
 0
 description

@@ -41,5 +41,9 @@ weppos
 0.9
 -0.16
 -1.0
+primaryweapon
+assets/Presets/primaryWeapons/Laken.txt
+turretweapon
+0
 description
 The AJS-44 "Laken" was designes as a heavy interceptor figher, and boasts a powerful engine and an impressive arsenal. Its due to it's heavy weight its a bit sluggish in turns, and the engine response is slower.

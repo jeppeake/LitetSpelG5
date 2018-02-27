@@ -31,7 +31,7 @@ weppos
 0.02
 -0.2
 primaryweapon
-assets/Presets/Weapons/Lynx.txt
+assets/Presets/primaryWeapons/Lynx.txt
 turretweapon
 0
 description
