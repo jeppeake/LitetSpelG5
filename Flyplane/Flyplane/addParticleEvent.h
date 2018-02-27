@@ -7,6 +7,7 @@ enum PARTICLE_TYPES
 	EXPLOSION,
 	SPARKS,
 	ENGINE_TRAIL,
+	SPEED_PARTICLE,
 	NUM_TYPES
 };
 struct AddParticleEvent {

@@ -18,7 +18,16 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader engineTrailShader;
 	ComputeShader deadTrailShader;
 	ComputeShader sparkShader;
+	ComputeShader speedShader;
 public:
+
+	~ParticleSystem() {
+		std::cout << "[DEBUG] ParticleSystem destructor called\n";
+		for (int i = 0; i < pool.size(); i++) {
+			delete pool[i];
+		}
+	}
+
 	void configure(entityx::EventManager &eventManager) {
 		eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 		eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
@@ -30,7 +39,7 @@ public:
 		engineTrailShader.create("engineTrail.glsl");
 		deadTrailShader.create("deadTrail.glsl");
 		sparkShader.create("sparks.glsl");
-
+		speedShader.create("speedPart.glsl");
 		for (int i = 0; i < 40; i++) {
 			pool.push_back(new Particles(5000));
 		}
@@ -65,6 +74,7 @@ public:
 	void chooseUniforms(Particles *& p, entityx::Entity &entity, const entityx::TimeDelta &dt)
 	{
 		auto transform = entity.component<Transform>();
+		auto camTrans = Renderer::getRenderer().getCamera().getTransform();
 		switch (p->type) {
 		case TRAIL:
 			//p->setComputeShader(&trailShader);
@@ -125,6 +135,18 @@ public:
 			}
 			deadTrailShader.uniform("life", 10.f);
 			deadTrailShader.uniform("dt", float(dt));
+			break;
+		case SPEED_PARTICLE:
+			//p->setComputeShader(&deadTrailShader);
+			//p->setTexture("N/A");
+			p->setSize(0.05);
+			speedShader.use();
+			if (transform) {
+				speedShader.uniform("spawn", transform->pos);
+			}
+			speedShader.uniform("direction", camTrans.orientation * glm::vec3(0, 0, -1));
+			speedShader.uniform("life", 2.f);
+			speedShader.uniform("dt", float(dt));
 			break;
 		default:
 			// plz no

@@ -122,12 +122,17 @@ void PlayingState::spawnEnemies(int nr) {
 }
 
 void PlayingState::spawnDrop() {
+	std::cout << "Drop spawned" << std::endl;
+
 	auto entity = ex.entities.create();
-	entity.assign<Transform>(glm::vec3(rand() % 1000 - 500, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0)) + 1500, rand() % 1000 - 500), glm::quat(1, 0, 0, 0));
-	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+	glm::vec3 pos(rand() % 1000 - 500, 0, rand() % 1000 - 500);
+	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 2500;
+	auto handle = entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
+	handle->scale = glm::vec3(75.0, 75.0, 75.0);
+	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
-	//entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
+	entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
 }
 
 void PlayingState::drawHighscore() {
@@ -186,6 +191,7 @@ void PlayingState::loadLoadout()
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
+	ex.events.emit<AddParticleEvent>(SPEED_PARTICLE, handle);
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
@@ -240,6 +246,7 @@ void PlayingState::restart() {
 
 void PlayingState::init() 
 {
+	srand(static_cast<unsigned>(time(NULL)));
 	Window::getWindow().showCursor(true);
 
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
@@ -262,6 +269,8 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
+	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "kub");
+	AssetLoader::getLoader().loadModel("assets/misc/Ammo_sign.fbx", "Ammo_sign");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 

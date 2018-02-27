@@ -99,10 +99,12 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity entity : es.entities_with_components(terrain)) {
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
 
-
-
-			Renderer::getRenderer().setIsOutside(terrain->hmptr->isOutside(playerPos));
+			ComponentHandle<PlayerComponent> player;
+			for (Entity pEntity : es.entities_with_components(player)) {
+				Renderer::getRenderer().setIsOutside(player->isOutside, player->outsideTimeLeft);
+			}
 		}
+
 		ComponentHandle<CameraOnComponent> cameraOn;
 		for (Entity entity : es.entities_with_components(cameraOn)) {
 			cullingCamera = cameraOn->camera;
@@ -219,6 +221,7 @@ struct RenderSystem : public System<RenderSystem> {
 				}
 			}
 			for (Entity entity : es.entities_with_components(mmarker, transform)) {
+				radar.addPlane(*transform.get());
 				if (entity.has_component<MissionMarker>())
 				{
 					glm::vec3 color = mmarker->color;

@@ -1,4 +1,7 @@
 #include "playersystem.h"
+
+#include "terraincomponent.h"
+
 PlayerSystem::PlayerSystem()
 {
 	
@@ -10,10 +13,6 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 	ComponentHandle<PlayerComponent> player;
 	ComponentHandle<FlightComponent> flight;
 	for (Entity entity : es.entities_with_components(physics, transform, player, flight)) {
-		physics = entity.component<Physics>();
-		transform = entity.component<Transform>();
-		player = entity.component<PlayerComponent>();
-		flight = entity.component<FlightComponent>();
 
 		auto mv = Input::mouseMov();
 
@@ -99,6 +98,16 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 
 
-		
+		/******************
+		** outside logic **
+		******************/
+		ComponentHandle<Terrain> terrain;
+		for (Entity entity : es.entities_with_components(terrain)) {
+			player->isOutside = terrain->hmptr->isOutside(transform->pos);
+			if (!player->isOutside) {
+				player->outsideTimer.restart();
+			}
+			player->outsideTimeLeft = 5.0 - player->outsideTimer.elapsed();
+		}
 	}
 }
