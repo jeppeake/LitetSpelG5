@@ -30,6 +30,8 @@ Radar::Radar() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)(sizeof(float) * 2));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(RadarData), (GLvoid*)(sizeof(float) * 3));
 
 	glBindVertexArray(0);
 }
@@ -119,7 +121,7 @@ void Radar::setPlayer(Transform transform) {
 	player = transform;
 }
 
-void Radar::addPlane(Transform transform) {
+void Radar::addPlane(Transform transform, glm::vec3 color) {
 	float distance = glm::distance(glm::vec3(transform.pos.x, 0, transform.pos.z), glm::vec3(player.pos.x, 0, player.pos.z));
 
 	if (distance < 10000) {
@@ -132,7 +134,7 @@ void Radar::addPlane(Transform transform) {
 		}
 		glm::mat4 view = glm::lookAt(player.pos, player.pos + glm::vec3(0, -1, 0), glm::vec3(0, 0, 1));
 		vec = proj * view * glm::vec4(transform.pos.x, 0, transform.pos.z, 1);
-		bufferData.push_back({ vec.x, vec.y, angle });
+		bufferData.push_back({ vec.x, vec.y, angle, color });
 	}
 }
 
@@ -148,12 +150,12 @@ void Radar::update(float dt) {
 	for (int i = 0; i < bufferData.size(); i++) {
 		if (angle >= oldAngle) {
 			if (angle >= bufferData[i].angle && oldAngle <= bufferData[i].angle) {
-				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
+				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0, bufferData[i].color });
 			}
 		}
 		else {
 			if (oldAngle <= bufferData[i].angle || angle >= bufferData[i].angle) {
-				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0 });
+				oldBufferData.push_back({ bufferData[i].x, bufferData[i].y, 1.0, bufferData[i].color });
 			}
 		}
 	}

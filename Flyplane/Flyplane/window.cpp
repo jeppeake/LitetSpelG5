@@ -51,7 +51,7 @@ void Window::open(int width, int height)
 	//glfwWindowHint(GLFW_DEPTH_BITS, 16);
 	//glfwWindowHint(GLFW_STENCIL_BITS, 0);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 
 	//glfwWindowHint(GLFW_SAMPLES, 8);
 
