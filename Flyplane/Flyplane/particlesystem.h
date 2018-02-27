@@ -139,13 +139,13 @@ public:
 		case SPEED_PARTICLE:
 			//p->setComputeShader(&deadTrailShader);
 			//p->setTexture("N/A");
-			p->setSize(0.005);
+			p->setSize(0.05);
 			speedShader.use();
 			if (transform) {
 				speedShader.uniform("spawn", transform->pos);
 			}
 			speedShader.uniform("direction", camTrans.orientation * glm::vec3(0, 0, -1));
-			speedShader.uniform("life", 0.5f);
+			speedShader.uniform("life", 2.f);
 			speedShader.uniform("dt", float(dt));
 			break;
 		default:
