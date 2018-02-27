@@ -42,7 +42,13 @@ void LoadoutState::updatePreview() {
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 	std::vector<Turret> turrets;
-
+	std::cout << "Weapon: " << this->planePresets[this->selected].weapon << " : " << this->planePresets[this->selected].turretWeapon << "\n";
+	if (this->planePresets[this->selected].weapon != "nan" && this->planePresets[this->selected].turretWeapon) {
+		TurretPreset TP;
+		TP.load(this->planePresets[this->selected].weapon);
+		std::cout << "Loading: " << this->planePresets[this->selected].weapon << "\n";
+		turrets.emplace_back(TP.getTurret());
+	}
 
 	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {
 		if (this->pickedWeapons[i] != NO_WEAPON) {
@@ -52,7 +58,7 @@ void LoadoutState::updatePreview() {
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(pr.name), AssetLoader::getLoader().getModel(pr.projModel), pos + pr.extraOffset, glm::vec3(pr.scale), glm::vec3(pr.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 		}
 	}
-	entityp.assign <Equipment>(pweapons, weapons);
+	entityp.assign <Equipment>(pweapons, weapons, turrets);
 }
 
 void LoadoutState::init() {
