@@ -347,14 +347,14 @@ void Renderer::RenderScene() {
 	//Render arrows
 	enemyArrowShader.use();
 	enemyArrowShader.uniform("aspectMatrix", viewProjMatrix);
-
+	glDisable(GL_CULL_FACE);
 	for (int i = 0; i < arrows.size(); i++) {
 		enemyArrowShader.uniform("transform", arrows[i].pos);
 		//enemyMarkerShader.uniform("scale", p[i].scale);
 		enemyArrowShader.uniform("color", arrows[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
-
+	glEnable(GL_CULL_FACE);
 	markers.clear();
 	list.clear();
 	listStatics.clear();
