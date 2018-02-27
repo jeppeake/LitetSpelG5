@@ -30,6 +30,7 @@ private:
 	ShaderProgram shadow;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
+	ShaderProgram enemyArrowShader;
 	ShaderProgram missileShader;
 	ShaderProgram heightShader;
 	ShaderProgram particleShader;

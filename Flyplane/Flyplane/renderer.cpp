@@ -19,6 +19,7 @@ Renderer::Renderer() {
 	this->terrainShadow.create("terrainShadowVert.glsl", "shadowFragmentShader.glsl");
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
+	this->enemyArrowShader.create("enemymarkerVS.glsl", "enemyarrowGS.glsl", "enemymarkerFS.glsl");
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
 	this->heightShader.create("heightindicatorVS.glsl", "heightindicatorFS.glsl");
 	this->particleShader.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
@@ -260,7 +261,6 @@ void Renderer::RenderScene() {
 
 	RenderTerrainShadow();
 
-
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	auto s = Window::getWindow().size();
@@ -325,13 +325,33 @@ void Renderer::RenderScene() {
 	std::vector<Marker> p = markers.getMarkers();
 	enemyMarkerShader.uniform("aspectMatrix", viewProjMatrix);
 	enemyMarkerShader.uniform("cameraPos", this->camera.getTransform().pos);
+	std::vector<Marker> arrows;
+
 	for (int i = 0; i < p.size(); i++) {
-		enemyMarkerShader.uniform("transform", p[i].pos);
-		enemyMarkerShader.uniform("scale", p[i].scale);
-		enemyMarkerShader.uniform("color", p[i].color);
+		glm::vec4 temp = viewProjMatrix * glm::vec4(p[i].pos, 1);
+		temp = temp / temp.w;
+
+		if (temp.x < -1.0 || temp.x > 1.0 || temp.y < -1.0 || temp.y > 1.0 || temp.z < 0.0) {
+			arrows.push_back({p[i].pos, p[i].color, p[i].scale });
+		}
+
+		else {
+			enemyMarkerShader.uniform("transform", p[i].pos);
+			enemyMarkerShader.uniform("scale", p[i].scale);
+			enemyMarkerShader.uniform("color", p[i].color);
+			glDrawArrays(GL_POINTS, 0, 1);
+		}
+	}
+	//Render arrows
+	enemyArrowShader.use();
+	enemyArrowShader.uniform("aspectMatrix", viewProjMatrix);
+
+	for (int i = 0; i < arrows.size(); i++) {
+		enemyArrowShader.uniform("transform", arrows[i].pos);
+		//enemyMarkerShader.uniform("scale", p[i].scale);
+		enemyArrowShader.uniform("color", arrows[i].color);
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
-
 
 	markers.clear();
 	list.clear();

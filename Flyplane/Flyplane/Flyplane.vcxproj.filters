@@ -584,6 +584,9 @@
     <None Include="terrainShadowVert.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="enemyarrowGS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
