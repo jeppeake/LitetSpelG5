@@ -29,7 +29,7 @@ loadout.txt
 loadout.txt
 
 settimer
-20.45
+40
 
 huntplayerdist
 1000
@@ -41,4 +41,4 @@ points
 1000
 
 text
-Crap! An angry russian dude wants to crash into the house, kill him before he gets too close!
+Crap! An angry russian dude wants to bomb one of our main factories, kill him before he succeeds.

@@ -1,0 +1,20 @@
+2
+
+spawnenemy
+53.4 1000 -52
+bogdan.txt
+
+settimer
+40
+
+huntplayerdist
+4000
+
+firingdistance
+1000
+
+points
+2500
+
+text
+Evil Nazi Supreme Officer Bogdan Dorbel, has gone completely mad. Stop him before he does the crazy thing!
