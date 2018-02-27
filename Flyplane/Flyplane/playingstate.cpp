@@ -190,6 +190,7 @@ void PlayingState::loadLoadout()
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
+	ex.events.emit<AddParticleEvent>(SPEED_PARTICLE, handle);
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 

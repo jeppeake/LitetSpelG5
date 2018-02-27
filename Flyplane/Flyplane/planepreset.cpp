@@ -51,7 +51,6 @@ void PlanePreset::load(std::string presetname)
 			std::string skinname = str;
 			std::getline(file, str);
 			AssetLoader::getLoader().loadTexture(str, skinname);
-			std::cout << "Loaded texture: " << skinname << ", " << str << "\n";
 			continue;
 		}
 		else if (str.compare("weppos") == 0) {
@@ -65,7 +64,7 @@ void PlanePreset::load(std::string presetname)
 			wepPos.push_back(pos);
 			continue;
 		}
-		else if (str.compare("weapon") == 0) {
+		else if (str.compare("primaryweapon") == 0) {
 			std::getline(file, str);
 			weapon = str;
 			continue;

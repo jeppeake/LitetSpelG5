@@ -584,6 +584,9 @@
     <None Include="terrainShadowVert.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="speedPart.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
