@@ -86,8 +86,6 @@ bool BoundingBox::intersect(Heightmap *map)
 
 void BoundingBox::setTransform(const Transform & transform)
 {
-	this->transform = transform;
-
 	glm::vec3 rotSides[3];
 	for (int i = 0; i < 3; i++) // maybe add scale in calculation
 		rotSides[i] = transform.orientation*(transform.scale*this->sides[i]);
@@ -96,13 +94,26 @@ void BoundingBox::setTransform(const Transform & transform)
 	normals[1] = glm::normalize(rotSides[1]);
 	normals[2] = glm::normalize(rotSides[2]);
 
+	float maxRadius = 0;
+
+	worldCenter = transform.orientation*(transform.scale*center) + transform.pos;
+
 	int i = 0;
 	for (float x = -1; x <= 1; x += 2) {
 		for (float y = -1; y <= 1; y += 2) {
 			for (float z = -1; z <= 1; z += 2) {
-				corners[i] = x * rotSides[0] + y * rotSides[1] + z * rotSides[2] + transform.orientation*(transform.scale*center) + transform.pos;
+				corners[i] = x * rotSides[0] + y * rotSides[1] + z * rotSides[2];
+
+				float currRadius = length(corners[i]);
+				if (currRadius > maxRadius)
+					maxRadius = currRadius;
+
+				corners[i] += worldCenter;
 				i++;
 			}
 		}
 	}
+
+	boundingRadius = maxRadius;
+
 }

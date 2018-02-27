@@ -77,16 +77,14 @@ private:
 		}
 		
 
-		float distance = length(a_trans->pos - b_trans->pos);
-		float radii = a_model->mptr->getBoundingRadius() + b_model->mptr->getBoundingRadius();
-		if (distance < radii)
-		{
-			for (int i = 0; i < a_boxes.size(); i++)
-			{
-				for (int j = 0; j < b_boxes.size(); j++)
-				{
-					if (a_boxes[i].intersect(b_boxes[j]))
-					{
+		for (int i = 0; i < a_boxes.size(); i++) {
+			for (int j = 0; j < b_boxes.size(); j++) {
+
+				float distance = length(a_boxes[i].worldCenter - b_boxes[j].worldCenter);
+				float radii = a_boxes[i].boundingRadius + b_boxes[j].boundingRadius;
+
+				if (distance < radii) {
+					if (a_boxes[i].intersect(b_boxes[j])) {
 						handleCollision(a, b, es);
 						return;
 					}
