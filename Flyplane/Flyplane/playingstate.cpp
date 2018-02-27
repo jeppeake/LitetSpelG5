@@ -245,6 +245,7 @@ void PlayingState::restart() {
 
 void PlayingState::init() 
 {
+	srand(static_cast<unsigned>(time(NULL)));
 	Window::getWindow().showCursor(true);
 
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
