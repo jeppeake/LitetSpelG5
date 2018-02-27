@@ -224,6 +224,17 @@ public:
 	};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
+		/******************
+		**     DEBUG     **
+		******************/
+
+
+
+		/******************
+		**    \DEBUG     **
+		******************/
+
+
 		Heightmap* map = nullptr;
 		entityx::ComponentHandle<Terrain> terr;
 		entityx::Entity terrain;
