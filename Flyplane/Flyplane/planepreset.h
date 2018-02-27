@@ -12,7 +12,7 @@ public:
 	double normalspeed, boostspeed, breakforce, acceleration, turnrate;
 	std::vector<std::string> textureNames;
 	std::vector<glm::vec3> wepPos;
-	std::string weapon;
+	std::string weapon = "nan";
 	bool turretWeapon = false;
 	PlanePreset() {}
 	~PlanePreset() {}
