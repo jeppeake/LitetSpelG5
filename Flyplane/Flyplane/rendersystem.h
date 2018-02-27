@@ -222,6 +222,7 @@ struct RenderSystem : public System<RenderSystem> {
 				}
 			}
 			for (Entity entity : es.entities_with_components(mmarker, transform)) {
+				radar.addPlane(*transform.get());
 				if (entity.has_component<MissionMarker>())
 				{
 					glm::vec3 color = mmarker->color;

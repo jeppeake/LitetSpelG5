@@ -66,7 +66,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 	MissionSystem(PlayingState *state) : state(state) {
 		std::string path = "assets/Presets/Missions";
-
+		
 		for (auto & p : fs::directory_iterator(path)) {
 			std::string curPath = p.path().string();
 			std::cout << "Loading mission: " << curPath << "\n";
@@ -203,8 +203,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(house.model);
 					glm::vec3 pos = glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
 					if (house.random) {
-						pos = pos + glm::vec3((rand() % 600)-300, 0, (rand() % 600)-300);
-						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 100;
+						pos = pos + glm::vec3((rand() % 5000)-2500, 0, (rand() % 5000)-2500);
+						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 50;
 					}
 					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
 					entity.assign<Transform>(pos);
@@ -354,6 +354,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						glm::vec3 housepos = enemy.pos;
 						if (mi.type == MISSIONTYPE_ATTACK) {
 							housepos = target.component<Transform>()->pos;
+							entity.component<Transform>()->pos = housepos;
+							entity.component<Transform>()->pos.y = housepos.y + rand() % 300;
 						}
 						
 						plotter.push_back(glm::vec3(housepos.x + 200, housepos.y + 100, housepos.z + 200));
