@@ -127,8 +127,9 @@ void PlayingState::spawnDrop() {
 	auto entity = ex.entities.create();
 	glm::vec3 pos(rand() % 1000 - 500, 0, rand() % 1000 - 500);
 	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 2500;
-	entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
-	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("kub"));
+	auto handle = entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
+	handle->scale = glm::vec3(75.0, 75.0, 75.0);
+	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
 	entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
@@ -269,6 +270,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "kub");
+	AssetLoader::getLoader().loadModel("assets/misc/Ammo_sign.fbx", "Ammo_sign");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
