@@ -253,18 +253,17 @@ public:
 				} else {
 					// ???
 				}
-			} else {
+			}
+			else {
 				if (entity.has_component<FlightComponent>()) {
 					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FlightComponent>()) {
 						checkCollision(entity, other,events);
 					}
 				}
 				else if (entity.has_component<DropComponent>()) {
-						entityx::ComponentHandle<PlayerComponent> player;
-						for (entityx::Entity other : es.entities_with_components(collision, transform, model, player)) {
+						for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, PlayerComponent>()) {
 							checkCollision(entity, other, events);
 						}
-					
 				}
 			}
 			
@@ -272,6 +271,7 @@ public:
 				continue;
 			}
 			auto boxes = *model->mptr->getBoundingBoxes();
+
 			// Collision with terrain
 			glm::vec3 pos = transform.get()->pos;
 			double height = map->heightAt(pos);
@@ -308,6 +308,9 @@ public:
 		{
 			if (e.second.has_component<AIComponent>()) {
 				std::cout << "COLLISION DEATH\n";
+			}
+			else if (e.second.has_component<DropComponent>()) {
+				std::cout << "Removed drop\n";
 			}
 			e.second.destroy();
 		}
