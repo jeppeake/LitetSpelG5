@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include "glm\glm.hpp"
-#include "weapon.h"
 #include "turret.h"
+#include "assetloader.h"
 
 class TurretPreset {
 public:

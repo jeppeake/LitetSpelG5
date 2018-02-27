@@ -65,7 +65,7 @@ void PlanePreset::load(std::string presetname)
 			wepPos.push_back(pos);
 			continue;
 		}
-		else if (str.compare("weapon") == 0) {
+		else if (str.compare("primaryweapon") == 0) {
 			std::getline(file, str);
 			weapon = str;
 			continue;

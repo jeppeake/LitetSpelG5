@@ -1,6 +1,5 @@
 #include "turretpreset.h"
 #include <fstream>
-#include "assetloader.h"
 
 void TurretPreset::load(std::string presetname) {
 	file = presetname;
