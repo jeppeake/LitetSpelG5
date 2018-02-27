@@ -388,6 +388,8 @@ void Renderer::RenderClouds() {
 void Renderer::RenderHPBar(float hp) {
 	renderTexture(hpbar, hpMatrix);
 	heightShader.use();
+	if (hp < 0)
+		hp = 0;
 	heightShader.uniform("value", glm::vec2((1 - hp) / 2.0f, 0));
 	hpIndicator.Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

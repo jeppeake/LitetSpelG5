@@ -23,7 +23,7 @@ weppos
 -0.1
 -0.4
 primaryweapon
-assets/Presets/Weapons/G-201.txt
+assets/Presets/primaryWeapons/G-201.txt
 turretweapon
 0
 description

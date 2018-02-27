@@ -1,10 +1,14 @@
 #pragma once
 #include "camera.h"
+#include "timer.h"
 
 struct PlayerComponent {
 	PlayerComponent() {
 
 	}
 	bool flyByWire = false;
-	Camera camera;
+
+	Timer outsideTimer;
+	bool isOutside = false;
+	double outsideTimeLeft = 0;
 };
