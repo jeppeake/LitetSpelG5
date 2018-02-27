@@ -203,7 +203,8 @@ struct RenderSystem : public System<RenderSystem> {
 			ComponentHandle<MissionMarker> mmarker;
 
 			for (Entity entity : es.entities_with_components(ai, transform)) {
-				radar.addPlane(*transform.get());
+				if (!entity.has_component<MissionMarker>())
+					radar.addPlane(*transform.get());
 				if (entity.has_component<FlightComponent>())
 				{
 					glm::vec3 enemyPos = entity.component<Transform>()->pos;
@@ -221,9 +222,11 @@ struct RenderSystem : public System<RenderSystem> {
 				}
 			}
 			for (Entity entity : es.entities_with_components(mmarker, transform)) {
+				radar.addPlane(*transform.get());
 				if (entity.has_component<MissionMarker>())
 				{
 					glm::vec3 color = mmarker->color;
+					radar.addPlane(*transform.get(), color);
 					if (entity.has_component<Target>()) {
 						if (entity.component<Target>().get()->is_targeted) {
 							color += glm::vec3(-0.5, 0.9, -0.5);

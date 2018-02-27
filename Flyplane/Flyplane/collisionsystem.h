@@ -22,6 +22,7 @@ private:
 	Heightmap *map;
 	PlayingState *state;
 	sf::Sound hitSound;
+	sf::Sound dropSound;
 
 	std::map<entityx::Entity::Id, entityx::Entity> to_remove;
 
@@ -125,6 +126,7 @@ private:
 
 	void handleDrop(entityx::Entity player, entityx::Entity drop) {
 		std::cout << "Picked up drop! ";
+		dropSound.play();
 
 		switch (drop.component<DropComponent>()->type) {
 		case DropComponent::Health:
@@ -216,11 +218,17 @@ public:
 		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
 		hitSound.setRelativeToListener(true);
 		hitSound.setPosition(0, 0, 0);
+		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
+		dropSound.setRelativeToListener(true);
+		dropSound.setPosition(0, 0, 0);
 	};
 	CollisionSystem(Heightmap *map, PlayingState *state) : map(map), state(state) {
 		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
 		hitSound.setRelativeToListener(true);
 		hitSound.setPosition(0, 0, 0);
+		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
+		dropSound.setRelativeToListener(true);
+		dropSound.setPosition(0, 0, 0);
 	};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{

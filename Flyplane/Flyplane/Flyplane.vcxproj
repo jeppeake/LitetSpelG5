@@ -294,6 +294,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="deadTrail.glsl" />
+    <None Include="enemyarrowGS.glsl" />
     <None Include="enemymarkerFS.glsl" />
     <None Include="enemymarkerGS.glsl" />
     <None Include="enemymarkerVS.glsl" />

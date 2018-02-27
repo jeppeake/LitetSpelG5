@@ -127,8 +127,9 @@ void PlayingState::spawnDrop() {
 	auto entity = ex.entities.create();
 	glm::vec3 pos(rand() % 1000 - 500, 0, rand() % 1000 - 500);
 	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 2500;
-	entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
-	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("kub"));
+	auto handle = entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
+	handle->scale = glm::vec3(75.0, 75.0, 75.0);
+	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
 	entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
@@ -211,6 +212,23 @@ void PlayingState::loadLoadout()
 			nrOfWeapons++;
 		}
 	}
+	std::vector<Turret> turrets;
+	if (pp.weapon != "nan") {
+		if (pp.turretWeapon) {//turret
+			TurretPreset TP;
+			TP.load(pp.weapon);
+			//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+			turrets.emplace_back(TP.getTurret());
+		}
+		else {//primary
+			WeaponPreset PW;
+			PW.load(pp.weapon);
+			//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+			WeaponStats stats = WeaponStats(PW.ammo, PW.lifetime, PW.speed, PW.mass, PW.cooldown, PW.infAmmo);
+			pweapons.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		}
+	}
+
 	std::getline(file, str);
 	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
 
@@ -219,11 +237,10 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	std::vector<Turret> turrets;
 	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
 	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
 	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
-	turrets.emplace_back(stats2, info, placement, WInfo, false);
+	//turrets.emplace_back(stats2, info, placement, WInfo, false);
 
 	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos, nrOfWeapons);
 	entity_p.assign <HealthComponent>(1000.0);
@@ -245,6 +262,7 @@ void PlayingState::restart() {
 
 void PlayingState::init() 
 {
+	srand(static_cast<unsigned>(time(NULL)));
 	Window::getWindow().showCursor(true);
 
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
@@ -268,6 +286,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "kub");
+	AssetLoader::getLoader().loadModel("assets/misc/Ammo_sign.fbx", "Ammo_sign");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 

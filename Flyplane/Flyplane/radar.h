@@ -9,11 +9,13 @@
 struct NewPlane {
 	float x, y;
 	float angle;
+	glm::vec3 color;
 };
 
 struct RadarData {
 	float x, y;
 	float intensity;
+	glm::vec3 color;
 };
 
 
@@ -39,5 +41,5 @@ public:
 	Radar();
 	void draw(float dt);
 	void setPlayer(Transform transform);
-	void addPlane(Transform transform);
+	void addPlane(Transform transform, glm::vec3 color = glm::vec3(1, 0, 0));
 };

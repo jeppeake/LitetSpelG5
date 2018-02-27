@@ -19,7 +19,7 @@ public:
 				formation.component<FormationComponent>()->posCalc = posCalc;
 				formation.component<FormationComponent>()->add = !formation.component<FormationComponent>()->add;
 				formation.component<FormationComponent>()->positions.push_back(position);
-				std::cout << position.x << " : " << position.y << "\n";
+				//std::cout << position.x << " : " << position.y << "\n";
 			}
 			glm::quat ori = formation.component<Transform>()->orientation;
 			if (!formation.has_component<FormationComponent>()) {

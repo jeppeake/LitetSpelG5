@@ -1,6 +1,10 @@
-assets\Presets\Planes\Lynx.txt
+assets\Presets\Planes\supertest.txt
 assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\missile3.txt
+assets\Presets\Weapons\missile3.txt
 0

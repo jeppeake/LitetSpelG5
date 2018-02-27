@@ -46,3 +46,7 @@ weppos
 2.0
 -0.43
 -0.2
+primaryweapon
+assets/Presets/primaryWeapons/Starfighter.txt
+turretweapon
+0
