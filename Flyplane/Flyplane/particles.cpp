@@ -82,6 +82,14 @@ Particles::Particles(unsigned particles, float _effectTime)
 	glBindVertexArray(0);
 }
 
+Particles::~Particles() {
+	glDeleteBuffers(1, &gPos);
+	glDeleteBuffers(1, &gColor);
+	glDeleteBuffers(1, &gLife);
+	glDeleteBuffers(1, &gVel);
+	glDeleteVertexArrays(1, &VAO);
+}
+
 void Particles::update()
 {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, gPos);

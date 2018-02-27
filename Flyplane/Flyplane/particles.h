@@ -21,6 +21,7 @@ private:
 public:
 	Timer t;
 	Particles(unsigned particles, float _effectTime = 0);
+	~Particles();
 	/*
 	void setComputeShader(ComputeShader* compute)
 	{
