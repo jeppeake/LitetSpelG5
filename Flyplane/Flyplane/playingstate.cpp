@@ -133,7 +133,7 @@ void PlayingState::spawnDrop() {
 	handle->scale = glm::vec3(75.0, 75.0, 75.0);
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
-	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
+	entity.assign<DropComponent>(static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems), 500);
 	entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
 }
 
@@ -476,7 +476,7 @@ void PlayingState::update(double dt)
 	/*
 	ex.systems.update<System class here>(dt);
 	*/
-	
+
 	if (Input::isKeyPressed(GLFW_KEY_ESCAPE)) {
 		this->menuOpen = !this->menuOpen;
 
