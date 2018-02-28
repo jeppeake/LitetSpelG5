@@ -61,6 +61,8 @@
 #include "mission.h"
 #include "missionsystem.h"
 
+#include "lifetimesystem.h"
+
 //entityx::Entity entity;
 
 entityx::Entity entity_formation;
@@ -324,6 +326,7 @@ void PlayingState::init()
 	ex.systems.add<GameOver>(this);
 	ex.systems.add<ParticleSystem>();
 	ex.systems.add<CameraSystem>();
+	ex.systems.add<LifeTimeSystem>();
 	ex.systems.add<MissionSystem>(this);
 	ex.systems.configure();
 
@@ -549,8 +552,10 @@ void PlayingState::update(double dt)
 		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
-		
+		ex.systems.update<LifeTimeSystem>(dt);
+
 		ex.systems.update<ParticleSystem>(dt);
+
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		ex.systems.update<MissionSystem>(dt);
