@@ -320,7 +320,7 @@ public:
 				}
 			}
 			
-			if (!map && entity.has_component<HouseComponent>()) {
+			if (!map || entity.has_component<HouseComponent>()) {
 				continue;
 			}
 			auto boxes = *model->mptr->getBoundingBoxes();

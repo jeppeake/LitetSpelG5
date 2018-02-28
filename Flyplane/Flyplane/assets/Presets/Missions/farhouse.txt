@@ -3,7 +3,7 @@
 spawnhouse
 1
 500.4 -500
-hus1
+bunker
 1
 
 spawnenemy

@@ -82,6 +82,8 @@ private:
 	std::vector<Patch> shadowPatches;
 
 	Texture transparent;
+	Texture score;
+
 	bool isOutside = false;
 	double outsideTime = -1;
 
