@@ -25,12 +25,15 @@ int main(void)
 	EngineState* engine = new MenuState();
 	engine->init();
 
-	TimeVisualizer::init();
+	//TimeVisualizer::init();
 
 	Timer deltatime;
 	while (!Window::getWindow().shouldClose()) {
 		double dt = deltatime.restart();
-
+		double dtMax = 4.0 / 60.0;
+		if (dt >= dtMax) {
+			dt = dtMax;
+		}
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 

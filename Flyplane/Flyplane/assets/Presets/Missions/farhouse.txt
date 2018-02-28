@@ -8,23 +8,7 @@ hus1
 
 spawnenemy
 500.4 210 -500
-tysk.txt
-
-spawnenemy
-500.4 220 -500
-tysk.txt
-
-spawnenemy
-500.4 230 -500
-tysk.txt
-
-spawnenemy
-500.4 240 -500
-tysk.txt
-
-spawnenemy
-55.45 250 -500
-tysk.txt
+bogdan.txt
 
 settimer
 50
@@ -36,7 +20,7 @@ firingdistance
 500
 
 points
-500
+2000
 
 text
-Destroy the very evil nazi building before they build the dangerous bomb!
+Destroy Bogdan's house and steal his money.

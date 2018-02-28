@@ -108,6 +108,8 @@ public:
 	void load(const std::string& file);
 
 	std::vector<BoundingBox>* getBoundingBoxes();
+
+	// Deprecated
 	inline float getBoundingRadius() {
 		return bounding_radius;
 	}
