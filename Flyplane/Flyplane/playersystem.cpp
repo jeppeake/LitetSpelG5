@@ -1,6 +1,7 @@
 #include "playersystem.h"
 
 #include "terraincomponent.h"
+#include "healthcomponent.h"
 
 PlayerSystem::PlayerSystem()
 {
@@ -102,7 +103,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		** outside map logic **
 		***********************/
 		ComponentHandle<Terrain> terrain;
-		for (Entity entity : es.entities_with_components(terrain)) {
+		for (Entity tEntity : es.entities_with_components(terrain)) {
 
 			player->isOutside = terrain->hmptr->isOutside(transform->pos);
 			if (!player->isOutside) {
@@ -111,7 +112,20 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 			double outsideTime = 5.0;
 
-			player->outsideTimeLeft = outsideTime - player->outsideTimer.elapsed();
+			double elapsed = player->outsideTimer.elapsed();
+			if (elapsed >= outsideTime) {
+
+				auto health = entity.component<HealthComponent>();
+				if (health) {
+					health->health = -1;
+				} else {
+					std::cout << "[WARNING] Player entity does not have HealthComponent\n";
+					// Nnonoononon
+				}
+			}
+
+			player->outsideTimeLeft = outsideTime - elapsed;
+			player->outsideTimeLeft = glm::max(player->outsideTimeLeft, 0.0);
 		}
 	}
 }
