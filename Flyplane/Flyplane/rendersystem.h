@@ -25,6 +25,7 @@
 #include "healthcomponent.h"
 #include "input.h"
 #include "missionmarker.h"
+#include "dropcomponent.h"
 
 using namespace entityx;
 
@@ -234,6 +235,10 @@ struct RenderSystem : public System<RenderSystem> {
 					length = 5.0 + length / 100.0f;
 					Renderer::getRenderer().addMarker(transform->pos, color, length);
 				}
+			}
+			ComponentHandle<DropComponent> dropHandle;
+			for (Entity entity : es.entities_with_components(dropHandle, transform)) {
+				radar.addPlane(*transform.get(), glm::vec3(0, 1, 0));
 			}
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			radar.draw((float)dt);

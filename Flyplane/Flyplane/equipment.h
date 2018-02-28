@@ -8,6 +8,7 @@ struct WeaponSlot {
 	int slotNumber;
 };
 
+
 struct Equipment {
 	//projectile model, sound, range?, ammo, speed, 
 	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special) : primary(primary), special(special) {}
@@ -48,18 +49,28 @@ struct Equipment {
 			}
 		}
 		else {
-			//std::cout << "size of special isnt less than weaponSlots" << std::endl;
+			//std::cout << "size of special isnt less than weaponSlots" << std::endl;			
 		}
 	}
 
 	void removeSpecialWeapon() {
-		special.erase(special.begin() + selected);
+		//std::cout << "call to removeSpecialWeapon()\n";
 
 		for (int i = 0; i < weaponSlots.size(); i++) {
 			if (weaponSlots[i].slotNumber == selected) {
 				weaponSlots[i].used = false;
+				//std::cout << "new free slot\n";
 			}
 		}
+
+		if (selected < special.size() - 1) {
+			for (int i = 0; i < weaponSlots.size(); i++) {
+				if (weaponSlots[i].slotNumber == special.size() - 1) {
+					weaponSlots[i].slotNumber = selected;
+				}
+			}
+		}
+		special.erase(special.begin() + selected);
 	}
 	std::vector<Turret> turrets;
 };

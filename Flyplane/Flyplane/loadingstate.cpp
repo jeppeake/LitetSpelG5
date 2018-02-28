@@ -37,6 +37,8 @@ void LoadingState::init() {
 
 	AssetLoader::getLoader().loadModel("assets/buildings/Bunker_small/Bunker_small2.fbx", "bunker");
 
+	AssetLoader::getLoader().loadModel("assets/TU-101/TU-101.fbx", "TU-101");
+
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_GUNS.fbx", "spectre_gun");
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_MOUNT.fbx", "spectre_mount");
 

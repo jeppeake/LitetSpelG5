@@ -14,6 +14,7 @@
 #include "dropcomponent.h"
 #include "playingstate.h"
 #include "housecomponent.h"
+#include "lifetimecomponent.h"
 #include <map>
 
 class CollisionSystem : public entityx::System<CollisionSystem>
@@ -23,6 +24,7 @@ private:
 	PlayingState *state;
 	sf::Sound hitSound;
 	sf::Sound dropSound;
+	sf::Sound explosionSound;
 
 	std::map<entityx::Entity::Id, entityx::Entity> to_remove;
 
@@ -214,6 +216,30 @@ private:
 			checkOBBvsPoint(b, a, es);
 		}
 	}
+
+
+	void handleTerrainCollision(entityx::Entity entity, entityx::EventManager &event) {
+		if (entity.has_component<Projectile>()) {
+			to_remove[entity.id()] = entity;
+		} else {
+			entity.assign<LifeTimeComponent>(5.0);
+
+			auto handle = entity.component<ParticleComponent>();
+			if (!handle) {
+				handle = entity.assign<ParticleComponent>();
+			}
+			explosionSound.play();
+			event.emit<AddParticleEvent>(EXPLOSION, handle);
+
+
+			entity.remove<CollisionComponent>();
+			if(entity.has_component<Physics>())
+				entity.remove<Physics>();
+			if (entity.has_component<AIComponent>())
+				entity.remove<AIComponent>();
+		}
+	}
+
 public:
 	CollisionSystem(Heightmap *map) : map(map) {
 		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
@@ -222,6 +248,9 @@ public:
 		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
 		dropSound.setRelativeToListener(true);
 		dropSound.setPosition(0, 0, 0);
+		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
+		explosionSound.setRelativeToListener(true);
+		explosionSound.setPosition(0, 0, 0);
 	};
 	CollisionSystem(Heightmap *map, PlayingState *state) : map(map), state(state) {
 		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
@@ -230,6 +259,9 @@ public:
 		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
 		dropSound.setRelativeToListener(true);
 		dropSound.setPosition(0, 0, 0);
+		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
+		explosionSound.setRelativeToListener(true);
+		explosionSound.setPosition(0, 0, 0);
 	};
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
@@ -300,8 +332,8 @@ public:
 				// Terrain point collision
 				if (pos.y <= height)
 				{
-					events.emit<CollisionEvent>(entity, terrain);
-					to_remove[entity.id()] = entity;
+					handleTerrainCollision(entity, events);
+					//to_remove[entity.id()] = entity;
 				}
 			}
 			else
@@ -314,8 +346,8 @@ public:
 						boxes[i].setTransform(*transform.get());
 						if (boxes[i].intersect(terr->hmptr))
 						{
-							events.emit<CollisionEvent>(entity, terrain);
-							to_remove[entity.id()] = entity;
+							handleTerrainCollision(entity, events);
+							//to_remove[entity.id()] = entity;
 							break;
 						}
 					}
@@ -327,7 +359,7 @@ public:
 		for (auto& e : to_remove)
 		{
 			if (e.second.has_component<AIComponent>()) {
-				std::cout << "COLLISION DEATH\n";
+				std::cout << "AI COLLISION DEATH\n";
 			}
 			else if (e.second.has_component<DropComponent>()) {
 				std::cout << "Removed drop\n";
