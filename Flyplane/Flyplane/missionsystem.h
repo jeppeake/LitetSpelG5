@@ -204,7 +204,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					glm::vec3 pos = glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
 					if (house.random) {
 						pos = pos + glm::vec3((rand() % 5000)-2500, 0, (rand() % 5000)-2500);
-						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 50;
+						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 10;
 					}
 					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
 					entity.assign<Transform>(pos);
