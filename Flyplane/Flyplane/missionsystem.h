@@ -115,6 +115,13 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						fail();
 					}
 				}
+				//leader crashes condition (win)
+				else if(!formLeader.valid()) {
+					state->addPoints(curMission.points);
+					active = false;
+					timer.restart();
+					cleanUpMarkers();
+				}
 			}
 			else if (curMission.type == MISSIONTYPE_ATTACK) {
 				textColor = MARKER_KILL;
@@ -128,6 +135,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						timer.restart();
 						cleanUpMarkers();
 					}
+				}
+				else {
+					fail();
+					std::cout << "[BUG] House was destroyed too early \n";
 				}
 			}
 			else if (curMission.type == MISSIONTYPE_KILLALL) {
@@ -203,8 +214,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<ModelComponent>(house.model);
 					glm::vec3 pos = glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
 					if (house.random) {
-						pos = pos + glm::vec3((rand() % 5000)-2500, 0, (rand() % 5000)-2500);
-						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 10;
+						pos = pos + glm::vec3((rand() % 8000)-4000, 0, (rand() % 8000)-4000);
+						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z)) + 40;
 					}
 					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
 					entity.assign<Transform>(pos);
@@ -248,7 +259,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 					entity.assign<Target>(10.0, FACTION_AI);
 					entity.assign<FactionEnemy>();
-					entity.assign<HealthComponent>(100.0);
+					
 					
 
 					auto handle = entity.assign<ParticleComponent>();
@@ -296,6 +307,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 						}
 					}
+					std::getline(file, str);
+					std::getline(file, str);
+					double hp = std::stod(str);
+					entity.assign<HealthComponent>(hp);
 
 					WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
@@ -338,7 +353,6 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 					entity.assign<Target>(10.0, FACTION_AI);
 					entity.assign<FactionEnemy>();
-					entity.assign<HealthComponent>(100.0);
 
 					auto handle = entity.assign<ParticleComponent>();
 					events.emit<AddParticleEvent>(TRAIL, handle);
@@ -396,6 +410,11 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 						}
 					}
+
+					std::getline(file, str);
+					std::getline(file, str);
+					double hp = std::stod(str);
+					entity.assign<HealthComponent>(hp);
 
 					WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);

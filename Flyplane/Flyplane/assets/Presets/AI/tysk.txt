@@ -2,3 +2,4 @@ assets\Presets\Planes\G-201.txt
 assets\Presets\Weapons\missile.txt
 assets\Presets\Weapons\missile.txt
 0
+50
