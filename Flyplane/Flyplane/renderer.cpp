@@ -337,9 +337,6 @@ void Renderer::RenderScene() {
 
 		if (temp.x < -1.0 || temp.x > 1.0 || temp.y < -1.0 || temp.y > 1.0 || temp.z >= 1.0) {
 			arrows.push_back({p[i].pos, p[i].color, p[i].scale });
-			//cout << "pos.x: " << temp.x << endl;
-			//cout << "pos.y: " << temp.y << endl;
-			//cout << "pos.z: " << temp.z << endl;
 		}
 		else {
 			enemyMarkerShader.uniform("transform", p[i].pos);
@@ -347,8 +344,6 @@ void Renderer::RenderScene() {
 			enemyMarkerShader.uniform("color", p[i].color);
 			glDrawArrays(GL_POINTS, 0, 1);
 		}
-		cout << "pos.y: " << temp.y << endl;
-		cout << "pos.z: " << temp.z << endl;
 	}
 	//Render arrows
 	enemyArrowShader.use();
