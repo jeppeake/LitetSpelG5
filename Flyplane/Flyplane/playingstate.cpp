@@ -526,7 +526,7 @@ void PlayingState::update(double dt)
 		playerAlive = true;
 	}*/
 
-	
+	glm::vec2 window = Window::getWindow().size();
 
 	if (playerAlive && !menuOpen) {
 		//points += 10 * dt;
@@ -559,8 +559,6 @@ void PlayingState::update(double dt)
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		ex.systems.update<MissionSystem>(dt);
-		glm::vec2 window = Window::getWindow().size();
-		AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 50), glm::vec3(1, 0, 0), 0.4);
 		if (pointObject.time >  0)
 		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
@@ -579,8 +577,9 @@ void PlayingState::update(double dt)
 	
 	
 
-	glm::vec2 pos = glm::vec2(10, Window::getWindow().size().y - 20);
-	AssetLoader::getLoader().getText()->drawText("Score: " + std::to_string(int(points)), pos, glm::vec3(1, 0, 0), 0.4);
+	glm::vec2 pos = glm::vec2(130, window.y - 29);
+	AssetLoader::getLoader().getText()->drawText(std::to_string(int(points)), pos, glm::vec3(0, 1, 0), 0.4);
+	AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 60), glm::vec3(0, 1, 0), 0.4);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState(name));
