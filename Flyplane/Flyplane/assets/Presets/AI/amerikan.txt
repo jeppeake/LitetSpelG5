@@ -6,3 +6,4 @@ assets\Presets\Weapons\micro.txt
 0
 0
 0
+100

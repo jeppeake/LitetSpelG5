@@ -211,7 +211,14 @@ glm::vec3 SAIB::calculateInterdiction(entityx::Entity target, entityx::Entity in
 
 glm::vec3 SAIB::ADVInterdiction(entityx::Entity target, entityx::Entity interdictor, float projectileSpeed, glm::vec3 offset, entityx::TimeDelta dt) {
 
-	glm::vec3 relVel = target.component<Physics>()->velocity - interdictor.component<Physics>()->velocity;
+	
+	glm::vec3 relVel;
+	auto tPhysics = target.component<Physics>();
+	auto iPhysics = interdictor.component<Physics>();
+	if (tPhysics && iPhysics) {
+		relVel = tPhysics->velocity - iPhysics->velocity;
+	}
+
 	glm::vec3 interdictorPos = interdictor.component<Transform>()->pos + (offset * interdictor.component<Transform>()->orientation);
 	glm::vec3 pt = target.component<Transform>()->pos - interdictorPos;
 	glm::vec3 tp = interdictorPos - target.component<Transform>()->pos;
