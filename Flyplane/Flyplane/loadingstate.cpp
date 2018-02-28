@@ -35,6 +35,8 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 
+	AssetLoader::getLoader().loadModel("assets/buildings/Bunker_small/Bunker_small2.fbx", "bunker");
+
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_GUNS.fbx", "spectre_gun");
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_MOUNT.fbx", "spectre_mount");
 
