@@ -90,7 +90,7 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 
 
-			
+			Renderer::getRenderer().setIsOutside(player->isOutside, player->outsideTimeLeft);
 		}
 
 
@@ -98,11 +98,6 @@ struct RenderSystem : public System<RenderSystem> {
 		ComponentHandle<Terrain> terrain;
 		for (Entity entity : es.entities_with_components(terrain)) {
 			Renderer::getRenderer().setHeightmap(terrain->hmptr);
-
-			ComponentHandle<PlayerComponent> player;
-			for (Entity pEntity : es.entities_with_components(player)) {
-				Renderer::getRenderer().setIsOutside(player->isOutside, player->outsideTimeLeft);
-			}
 		}
 
 		ComponentHandle<CameraOnComponent> cameraOn;
