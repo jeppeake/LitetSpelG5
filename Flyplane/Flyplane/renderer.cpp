@@ -328,21 +328,26 @@ void Renderer::RenderScene() {
 	enemyMarkerShader.uniform("aspectMatrix", viewProjMatrix);
 	enemyMarkerShader.uniform("cameraPos", this->camera.getTransform().pos);
 	std::vector<Marker> arrows;
+	//glm::mat4 matrix = glm::perspectiveFov(glm::radians(45.0f), 19200.0f, 1080.0f, 0.1f, 200000.0f) *	camera.getViewMatrix();
 
 	for (int i = 0; i < p.size(); i++) {
 		glm::vec4 temp = viewProjMatrix * glm::vec4(p[i].pos, 1);
 		temp = temp / temp.w;
 
-		if (temp.x < -1.0 || temp.x > 1.0 || temp.y < -1.0 || temp.y > 1.0 || temp.z < 0.0) {
+		if (temp.x < -1.0 || temp.x > 1.0 || temp.y < -1.0 || temp.y > 1.0 || temp.z >= 1.0) {
 			arrows.push_back({p[i].pos, p[i].color, p[i].scale });
+			//cout << "pos.x: " << temp.x << endl;
+			//cout << "pos.y: " << temp.y << endl;
+			//cout << "pos.z: " << temp.z << endl;
 		}
-
 		else {
 			enemyMarkerShader.uniform("transform", p[i].pos);
 			enemyMarkerShader.uniform("scale", p[i].scale);
 			enemyMarkerShader.uniform("color", p[i].color);
 			glDrawArrays(GL_POINTS, 0, 1);
 		}
+		cout << "pos.y: " << temp.y << endl;
+		cout << "pos.z: " << temp.z << endl;
 	}
 	//Render arrows
 	enemyArrowShader.use();
