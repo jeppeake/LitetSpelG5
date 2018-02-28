@@ -98,16 +98,20 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 
 
-		/******************
-		** outside logic **
-		******************/
+		/**********************
+		** outside map logic **
+		***********************/
 		ComponentHandle<Terrain> terrain;
 		for (Entity entity : es.entities_with_components(terrain)) {
+
 			player->isOutside = terrain->hmptr->isOutside(transform->pos);
 			if (!player->isOutside) {
 				player->outsideTimer.restart();
 			}
-			player->outsideTimeLeft = 5.0 - player->outsideTimer.elapsed();
+
+			double outsideTime = 5.0;
+
+			player->outsideTimeLeft = outsideTime - player->outsideTimer.elapsed();
 		}
 	}
 }

@@ -90,7 +90,7 @@ void BoundingBox::setTransform(const Transform & transform)
 
 	glm::vec3 rotSides[3];
 	for (int i = 0; i < 3; i++) // maybe add scale in calculation
-		rotSides[i] = transform.orientation*this->sides[i];
+		rotSides[i] = transform.orientation*(transform.scale*this->sides[i]);
 
 	normals[0] = glm::normalize(rotSides[0]);
 	normals[1] = glm::normalize(rotSides[1]);
@@ -100,7 +100,7 @@ void BoundingBox::setTransform(const Transform & transform)
 	for (float x = -1; x <= 1; x += 2) {
 		for (float y = -1; y <= 1; y += 2) {
 			for (float z = -1; z <= 1; z += 2) {
-				corners[i] = x * rotSides[0] + y * rotSides[1] + z * rotSides[2] + transform.orientation*center + transform.pos;
+				corners[i] = x * rotSides[0] + y * rotSides[1] + z * rotSides[2] + transform.orientation*(transform.scale*center) + transform.pos;
 				i++;
 			}
 		}

@@ -587,6 +587,9 @@
     <None Include="speedPart.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
+    <None Include="enemyarrowGS.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
