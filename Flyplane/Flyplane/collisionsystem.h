@@ -115,7 +115,8 @@ private:
 				to_remove[b.id()] = b;
 
 				if (b.has_component<FactionPlayer>()) {
-					hitSound.play();
+					if(hitSound.getStatus() != sf::Sound::Playing)
+						hitSound.play();
 				}
 				auto handle = a.component<ParticleComponent>();
 				if (!handle)
@@ -319,7 +320,7 @@ public:
 				}
 			}
 			
-			if (!map && entity.has_component<HouseComponent>()) {
+			if (!map || entity.has_component<HouseComponent>()) {
 				continue;
 			}
 			auto boxes = *model->mptr->getBoundingBoxes();

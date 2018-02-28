@@ -117,6 +117,7 @@ Renderer::Renderer() {
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
+	score.loadTexture("assets/Textures/score.png", 1);
 
 	sunDir = normalize(glm::vec3(0, 1, 2));
 }
@@ -328,15 +329,15 @@ void Renderer::RenderScene() {
 	enemyMarkerShader.uniform("aspectMatrix", viewProjMatrix);
 	enemyMarkerShader.uniform("cameraPos", this->camera.getTransform().pos);
 	std::vector<Marker> arrows;
+	//glm::mat4 matrix = glm::perspectiveFov(glm::radians(45.0f), 19200.0f, 1080.0f, 0.1f, 200000.0f) *	camera.getViewMatrix();
 
 	for (int i = 0; i < p.size(); i++) {
 		glm::vec4 temp = viewProjMatrix * glm::vec4(p[i].pos, 1);
 		temp = temp / temp.w;
 
-		if (temp.x < -1.0 || temp.x > 1.0 || temp.y < -1.0 || temp.y > 1.0 || temp.z < 0.0) {
+		if (temp.x < -1.0 || temp.x > 1.0 || temp.y < -1.0 || temp.y > 1.0 || temp.z >= 1.0) {
 			arrows.push_back({p[i].pos, p[i].color, p[i].scale });
 		}
-
 		else {
 			enemyMarkerShader.uniform("transform", p[i].pos);
 			enemyMarkerShader.uniform("scale", p[i].scale);
@@ -372,6 +373,10 @@ void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshai
 	RenderHPBar(hp);
 	RenderHeightIndicator(height);
 	RenderSpeedometer(speed);
+	auto s = Window::getWindow().size();
+	glViewport(0, s.y - 50, 125, 50);
+	renderTexture(score, glm::mat4(1));
+	glViewport(0, 0, s.x, s.y);
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
