@@ -115,6 +115,13 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						fail();
 					}
 				}
+				//leader crashes condition (win)
+				else if(!formLeader.valid()) {
+					state->addPoints(curMission.points);
+					active = false;
+					timer.restart();
+					cleanUpMarkers();
+				}
 			}
 			else if (curMission.type == MISSIONTYPE_ATTACK) {
 				textColor = MARKER_KILL;
