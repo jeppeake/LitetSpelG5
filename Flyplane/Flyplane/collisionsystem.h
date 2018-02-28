@@ -28,11 +28,13 @@ private:
 
 	void checkOBBvsPoint(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)
 	{
+		// OBB
 		auto a_trans = a.component<Transform>();
 		auto a_model = a.component<ModelComponent>();
 
+		// Point
 		auto b_trans = b.component<Transform>();
-		auto b_model = b.component<ModelComponent>();
+		//auto b_model = b.component<ModelComponent>();
 
 		auto a_boxes = *a_model->mptr->getBoundingBoxes();
 
@@ -41,11 +43,12 @@ private:
 			a_boxes[i].setTransform(*a_trans.get());
 		}
 
-		float distance = length(a_trans->pos - b_trans->pos);
-		float radii = a_model->mptr->getBoundingRadius();
-		if (distance < radii)
+
+		for (int i = 0; i < a_boxes.size(); i++)
 		{
-			for (int i = 0; i < a_boxes.size(); i++)
+			float distance = length(a_boxes[i].worldCenter - b_trans->pos);
+			float radii = a_boxes[i].boundingRadius;
+			if (distance < radii)
 			{
 				if (a_boxes[i].intersect(b_trans->pos))
 				{
