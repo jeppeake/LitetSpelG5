@@ -215,8 +215,7 @@ void LoadoutState::saveLoadout()
 				outputFile << 0 << "\n";
 		}
 		outputFile << this->selectedSkin << "\n";
-	}
-}
+	}}
 
 void LoadoutState::clearPicks()
 {
