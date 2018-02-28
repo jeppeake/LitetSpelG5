@@ -20,6 +20,9 @@ private:
 public:
 	Text(const std::string &Shipath, unsigned size);
 	void drawText(const std::string &text, glm::vec2 pos, glm::vec3 col, GLfloat scale);
+	void unbind();
+	void drawCharacter(std::string::const_iterator &c, glm::vec2 &pos, const GLfloat &scale);
+	void setUniforms(glm::vec3 &col);
 	~Text();
 };
 

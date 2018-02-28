@@ -1,0 +1,68 @@
+2
+
+spawnenemy
+53.4 1000 -52
+scrap.txt
+
+spawnenemy
+63.4 1000 -52
+scrap.txt
+
+spawnenemy
+73.4 1000 -52
+scrap.txt
+
+spawnenemy
+83.4 1000 -52
+scrap.txt
+
+spawnenemy
+93.4 1000 -52
+scrap.txt
+
+spawnenemy
+100.4 1000 -52
+scrap.txt
+
+spawnenemy
+113.4 1000 -52
+scrap.txt
+
+spawnenemy
+123.4 1000 -52
+scrap.txt
+
+spawnenemy
+133.4 1000 -52
+scrap.txt
+
+spawnenemy
+143.4 1000 -52
+scrap.txt
+
+spawnenemy
+153.4 1000 -52
+scrap.txt
+
+spawnenemy
+163.4 1000 -52
+scrap.txt
+
+spawnenemy
+173.4 1000 -52
+scrap.txt
+
+settimer
+100
+
+huntplayerdist
+7000
+
+firingdistance
+500
+
+points
+5000
+
+text
+A group of German crazy boys in scrap planes are headed your way, destroy them!

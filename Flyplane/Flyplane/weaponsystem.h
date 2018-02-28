@@ -216,12 +216,14 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			
 
 			//turret code end
-
 			Weapon* weapon = &equip->special[equip->selected];
-		
-			if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->timer.elapsed() > weapon->stats.cooldown && weapon->stats.ammo > 0 && equip->special.size() > 0) {
-				weapon->shouldFire = true;
+			if (equip->special.size() > 0) {
+				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->stats.ammo > 0) {
+					if (weapon->timer.elapsed() > weapon->stats.cooldown)
+						weapon->shouldFire = true;
+				}
 			}
+			
 			
 			for (int i = 0; i < equip->primary.size(); i++) {
 				Weapon* pweapon = &equip->primary[i];

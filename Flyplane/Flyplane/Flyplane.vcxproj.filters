@@ -480,6 +480,12 @@
     <ClInclude Include="turretpreset.cpp">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="lifetimecomponent.h">
+      <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="lifetimesystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">

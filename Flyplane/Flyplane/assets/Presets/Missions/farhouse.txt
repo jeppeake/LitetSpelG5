@@ -3,7 +3,7 @@
 spawnhouse
 1
 500.4 -500
-hus1
+bunker
 1
 
 spawnenemy
@@ -23,4 +23,4 @@ points
 2000
 
 text
-Destroy Bogdan's house and steal his money.
+Smibel Gork is hiding out in his bunker, destroy it! Watch out for the crazy plane dude though!
