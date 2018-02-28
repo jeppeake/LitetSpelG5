@@ -25,7 +25,7 @@ int main(void)
 	EngineState* engine = new MenuState();
 	engine->init();
 
-	TimeVisualizer::init();
+	//TimeVisualizer::init();
 
 	Timer deltatime;
 	while (!Window::getWindow().shouldClose()) {

@@ -176,7 +176,7 @@ struct RenderSystem : public System<RenderSystem> {
 				//turretTrans.orientation = transform->orientation * glm::rotate(equip->turrets[i].placement.orientation, equip->turrets[i].placement.orientation * glm::vec3(0.f, 0.f, 1.f), equip->turrets[i].info.ET.x);
 				turretTrans.orientation = transform->orientation * equip->turrets[i].getMountOrientation();
 				turretTrans.scale = equip->turrets[i].placement.scale;
-
+				
 				Renderer::getRenderer().addToList(equip->turrets[i].info.turret, turretTrans);
 				Renderer::getRenderer().addToList(equip->turrets[i].info.gun, gunTrans);
 			}
