@@ -289,7 +289,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
 				unsigned int count = 0;
-				while (equip->special[equip->selected].model == lastWep.model && count < equip->special.size()) {
+				while (equip->special[equip->selected].model == lastWep.model && count < equip->special.size() || equip->special[equip->selected].stats.ammo <= 0) {
 					equip->selected = (equip->selected + 1) % equip->special.size();
 					count++;
 				}
@@ -344,8 +344,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			}
 
 
-			if(player && weapon != nullptr)
-				AssetLoader::getLoader().getText()->drawText("Ammo: " + std::to_string(totalAmmo), glm::vec2(10,10), glm::vec3(1, 0, 0), 0.4);
+			
 			
 		}
 

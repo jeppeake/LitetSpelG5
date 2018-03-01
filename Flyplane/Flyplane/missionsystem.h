@@ -365,7 +365,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					if (mi.type == MISSIONTYPE_ATTACK || mi.type == MISSIONTYPE_KILLALL) {
 						std::vector<glm::vec3> plotter;
-						glm::vec3 housepos = enemy.pos;
+						glm::vec3 housepos = pos;
 						if (mi.type == MISSIONTYPE_ATTACK) {
 							housepos = target.component<Transform>()->pos;
 							entity.component<Transform>()->pos = housepos;
