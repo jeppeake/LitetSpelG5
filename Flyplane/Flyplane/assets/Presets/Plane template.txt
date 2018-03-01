@@ -26,3 +26,11 @@ weppos
 [double] (x)
 [double] (y)
 [double] (z)
+
+enginepos
+[double] (x)
+[double] (y)
+[double] (z)
+
+engineradius
+[double]

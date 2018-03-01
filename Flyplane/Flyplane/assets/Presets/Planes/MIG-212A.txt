@@ -48,5 +48,11 @@ primaryweapon
 assets/Presets/primaryWeapons/MIG_gunpod.txt
 turretweapon
 0
+engineradius
+0.11
+enginepos
+0
+-0.01
+-1.7
 description
 Designed as a light interceptor, the MIG-212A excels at hunting down bombers. Doe to the unpredictable nature of the war, it soon found itself on most fronts of the war facing enemies it was never designed to face.

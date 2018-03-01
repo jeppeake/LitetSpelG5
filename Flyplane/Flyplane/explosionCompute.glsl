@@ -38,8 +38,7 @@ void main()
 		vel.z = rand(gid * 11);
 		vel = normalize(vel);
 
-
-		Velocities[gid].xyz = 3.0 * explosionRadius * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
+		Velocities[gid].xyz = 4.0 * explosionRadius * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
 	}
 	else
 	{

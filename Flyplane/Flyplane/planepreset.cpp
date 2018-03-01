@@ -93,5 +93,23 @@ void PlanePreset::load(std::string presetname)
 			std::getline(file, str);
 			description = str;
 		}
+		else if (str.compare("enginepos") == 0) {
+			glm::vec3 pos;
+
+			std::getline(file, str);
+			pos.x = std::stod(str, NULL);
+
+			std::getline(file, str);
+			pos.y = std::stod(str, NULL);
+
+			std::getline(file, str);
+			pos.z = std::stod(str, NULL);
+
+			enginePos.push_back(pos);
+		}
+		else if (str.compare("engineradius") == 0) {
+			std::getline(file, str);
+			engineRadius = std::stod(str, NULL);
+		}
 	}
 }

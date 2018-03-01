@@ -15,8 +15,12 @@ layout(std430, binding=10) buffer Col
 {
 	vec4 Colors[];
 };
+
+const float life = 0.2;
+//uniform float life;
+uniform float thrust;
+uniform float radius;
 uniform float dt;
-uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
 
@@ -29,6 +33,8 @@ float rand(float n) {
 
 void main()
 {
+	float r = radius;
+
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
@@ -41,25 +47,28 @@ void main()
 	else
 	{
 		// UPDATE
-		Colors[gid].a = 0.3*pow(1-Lives[gid] / life, 4);
+		
+		Colors[gid].a = 1.0;
+		Colors[gid].a = 0.7*pow(1-Lives[gid] / life, 1)*r;
 
-		Positions[gid].xyz = spawn + Velocities[gid].xyz + direction * (Lives[gid]*20 + 2);
+		Positions[gid].xyz = spawn + Velocities[gid].xyz + (direction - 0.15*Velocities[gid].xyz) * (Lives[gid]*20);
 	}
 	Lives[gid] += dt;
-	if(Lives[gid] >= life)
+	if(Lives[gid] >= life + 0.1*life*abs(rand(gid)))
 	{
 		// RESPAWN
 		Lives[gid] -= life;
 
 		vec3 d = normalize(direction);
-		vec3 ortho = normalize(vec3(-d.y, d.x, 0));
-		vec3 ortho2 = cross(d, ortho);
 
 		vec3 offset;
-		offset += ortho * rand(gid * 7);
-		offset += ortho2 * rand(gid * 13);
+		offset.x = rand(gid * 7 + 100 + dt);
+		offset.y = rand(gid * 13 - 100+ dt);
+		offset.z = rand(gid * 17 - 200+ dt);
 
-		offset = 0.2*rand(gid * 19)*normalize(offset);
+		
+		offset = r*rand(gid * 19)*normalize(offset);
+		offset  = r * normalize(offset);
 
 		Velocities[gid].xyz = offset;
 

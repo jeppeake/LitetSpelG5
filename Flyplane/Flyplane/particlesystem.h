@@ -128,13 +128,14 @@ public:
 		case ENGINE_TRAIL:
 			//p->setComputeShader(&engineTrailShader);
 			//p->setTexture("engine_fire");
-			p->setSize(0.02);
+			p->setSize(0.01);
 			engineTrailShader.use();
+			engineTrailShader.uniform("radius", p->params.engineTrail.radius);
 			if (transform) {
-				engineTrailShader.uniform("spawn", transform->pos);
+				engineTrailShader.uniform("spawn", transform->pos + transform->orientation * p->params.engineTrail.offset);
 				engineTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
-			engineTrailShader.uniform("life", 1.f);
+			//engineTrailShader.uniform("life", 0.25f);
 			engineTrailShader.uniform("dt", float(dt));
 			break;
 		case DEAD_TRAIL:

@@ -12,10 +12,16 @@ enum PARTICLE_TYPES
 };
 
 struct ParticleParameters {
+	ParticleParameters() {}
 	union {
 		struct Explosion {
 			float radius;
 		} explosion;
+
+		struct EngineTrail {
+			glm::vec3 offset;
+			float radius;
+		} engineTrail;
 	};
 	float effectLength = 0;
 };
