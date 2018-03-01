@@ -17,6 +17,7 @@
 #include "speedindicator.h"
 #include "hpindicator.h"
 
+
 struct RenderObject {
 	Model* model;
 	Transform trans;
@@ -82,7 +83,12 @@ private:
 	std::vector<Patch> shadowPatches;
 
 	Texture transparent;
-	Texture score;
+
+	Texture scoreTexture;
+	int score;
+	Texture numbers[10];
+	Texture x;
+	int multiplier;
 
 	bool isOutside = false;
 	double outsideTime = -1;
@@ -134,6 +140,8 @@ public:
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
+	void setScore(int points);
+	void setMultiplier(int multiplier);
 	void renderParticles(Particles* p);
 
 

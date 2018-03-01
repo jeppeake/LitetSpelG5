@@ -150,7 +150,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 						glm::vec3 pt_elev = glm::normalize(pt - glm::proj(pt, turretLeft));
 
 						float UDC = glm::degrees(glm::acos(glm::dot(pt_elev, turretUp)));
-						float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, turretFront)));
+						glm::vec3 adjTurretFront = pt - glm::proj(pt, turretUp);
+						float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, adjTurretFront)));
 						float elevationLimit;
 						if (UDC < 90) {//up
 							elevationLimit = elevationLimits.x;
@@ -173,7 +174,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				if (entity_closest.valid()) {
 					glm::vec3 interdiction = SAIB::ADVInterdiction(entity_closest, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
-					//interdiction = SAIB::calculateInterdiction(entity_closest, entity);
 
 					glm::vec2 rotation = SAIB::turretRotateTowards(equip->turrets.at(i), interdiction, trans->orientation, trans->pos);
 
@@ -213,9 +213,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					}
 				}
 			}
-			
-
 			//turret code end
+
+
 			Weapon* weapon = &equip->special[equip->selected];
 			if (equip->special.size() > 0) {
 				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->stats.ammo > 0) {
@@ -256,7 +256,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 			}
 			
-			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f && equip->special.size() > 0) {
+			if ((Input::isKeyDown(GLFW_KEY_Q) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f && equip->special.size() > 0) {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
 				unsigned int count = 0;
@@ -436,7 +436,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				explosion.assign<Transform>(trans->pos);
 				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500);
 				auto handle = explosion.assign<ParticleComponent>();
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
+				ParticleParameters params;
+				params.explosion.radius = missile->explodeRadius;
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 3, params);
 				entity.destroy();
 			}
 		}

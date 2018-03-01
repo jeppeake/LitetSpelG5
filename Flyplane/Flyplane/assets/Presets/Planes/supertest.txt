@@ -46,3 +46,8 @@ weppos
 2.0
 -0.43
 -0.2
+turret
+assets/presets/Turrets/MG_turret.txt
+0.0
+0.4
+-0.7

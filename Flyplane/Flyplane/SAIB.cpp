@@ -261,7 +261,11 @@ glm::vec2 SAIB::turretRotateTowards(Turret turret, glm::vec3 point, glm::quat ro
 	rotation.x = -traverse;
 	//elevation
 	float elevation = test2Axis(rootPosition, rootOrientation * turret.getGunOrientation(), point, ORI_left, gun_front);
-	rotation.y = -elevation;
+	if(glm::dot(gun_front, ORI_front) < 0){
+		rotation.y = elevation;
+	} else {
+		rotation.y = -elevation;
+	}
 
 	return rotation;
 }

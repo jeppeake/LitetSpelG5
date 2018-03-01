@@ -410,6 +410,16 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 						}
 					}
+					std::vector<Turret> turrets;
+					//turret load
+					for (int i = 0; i < pp.turretFiles.size(); i++) {
+						TurretPreset TP;
+						TP.load(pp.turretFiles[i]);
+						Turret turret = TP.getTurret();
+						turret.placement.offset = pp.turretPositions[i];
+						turrets.emplace_back(turret);
+					}
+
 
 					std::getline(file, str);
 					std::getline(file, str);
@@ -421,7 +431,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					std::vector<Weapon> primary;
 
 					primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
-					entity.assign<Equipment>(primary, weapons);
+					entity.assign<Equipment>(primary, weapons, turrets);
 					entity.assign<PointComponent>(100);
 					enemyList.push_back(entity);
 

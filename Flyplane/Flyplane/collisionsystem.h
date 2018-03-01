@@ -221,7 +221,12 @@ private:
 
 	void handleTerrainCollision(entityx::Entity entity, entityx::EventManager &event) {
 		if (entity.has_component<Projectile>()) {
-			to_remove[entity.id()] = entity;
+			if (entity.has_component<Missile>()) {
+				entity.component<Missile>()->shouldExplode = true;
+			}
+			else {
+				to_remove[entity.id()] = entity;
+			}
 		} else {
 
 			if (!entity.has_component<LifeTimeComponent>())
