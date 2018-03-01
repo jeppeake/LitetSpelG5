@@ -67,7 +67,7 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.7f);
 		}
 		else {
-			flight->driftReduction -= float(dt) * 0.05;
+			flight->driftReduction -= float(dt) * 0.1;
 			flight->driftReduction = glm::clamp(flight->driftReduction, 0.f, 0.7f);
 		}
 

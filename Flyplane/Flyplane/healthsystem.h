@@ -32,6 +32,9 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 					{
 						entity.remove<Target>();
 					}
+					if (entity.has_component<SoundComponent>()) {
+						entity.remove<SoundComponent>();
+					}
 				}
 
 				if (entity.has_component<PlayerComponent>()) {

@@ -65,10 +65,10 @@ public:
 			flyplane = entity.component<FlightComponent>();
 			
 
-			SoundComponent* s = sound.get();
 			Transform t = *transform.get();
 
-			if (flyplane) {
+			if (flyplane && sound) {
+				SoundComponent* s = sound.get();
 				FlightComponent* f = flyplane.get();
 				float pitch = 0;
 

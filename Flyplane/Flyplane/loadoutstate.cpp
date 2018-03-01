@@ -42,6 +42,7 @@ void LoadoutState::updatePreview() {
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 	std::vector<Turret> turrets;
+	//primary load
 	std::cout << "Weapon: " << this->planePresets[this->selected].weapon << " : " << this->planePresets[this->selected].turretWeapon << "\n";
 	if (this->planePresets[this->selected].weapon != "nan") {
 		if (this->planePresets[this->selected].turretWeapon) {//turret
@@ -58,7 +59,15 @@ void LoadoutState::updatePreview() {
 			pweapons.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 		}
 	}
-
+	//turret load
+	for (int i = 0; i < this->planePresets[this->selected].turretFiles.size(); i++) {
+		TurretPreset TP;
+		TP.load(this->planePresets[this->selected].turretFiles[i]);
+		Turret turret = TP.getTurret();
+		turret.placement.offset = this->planePresets[this->selected].turretPositions[i];
+		turrets.emplace_back(turret);
+	}
+	//secondary load
 	for (int i = 0; i < this->planePresets[this->selected].wepPos.size(); i++) {
 		if (this->pickedWeapons[i] != NO_WEAPON) {
 			glm::vec3 pos = this->planePresets[this->selected].wepPos[i];

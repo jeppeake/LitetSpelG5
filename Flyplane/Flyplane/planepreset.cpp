@@ -74,6 +74,21 @@ void PlanePreset::load(std::string presetname)
 			turretWeapon = std::stoi(str, NULL);
 			continue;
 		}
+		else if (str.compare("turret") == 0) {
+			//turret config file
+			std::getline(file, str);
+			turretFiles.emplace_back(str);
+			//turret position
+			glm::vec3 Tpos;
+			std::getline(file, str);
+			Tpos.x = std::stod(str, NULL);
+			std::getline(file, str);
+			Tpos.y = std::stod(str, NULL);
+			std::getline(file, str);
+			Tpos.z = std::stod(str, NULL);
+			turretPositions.push_back(Tpos);
+			continue;
+		}
 		else if (str.compare("description") == 0) {
 			std::getline(file, str);
 			description = str;
