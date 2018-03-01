@@ -139,11 +139,11 @@ void PlayingState::spawnDrop() {
 
 void PlayingState::drawHighscore() {
 	glm::vec2 pos;
-	pos.x = 800;
-	pos.y = 400;
+	pos.x = Window::getWindow().size().x/2 - 60;
+	pos.y = Window::getWindow().size().y - 300;
 	string* p = Highscore::getHighscore().getHighscoreList();
 	AssetLoader::getLoader().getHighscoreText()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
-	pos.x = 700;
+	pos.x = Window::getWindow().size().x / 2 - 160;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
 		AssetLoader::getLoader().getHighscoreText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
@@ -474,8 +474,6 @@ void PlayingState::init()
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
-
-	spawnDrop();
 }
 
 void PlayingState::update(double dt)
@@ -558,8 +556,8 @@ void PlayingState::update(double dt)
 		ex.systems.update<FlightSystem>(dt);
 		ex.systems.update<PhysicsSystem>(dt);
 		ex.systems.update<WeaponSystem>(dt);
-		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<SoundSystem>(dt);
+		ex.systems.update<CollisionSystem>(dt);
 		ex.systems.update<HealthSystem>(dt);
 		ex.systems.update<LifeTimeSystem>(dt);
 
@@ -574,11 +572,11 @@ void PlayingState::update(double dt)
 	else {
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		Renderer::getRenderer().RenderTransparent();
 		if (!playerAlive) {
-			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
+			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2((Window::getWindow().size().x/2) - 9*16, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
-		Renderer::getRenderer().RenderTransparent();
 		Window::getWindow().showCursor(true);
 		bHandler.drawButtons();
 		bHandler.handleButtonClicks();

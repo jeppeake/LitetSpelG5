@@ -1,4 +1,6 @@
-assets\Presets\Planes\Spectre.txt
+assets\Presets\Planes\supertest.txt
+0
+0
 0
 0
 0

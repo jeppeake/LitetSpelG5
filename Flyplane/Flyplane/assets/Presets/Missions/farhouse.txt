@@ -23,4 +23,4 @@ points
 2000
 
 text
-Smibel Gork is hiding out in his bunker, destroy it! Watch out for the crazy plane dude though!
+Smibel Gork is hiding out in his bunker, destroy it. Watch out for the crazy plane dude though.
