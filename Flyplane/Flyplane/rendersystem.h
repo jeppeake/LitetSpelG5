@@ -65,9 +65,9 @@ struct RenderSystem : public System<RenderSystem> {
 
 			if (entity.has_component<Equipment>()) {
 				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
+				int ammo = 0;
 				if (equipment->special.size() > 0) {
 					Renderer::getRenderer().setWeaponModel(equipment->special[equipment->selected].model);
-					int ammo = 0;
 					int count = 0;
 					unsigned int tempselect = equipment->selected;
 					while (count < equipment->special.size()) {
@@ -80,11 +80,8 @@ struct RenderSystem : public System<RenderSystem> {
 					/*for (int i = 0; i < equipment->special.size(); i++) {
 					ammo += equipment->special[i].stats.ammo;
 					}*/
-					Renderer::getRenderer().setAmmo(ammo);
 				}
-				else {
-					Renderer::getRenderer().setAmmo(0);
-				}
+				Renderer::getRenderer().setAmmo(ammo);
 				
 			}
 			if (entity.has_component<FlightComponent>())

@@ -89,6 +89,7 @@ private:
 	Texture numbers[10];
 	Texture x;
 	int multiplier;
+	Texture ammoTexture;
 
 	bool isOutside = false;
 	double outsideTime = -1;

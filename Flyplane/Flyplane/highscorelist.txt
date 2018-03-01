@@ -1,3 +1,5 @@
+264800
+gg
 203400
 sdasd
 169400
@@ -8,13 +10,11 @@ sdasd
 sminem
 124700
 asdasd
+124100
+asd
 88500
 hurk
 65700
 test
 60400
 fr
-47700
-fdsf
-46700
-gurk

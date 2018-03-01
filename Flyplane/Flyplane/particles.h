@@ -19,6 +19,8 @@ private:
 	//Texture *text = nullptr;
 	float size = 0.1;
 public:
+	ParticleParameters params;
+
 	Timer t;
 	Particles(unsigned particles, float _effectTime = 0);
 	~Particles();

@@ -18,6 +18,7 @@ layout(std430, binding=10) buffer Col
 uniform float dt;
 uniform float life;
 uniform vec3 spawn;
+uniform float explosionRadius;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 float rand(float n) { 
 	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
@@ -38,7 +39,7 @@ void main()
 		vel = normalize(vel);
 
 
-		Velocities[gid].xyz = 200 * rand(gid + 3000) * vel;
+		Velocities[gid].xyz = 5.0 * explosionRadius * rand(gid + 3000) * vel;
 	}
 	else
 	{

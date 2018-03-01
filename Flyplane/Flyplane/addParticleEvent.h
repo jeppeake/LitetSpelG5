@@ -10,9 +10,23 @@ enum PARTICLE_TYPES
 	SPEED_PARTICLE,
 	NUM_TYPES
 };
+
+struct ParticleParameters {
+	union {
+		struct Explosion {
+			float radius;
+		} explosion;
+	};
+};
+
 struct AddParticleEvent {
+	ParticleParameters params;
+
 	PARTICLE_TYPES type;
 	entityx::ComponentHandle<ParticleComponent> component;
 	float effectLength = 0;
-	AddParticleEvent(PARTICLE_TYPES type, entityx::ComponentHandle<ParticleComponent> component, float effectLength = 0) : type(type), component(component), effectLength(effectLength) {}
+	AddParticleEvent(PARTICLE_TYPES type, 
+	                 entityx::ComponentHandle<ParticleComponent> component, 
+	                 float effectLength = 0,
+	                 ParticleParameters params = {}): type(type), component(component), effectLength(effectLength), params(params) {}
 };

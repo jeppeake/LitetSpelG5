@@ -159,7 +159,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 						else {//down
 							elevationLimit = elevationLimits.y;
 						}
-						std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
+						//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
 						if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(new_closest) < closest && glm::length(new_closest) < equip->turrets.at(i).info.range) {
 							entity_closest = entity_closest_search;
 							closest = new_closest;
@@ -436,7 +436,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				explosion.assign<Transform>(trans->pos);
 				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500);
 				auto handle = explosion.assign<ParticleComponent>();
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
+				ParticleParameters params;
+				params.explosion.radius = missile->explodeRadius;
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 3, params);
 				entity.destroy();
 			}
 		}
