@@ -231,6 +231,15 @@ void PlayingState::loadLoadout()
 		}
 	}
 
+	//turret load
+	for (int i = 0; i < pp.turretFiles.size(); i++) {
+		TurretPreset TP;
+		TP.load(pp.turretFiles[i]);
+		Turret turret = TP.getTurret();
+		turret.placement.offset = pp.turretPositions[i];
+		turrets.emplace_back(turret);
+	}
+
 	std::getline(file, str);
 	entity_p.component<ModelComponent>().get()->mptr->texture = *AssetLoader::getLoader().getTexture(pp.textureNames[std::stoi(str)]);
 
