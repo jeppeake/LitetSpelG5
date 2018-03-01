@@ -26,6 +26,9 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 					{
 						entity.remove<Target>();
 					}
+					if (entity.has_component<SoundComponent>()) {
+						entity.remove<SoundComponent>();
+					}
 				}
 				auto handle = entity.component<ParticleComponent>();
 				if (!handle)
