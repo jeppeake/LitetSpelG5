@@ -16,7 +16,5 @@ hurk
 test
 60400
 fr
-47700
-fdsf
-46700
-gurk
+49300
+FFFFF
