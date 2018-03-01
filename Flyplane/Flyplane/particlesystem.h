@@ -69,11 +69,23 @@ public:
 				}
 			}
 		}
+
+		if (Input::isKeyPressed(GLFW_KEY_F7)) {
+			resetShader.reload();
+			trailShader.reload();
+			explosionShader.reload();
+			engineTrailShader.reload();
+			deadTrailShader.reload();
+			sparkShader.reload();
+			speedShader.reload();
+		}
+
 	}
 
 	void chooseUniforms(Particles *& p, entityx::Entity &entity, const entityx::TimeDelta &dt)
 	{
 		auto transform = entity.component<Transform>();
+		auto physics = entity.component<Physics>();
 		auto camTrans = Renderer::getRenderer().getCamera().getTransform();
 		switch (p->type) {
 		case TRAIL:
@@ -91,14 +103,14 @@ public:
 		case EXPLOSION:
 			//p->setComputeShader(&explosionShader);
 			//p->setTexture("explosion");
-			p->setSize(p->params.explosion.radius*0.001f);
+			p->setSize(p->params.explosion.radius*0.002f);
 			explosionShader.use();
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
 				explosionShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
 			explosionShader.uniform("explosionRadius", p->params.explosion.radius);
-			explosionShader.uniform("life", 1.f);
+			explosionShader.uniform("life", p->params.effectLength);
 			explosionShader.uniform("dt", float(dt));
 			break;
 		case SPARKS:
@@ -116,7 +128,7 @@ public:
 		case ENGINE_TRAIL:
 			//p->setComputeShader(&engineTrailShader);
 			//p->setTexture("engine_fire");
-			p->setSize(0.05);
+			p->setSize(0.02);
 			engineTrailShader.use();
 			if (transform) {
 				engineTrailShader.uniform("spawn", transform->pos);
@@ -132,7 +144,11 @@ public:
 			deadTrailShader.use();
 			if (transform) {
 				deadTrailShader.uniform("spawn", transform->pos);
-				deadTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+			}
+			if (physics) {
+				deadTrailShader.uniform("direction", -physics->velocity);
+			} else {
+				deadTrailShader.uniform("direction", glm::vec3());
 			}
 			deadTrailShader.uniform("life", 10.f);
 			deadTrailShader.uniform("dt", float(dt));
@@ -178,7 +194,7 @@ public:
 			free->type = event.type;
 			free->params = event.params;
 			free->t.restart();
-			free->setTimer(event.effectLength);
+			free->setTimer(event.params.effectLength);
 			resetShader.use();
 			//free->setComputeShader(&resetShader);
 			free->update();

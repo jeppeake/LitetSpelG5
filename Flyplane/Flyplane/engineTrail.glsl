@@ -19,6 +19,7 @@ uniform float dt;
 uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
+
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 // [-1, 1]
@@ -31,30 +32,40 @@ void main()
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
+		// INITAL SPAWN
+
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
-		Colors[gid].rgb = vec3(1.0,0.0,0.0);
+		Colors[gid].rgb = vec3(1.0,0.5,0.0);
 	}
 	else
 	{
-		//Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
-		//Positions[gid].xyz += Velocities[gid].xyz * dt;
+		// UPDATE
+		Colors[gid].a = 0.3*pow(1-Lives[gid] / life, 4);
 
-		Colors[gid].a = pow(1-Lives[gid] / life, 4);
-
-		Positions[gid].xyz = spawn + direction * (Lives[gid]*3 + 2);
+		Positions[gid].xyz = spawn + Velocities[gid].xyz + direction * (Lives[gid]*20 + 2);
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
 	{
+		// RESPAWN
 		Lives[gid] -= life;
-		Positions[gid].xyz = spawn; // + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
-		Lives[gid] = (2.0/60.0) * life * (rand(float(gid) + 1000) + 1)/2;
-		vec3 vel;
-		vel.x = rand(float(gid + dt*10));
-		vel.y = rand(float(gid + 1000 + dt*10));
-		vel.z = rand(float(gid + 2000 + dt*10));
-		Velocities[gid].xyz = 20 * direction + 3 * normalize(vel);
+
+		vec3 d = normalize(direction);
+		vec3 ortho = normalize(vec3(-d.y, d.x, 0));
+		vec3 ortho2 = cross(d, ortho);
+
+		vec3 offset;
+		offset += ortho * rand(gid * 7);
+		offset += ortho2 * rand(gid * 13);
+
+		offset = 0.2*rand(gid * 19)*normalize(offset);
+
+		Velocities[gid].xyz = offset;
+
+		Positions[gid].xyz = spawn + offset; 
+
+		//Lives[gid] = dt * life * (rand(float(gid) + 1000 + dt) + 1)/2;
 	}
 }
 

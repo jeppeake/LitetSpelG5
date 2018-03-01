@@ -1,6 +1,7 @@
 #include "computeShader.h"
 bool ComputeShader::create(const std::string & path)
 {
+	this->path = path;
 	std::ifstream file(path);
 	std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	const char *code = c.c_str();
@@ -62,6 +63,14 @@ GLuint ComputeShader::findUniformLocation(const std::string & name)
 		uniform_location = it->second;
 	return uniform_location;
 }
+
+
+
+void ComputeShader::reload() {
+	glDeleteProgram(program);
+	create(path);
+}
+
 void ComputeShader::use()
 {
 	glUseProgram(program);

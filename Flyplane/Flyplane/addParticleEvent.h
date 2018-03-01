@@ -17,6 +17,7 @@ struct ParticleParameters {
 			float radius;
 		} explosion;
 	};
+	float effectLength = 0;
 };
 
 struct AddParticleEvent {
@@ -24,9 +25,7 @@ struct AddParticleEvent {
 
 	PARTICLE_TYPES type;
 	entityx::ComponentHandle<ParticleComponent> component;
-	float effectLength = 0;
 	AddParticleEvent(PARTICLE_TYPES type, 
 	                 entityx::ComponentHandle<ParticleComponent> component, 
-	                 float effectLength = 0,
-	                 ParticleParameters params = {}): type(type), component(component), effectLength(effectLength), params(params) {}
+	                 ParticleParameters params = {}): type(type), component(component), params(params) {}
 };
