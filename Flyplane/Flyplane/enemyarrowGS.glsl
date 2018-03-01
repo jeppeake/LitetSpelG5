@@ -55,13 +55,13 @@ void main() {
 		}
 
 		else if (posCS.y < -1.0) {
-			gl_Position = vec4(posCS.x, 1.0, 0.0, 1.0);
+			gl_Position = vec4(posCS.x, -1.0, 0.0, 1.0);
 			EmitVertex();
 
-			gl_Position = vec4(posCS.x - 0.03, 0.97, 0.0, 1.0);
+			gl_Position = vec4(posCS.x - 0.03, -0.97, 0.0, 1.0);
 			EmitVertex();
 
-			gl_Position = vec4(posCS.x + 0.03, 0.97, 0.0, 1.0);
+			gl_Position = vec4(posCS.x + 0.03, -0.97, 0.0, 1.0);
 			EmitVertex();
 			EndPrimitive();
 		}
@@ -76,24 +76,6 @@ void main() {
 			gl_Position = vec4(posCS.x + 0.03, 0.97, 0.0, 1.0);
 			EmitVertex();
 			EndPrimitive();
-		}
-
-		else {
-			float temp = 1.0;
-			if (posCS.y < 0.0) {
-				temp = -1.0;
-			}
-
-			gl_Position = vec4(posCS.x, temp * 1.0, 0.0, 1.0);
-			EmitVertex();
-
-			gl_Position = vec4(posCS.x - 0.03, temp * 0.97, 0.0, 1.0);
-			EmitVertex();
-
-			gl_Position = vec4(posCS.x + 0.03, temp * 0.97, 0.0, 1.0);
-			EmitVertex();
-			EndPrimitive();
-		
 		}
 	}
 
@@ -156,9 +138,9 @@ void main() {
 			EndPrimitive();
 		}
 		else {
-			float temp = -1;
+			float temp = 1;
 			if (posY < 0.0) {
-				temp = 1;
+				temp = -1;
 			}
 			gl_Position = vec4(-posCS.x, temp * 1.0, 0.0, 1.0);
 			EmitVertex();

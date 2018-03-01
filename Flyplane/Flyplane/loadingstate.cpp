@@ -15,7 +15,7 @@ void LoadingState::init() {
 
 
 	//bHandler.addButton(new Button("Start", glm::vec2(Window::getWindow().size().x - 200, Window::getWindow().size().y - 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new StartGameAction(this), "buttonforward"));
-	fi.load("assets/textures/loadingscreen.png");
+	fi.load("assets/textures/loadingbg.png");
 
 
 	music.setBuffer(*AssetLoader::getLoader().getSoundBuffer("loadingmusic"));
@@ -42,11 +42,13 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_GUNS.fbx", "spectre_gun");
 	AssetLoader::getLoader().loadModel("assets/Spectre/Spectre_MOUNT.fbx", "spectre_mount");
 
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/HAAM_166.txt", "HAAM-166");
 	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/micro.txt", "Micromissile");
 	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/rocketpod.txt", "Rocketpod");
 	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/missile.txt", "Fishrod");
 	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/missile2.txt", "Rodfish");
 	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/missile3.txt", "Bigboi");
+	AssetLoader::getLoader().loadWeapon("assets/Presets/Weapons/SHAAM-200.txt", "SHAAM-200");
 	
 
 

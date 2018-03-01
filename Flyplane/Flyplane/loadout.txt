@@ -1,8 +1,4 @@
-assets\Presets\Planes\laken.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\micro.txt
-assets\Presets\Weapons\SHAAM-200.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile3.txt
-assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Planes\G-201.txt
+0
+0
 0

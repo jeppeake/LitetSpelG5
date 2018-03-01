@@ -8,8 +8,6 @@ sdasd
 sminem
 124700
 asdasd
-124600
-asd
 124100
 asd
 88500
@@ -18,3 +16,5 @@ hurk
 test
 60400
 fr
+49300
+FFFFF
