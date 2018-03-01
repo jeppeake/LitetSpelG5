@@ -20,7 +20,7 @@ projscale
 infammo
 0
 ismissile
-0
+1
 dissappear
 0
 offset
@@ -28,4 +28,12 @@ offset
 -0.15
 0
 damage
-80
+800
+turnrate
+0
+droptime
+0
+detonaterange
+50
+exploderadius
+60
