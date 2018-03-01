@@ -150,6 +150,11 @@ private:
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Fishrod"));
 			std::cout << " Fishrod!" << std::endl;
 			break;
+		case DropComponent::HAAM_166:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("HAAM-166"));
+			std::cout << " HAAM-166!" << std::endl;
+			break;
 		case DropComponent::Micromissile:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Micromissile"));
@@ -164,6 +169,11 @@ private:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Rodfish"));
 			std::cout << " Rodfish!" << std::endl;
+			break;
+		case DropComponent::SHAAM_200:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("SHAAM-200"));
+			std::cout << " SHAAM-200!" << std::endl;
 			break;
 		}
 	}
