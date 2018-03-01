@@ -82,6 +82,9 @@ struct RenderSystem : public System<RenderSystem> {
 					}*/
 					Renderer::getRenderer().setAmmo(ammo);
 				}
+				else {
+					Renderer::getRenderer().setAmmo(0);
+				}
 				
 			}
 			if (entity.has_component<FlightComponent>())
