@@ -9,8 +9,14 @@
 using namespace entityx;
 
 struct HealthSystem : public entityx::System<HealthSystem> {
+	sf::Sound explosionSound;
+
 	PlayingState* state;
-	HealthSystem(PlayingState *state) : state(state) {};
+	HealthSystem(PlayingState *state) : state(state) {
+		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
+		explosionSound.setRelativeToListener(true);
+		explosionSound.setPosition(0, 0, 0);
+	};
 	entityx::ComponentHandle<HealthComponent> health;
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
 		for (Entity entity : es.entities_with_components(health)) {
@@ -27,6 +33,12 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 						entity.remove<Target>();
 					}
 				}
+
+				if (entity.has_component<PlayerComponent>()) {
+					entity.assign<LifeTimeComponent>(1.5f);
+					explosionSound.play();
+				}
+
 				auto handle = entity.component<ParticleComponent>();
 				if (!handle)
 				{
