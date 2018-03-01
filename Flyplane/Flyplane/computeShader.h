@@ -9,6 +9,8 @@
 class ComputeShader
 {
 private:
+	std::string path;
+
 	GLuint program;
 	std::map<std::string, GLuint> uniform_locations;
 	GLuint findUniformLocation(const std::string& name);
@@ -18,6 +20,8 @@ public:
 	{
 		return program;
 	}
+	void reload();
+
 	void use();
 	void uniformv(const std::string& name, GLuint count, const glm::mat4* matrices);
 	void uniform(const std::string& name, const glm::mat4& matrix);

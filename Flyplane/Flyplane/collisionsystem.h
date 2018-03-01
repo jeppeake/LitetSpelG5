@@ -123,7 +123,9 @@ private:
 				{
 					handle = a.assign<ParticleComponent>();
 				}
-				es.emit<AddParticleEvent>(SPARKS, handle, 3);
+				ParticleParameters p;
+				p.effectLength = 3.f;
+				es.emit<AddParticleEvent>(SPARKS, handle, p);
 			}
 		}
 	}
@@ -230,13 +232,16 @@ private:
 		} else {
 
 			if (!entity.has_component<LifeTimeComponent>())
-				entity.assign<LifeTimeComponent>(5.0);
+				entity.assign<LifeTimeComponent>(20.0);
 
 			auto handle = entity.component<ParticleComponent>();
 			if (!handle) {
 				handle = entity.assign<ParticleComponent>();
 			}
-			event.emit<AddParticleEvent>(EXPLOSION, handle);
+			ParticleParameters p;
+			p.effectLength = 3.f;
+			p.explosion.radius = 50.f;
+			event.emit<AddParticleEvent>(EXPLOSION, handle, p);
 
 
 			auto transform = entity.component<Transform>();

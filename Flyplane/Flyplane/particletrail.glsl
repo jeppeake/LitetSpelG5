@@ -44,7 +44,7 @@ void main()
 	if(Lives[gid] >= life + 0.1*life*rand(float(gid)))
 	{
 		Lives[gid] -= life;
-		Positions[gid].xyz = spawn + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
+		Positions[gid].xyz = spawn + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 10.5);
 
 		vec3 vel;
 		vel.x = rand(float(gid + dt*10));
