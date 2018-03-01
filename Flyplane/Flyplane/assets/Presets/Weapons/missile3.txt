@@ -30,7 +30,7 @@ offset
 -0.1
 0.3
 detonaterange
-50
+0
 exploderadius
 60
 damage

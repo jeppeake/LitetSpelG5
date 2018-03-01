@@ -139,11 +139,11 @@ void PlayingState::spawnDrop() {
 
 void PlayingState::drawHighscore() {
 	glm::vec2 pos;
-	pos.x = Window::getWindow().size().x/2 - 60;
+	pos.x = Window::getWindow().size().x/2 - 80;
 	pos.y = Window::getWindow().size().y - 300;
 	string* p = Highscore::getHighscore().getHighscoreList();
 	AssetLoader::getLoader().getHighscoreText()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
-	pos.x = Window::getWindow().size().x / 2 - 160;
+	pos.x = Window::getWindow().size().x / 2 - 170;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
 		AssetLoader::getLoader().getHighscoreText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
@@ -567,6 +567,7 @@ void PlayingState::update(double dt)
 		ex.systems.update<RenderSystem>(dt);
 		Renderer::getRenderer().RenderTransparent();
 		if (!playerAlive) {
+			Renderer::getRenderer().setIsOutside(false);
 			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2((Window::getWindow().size().x/2) - 9*16, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
