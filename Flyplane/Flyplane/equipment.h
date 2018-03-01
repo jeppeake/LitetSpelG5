@@ -29,14 +29,15 @@ struct Equipment {
 	std::vector<Weapon> special;
 	std::vector<WeaponSlot> weaponSlots;
 
-	void addSpecialWeapon(Weapon& weapon) {
+	void addSpecialWeapon(Weapon weapon) {
 		if (special.size() < weaponSlots.size()) {
 			for (int i = 0; i < weaponSlots.size(); i++) {
 				if (weaponSlots[i].used == false) {
 					selected = special.size();
 					weaponSlots[i].used = true;
 					weaponSlots[i].slotNumber = selected;
-					weapon.offset = weaponSlots[i].pos;
+					weapon.offset += weaponSlots[i].pos;
+
 					special.push_back(weapon);
 
 					//std::cout << "added weapon to slot " << i << std::endl;
@@ -54,19 +55,17 @@ struct Equipment {
 	}
 
 	void removeSpecialWeapon() {
-		//std::cout << "call to removeSpecialWeapon()\n";
-
 		for (int i = 0; i < weaponSlots.size(); i++) {
 			if (weaponSlots[i].slotNumber == selected) {
 				weaponSlots[i].used = false;
-				//std::cout << "new free slot\n";
+				weaponSlots[i].slotNumber = -1;
 			}
 		}
 
 		if (selected < special.size() - 1) {
 			for (int i = 0; i < weaponSlots.size(); i++) {
-				if (weaponSlots[i].slotNumber == special.size() - 1) {
-					weaponSlots[i].slotNumber = selected;
+				if (weaponSlots[i].slotNumber > selected) {
+					weaponSlots[i].slotNumber--;
 				}
 			}
 		}
