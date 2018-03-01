@@ -93,7 +93,9 @@ void LoadoutState::init() {
 	ex.systems.configure();
 
 	Renderer::getRenderer().setHeightmap(nullptr);
+	Renderer::getRenderer().setDrawShadows(false);
 	ex.systems.system<RenderSystem>()->playing = false;
+
 
 	timer.restart();
 

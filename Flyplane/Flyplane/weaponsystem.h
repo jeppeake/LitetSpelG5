@@ -159,7 +159,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 						else {//down
 							elevationLimit = elevationLimits.y;
 						}
-						std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
+						//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
 						if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(new_closest) < closest && glm::length(new_closest) < equip->turrets.at(i).info.range) {
 							entity_closest = entity_closest_search;
 							closest = new_closest;
@@ -256,7 +256,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				}
 			}
 			
-			if ((Input::isKeyDown(GLFW_KEY_F2) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f && equip->special.size() > 0) {
+			if ((Input::isKeyDown(GLFW_KEY_Q) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) && switchT.elapsed() > 0.2f && equip->special.size() > 0) {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
 				unsigned int count = 0;

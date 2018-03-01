@@ -117,8 +117,12 @@ Renderer::Renderer() {
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
-	score.loadTexture("assets/Textures/score.png", 1);
+	scoreTexture.loadTexture("assets/Textures/score.png", 1);
 
+	for (int i = 0; i < 10; i++) {
+		numbers[i].loadTexture("assets/Textures/" + to_string(i) + ".png", 1);
+	}
+	x.loadTexture("assets/Textures/x.png", 1);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -385,7 +389,22 @@ void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshai
 	RenderSpeedometer(speed);
 	auto s = Window::getWindow().size();
 	glViewport(0, s.y - 50, 125, 50);
-	renderTexture(score, glm::mat4(1));
+	renderTexture(scoreTexture, glm::mat4(1));
+
+	string temp = to_string(score);
+
+	for (int i = 0; i < temp.size(); i++) {
+		glViewport(130 + 20 * i, s.y - 40, 20, 30);
+		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+	}
+	glViewport(20, s.y - 70, 20, 30);
+	renderTexture(x, glm::mat4(1));
+
+	temp = to_string(multiplier);
+	for (int i = 0; i < temp.size(); i++) {
+		glViewport(40 + 22 * i, s.y - 70, 20, 30);
+		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+	}
 	glViewport(0, 0, s.x, s.y);
 
 	glEnable(GL_CULL_FACE);
@@ -463,8 +482,10 @@ void Renderer::RenderOutsideMessage() {
 	string boi = "8.3";
 	RenderTransparent();
 	auto s = Window::getWindow().size();
-	AssetLoader::getLoader().getBigtext()->drawText("Return to the combat area!", glm::vec2(s.x/2 - 23*13, s.y*0.8), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
-	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x/2 - 10*boi.length()/2, s.y*0.7), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	double scalething = 20;
+	double scalething2 = 20;
+	AssetLoader::getLoader().getBigtext()->drawText("Return to the combat area!", glm::vec2(s.x/2 - scalething*13 * s.y / 720.0, s.y*0.6), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x/2 - scalething2*boi.length()/2 * s.y / 720.0, s.y*0.52), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -557,6 +578,14 @@ void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
 
 	glEnable(GL_CULL_FACE);
 	//glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::setScore(int points) {
+	score = points;
+}
+
+void Renderer::setMultiplier(int multiplier) {
+	this->multiplier = multiplier;
 }
 
 void Renderer::renderParticles(Particles * p) {

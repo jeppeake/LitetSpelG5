@@ -84,9 +84,9 @@ void LoadingState::update(double dt) {
 	fi.draw();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	if (!done)
-		AssetLoader::getLoader().getBigtext()->drawText("Loading " + current + "...", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
+		AssetLoader::getLoader().getBigtext()->drawText("Loading " + current + "...", glm::vec2(100, 70), glm::vec3(1, 1, 1), 1);
 	else
-		AssetLoader::getLoader().getBigtext()->drawText("Loading done. Press enter to start.", glm::vec2(100, 100), glm::vec3(1, 1, 1), 1);
+		AssetLoader::getLoader().getBigtext()->drawText("Loading done. Press enter to start.", glm::vec2(100, 70), glm::vec3(1, 1, 1), 1);
 	if (done) {
 		if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
 			startGame();
