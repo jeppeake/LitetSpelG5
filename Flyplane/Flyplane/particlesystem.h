@@ -86,6 +86,7 @@ public:
 	{
 		auto transform = entity.component<Transform>();
 		auto physics = entity.component<Physics>();
+		auto flight = entity.component<FlightComponent>();
 		auto camTrans = Renderer::getRenderer().getCamera().getTransform();
 		switch (p->type) {
 		case TRAIL:
@@ -100,6 +101,8 @@ public:
 			trailShader.uniform("life", 10.f);
 			trailShader.uniform("dt", float(dt));
 			break;
+
+
 		case EXPLOSION:
 			//p->setComputeShader(&explosionShader);
 			//p->setTexture("explosion");
@@ -113,18 +116,24 @@ public:
 			explosionShader.uniform("life", p->params.effectLength);
 			explosionShader.uniform("dt", float(dt));
 			break;
+
+
 		case SPARKS:
 			//p->setComputeShader(&sparkShader);
 			//p->setTexture("N/A");
-			p->setSize(0.01);
+			p->setSize(0.005);
 			sparkShader.use();
-			if (transform) {
-				sparkShader.uniform("spawn", transform->pos);
-				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, 0));
+			sparkShader.uniform("spawn", p->params.sparks.pos);
+			if (physics) {
+				sparkShader.uniform("velocity", physics->velocity);
+			} else {
+				sparkShader.uniform("velocity", glm::vec3());
 			}
-			sparkShader.uniform("life", 1.f);
+			sparkShader.uniform("life", p->params.effectLength);
 			sparkShader.uniform("dt", float(dt));
 			break;
+
+
 		case ENGINE_TRAIL:
 			//p->setComputeShader(&engineTrailShader);
 			//p->setTexture("engine_fire");
@@ -135,9 +144,14 @@ public:
 				engineTrailShader.uniform("spawn", transform->pos + transform->orientation * p->params.engineTrail.offset);
 				engineTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
+			if (flight) {
+				engineTrailShader.uniform("throttle", flight->throttle - flight->airBrake);
+			}
 			//engineTrailShader.uniform("life", 0.25f);
 			engineTrailShader.uniform("dt", float(dt));
 			break;
+
+
 		case DEAD_TRAIL:
 			//p->setComputeShader(&deadTrailShader);
 			//p->setTexture("N/A");
@@ -154,6 +168,8 @@ public:
 			deadTrailShader.uniform("life", 10.f);
 			deadTrailShader.uniform("dt", float(dt));
 			break;
+
+
 		case SPEED_PARTICLE:
 			//p->setComputeShader(&deadTrailShader);
 			//p->setTexture("N/A");
@@ -163,9 +179,11 @@ public:
 				speedShader.uniform("spawn", transform->pos);
 			}
 			speedShader.uniform("direction", camTrans.orientation * glm::vec3(0, 0, -1));
-			speedShader.uniform("life", 2.f);
+			speedShader.uniform("life", 6.f);
 			speedShader.uniform("dt", float(dt));
 			break;
+
+
 		default:
 			// plz no
 			break;

@@ -4,6 +4,8 @@ sdasd
 frukt
 161200
 sdasd
+136300
+asd
 135500
 sminem
 125000
@@ -12,9 +14,7 @@ asd
 asdasd
 124100
 asd
+95200
+asd
 88500
 hurk
-65700
-test
-60400
-fr

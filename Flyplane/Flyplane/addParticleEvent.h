@@ -22,6 +22,10 @@ struct ParticleParameters {
 			glm::vec3 offset;
 			float radius;
 		} engineTrail;
+
+		struct Sparks {
+			glm::vec3 pos;
+		} sparks;
 	};
 	float effectLength = 0;
 };

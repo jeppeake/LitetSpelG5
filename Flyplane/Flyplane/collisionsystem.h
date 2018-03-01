@@ -118,13 +118,20 @@ private:
 					if(hitSound.getStatus() != sf::Sound::Playing)
 						hitSound.play();
 				}
+
+				auto btransform = b.component<Transform>();
+
+
 				auto handle = a.component<ParticleComponent>();
 				if (!handle)
 				{
 					handle = a.assign<ParticleComponent>();
 				}
+
 				ParticleParameters p;
-				p.effectLength = 3.f;
+				p.effectLength = 1.f;
+				if(btransform)
+					p.sparks.pos = btransform->pos;
 				es.emit<AddParticleEvent>(SPARKS, handle, p);
 			}
 		}
@@ -296,15 +303,7 @@ public:
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
-		/******************
-		**     DEBUG     **
-		******************/
-
-
-
-		/******************
-		**    \DEBUG     **
-		******************/
+		
 
 
 		Heightmap* map = nullptr;

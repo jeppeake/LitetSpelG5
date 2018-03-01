@@ -127,5 +127,26 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			player->outsideTimeLeft = outsideTime - elapsed;
 			player->outsideTimeLeft = glm::max(player->outsideTimeLeft, 0.0);
 		}
+
+
+
+		/******************
+		**     DEBUG     **
+		******************/
+
+		/*
+		if(Input::isKeyPressed(GLFW_KEY_G)) {
+			auto handle = entity.component<ParticleComponent>();
+			ParticleParameters p;
+			p.effectLength = 1.f;
+			if (transform)
+				p.sparks.pos = transform->pos;
+			events.emit<AddParticleEvent>(SPARKS, handle, p);
+		}
+		*/
+
+		/******************
+		**    \DEBUG     **
+		******************/
 	}
 }

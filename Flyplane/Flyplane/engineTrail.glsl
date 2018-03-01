@@ -16,13 +16,16 @@ layout(std430, binding=10) buffer Col
 	vec4 Colors[];
 };
 
-const float life = 0.2;
+const float life = 0.15;
 //uniform float life;
 uniform float thrust;
 uniform float radius;
 uniform float dt;
 uniform vec3 spawn;
 uniform vec3 direction;
+
+// [-1, 1]
+uniform float throttle;
 
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
@@ -47,11 +50,14 @@ void main()
 	else
 	{
 		// UPDATE
+		float t = throttle;
 		
-		Colors[gid].a = 1.0;
-		Colors[gid].a = 0.7*pow(1-Lives[gid] / life, 1)*r;
+		Colors[gid].a = 1.0 * r * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
+		Colors[gid].a *= 0.4 + pow(t*0.5 + 0.5, 2);
 
-		Positions[gid].xyz = spawn + Velocities[gid].xyz + (direction - 0.15*Velocities[gid].xyz) * (Lives[gid]*20);
+		//Colors[gid].a = 1.0;
+
+		Positions[gid].xyz = spawn + Velocities[gid].xyz + (direction - 0.15*Velocities[gid].xyz) * Lives[gid]*(24 + 4*t);
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life + 0.1*life*abs(rand(gid)))
