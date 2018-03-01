@@ -91,12 +91,13 @@ public:
 		case EXPLOSION:
 			//p->setComputeShader(&explosionShader);
 			//p->setTexture("explosion");
-			p->setSize(0.05);
+			p->setSize(p->params.explosion.radius*0.001f);
 			explosionShader.use();
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
 				explosionShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
+			explosionShader.uniform("explosionRadius", p->params.explosion.radius);
 			explosionShader.uniform("life", 1.f);
 			explosionShader.uniform("dt", float(dt));
 			break;
@@ -175,6 +176,7 @@ public:
 		if (free) {
 			//free->program = &program;
 			free->type = event.type;
+			free->params = event.params;
 			free->t.restart();
 			free->setTimer(event.effectLength);
 			resetShader.use();

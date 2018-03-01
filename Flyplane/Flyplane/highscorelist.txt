@@ -6,6 +6,8 @@ sdasd
 sdasd
 124700
 asdasd
+124100
+asd
 88500
 hurk
 65700
@@ -15,6 +17,4 @@ fr
 47700
 fdsf
 46700
-gurk
-43100
 gurk

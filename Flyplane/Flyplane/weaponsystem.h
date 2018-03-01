@@ -436,7 +436,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				explosion.assign<Transform>(trans->pos);
 				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500);
 				auto handle = explosion.assign<ParticleComponent>();
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
+				ParticleParameters params;
+				params.explosion.radius = missile->explodeRadius;
+				events.emit<AddParticleEvent>(EXPLOSION, handle, 3, params);
 				entity.destroy();
 			}
 		}
