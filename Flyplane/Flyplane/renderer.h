@@ -95,6 +95,7 @@ private:
 
 	glm::vec3 sunDir;
 
+	bool drawShadows = true;
 
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
@@ -141,8 +142,12 @@ public:
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
 	void setScore(int points);
 	void setMultiplier(int multiplier);
-
 	void renderParticles(Particles* p);
+
+
+	void setDrawShadows(bool drawShadows) {
+		this->drawShadows = drawShadows;
+	}
 
 	void setIsOutside(bool isOutside, double outsideTime = -2) {
 		this->isOutside = isOutside;

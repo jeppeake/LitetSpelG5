@@ -13,6 +13,8 @@ public:
 	std::vector<std::string> textureNames;
 	std::vector<glm::vec3> wepPos;
 	std::string weapon = "nan";
+	std::vector<std::string> turretFiles;
+	std::vector<glm::vec3> turretPositions;
 	bool turretWeapon = false;
 	PlanePreset() {}
 	~PlanePreset() {}

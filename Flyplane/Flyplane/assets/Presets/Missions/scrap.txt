@@ -65,4 +65,4 @@ points
 5000
 
 text
-A group of German crazy boys in scrap planes are headed your way, destroy them!
+A group of German crazy boys in scrap planes are headed your way, destroy them.

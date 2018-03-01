@@ -39,4 +39,4 @@ points
 500
 
 text
-Destroy the very evil nazi building before they build the dangerous bomb!
+Destroy the very evil nazi building before they build the dangerous bomb.

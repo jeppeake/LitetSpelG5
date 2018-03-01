@@ -202,8 +202,6 @@ struct RenderSystem : public System<RenderSystem> {
 			ComponentHandle<MissionMarker> mmarker;
 
 			for (Entity entity : es.entities_with_components(ai, transform)) {
-				if (!entity.has_component<MissionMarker>())
-					radar.addPlane(*transform.get());
 				if (entity.has_component<FlightComponent>())
 				{
 					glm::vec3 enemyPos = entity.component<Transform>()->pos;
@@ -216,12 +214,14 @@ struct RenderSystem : public System<RenderSystem> {
 					}
 
 					length = 5.0 + length / 100.0f;
-					if (!entity.has_component<MissionMarker>())
+					if (!entity.has_component<MissionMarker>()) {
 						Renderer::getRenderer().addMarker(enemyPos, color, length);
+						radar.addPlane(*transform.get());
+					}
 				}
 			}
 			for (Entity entity : es.entities_with_components(mmarker, transform)) {
-				radar.addPlane(*transform.get());
+				//radar.addPlane(*transform.get());
 				if (entity.has_component<MissionMarker>())
 				{
 					glm::vec3 color = mmarker->color;
@@ -238,7 +238,7 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 			ComponentHandle<DropComponent> dropHandle;
 			for (Entity entity : es.entities_with_components(dropHandle, transform)) {
-				radar.addPlane(*transform.get(), glm::vec3(0, 1, 0));
+				radar.addPlane(*transform.get(), glm::vec3(235.f / 255.f, 85.f / 255.f, 0.f));
 			}
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			radar.draw((float)dt);

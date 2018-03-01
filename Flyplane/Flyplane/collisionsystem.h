@@ -223,14 +223,24 @@ private:
 		if (entity.has_component<Projectile>()) {
 			to_remove[entity.id()] = entity;
 		} else {
-			entity.assign<LifeTimeComponent>(5.0);
+
+			if (!entity.has_component<LifeTimeComponent>())
+				entity.assign<LifeTimeComponent>(5.0);
 
 			auto handle = entity.component<ParticleComponent>();
 			if (!handle) {
 				handle = entity.assign<ParticleComponent>();
 			}
-			explosionSound.play();
 			event.emit<AddParticleEvent>(EXPLOSION, handle);
+
+
+			auto transform = entity.component<Transform>();
+			if (transform) {
+				auto p = transform->pos;
+				explosionSound.setPosition(p.x, p.y, p.z);
+			}
+			explosionSound.play();
+			
 
 
 			entity.remove<CollisionComponent>();
@@ -241,29 +251,29 @@ private:
 		}
 	}
 
+
+	void setupSounds() {
+		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
+		hitSound.setRelativeToListener(true);
+		hitSound.setPosition(0, 0, 0);
+
+		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
+		dropSound.setRelativeToListener(true);
+		dropSound.setPosition(0, 0, 0);
+
+		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
+		explosionSound.setPosition(0, 0, 0);
+		explosionSound.setMinDistance(400.f);
+		explosionSound.setAttenuation(0.5f);
+	}
 public:
 	CollisionSystem(Heightmap *map) : map(map) {
-		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
-		hitSound.setRelativeToListener(true);
-		hitSound.setPosition(0, 0, 0);
-		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
-		dropSound.setRelativeToListener(true);
-		dropSound.setPosition(0, 0, 0);
-		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
-		explosionSound.setRelativeToListener(true);
-		explosionSound.setPosition(0, 0, 0);
+		setupSounds();
 	};
 	CollisionSystem(Heightmap *map, PlayingState *state) : map(map), state(state) {
-		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
-		hitSound.setRelativeToListener(true);
-		hitSound.setPosition(0, 0, 0);
-		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
-		dropSound.setRelativeToListener(true);
-		dropSound.setPosition(0, 0, 0);
-		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
-		explosionSound.setRelativeToListener(true);
-		explosionSound.setPosition(0, 0, 0);
+		setupSounds();
 	};
+
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
 		/******************
@@ -292,7 +302,6 @@ public:
 		entityx::ComponentHandle<ModelComponent> model;
 		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
 		{
-
 			// Collision with other entitites 
 			if (entity.has_component<Projectile>()) {
 				if (entity.has_component<FactionPlayer>()) {

@@ -123,6 +123,13 @@ Renderer::Renderer() {
 		numbers[i].loadTexture("assets/Textures/" + to_string(i) + ".png", 1);
 	}
 	x.loadTexture("assets/Textures/x.png", 1);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+
 	sunDir = normalize(glm::vec3(0, 1, 2));
 }
 
@@ -264,9 +271,11 @@ void Renderer::RenderTerrainShadow() {
 
 void Renderer::RenderScene() {
 
-	RenderPlaneShadow();
+	if (drawShadows) {
+		RenderPlaneShadow();
+		RenderTerrainShadow();
+	}
 
-	RenderTerrainShadow();
 
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -290,6 +299,7 @@ void Renderer::RenderScene() {
 	shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
 	shader.uniform("cameraPos", camera.getTransform().pos);
 	shader.uniform("sunDir", sunDir);
+	shader.uniform("drawShadows", (int)drawShadows);
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
 	}
@@ -469,11 +479,11 @@ void Renderer::RenderOutsideMessage() {
 
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(1) << outsideTime;
-
+	string boi = "8.3";
 	RenderTransparent();
 	auto s = Window::getWindow().size();
-	AssetLoader::getLoader().getText()->drawText("Return to the combat area!", glm::vec2(s.x*0.25, s.y*0.6), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
-	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x*0.5, s.y*0.5), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	AssetLoader::getLoader().getBigtext()->drawText("Return to the combat area!", glm::vec2(s.x/2 - 23*13, s.y*0.8), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x/2 - 10*boi.length()/2, s.y*0.7), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
 
 	glEnable(GL_DEPTH_TEST);
 }
