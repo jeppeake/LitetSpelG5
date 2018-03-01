@@ -578,8 +578,10 @@ void PlayingState::update(double dt)
 	
 
 	glm::vec2 pos = glm::vec2(130, window.y - 30);
-	AssetLoader::getLoader().getText()->drawText(std::to_string(int(points)), pos, glm::vec3(0, 1, 0), 0.4);
-	AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 60), glm::vec3(0, 1, 0), 0.4);
+	//AssetLoader::getLoader().getText()->drawText(std::to_string(int(points)), pos, glm::vec3(0, 1, 0), 0.4);
+	Renderer::getRenderer().setScore(points);
+	//AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 80), glm::vec3(0, 1, 0), 0.4);
+	Renderer::getRenderer().setMultiplier(multiplier);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState(name));
