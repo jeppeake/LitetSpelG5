@@ -7,6 +7,8 @@ uniform sampler2D terrainShadowMap;
 uniform mat4 shadowMatrix;
 uniform vec3 cameraPos;
 
+uniform int drawShadows;
+
 uniform vec3 sunDir;
 
 in vec3 Pos;
@@ -59,10 +61,13 @@ float shadow(vec3 shadowCoord, sampler2D sampler, float c) {
 }
 
 void main() {
-	float visibility1 = shadow(ShadowSpace, shadowMap, 0.0002);
-	float visibility2 = shadow(TerrainShadowSpace, terrainShadowMap, 0.0);
-	float visibility = min(visibility1, visibility2);
+	float visibility = 1.0;
 
+	if(drawShadows!=0) {
+		float visibility1 = shadow(ShadowSpace, shadowMap, 0.0002);
+		float visibility2 = shadow(TerrainShadowSpace, terrainShadowMap, 0.0);
+		visibility = min(visibility1, visibility2);
+	}
 
 	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;
 
