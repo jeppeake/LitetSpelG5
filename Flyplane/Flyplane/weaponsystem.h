@@ -51,7 +51,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	}
 
 	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
+		//std::cout << "Spawning bullet!\n";
 		entityx::Entity projectile = es.create();
+		//std::cout << weapon->projScale.x << " : " << weapon->projScale.y << " : " << weapon->projScale.z << "\n";
 		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
 		glm::vec3 dir = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 1.0);
 		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
@@ -258,6 +260,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Weapon* pweapon = &equip->primary[i];
 				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
 					pweapon->shouldFire = true;
+					std::cout << "FIRING!\n";
 				}
 				if (pweapon->shouldFire) {
 					pweapon->shouldFire = false;
