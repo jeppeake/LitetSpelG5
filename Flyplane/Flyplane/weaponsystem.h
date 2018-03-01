@@ -159,7 +159,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 						else {//down
 							elevationLimit = elevationLimits.y;
 						}
-						std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
+						//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
 						if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(new_closest) < closest && glm::length(new_closest) < equip->turrets.at(i).info.range) {
 							entity_closest = entity_closest_search;
 							closest = new_closest;
