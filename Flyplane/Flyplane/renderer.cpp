@@ -119,6 +119,13 @@ Renderer::Renderer() {
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
 	score.loadTexture("assets/Textures/score.png", 1);
 
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+
 	sunDir = normalize(glm::vec3(0, 1, 2));
 }
 
@@ -260,9 +267,11 @@ void Renderer::RenderTerrainShadow() {
 
 void Renderer::RenderScene() {
 
-	RenderPlaneShadow();
+	if (drawShadows) {
+		RenderPlaneShadow();
+		RenderTerrainShadow();
+	}
 
-	RenderTerrainShadow();
 
 	//Render scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -286,6 +295,7 @@ void Renderer::RenderScene() {
 	shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
 	shader.uniform("cameraPos", camera.getTransform().pos);
 	shader.uniform("sunDir", sunDir);
+	shader.uniform("drawShadows", (int)drawShadows);
 	for (int i = 0; i < list.size(); i++) {
 		Render(list[i]);
 	}
