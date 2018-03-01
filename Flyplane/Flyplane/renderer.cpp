@@ -445,11 +445,11 @@ void Renderer::RenderOutsideMessage() {
 
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(1) << outsideTime;
-
+	string boi = "8.3";
 	RenderTransparent();
 	auto s = Window::getWindow().size();
-	AssetLoader::getLoader().getText()->drawText("Return to the combat area!", glm::vec2(s.x*0.25, s.y*0.6), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
-	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x*0.5, s.y*0.5), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	AssetLoader::getLoader().getBigtext()->drawText("Return to the combat area!", glm::vec2(s.x/2 - 23*13, s.y*0.8), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
+	AssetLoader::getLoader().getText()->drawText(ss.str(), glm::vec2(s.x/2 - 10*boi.length()/2, s.y*0.7), glm::vec3(1, 1, 1), 1.0 * s.y / 720.0);
 
 	glEnable(GL_DEPTH_TEST);
 }

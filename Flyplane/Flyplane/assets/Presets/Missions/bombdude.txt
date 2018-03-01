@@ -1,0 +1,44 @@
+0
+
+spawnhouse
+1
+33.4 -80
+hus1
+2
+
+spawnenemy
+3300.4 1000 -102
+bomber.txt
+
+makeleader
+
+spawnenemy
+3300.4 1000 -82
+ryss.txt
+
+spawnenemy
+43.4 3900 -82
+ryss.txt
+
+spawnenemy
+53.4 4400 -82
+ryss.txt
+
+spawnenemy
+63.4 3800 -82
+ryss.txt
+
+settimer
+40
+
+huntplayerdist
+1000
+
+firingdistance
+500
+
+points
+1000
+
+text
+A Russian bomber is on its way, stop him before he blows up everything.

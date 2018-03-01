@@ -134,16 +134,17 @@ void PlayingState::spawnDrop() {
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(50, static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
-	entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
+	//entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
+
 }
 
 void PlayingState::drawHighscore() {
 	glm::vec2 pos;
-	pos.x = 800;
-	pos.y = 400;
+	pos.x = Window::getWindow().size().x/2 - 60;
+	pos.y = Window::getWindow().size().y - 300;
 	string* p = Highscore::getHighscore().getHighscoreList();
 	AssetLoader::getLoader().getHighscoreText()->drawText("HIGH SCORES", pos, glm::vec3(1, 1, 1), 0.8);
-	pos.x = 700;
+	pos.x = Window::getWindow().size().x / 2 - 160;
 	for (int i = 0; i < 5; i++) {
 		pos.y -= 40;
 		AssetLoader::getLoader().getHighscoreText()->drawText(p[i], pos, glm::vec3(1, 1, 1), 0.7);
@@ -567,11 +568,11 @@ void PlayingState::update(double dt)
 	else {
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
+		Renderer::getRenderer().RenderTransparent();
 		if (!playerAlive) {
-			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2(500, 500), glm::vec3(1, 0, 0), 1.5);
+			AssetLoader::getLoader().getBigtext()->drawText("Game over", glm::vec2((Window::getWindow().size().x/2) - 9*16, Window::getWindow().size().y - 200), glm::vec3(1, 0, 0), 1.5);
 			drawHighscore();
 		}
-		Renderer::getRenderer().RenderTransparent();
 		Window::getWindow().showCursor(true);
 		bHandler.drawButtons();
 		bHandler.handleButtonClicks();

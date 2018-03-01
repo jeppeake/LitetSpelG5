@@ -284,7 +284,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
 					//behaviours.push_back(new Follow_Target(7,new Always_True(), target));
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
-					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
+					//behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
 					entity.assign<AIComponent>(behaviours, true, true, false);
 					entity.assign<CollisionComponent>();
