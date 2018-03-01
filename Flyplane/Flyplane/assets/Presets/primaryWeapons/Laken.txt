@@ -16,7 +16,7 @@ cooldown
 scale
 0.2
 projscale
-0.6
+3
 infammo
 1
 ismissile

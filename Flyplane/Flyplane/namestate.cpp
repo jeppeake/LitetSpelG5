@@ -1,6 +1,7 @@
 #include "namestate.h"
 #include "loadingstate.h"
 #include "input.h"
+#include "window.h"
 
 
 void NameState::checkForInput() {
@@ -26,14 +27,17 @@ void NameState::update(double dt) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	checkForInput();
 	glm::vec2 pos;
-	pos.x = 500;
-	pos.y = 600;
-	AssetLoader::getLoader().getMenutext()->drawText("Enter name!", pos, glm::vec3(1, 1, 1), 1.0);
-	pos.x = 500;
-	pos.y = 500;
+	pos.x = Window::getWindow().size().x / 2 - 12*6;
+	pos.y = Window::getWindow().size().y - 200;
+	AssetLoader::getLoader().getMenutext()->drawText("Enter name:", pos, glm::vec3(1, 1, 1), 1.0);
+	pos.x = Window::getWindow().size().x / 2 - 12 * name.length()/2;
+	pos.y = Window::getWindow().size().y - 250;
 	AssetLoader::getLoader().getText()->drawText(name, pos, glm::vec3(1, 1, 1), 0.7);
 	if (Input::isKeyPressed(GLFW_KEY_ENTER) && name.size() > 0) {
 		this->changeState(new LoadingState(name));
+	}
+	if (Input::isKeyPressed(GLFW_KEY_ESCAPE)) {
+		this->changeState(new MenuState());
 	}
 }
 

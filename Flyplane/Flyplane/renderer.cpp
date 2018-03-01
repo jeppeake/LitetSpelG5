@@ -123,6 +123,7 @@ Renderer::Renderer() {
 		numbers[i].loadTexture("assets/Textures/" + to_string(i) + ".png", 1);
 	}
 	x.loadTexture("assets/Textures/x.png", 1);
+	ammoTexture.loadTexture("assets/Textures/ammo.png", 1);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -211,7 +212,16 @@ void Renderer::RenderWeapon() {
 	glDrawElements(GL_TRIANGLES, missile->model_meshes[0].first->numIndices(), GL_UNSIGNED_INT, 0);
 
 	glViewport(0, 0, s.x, s.y);
-	AssetLoader::getLoader().getText()->drawText(std::to_string(weaponAmmo), glm::vec2(s.x - 300, 20), glm::vec3(1, 1, 0), 0.4);
+	//AssetLoader::getLoader().getText()->drawText(std::to_string(weaponAmmo), glm::vec2(s.x - 300, 20), glm::vec3(1, 1, 0), 0.4);
+	glViewport(s.x - 450, 0, 100, 30);
+	renderTexture(ammoTexture, glm::mat4(1));
+	string temp = to_string(weaponAmmo);
+
+	for (int i = 0; i < temp.size(); i++) {
+		glViewport(s.x - 360 + 14 * i, 5, 14, 20);
+		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+	}
+	glViewport(0, 0, s.x, s.y);
 }
 
 Timer t;

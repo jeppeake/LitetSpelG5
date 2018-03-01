@@ -15,7 +15,7 @@ void LoadingState::init() {
 
 
 	//bHandler.addButton(new Button("Start", glm::vec2(Window::getWindow().size().x - 200, Window::getWindow().size().y - 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new StartGameAction(this), "buttonforward"));
-	fi.load("assets/textures/loadingscreen.png");
+	fi.load("assets/textures/loadingbg.png");
 
 
 	music.setBuffer(*AssetLoader::getLoader().getSoundBuffer("loadingmusic"));
