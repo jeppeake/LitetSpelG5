@@ -190,10 +190,20 @@ void PlayingState::loadLoadout()
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
 	entity_p.assign<FactionPlayer>();
+
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
-	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(SPEED_PARTICLE, handle);
+
+
+	ParticleParameters p;
+	p.engineTrail.radius = pp.engineRadius;
+	for (auto pos : pp.enginePos) {
+		p.engineTrail.offset = pos;
+		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle, p);
+	}
+
+
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
@@ -230,6 +240,7 @@ void PlayingState::loadLoadout()
 			pweapons.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 		}
 	}
+
 
 	//turret load
 	for (int i = 0; i < pp.turretFiles.size(); i++) {

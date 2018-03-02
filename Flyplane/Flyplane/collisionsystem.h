@@ -118,12 +118,21 @@ private:
 					if(hitSound.getStatus() != sf::Sound::Playing)
 						hitSound.play();
 				}
+
+				auto btransform = b.component<Transform>();
+
+
 				auto handle = a.component<ParticleComponent>();
 				if (!handle)
 				{
 					handle = a.assign<ParticleComponent>();
 				}
-				es.emit<AddParticleEvent>(SPARKS, handle, 3);
+
+				ParticleParameters p;
+				p.effectLength = 1.f;
+				if(btransform)
+					p.sparks.pos = btransform->pos;
+				es.emit<AddParticleEvent>(SPARKS, handle, p);
 			}
 		}
 	}
@@ -150,6 +159,11 @@ private:
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Fishrod"));
 			std::cout << " Fishrod!" << std::endl;
 			break;
+		case DropComponent::HAAM_166:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("HAAM-166"));
+			std::cout << " HAAM-166!" << std::endl;
+			break;
 		case DropComponent::Micromissile:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Micromissile"));
@@ -164,6 +178,11 @@ private:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Rodfish"));
 			std::cout << " Rodfish!" << std::endl;
+			break;
+		case DropComponent::SHAAM_200:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("SHAAM-200"));
+			std::cout << " SHAAM-200!" << std::endl;
 			break;
 		}
 	}
@@ -230,13 +249,16 @@ private:
 		} else {
 
 			if (!entity.has_component<LifeTimeComponent>())
-				entity.assign<LifeTimeComponent>(5.0);
+				entity.assign<LifeTimeComponent>(20.0);
 
 			auto handle = entity.component<ParticleComponent>();
 			if (!handle) {
 				handle = entity.assign<ParticleComponent>();
 			}
-			event.emit<AddParticleEvent>(EXPLOSION, handle);
+			ParticleParameters p;
+			p.effectLength = 3.f;
+			p.explosion.radius = 50.f;
+			event.emit<AddParticleEvent>(EXPLOSION, handle, p);
 
 
 			auto transform = entity.component<Transform>();
@@ -281,15 +303,7 @@ public:
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
-		/******************
-		**     DEBUG     **
-		******************/
-
-
-
-		/******************
-		**    \DEBUG     **
-		******************/
+		
 
 
 		Heightmap* map = nullptr;

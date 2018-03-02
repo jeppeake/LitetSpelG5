@@ -28,26 +28,25 @@ void main()
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
-		Positions[gid].xyz = spawn + 10 * normalize(vec3(10 * rand(gid * gid),3 * rand(gid - 1337), 4 * rand(gid * 13)));
+		Positions[gid].xyz = spawn + 10 * normalize(vec3(rand(gid * 2), rand(gid * 3), rand(gid * 5)));
 		Lives[gid] = 0;
-		Colors[gid].xyz = vec3(1.0,0.0,0.0);
+		Colors[gid].xyz = vec3(1.0,1.0,0.0);
 
 		vec3 vel;
-		vel.x = rand(gid);
-		vel.y = rand(gid + 1000);
-		vel.z = rand(gid + 2000);
+		vel.x = rand(gid * 17);
+		vel.y = rand(gid * 7);
+		vel.z = rand(gid * 11);
 		vel = normalize(vel);
 
-
-		Velocities[gid].xyz = 5.0 * explosionRadius * rand(gid + 3000) * vel;
+		Velocities[gid].xyz = 4.0 * explosionRadius * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
 	}
 	else
 	{
-		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.1, dt));
+		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.01, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].g += Lives[gid] / 16.0;
-		Colors[gid].a -= clamp(Lives[gid] * dt, 0.0, 1.0);
+		Colors[gid].rgb = mix(Colors[gid].rgb, vec3(0.5), pow(smoothstep(0, life, Lives[gid]), 1));
+		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 0.3);
 	}
 	Lives[gid] += dt;
 }

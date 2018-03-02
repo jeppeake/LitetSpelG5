@@ -18,7 +18,7 @@ layout(std430, binding=10) buffer Col
 uniform float dt;
 uniform float life;
 uniform vec3 spawn;
-uniform vec3 direction;
+uniform vec3 velocity;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 float rand(float n) { 
 	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
@@ -28,26 +28,35 @@ void main()
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
-		Positions[gid].xyz = spawn + 10 * normalize(vec3(10 * rand(gid * gid),3 * rand(gid - 1337), 4 * rand(gid * 13)));
+		// INITAL SPAWN
+		
 		Lives[gid] = 0;
-		Colors[gid].xyz = vec3(1.0,rand(gid * gid * gid),0.0);
+		Colors[gid].xyz = vec3(1.0,1.0,0.2);
+
+		// spark count
+		float sc = 60;
 
 		vec3 vel;
-		vel.x = rand(gid);
-		vel.y = rand(gid + 1000);
-		vel.z = rand(gid + 2000);
-		vel = 25 * normalize(vel);
+		vel.x = rand(mod(gid, sc) + 60 * dt);
+		vel.y = rand(mod(gid, sc) + 50 + 160 * dt);
+		vel.z = rand(mod(gid, sc) + 100 + 260 * dt);
+		vel = normalize(vel);
 
+		vec3 pos = 2.5f * abs(rand(2*gid - 1000)) * vel;
 
-		Velocities[gid].xyz = direction * 10 + vel;
+		Positions[gid].xyz = spawn + pos;
+
+		Velocities[gid].xyz = velocity + 22*(2 + abs(rand(mod(gid, sc) - 100 * dt))) * vel;
 	}
 	else
 	{
-		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.1, dt));
+		// UPDATE
+
+		Velocities[gid].y += -9.82 * dt;
+		//Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.1, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].g += Lives[gid] / 16.0;
-		Colors[gid].a -= clamp(Lives[gid] * dt, 0.0, 1.0);
+		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 20);
 	}
 	Lives[gid] += dt;
 }

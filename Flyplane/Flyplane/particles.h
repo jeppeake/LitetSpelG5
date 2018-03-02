@@ -30,6 +30,7 @@ public:
 		this->compute = compute;
 	}
 	*/
+
 	void setTimer(float _effectTime)
 	{
 		effectTime = _effectTime;

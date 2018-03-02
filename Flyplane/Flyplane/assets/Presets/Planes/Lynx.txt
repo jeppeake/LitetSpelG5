@@ -34,5 +34,15 @@ primaryweapon
 assets/Presets/primaryWeapons/Lynx.txt
 turretweapon
 0
+engineradius
+0.04
+enginepos
+-0.145
+-0.017
+-1.17
+enginepos
+0.145
+-0.017
+-1.17
 description
 The ASF-1000 "Lynx" is a small and agile air superiority fighter, the small playload and mediocre speed is made up in incredible manouverability, which few of its opposition can match.

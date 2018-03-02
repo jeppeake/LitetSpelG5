@@ -51,7 +51,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	}
 
 	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
+		//std::cout << "Spawning bullet!\n";
 		entityx::Entity projectile = es.create();
+		//std::cout << weapon->projScale.x << " : " << weapon->projScale.y << " : " << weapon->projScale.z << "\n";
 		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
 		glm::vec3 dir = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 1.0);
 		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
@@ -111,7 +113,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (int i = 0; i < equip->turrets.size(); i++) {
 
 				Entity entity_closest;
-				float closest = 1000000000.f;
+				float closest = -1.1f;
 				float new_closest = 0.f;
 
 				ComponentHandle<FlightComponent> closest_flight;
@@ -119,50 +121,55 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				ComponentHandle<ModelComponent> closest_model;
 
 				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform)) {
-					glm::vec3 interdictionTest = SAIB::ADVInterdiction(entity_closest_search, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
-					//interdictionPoint = SAIB::calculateInterdiction(entity_closest_search, entity);
+					if (entity_closest_search != entity) {
+						glm::vec3 interdictionTest = SAIB::ADVInterdiction(entity_closest_search, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
+						//interdictionPoint = SAIB::calculateInterdiction(entity_closest_search, entity);
 
-					new_closest = glm::length(interdictionTest - trans->pos);
-					//std::cout << new_closest << "\n";
-					if (new_closest < closest && new_closest > 1.f) {//check if target is inside frustum
+						//new_closest = glm::length(interdictionTest - trans->pos);
+						glm::vec3 gunOrientation = glm::normalize(trans->orientation * equip->turrets.at(i).getGunOrientation() * glm::vec3(0.f, 0.f, 1.f));
+						new_closest = glm::dot(glm::normalize(interdictionTest - trans->pos), gunOrientation);
+						//std::cout << new_closest << "\n";
+						//std::cout << new_closest << "\n";
+						if (new_closest > closest) {//check if target is inside frustum
 
-						glm::vec2 traverseLimits = equip->turrets.at(i).info.traverseLimit;
-						glm::vec2 elevationLimits = equip->turrets.at(i).info.elevationLimit;
+							glm::vec2 traverseLimits = equip->turrets.at(i).info.traverseLimit;
+							glm::vec2 elevationLimits = equip->turrets.at(i).info.elevationLimit;
 
-						glm::vec3 turretFront = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 0.f, 1.f));
-						glm::vec3 turretUp = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 1.f, 0.f));
-						glm::vec3 turretLeft = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(1.f, 0.f, 0.f));
+							glm::vec3 turretFront = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 0.f, 1.f));
+							glm::vec3 turretUp = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 1.f, 0.f));
+							glm::vec3 turretLeft = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(1.f, 0.f, 0.f));
 
-						glm::vec3 pt = glm::normalize(interdictionTest - trans->pos);
+							glm::vec3 pt = glm::normalize(interdictionTest - trans->pos);
 
-						glm::vec3 pt_trav = glm::normalize(pt - glm::proj(pt, turretUp));
-						//std::cout << pt.x << " : " << pt.y << " : " << pt.z << "	" << pt_trav.x << " : " << pt_trav.y << " : " << pt_trav.z << "\n";
-						float LRC = glm::degrees(glm::acos(glm::dot(pt_trav, turretLeft)));
-						float traverseAngle = glm::degrees(glm::acos(glm::dot(pt_trav, turretFront)));
-						float traverseLimit;
-						if (LRC < 90) {//left
-							traverseLimit = traverseLimits.x;
-						}
-						else {//right
-							traverseLimit = traverseLimits.y;
-						}
+							glm::vec3 pt_trav = glm::normalize(pt - glm::proj(pt, turretUp));
+							//std::cout << pt.x << " : " << pt.y << " : " << pt.z << "	" << pt_trav.x << " : " << pt_trav.y << " : " << pt_trav.z << "\n";
+							float LRC = glm::degrees(glm::acos(glm::dot(pt_trav, turretLeft)));
+							float traverseAngle = glm::degrees(glm::acos(glm::dot(pt_trav, turretFront)));
+							float traverseLimit;
+							if (LRC < 90) {//left
+								traverseLimit = traverseLimits.x;
+							}
+							else {//right
+								traverseLimit = traverseLimits.y;
+							}
 
-						glm::vec3 pt_elev = glm::normalize(pt - glm::proj(pt, turretLeft));
+							glm::vec3 pt_elev = glm::normalize(pt - glm::proj(pt, turretLeft));
 
-						float UDC = glm::degrees(glm::acos(glm::dot(pt_elev, turretUp)));
-						glm::vec3 adjTurretFront = pt - glm::proj(pt, turretUp);
-						float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, adjTurretFront)));
-						float elevationLimit;
-						if (UDC < 90) {//up
-							elevationLimit = elevationLimits.x;
-						}
-						else {//down
-							elevationLimit = elevationLimits.y;
-						}
-						//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
-						if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(new_closest) < closest && glm::length(new_closest) < equip->turrets.at(i).info.range) {
-							entity_closest = entity_closest_search;
-							closest = new_closest;
+							float UDC = glm::degrees(glm::acos(glm::dot(pt_elev, turretUp)));
+							glm::vec3 adjTurretFront = pt - glm::proj(pt, turretUp);
+							float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, adjTurretFront)));
+							float elevationLimit;
+							if (UDC < 90) {//up
+								elevationLimit = elevationLimits.x;
+							}
+							else {//down
+								elevationLimit = elevationLimits.y;
+							}
+							//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
+							if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(interdictionTest - trans->pos) < equip->turrets.at(i).info.range) {
+								entity_closest = entity_closest_search;
+								closest = new_closest;
+							}
 						}
 					}
 				}
@@ -212,6 +219,30 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 						}
 					}
 				}
+				glm::vec2 g = equip->turrets.at(i).info.ET;
+				if (g.y < 0) {//up
+					if (-glm::degrees(g.y) > equip->turrets.at(i).info.elevationLimit.x) {
+						g.y = -glm::radians(equip->turrets.at(i).info.elevationLimit.x);
+					}
+				}
+				else {//down
+					if (glm::degrees(g.y) > equip->turrets.at(i).info.elevationLimit.y) {
+						g.y = glm::radians(equip->turrets.at(i).info.elevationLimit.y);
+					}
+				}
+				if (equip->turrets.at(i).info.traverseLimit.x != equip->turrets.at(i).info.traverseLimit.x || equip->turrets.at(i).info.traverseLimit.x != 180.f) {
+					if (g.x < 0) {//right
+						if (-glm::degrees(g.x) > equip->turrets.at(i).info.traverseLimit.y) {
+							g.x = -glm::radians(equip->turrets.at(i).info.traverseLimit.y);
+						}
+					}
+					else {//left
+						if (glm::degrees(g.x) > equip->turrets.at(i).info.traverseLimit.x) {
+							g.x = glm::radians(equip->turrets.at(i).info.traverseLimit.x);
+						}
+					}
+				}
+				equip->turrets.at(i).info.ET = g;
 			}
 			//turret code end
 
@@ -229,6 +260,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Weapon* pweapon = &equip->primary[i];
 				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
 					pweapon->shouldFire = true;
+					std::cout << "FIRING!\n";
 				}
 				if (pweapon->shouldFire) {
 					pweapon->shouldFire = false;
@@ -436,8 +468,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500);
 				auto handle = explosion.assign<ParticleComponent>();
 				ParticleParameters params;
+				params.effectLength = 3.f;
 				params.explosion.radius = missile->explodeRadius;
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 3, params);
+				events.emit<AddParticleEvent>(EXPLOSION, handle, params);
 				entity.destroy();
 			}
 		}

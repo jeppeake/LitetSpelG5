@@ -42,5 +42,15 @@ primaryweapon
 assets/Presets/primaryWeapons/spectreMG.txt
 turretweapon
 1
+engineradius
+0.08
+enginepos
+-0.167
+-0.121
+-1.5
+enginepos
+0.167
+-0.121
+-1.5
 description
 The F92 "Spectre" sports fairly mediocre statistics, but carries an ace up its sleeve. The nose mounted auto tracking turret is designed to help pilots follow the target and take down enemies from unexpected angles. Some pilots question its effectiveness though, since the system was designed by 'KV heavy industries', the lowest bidder. 
