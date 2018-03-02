@@ -132,7 +132,7 @@ void MenuState::init() {
 
 	Camera camera;
 	Transform trans;
-	trans.pos = glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0, 0, 0)) + 1500, 0);
+	trans.pos = glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0, 0, 0)) + 1000, 0);
 	camera.setTransform(trans);
 	Renderer::getRenderer().setCamera(camera);
 
