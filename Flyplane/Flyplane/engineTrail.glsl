@@ -52,12 +52,12 @@ void main()
 		// UPDATE
 		float t = throttle;
 		
-		Colors[gid].a = 1.0 * r * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
+		Colors[gid].a = 0.5 * sqrt(r) * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
 		Colors[gid].a *= 0.4 + pow(t*0.5 + 0.5, 2);
 
 		//Colors[gid].a = 1.0;
 
-		Positions[gid].xyz = spawn + Velocities[gid].xyz + (direction - 0.15*Velocities[gid].xyz) * Lives[gid]*(24 + 4*t);
+		Positions[gid].xyz = spawn + Velocities[gid].xyz + (direction - 0.15*Velocities[gid].xyz) * Lives[gid]*(22 + 5*t);
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life + 0.1*life*abs(rand(gid)))
