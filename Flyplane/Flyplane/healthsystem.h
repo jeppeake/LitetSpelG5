@@ -38,7 +38,8 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				}
 
 				if (entity.has_component<PlayerComponent>()) {
-					entity.assign<LifeTimeComponent>(1.5f);
+					if(!entity.has_component<LifeTimeComponent>())
+						entity.assign<LifeTimeComponent>(1.5f);
 					explosionSound.play();
 				}
 

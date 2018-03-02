@@ -161,6 +161,7 @@ void PlayingState::loadLoadout()
 
 	//read name
 	PlanePreset pp;
+	pp.preorder = true;
 	std::getline(file, str);
 	pp.load(str);
 

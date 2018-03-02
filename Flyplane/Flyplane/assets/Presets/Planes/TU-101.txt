@@ -14,6 +14,7 @@ turnrate
 skin
 Desert
 assets/TU-101/TU-101_TEX.png
+0
 weppos
 -0
 -0.13

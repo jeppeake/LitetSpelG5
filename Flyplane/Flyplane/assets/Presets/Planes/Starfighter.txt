@@ -14,6 +14,11 @@ turnrate
 skin
 Starfighter
 assets/Starfighter/starfighter_TEX.png
+0
+skin
+Winter
+assets/Starfighter/starfighter_TEX_preorder.png
+1
 weppos
 -0.8
 -0.1

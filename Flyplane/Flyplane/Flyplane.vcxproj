@@ -162,6 +162,7 @@
     <ClCompile Include="planepreset.cpp" />
     <ClCompile Include="playersystem.cpp" />
     <ClCompile Include="playingstate.cpp" />
+    <ClCompile Include="preorderstate.cpp" />
     <ClCompile Include="radar.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="SAIB.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="modelcomponent.h" />
     <ClInclude Include="namestate.h" />
     <ClInclude Include="computeShader.h" />
+    <ClInclude Include="openpreorderaction.h" />
     <ClInclude Include="particlecomponent.h" />
     <ClInclude Include="particles.h" />
     <ClInclude Include="optionsaction.h" />
@@ -261,6 +263,7 @@
     <ClInclude Include="playersystem.h" />
     <ClInclude Include="playingstate.h" />
     <ClInclude Include="pointcomponent.h" />
+    <ClInclude Include="preorderstate.h" />
     <ClInclude Include="presetloader.h" />
     <ClInclude Include="previewcomponenet.h" />
     <ClInclude Include="radar.h" />

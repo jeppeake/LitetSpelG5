@@ -31,15 +31,17 @@ private:
 	std::vector<WeaponPreset> weaponPresets;
 	std::vector<int> pickedWeapons;
 	bool picking = false, pagePicked = false, planePicked = false;
-
+	bool preorder = false;
 	Timer timer;
 	entityx::EntityX ex;
 	void updatePreview();
 public:
+	LoadoutState(bool preorder = false) { this->preorder = preorder; }
 	virtual ~LoadoutState() {}
 	virtual void init();
 	virtual void update(double dt);
 	void startMenu();
+	void startPreorder();
 	void changePlane(unsigned int selected);
 	void changeWeapon(unsigned int selected);
 	void changeSkin(unsigned int selected);

@@ -14,9 +14,11 @@ turnrate
 skin
 Laken
 assets/Laken/Laken_TEX.png
+0
 skin
 En Svensk tiger
 assets/Laken/Laken_TEX2.png
+0
 weppos
 -0.3
 -0.16

@@ -260,7 +260,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Weapon* pweapon = &equip->primary[i];
 				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
 					pweapon->shouldFire = true;
-					std::cout << "FIRING!\n";
+					//std::cout << "FIRING!\n";
 				}
 				if (pweapon->shouldFire) {
 					pweapon->shouldFire = false;
