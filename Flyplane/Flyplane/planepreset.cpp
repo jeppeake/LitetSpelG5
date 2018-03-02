@@ -47,10 +47,19 @@ void PlanePreset::load(std::string presetname)
 		}
 		else if (str.compare("skin") == 0) {
 			std::getline(file, str);
-			textureNames.push_back(str);
 			std::string skinname = str;
 			std::getline(file, str);
 			AssetLoader::getLoader().loadTexture(str, skinname);
+			std::getline(file, str);
+			bool preorder = std::stoi(str);
+			if (preorder) {
+				if(this->preorder)
+					textureNames.push_back(skinname);
+			}
+			else {
+				textureNames.push_back(skinname);
+			}
+				
 			continue;
 		}
 		else if (str.compare("weppos") == 0) {

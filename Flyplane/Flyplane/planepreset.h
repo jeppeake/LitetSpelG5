@@ -18,6 +18,7 @@ public:
 	std::vector<std::string> turretFiles;
 	std::vector<glm::vec3> turretPositions;
 	bool turretWeapon = false;
+	bool preorder = false;
 	PlanePreset() {}
 	~PlanePreset() {}
 	void load(std::string presetname);

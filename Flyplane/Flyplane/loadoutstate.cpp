@@ -8,6 +8,7 @@
 #include "changeweaponaction.h"
 #include "pickweaponaction.h"
 #include "saveloadoutaction.h"
+#include "openpreorderaction.h"
 #include <stdio.h>
 #include "entityx\Entity.h"
 #include "modelcomponent.h"
@@ -17,6 +18,7 @@
 #include "rendersystem.h"
 #include "rotatepreviewsystem.h"
 #include "changeskinaction.h"
+#include "preorderstate.h"
 #include <fstream>
 #include <iostream>
 #include <experimental\filesystem>
@@ -108,13 +110,14 @@ void LoadoutState::init() {
 	bHandler.addButton(new Button("SKINS", glm::vec2(480, 50), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangePageAction(this, skins), "buttonforward"));
 	bHandler.addButton(new Button("BACK TO MENU", glm::vec2(50, Window::getWindow().size().y - 90), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 	bHandler.addButton(new Button("SAVE LOADOUT", glm::vec2(350, Window::getWindow().size().y - 90), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new SaveLoadoutAction(this), "buttonforward"));
-	
+	bHandler.addButton(new Button("Activate preorder", glm::vec2(650, Window::getWindow().size().y - 90), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new OpenPreorderAction(this), "buttonforward"));
 	
 	//Load all planes in plane preset folder
 	std::string path = "assets/Presets/Planes";
 	for (auto & p : fs::directory_iterator(path)) {
 		std::string curPath = p.path().string();
 		PlanePreset pr;
+		pr.preorder = this->preorder;
 		pr.load(curPath);
 		planePresets.push_back(pr);
 	}
@@ -144,6 +147,11 @@ void LoadoutState::init() {
 
 void LoadoutState::startMenu() {
 	this->changeState(new MenuState());
+}
+
+void LoadoutState::startPreorder()
+{
+	this->changeState(new PreorderState());
 }
 
 void LoadoutState::changePlane(unsigned int selected)

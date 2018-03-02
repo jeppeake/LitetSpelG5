@@ -129,6 +129,9 @@
     <ClCompile Include="speedindicator.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="preorderstate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -485,6 +488,12 @@
     </ClInclude>
     <ClInclude Include="lifetimesystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="preorderstate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="openpreorderaction.h">
+      <Filter>GUI\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

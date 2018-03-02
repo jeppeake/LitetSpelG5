@@ -14,12 +14,15 @@ turnrate
 skin
 White
 assets/MIG-212A_UV.png
+0
 skin
 Green
 assets/MIG-212A_UV green.png
+0
 skin
 Jobbig
 assets/MIG-212A_UV magenta.png
+1
 weppos
 -0.3
 -0.1225
