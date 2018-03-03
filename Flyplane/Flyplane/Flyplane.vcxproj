@@ -298,6 +298,9 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bulletFrag.glsl" />
+    <None Include="bulletGeom.glsl" />
+    <None Include="bulletVert.glsl" />
     <None Include="deadTrail.glsl" />
     <None Include="enemyarrowGS.glsl" />
     <None Include="enemymarkerFS.glsl" />

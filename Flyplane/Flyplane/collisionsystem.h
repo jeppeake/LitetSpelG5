@@ -220,8 +220,12 @@ private:
 		auto a_model = a.component<ModelComponent>();
 		auto b_model = b.component<ModelComponent>();
 
-		auto a_boxes = *a_model->mptr->getBoundingBoxes();
-		auto b_boxes = *b_model->mptr->getBoundingBoxes();
+		std::vector<BoundingBox> a_boxes;
+		std::vector<BoundingBox> b_boxes;
+		if (a_model)
+			a_boxes = *a_model->mptr->getBoundingBoxes();
+		if (b_model)
+			b_boxes = *b_model->mptr->getBoundingBoxes();
 
 		if (!a_boxes.empty() && !b_boxes.empty())
 		{
@@ -318,8 +322,7 @@ public:
 		
 		entityx::ComponentHandle<CollisionComponent> collision;
 		entityx::ComponentHandle<Transform> transform;
-		entityx::ComponentHandle<ModelComponent> model;
-		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
+		for(entityx::Entity entity : es.entities_with_components(collision, transform))
 		{
 			// Collision with other entitites 
 			if (entity.has_component<Projectile>()) {
@@ -347,11 +350,17 @@ public:
 						}
 				}
 			}
-			
+
+
+
 			if (!map || entity.has_component<HouseComponent>()) {
 				continue;
 			}
-			auto boxes = *model->mptr->getBoundingBoxes();
+
+			std::vector<BoundingBox> boxes;
+			auto model = entity.component<ModelComponent>();
+			if(model)
+				boxes = *model->mptr->getBoundingBoxes();
 
 			// Collision with terrain
 			glm::vec3 pos = transform.get()->pos;

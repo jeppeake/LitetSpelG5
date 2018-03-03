@@ -582,7 +582,7 @@ void PlayingState::update(double dt)
 		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
 	else {
-		ex.systems.update<CameraSystem>(dt);
+		//ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		Renderer::getRenderer().RenderTransparent();
 		if (!playerAlive) {

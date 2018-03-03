@@ -26,6 +26,7 @@
 #include "input.h"
 #include "missionmarker.h"
 #include "dropcomponent.h"
+#include "missilecomponent.h"
 
 using namespace entityx;
 
@@ -110,6 +111,11 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().setCamera(cameraOn->camera);
 		}
 
+		ComponentHandle<Projectile> projectile;
+		for (Entity entity : es.entities_with_components(projectile, transform)) {
+			if (!entity.has_component<Missile>())
+				Renderer::getRenderer().addBullet(transform->pos, transform->orientation);
+		}
 
 		ComponentHandle<ModelComponent> model;
 		for (Entity entity : es.entities_with_components(model, transform)) {

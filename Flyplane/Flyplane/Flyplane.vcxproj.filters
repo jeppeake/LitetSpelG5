@@ -605,6 +605,15 @@
     <None Include="enemyarrowGS.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="bulletVert.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="bulletGeom.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="bulletFrag.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">

@@ -39,7 +39,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
 		projectile.assign<Physics>(turret.stats.mass, 1, turret.stats.speed * glm::normalize(dir + randvec * 0.01f) + planeSpeed, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
-		projectile.assign<ModelComponent>(turret.weapon.projModel);
+		//projectile.assign<ModelComponent>(turret.weapon.projModel);
 		projectile.assign<Projectile>(turret.stats.lifetime, parentFaction, turret.stats.damage);
 		projectile.assign<CollisionComponent>();
 
@@ -60,7 +60,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		glm::vec3 randvec = glm::normalize(glm::vec3(rand()%20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
 		projectile.assign<Physics>(weapon->stats.mass, 1, 200.f * glm::normalize(dir + randvec*0.01f) + planeSpeed, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
-		projectile.assign<ModelComponent>(weapon->projectileModel);
+		//projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
 		projectile.assign<CollisionComponent>();
 		if (parentFaction == FACTION_PLAYER)

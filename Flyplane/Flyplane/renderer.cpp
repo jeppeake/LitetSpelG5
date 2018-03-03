@@ -130,8 +130,11 @@ Renderer::Renderer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	sunDir = normalize(glm::vec3(0, 1, 2));
+
+	InitBullets();
 }
 
 Renderer::~Renderer() {
@@ -317,6 +320,8 @@ void Renderer::RenderScene() {
 		Render(listStatics[i]);
 	}
 
+	RenderBullets();
+
 
 	//Render terrain
 	terrain_shader.use();
@@ -500,6 +505,53 @@ void Renderer::RenderOutsideMessage() {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void Renderer::InitBullets() {
+	bulletShader.create("bulletVert.glsl", "bulletGeom.glsl", "bulletFrag.glsl");
+
+	glGenBuffers(1, &bulletPosVBO);
+	glGenBuffers(1, &bulletQuatVBO);
+
+	glGenVertexArrays(1, &bulletVAO);
+	glBindVertexArray(bulletVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletPosVBO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletQuatVBO);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void Renderer::RenderBullets() {
+	GLint access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
+	
+	bulletShader.use();
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletPosVBO);
+	glBufferData(GL_ARRAY_BUFFER, bulletPositions.size() * sizeof(glm::vec3), &bulletPositions[0], GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletQuatVBO);
+	glBufferData(GL_ARRAY_BUFFER, bulletOrientations.size() * sizeof(glm::vec4), &bulletOrientations[0], GL_DYNAMIC_DRAW);
+
+	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
+	bulletShader.uniform("ViewProjMatrix", viewProjMatrix);
+
+	glEnable(GL_LINE_SMOOTH);
+	float width = 2.0f;
+	glLineWidth(2.0f);
+	glBindVertexArray(bulletVAO);
+	glDrawArrays(GL_POINTS, 0, bulletPositions.size());
+	glBindVertexArray(0);
+
+	bulletPositions.clear();
+	bulletOrientations.clear();
+}
+
 void Renderer::setWeaponModel(Model * mptr) {
 	missile = mptr;
 }
@@ -618,6 +670,7 @@ void Renderer::update(float dt)
 	if (Input::isKeyPressed(GLFW_KEY_F8)) {
 		this->shader.reload();
 		this->terrain_shader.reload();
+		this->bulletShader.reload();
 	}
 }
 
