@@ -25,6 +25,7 @@ Renderer::Renderer() {
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
 	this->heightShader.create("heightindicatorVS.glsl", "heightindicatorFS.glsl");
 	this->particleShader.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
+	this->particleLineShader.create("partLineVert.glsl", "partFrag.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -543,7 +544,7 @@ void Renderer::RenderBullets() {
 
 	glEnable(GL_LINE_SMOOTH);
 	float width = 2.0f;
-	glLineWidth(2.0f);
+	glLineWidth(width);
 	glBindVertexArray(bulletVAO);
 	glDrawArrays(GL_POINTS, 0, bulletPositions.size());
 	glBindVertexArray(0);
@@ -651,7 +652,14 @@ void Renderer::setMultiplier(int multiplier) {
 }
 
 void Renderer::renderParticles(Particles * p) {
-	p->render(particleShader);
+	if (p->type == WING_TRAIL) {
+		glDisable(GL_LINE_SMOOTH);
+		float width = 1.0f;
+		glLineWidth(width);
+		p->render(particleLineShader, GL_LINES);
+	} else {
+		p->render(particleShader, GL_POINTS);
+	}
 }
 
 /*void Renderer::setCrosshairPos(glm::vec3 pos) {

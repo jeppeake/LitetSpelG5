@@ -30,7 +30,7 @@ void main()
 	{
 		Positions[gid].xyz = spawn + 10 * normalize(vec3(rand(gid * 2), rand(gid * 3), rand(gid * 5)));
 		Lives[gid] = 0;
-		Colors[gid].xyz = vec3(1.0,1.0,0.0);
+		Colors[gid].xyz = vec3(1.0, 0.5, 0.0);
 
 		vec3 vel;
 		vel.x = rand(gid * 17);
@@ -45,7 +45,7 @@ void main()
 		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.01, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].rgb = mix(Colors[gid].rgb, vec3(0.5), pow(smoothstep(0, life, Lives[gid]), 1));
+		Colors[gid].rgb = mix(Colors[gid].rgb, vec3(0.3), pow(smoothstep(0, life, Lives[gid]), 1));
 		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 0.3);
 	}
 	Lives[gid] += dt;

@@ -81,3 +81,11 @@ enginepos
 0.25
 0.15
 -2.0
+wingtrailpos
+-2.42
+-0.47
+-0.49
+wingtrailpos
+2.42
+-0.47
+-0.49

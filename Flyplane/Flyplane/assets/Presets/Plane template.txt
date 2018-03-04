@@ -34,3 +34,8 @@ enginepos
 
 engineradius
 [double]
+
+wingtrailpos
+[double] (x)
+[double] (y)
+[double] (z)

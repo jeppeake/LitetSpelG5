@@ -196,12 +196,18 @@ void PlayingState::loadLoadout()
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(SPEED_PARTICLE, handle);
 
+	
 
 	ParticleParameters p;
 	p.engineTrail.radius = pp.engineRadius;
 	for (auto pos : pp.enginePos) {
 		p.engineTrail.offset = pos;
 		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle, p);
+	}
+	for (auto pos : pp.wingTrailPos) {
+		p.wingTrail.respawnCounter = 0;
+		p.wingTrail.offset = pos;
+		ex.events.emit<AddParticleEvent>(WING_TRAIL, handle, p);
 	}
 
 

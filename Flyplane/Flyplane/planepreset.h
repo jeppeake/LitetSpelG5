@@ -13,6 +13,7 @@ public:
 	std::vector<std::string> textureNames;
 	std::vector<glm::vec3> wepPos;
 	std::vector<glm::vec3> enginePos;
+	std::vector<glm::vec3> wingTrailPos;
 	float engineRadius;
 	std::string weapon = "nan";
 	std::vector<std::string> turretFiles;

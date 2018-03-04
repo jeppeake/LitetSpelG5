@@ -35,6 +35,7 @@ private:
 	ShaderProgram missileShader;
 	ShaderProgram heightShader;
 	ShaderProgram particleShader;
+	ShaderProgram particleLineShader;
 	ShaderProgram bulletShader;
 
 	GLuint quadVao, quadVbo;

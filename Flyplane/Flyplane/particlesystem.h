@@ -19,6 +19,7 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader deadTrailShader;
 	ComputeShader sparkShader;
 	ComputeShader speedShader;
+	ComputeShader wingTrailShader;
 public:
 
 	~ParticleSystem() {
@@ -40,6 +41,7 @@ public:
 		deadTrailShader.create("deadTrail.glsl");
 		sparkShader.create("sparks.glsl");
 		speedShader.create("speedPart.glsl");
+		wingTrailShader.create("wingTrail.glsl");
 		for (int i = 0; i < 40; i++) {
 			pool.push_back(new Particles(5000));
 		}
@@ -183,6 +185,31 @@ public:
 			speedShader.uniform("dt", float(dt));
 			break;
 
+
+		case WING_TRAIL:
+			//p->setComputeShader(&deadTrailShader);
+			//p->setTexture("N/A");
+			p->setSize(0.01f);
+			wingTrailShader.use();
+			if (transform) {
+				wingTrailShader.uniform("spawn", transform->orientation*p->params.wingTrail.offset + transform->pos);
+				wingTrailShader.uniform("up", transform->orientation * glm::vec3(0,1,0));
+			}
+			if (physics) {
+				wingTrailShader.uniform("velocity", physics->velocity);
+			}
+			wingTrailShader.uniform("life", 6.f);
+			wingTrailShader.uniform("dt", float(dt));
+
+			p->params.wingTrail.respawnCounter = (p->params.wingTrail.respawnCounter + 1) % p->numParticles;
+			wingTrailShader.uniform("respawnID1", p->params.wingTrail.respawnCounter);
+
+			p->params.wingTrail.respawnCounter = (p->params.wingTrail.respawnCounter + 1) % p->numParticles;
+			wingTrailShader.uniform("respawnID2", p->params.wingTrail.respawnCounter);
+
+			wingTrailShader.uniform("respawnID3", (p->params.wingTrail.respawnCounter + 1) % (int)p->numParticles);
+
+			break;
 
 		default:
 			// plz no

@@ -321,6 +321,7 @@
     <None Include="partFrag.glsl" />
     <None Include="partGeom.glsl" />
     <None Include="particlereset.glsl" />
+    <None Include="partLineVert.glsl" />
     <None Include="partVert.glsl" />
     <None Include="radarFS.glsl" />
     <None Include="radarVS.glsl" />
@@ -337,6 +338,7 @@
     <None Include="timesFrag.glsl" />
     <None Include="timesVert.glsl" />
     <None Include="vertexShader.glsl" />
+    <None Include="wingTrail.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="equipment.h" />

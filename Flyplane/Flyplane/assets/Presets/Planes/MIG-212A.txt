@@ -57,5 +57,13 @@ enginepos
 0
 -0.01
 -1.7
+wingtrailpos
+-1.27
+-0.005
+-1.6
+wingtrailpos
+1.27
+-0.005
+-1.6
 description
 Designed as a light interceptor, the MIG-212A excels at hunting down bombers. Doe to the unpredictable nature of the war, it soon found itself on most fronts of the war facing enemies it was never designed to face.

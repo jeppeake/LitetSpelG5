@@ -614,6 +614,12 @@
     <None Include="bulletFrag.glsl">
       <Filter>Graphics\Shaders</Filter>
     </None>
+    <None Include="wingTrail.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="partLineVert.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">

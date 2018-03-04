@@ -8,6 +8,7 @@ enum PARTICLE_TYPES
 	SPARKS,
 	ENGINE_TRAIL,
 	SPEED_PARTICLE,
+	WING_TRAIL,
 	NUM_TYPES
 };
 
@@ -26,6 +27,11 @@ struct ParticleParameters {
 		struct Sparks {
 			glm::vec3 pos;
 		} sparks;
+
+		struct WingTrail {
+			glm::vec3 offset;
+			int respawnCounter;
+		} wingTrail;
 	};
 	float effectLength = 0;
 };
