@@ -58,7 +58,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		glm::vec3 dir = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 1.0);
 		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
 		glm::vec3 randvec = glm::normalize(glm::vec3(rand()%20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
-		projectile.assign<Physics>(weapon->stats.mass, 1, 200.f * glm::normalize(dir + randvec*0.01f) + planeSpeed, glm::vec3());
+		projectile.assign<Physics>(weapon->stats.mass, 1, weapon->stats.speed * glm::normalize(dir + randvec*0.01f) + planeSpeed, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
 		//projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
