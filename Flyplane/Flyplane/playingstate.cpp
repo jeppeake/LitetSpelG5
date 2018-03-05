@@ -494,6 +494,15 @@ void PlayingState::init()
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
+
+	/*
+	for (int i = 0; i < 200; i++) {
+		entityx::Entity house = ex.entities.create();
+		glm::vec3 pos = AssetLoader::getLoader().getHeightmap("testmap")->generateHousePos();
+		house.assign<Transform>(pos);
+		house.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+	}
+	*/
 }
 
 void PlayingState::update(double dt)
