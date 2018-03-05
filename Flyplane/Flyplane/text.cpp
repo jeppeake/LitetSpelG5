@@ -104,7 +104,7 @@ void Text::drawCharacter(std::string::const_iterator &c, glm::vec2 &pos, const G
 	};
 	glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, vertices, GL_DYNAMIC_DRAW);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
