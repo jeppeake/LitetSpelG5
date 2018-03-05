@@ -44,6 +44,9 @@ private:
 	void recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float patchSize, glm::vec2 offset, int level, BoundingBox& frustum, glm::dvec3 orig);
 	float heightOfWater(glm::vec3 pos);
 	void createIndices(int x, int y, int i);
+
+	glm::vec3 normalAt(glm::vec3 pos);
+	bool isWater(glm::vec3 pos);
 public:
 	std::vector<glm::vec3> vertices;
 
@@ -68,6 +71,8 @@ public:
 	inline glm::vec2 getSize() {
 		return glm::vec2(width, height);
 	}
+
+	glm::vec3 generateHousePos();
 
 	glm::vec2 getMinMaxHeights();
 
