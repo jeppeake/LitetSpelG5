@@ -18,40 +18,56 @@ layout(std430, binding=10) buffer Col
 uniform float dt;
 uniform float life;
 uniform vec3 spawn;
-uniform vec3 direction;
+uniform vec3 velocity;
+uniform vec3 up;
+
+uniform int respawnID1;
+uniform int respawnID2;
+uniform int respawnID3;
+
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 float rand(float n);
 
 void main()
 {
+	
+
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
+		// INITIAL SPAWN
+
 		Positions[gid].xyz = spawn;
-		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
+		Lives[gid] = 0;
+		Colors[gid].rgba = vec4(1);
 	}
 	else
 	{
-		Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
-		Positions[gid].xyz += Velocities[gid].xyz * dt;
+		// UPDATE
+		if(gid == respawnID1 || gid == respawnID2 || gid == respawnID3) {
+			Positions[gid].xyz = spawn;
 
-		Colors[gid].a = pow(1-Lives[gid] / life, 4);
 
-		//Positions[gid].xyz = spawn + direction * Lives[gid];
+			Colors[gid].a = smoothstep(5, 50, abs(dot(velocity, up)));
+			//Colors[gid].a = 1;
+
+			Lives[gid] = 0;
+		}
+
+		Colors[gid].a = mix(Colors[gid].a, 0, smoothstep(0.0, 2.0, Lives[gid]));
 	}
 	Lives[gid] += dt;
-	if(Lives[gid] >= life + 0.1*life*rand(float(gid)))
+	
+	/*
+	
+	if(Lives[gid] >= life)
 	{
+		// RESPAWN
 		Lives[gid] -= life;
-		Positions[gid].xyz = spawn + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 10.5);
-
-		vec3 vel;
-		vel.x = rand(float(gid + dt*10));
-		vel.y = rand(float(gid + 1000 + dt*10));
-		vel.z = rand(float(gid + 2000 + dt*10));
-		Velocities[gid].xyz = 20 * direction + 3 * normalize(vel);
+		Positions[gid].xyz = spawn - 1.2 * dt  * velocity * (rand(gid*3) + 1)/2;
 	}
+	*/
 }
 
 // [-1, 1]

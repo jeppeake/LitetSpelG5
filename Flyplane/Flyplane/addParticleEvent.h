@@ -8,15 +8,32 @@ enum PARTICLE_TYPES
 	SPARKS,
 	ENGINE_TRAIL,
 	SPEED_PARTICLE,
+	WING_TRAIL,
 	NUM_TYPES
 };
 
 struct ParticleParameters {
+	ParticleParameters() {}
 	union {
 		struct Explosion {
 			float radius;
 		} explosion;
+
+		struct EngineTrail {
+			glm::vec3 offset;
+			float radius;
+		} engineTrail;
+
+		struct Sparks {
+			glm::vec3 pos;
+		} sparks;
+
+		struct WingTrail {
+			glm::vec3 offset;
+			int respawnCounter;
+		} wingTrail;
 	};
+	float effectLength = 0;
 };
 
 struct AddParticleEvent {
@@ -24,9 +41,7 @@ struct AddParticleEvent {
 
 	PARTICLE_TYPES type;
 	entityx::ComponentHandle<ParticleComponent> component;
-	float effectLength = 0;
 	AddParticleEvent(PARTICLE_TYPES type, 
 	                 entityx::ComponentHandle<ParticleComponent> component, 
-	                 float effectLength = 0,
-	                 ParticleParameters params = {}): type(type), component(component), effectLength(effectLength), params(params) {}
+	                 ParticleParameters params = {}): type(type), component(component), params(params) {}
 };

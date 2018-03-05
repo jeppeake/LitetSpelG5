@@ -13,12 +13,12 @@ class Particles
 {
 private:
 	float effectTime;
-	unsigned numParticles = 20;
 	GLuint gPos, gColor, gLife, gVel, VAO;
 	//ComputeShader* compute;
 	//Texture *text = nullptr;
 	float size = 0.1;
 public:
+	unsigned numParticles = 20;
 	ParticleParameters params;
 
 	Timer t;
@@ -30,6 +30,7 @@ public:
 		this->compute = compute;
 	}
 	*/
+
 	void setTimer(float _effectTime)
 	{
 		effectTime = _effectTime;
@@ -64,7 +65,7 @@ public:
 		*/
 	}
 	void update();
-	void render(ShaderProgram& program);
+	void render(ShaderProgram& program, GLenum primitive);
 	bool isAlive();
 	// used for pool in particlesystem.h
 	bool used = false;

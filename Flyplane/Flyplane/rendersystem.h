@@ -26,6 +26,7 @@
 #include "input.h"
 #include "missionmarker.h"
 #include "dropcomponent.h"
+#include "missilecomponent.h"
 
 using namespace entityx;
 
@@ -65,9 +66,9 @@ struct RenderSystem : public System<RenderSystem> {
 
 			if (entity.has_component<Equipment>()) {
 				ComponentHandle<Equipment> equipment = entity.component<Equipment>();
+				int ammo = 0;
 				if (equipment->special.size() > 0) {
 					Renderer::getRenderer().setWeaponModel(equipment->special[equipment->selected].model);
-					int ammo = 0;
 					int count = 0;
 					unsigned int tempselect = equipment->selected;
 					while (count < equipment->special.size()) {
@@ -80,8 +81,8 @@ struct RenderSystem : public System<RenderSystem> {
 					/*for (int i = 0; i < equipment->special.size(); i++) {
 					ammo += equipment->special[i].stats.ammo;
 					}*/
-					Renderer::getRenderer().setAmmo(ammo);
 				}
+				Renderer::getRenderer().setAmmo(ammo);
 				
 			}
 			if (entity.has_component<FlightComponent>())
@@ -110,6 +111,11 @@ struct RenderSystem : public System<RenderSystem> {
 			Renderer::getRenderer().setCamera(cameraOn->camera);
 		}
 
+		ComponentHandle<Projectile> projectile;
+		for (Entity entity : es.entities_with_components(projectile, transform)) {
+			if (!entity.has_component<Missile>())
+				Renderer::getRenderer().addBullet(transform->pos, transform->orientation);
+		}
 
 		ComponentHandle<ModelComponent> model;
 		for (Entity entity : es.entities_with_components(model, transform)) {

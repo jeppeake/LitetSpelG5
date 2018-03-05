@@ -14,9 +14,11 @@ turnrate
 skin
 Laken
 assets/Laken/Laken_TEX.png
+0
 skin
 En Svensk tiger
 assets/Laken/Laken_TEX2.png
+0
 weppos
 -0.3
 -0.16
@@ -45,5 +47,19 @@ primaryweapon
 assets/Presets/primaryWeapons/Laken.txt
 turretweapon
 0
+engineradius
+0.17
+enginepos
+0
+0.09
+-2.17
+wingtrailpos
+-1.375
+-0.08
+-1.894
+wingtrailpos
+1.375
+-0.08
+-1.894
 description
 The AJS-44 "Laken" was designes as a heavy interceptor figher, and boasts a powerful engine and an impressive arsenal. Its due to it's heavy weight its a bit sluggish in turns, and the engine response is slower.

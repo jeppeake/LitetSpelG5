@@ -25,6 +25,7 @@ Renderer::Renderer() {
 	this->missileShader.create("missileVS.glsl", "missileFS.glsl");
 	this->heightShader.create("heightindicatorVS.glsl", "heightindicatorFS.glsl");
 	this->particleShader.create("partVert.glsl", "partGeom.glsl", "partFrag.glsl");
+	this->particleLineShader.create("partLineVert.glsl", "partFrag.glsl");
 
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -123,14 +124,18 @@ Renderer::Renderer() {
 		numbers[i].loadTexture("assets/Textures/" + to_string(i) + ".png", 1);
 	}
 	x.loadTexture("assets/Textures/x.png", 1);
+	ammoTexture.loadTexture("assets/Textures/ammo.png", 1);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	sunDir = normalize(glm::vec3(0, 1, 2));
+
+	InitBullets();
 }
 
 Renderer::~Renderer() {
@@ -211,7 +216,16 @@ void Renderer::RenderWeapon() {
 	glDrawElements(GL_TRIANGLES, missile->model_meshes[0].first->numIndices(), GL_UNSIGNED_INT, 0);
 
 	glViewport(0, 0, s.x, s.y);
-	AssetLoader::getLoader().getText()->drawText(std::to_string(weaponAmmo), glm::vec2(s.x - 300, 20), glm::vec3(1, 1, 0), 0.4);
+	//AssetLoader::getLoader().getText()->drawText(std::to_string(weaponAmmo), glm::vec2(s.x - 300, 20), glm::vec3(1, 1, 0), 0.4);
+	glViewport(s.x - 450, 0, 100, 30);
+	renderTexture(ammoTexture, glm::mat4(1));
+	string temp = to_string(weaponAmmo);
+
+	for (int i = 0; i < temp.size(); i++) {
+		glViewport(s.x - 340 + 14 * i, 5, 14, 20);
+		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+	}
+	glViewport(0, 0, s.x, s.y);
 }
 
 Timer t;
@@ -306,6 +320,8 @@ void Renderer::RenderScene() {
 	for (int i = 0; i < listStatics.size(); i++) {
 		Render(listStatics[i]);
 	}
+
+	RenderBullets();
 
 
 	//Render terrain
@@ -490,6 +506,53 @@ void Renderer::RenderOutsideMessage() {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void Renderer::InitBullets() {
+	bulletShader.create("bulletVert.glsl", "bulletGeom.glsl", "bulletFrag.glsl");
+
+	glGenBuffers(1, &bulletPosVBO);
+	glGenBuffers(1, &bulletQuatVBO);
+
+	glGenVertexArrays(1, &bulletVAO);
+	glBindVertexArray(bulletVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletPosVBO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletQuatVBO);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void Renderer::RenderBullets() {
+	GLint access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
+	
+	bulletShader.use();
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletPosVBO);
+	glBufferData(GL_ARRAY_BUFFER, bulletPositions.size() * sizeof(glm::vec3), &bulletPositions[0], GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bulletQuatVBO);
+	glBufferData(GL_ARRAY_BUFFER, bulletOrientations.size() * sizeof(glm::vec4), &bulletOrientations[0], GL_DYNAMIC_DRAW);
+
+	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
+	bulletShader.uniform("ViewProjMatrix", viewProjMatrix);
+
+	glEnable(GL_LINE_SMOOTH);
+	float width = 2.0f;
+	glLineWidth(width);
+	glBindVertexArray(bulletVAO);
+	glDrawArrays(GL_POINTS, 0, bulletPositions.size());
+	glBindVertexArray(0);
+
+	bulletPositions.clear();
+	bulletOrientations.clear();
+}
+
 void Renderer::setWeaponModel(Model * mptr) {
 	missile = mptr;
 }
@@ -589,7 +652,14 @@ void Renderer::setMultiplier(int multiplier) {
 }
 
 void Renderer::renderParticles(Particles * p) {
-	p->render(particleShader);
+	if (p->type == WING_TRAIL) {
+		glDisable(GL_LINE_SMOOTH);
+		float width = 1.0f;
+		glLineWidth(width);
+		p->render(particleLineShader, GL_LINES);
+	} else {
+		p->render(particleShader, GL_POINTS);
+	}
 }
 
 /*void Renderer::setCrosshairPos(glm::vec3 pos) {
@@ -608,6 +678,7 @@ void Renderer::update(float dt)
 	if (Input::isKeyPressed(GLFW_KEY_F8)) {
 		this->shader.reload();
 		this->terrain_shader.reload();
+		this->bulletShader.reload();
 	}
 }
 

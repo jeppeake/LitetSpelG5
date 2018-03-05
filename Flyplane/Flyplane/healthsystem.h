@@ -38,7 +38,8 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				}
 
 				if (entity.has_component<PlayerComponent>()) {
-					entity.assign<LifeTimeComponent>(1.5f);
+					if(!entity.has_component<LifeTimeComponent>())
+						entity.assign<LifeTimeComponent>(1.5f);
 					explosionSound.play();
 				}
 
@@ -47,7 +48,10 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				{
 					handle = entity.assign<ParticleComponent>();
 				}
-				events.emit<AddParticleEvent>(EXPLOSION, handle, 3);
+				ParticleParameters p;
+				p.effectLength = 3.f;
+				p.explosion.radius = 50.f;
+				events.emit<AddParticleEvent>(EXPLOSION, handle, p);
 				events.emit<RemoveParticleEvent>(TRAIL, handle);
 				events.emit<RemoveParticleEvent>(ENGINE_TRAIL, handle);
 				events.emit<AddParticleEvent>(DEAD_TRAIL, handle);

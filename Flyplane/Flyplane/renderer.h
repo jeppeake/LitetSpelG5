@@ -35,6 +35,8 @@ private:
 	ShaderProgram missileShader;
 	ShaderProgram heightShader;
 	ShaderProgram particleShader;
+	ShaderProgram particleLineShader;
+	ShaderProgram bulletShader;
 
 	GLuint quadVao, quadVbo;
 	GLuint frameBuffer;
@@ -82,6 +84,13 @@ private:
 	std::vector<Patch> patches;
 	std::vector<Patch> shadowPatches;
 
+	std::vector<glm::vec3> bulletPositions;
+	std::vector<glm::quat> bulletOrientations;
+	GLuint bulletPosVBO;
+	GLuint bulletQuatVBO;
+	GLuint bulletVAO;
+
+
 	Texture transparent;
 
 	Texture scoreTexture;
@@ -89,6 +98,7 @@ private:
 	Texture numbers[10];
 	Texture x;
 	int multiplier;
+	Texture ammoTexture;
 
 	bool isOutside = false;
 	double outsideTime = -1;
@@ -109,6 +119,12 @@ private:
 	void RenderHeightIndicator(float height);
 	void RenderSpeedometer(float speed);
 	void RenderOutsideMessage();
+
+	void InitBullets();
+	void RenderBullets();
+
+	void RenderPlaneShadow();
+	void RenderTerrainShadow();
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -124,10 +140,11 @@ public:
 	void setHeightmap(Heightmap* hm) {
 		this->hm = hm;
 	}
-	
-	void RenderPlaneShadow();
 
-	void RenderTerrainShadow();
+	void addBullet(glm::vec3 pos, glm::quat orientation) {
+		bulletPositions.push_back(pos);
+		bulletOrientations.push_back(orientation);
+	}
 
 	void RenderScene();
 	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);

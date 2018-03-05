@@ -19,6 +19,7 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader deadTrailShader;
 	ComputeShader sparkShader;
 	ComputeShader speedShader;
+	ComputeShader wingTrailShader;
 public:
 
 	~ParticleSystem() {
@@ -40,6 +41,7 @@ public:
 		deadTrailShader.create("deadTrail.glsl");
 		sparkShader.create("sparks.glsl");
 		speedShader.create("speedPart.glsl");
+		wingTrailShader.create("wingTrail.glsl");
 		for (int i = 0; i < 40; i++) {
 			pool.push_back(new Particles(5000));
 		}
@@ -69,11 +71,24 @@ public:
 				}
 			}
 		}
+
+		if (Input::isKeyPressed(GLFW_KEY_F7)) {
+			resetShader.reload();
+			trailShader.reload();
+			explosionShader.reload();
+			engineTrailShader.reload();
+			deadTrailShader.reload();
+			sparkShader.reload();
+			speedShader.reload();
+		}
+
 	}
 
 	void chooseUniforms(Particles *& p, entityx::Entity &entity, const entityx::TimeDelta &dt)
 	{
 		auto transform = entity.component<Transform>();
+		auto physics = entity.component<Physics>();
+		auto flight = entity.component<FlightComponent>();
 		auto camTrans = Renderer::getRenderer().getCamera().getTransform();
 		switch (p->type) {
 		case TRAIL:
@@ -88,43 +103,57 @@ public:
 			trailShader.uniform("life", 10.f);
 			trailShader.uniform("dt", float(dt));
 			break;
+
+
 		case EXPLOSION:
 			//p->setComputeShader(&explosionShader);
 			//p->setTexture("explosion");
-			p->setSize(p->params.explosion.radius*0.001f);
+			p->setSize(p->params.explosion.radius*0.002f);
 			explosionShader.use();
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
 				explosionShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
 			explosionShader.uniform("explosionRadius", p->params.explosion.radius);
-			explosionShader.uniform("life", 1.f);
+			explosionShader.uniform("life", p->params.effectLength);
 			explosionShader.uniform("dt", float(dt));
 			break;
+
+
 		case SPARKS:
 			//p->setComputeShader(&sparkShader);
 			//p->setTexture("N/A");
-			p->setSize(0.01);
+			p->setSize(0.005);
 			sparkShader.use();
-			if (transform) {
-				sparkShader.uniform("spawn", transform->pos);
-				sparkShader.uniform("direction", transform->orientation * glm::vec3(0, 1, 0));
+			sparkShader.uniform("spawn", p->params.sparks.pos);
+			if (physics) {
+				sparkShader.uniform("velocity", physics->velocity);
+			} else {
+				sparkShader.uniform("velocity", glm::vec3());
 			}
-			sparkShader.uniform("life", 1.f);
+			sparkShader.uniform("life", p->params.effectLength);
 			sparkShader.uniform("dt", float(dt));
 			break;
+
+
 		case ENGINE_TRAIL:
 			//p->setComputeShader(&engineTrailShader);
 			//p->setTexture("engine_fire");
-			p->setSize(0.05);
+			p->setSize(0.01);
 			engineTrailShader.use();
+			engineTrailShader.uniform("radius", p->params.engineTrail.radius);
 			if (transform) {
-				engineTrailShader.uniform("spawn", transform->pos);
+				engineTrailShader.uniform("spawn", transform->pos + transform->orientation * p->params.engineTrail.offset);
 				engineTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
 			}
-			engineTrailShader.uniform("life", 1.f);
+			if (flight) {
+				engineTrailShader.uniform("throttle", flight->throttle - flight->airBrake);
+			}
+			//engineTrailShader.uniform("life", 0.25f);
 			engineTrailShader.uniform("dt", float(dt));
 			break;
+
+
 		case DEAD_TRAIL:
 			//p->setComputeShader(&deadTrailShader);
 			//p->setTexture("N/A");
@@ -132,11 +161,17 @@ public:
 			deadTrailShader.use();
 			if (transform) {
 				deadTrailShader.uniform("spawn", transform->pos);
-				deadTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+			}
+			if (physics) {
+				deadTrailShader.uniform("direction", -physics->velocity);
+			} else {
+				deadTrailShader.uniform("direction", glm::vec3());
 			}
 			deadTrailShader.uniform("life", 10.f);
 			deadTrailShader.uniform("dt", float(dt));
 			break;
+
+
 		case SPEED_PARTICLE:
 			//p->setComputeShader(&deadTrailShader);
 			//p->setTexture("N/A");
@@ -146,9 +181,36 @@ public:
 				speedShader.uniform("spawn", transform->pos);
 			}
 			speedShader.uniform("direction", camTrans.orientation * glm::vec3(0, 0, -1));
-			speedShader.uniform("life", 2.f);
+			speedShader.uniform("life", 6.f);
 			speedShader.uniform("dt", float(dt));
 			break;
+
+
+		case WING_TRAIL:
+			//p->setComputeShader(&deadTrailShader);
+			//p->setTexture("N/A");
+			p->setSize(0.01f);
+			wingTrailShader.use();
+			if (transform) {
+				wingTrailShader.uniform("spawn", transform->orientation*p->params.wingTrail.offset + transform->pos);
+				wingTrailShader.uniform("up", transform->orientation * glm::vec3(0,1,0));
+			}
+			if (physics) {
+				wingTrailShader.uniform("velocity", physics->velocity);
+			}
+			wingTrailShader.uniform("life", 6.f);
+			wingTrailShader.uniform("dt", float(dt));
+
+			p->params.wingTrail.respawnCounter = (p->params.wingTrail.respawnCounter + 1) % p->numParticles;
+			wingTrailShader.uniform("respawnID1", p->params.wingTrail.respawnCounter);
+
+			p->params.wingTrail.respawnCounter = (p->params.wingTrail.respawnCounter + 1) % p->numParticles;
+			wingTrailShader.uniform("respawnID2", p->params.wingTrail.respawnCounter);
+
+			wingTrailShader.uniform("respawnID3", (p->params.wingTrail.respawnCounter + 1) % (int)p->numParticles);
+
+			break;
+
 		default:
 			// plz no
 			break;
@@ -178,7 +240,7 @@ public:
 			free->type = event.type;
 			free->params = event.params;
 			free->t.restart();
-			free->setTimer(event.effectLength);
+			free->setTimer(event.params.effectLength);
 			resetShader.use();
 			//free->setComputeShader(&resetShader);
 			free->update();

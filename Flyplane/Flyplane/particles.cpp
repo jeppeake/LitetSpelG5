@@ -104,7 +104,7 @@ void Particles::update()
 	glUseProgram(0);
 }
 
-void Particles::render(ShaderProgram& program)
+void Particles::render(ShaderProgram& program, GLenum primitive)
 {
 	auto camera = Renderer::getRenderer().getCamera();
 	auto transform = camera.getTransform();
@@ -122,7 +122,7 @@ void Particles::render(ShaderProgram& program)
 	program.uniform("cPos", transform.pos);
 	program.uniform("cUp", transform.orientation * glm::vec3(0.0, 1.0, 0.0));
 	program.uniform("particleSize", size);
-	glDrawArrays(GL_POINTS, 0, numParticles);
+	glDrawArrays(primitive, 0, numParticles);
 	glBindVertexArray(0);
 }
 

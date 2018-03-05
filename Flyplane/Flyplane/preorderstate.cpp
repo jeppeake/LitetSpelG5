@@ -1,10 +1,10 @@
-#include "namestate.h"
+#include "preorderstate.h"
 #include "loadingstate.h"
 #include "input.h"
 #include "window.h"
+#include "loadoutstate.h"
 
-
-void NameState::checkForInput() {
+void PreorderState::checkForInput() {
 	int offset = 'a' - 'A';
 	if (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
 		offset = 0;
@@ -18,29 +18,29 @@ void NameState::checkForInput() {
 		name.pop_back();
 }
 
-void NameState::init() {
-	
+void PreorderState::init() {
+
 }
 
-void NameState::update(double dt) {
+void PreorderState::update(double dt) {
 	glClearColor(33.0 / 255, 33.0 / 255, 33.0 / 255, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	checkForInput();
 	glm::vec2 pos;
-	pos.x = Window::getWindow().size().x / 2 - 12*6;
+	pos.x = Window::getWindow().size().x / 2 - 12 * 6;
 	pos.y = Window::getWindow().size().y - 200;
-	AssetLoader::getLoader().getMenutext()->drawText("Enter name:", pos, glm::vec3(1, 1, 1), 1.0);
-	pos.x = Window::getWindow().size().x / 2 - 12 * name.length()/2;
+	AssetLoader::getLoader().getMenutext()->drawText("Enter pre-order key:", pos, glm::vec3(1, 1, 1), 1.0);
+	pos.x = Window::getWindow().size().x / 2 - 12 * name.length() / 2;
 	pos.y = Window::getWindow().size().y - 250;
 	AssetLoader::getLoader().getText()->drawText(name, pos, glm::vec3(1, 1, 1), 0.7);
-	if (Input::isKeyPressed(GLFW_KEY_ENTER) && name.size() > 0) {
-		this->changeState(new LoadingState(name));
-	}
-	if (Input::isKeyPressed(GLFW_KEY_ESCAPE)) {
-		this->changeState(new MenuState());
+	if (Input::isKeyPressed(GLFW_KEY_ENTER)) {
+		if(name.compare("selloutboys") == 0)
+			this->changeState(new LoadoutState(true));
+		else
+			this->changeState(new LoadoutState(false));
 	}
 }
 
-void NameState::startMenu() {
+void PreorderState::startMenu() {
 
 }

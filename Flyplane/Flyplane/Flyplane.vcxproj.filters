@@ -129,6 +129,9 @@
     <ClCompile Include="speedindicator.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="preorderstate.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -486,6 +489,12 @@
     <ClInclude Include="lifetimesystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="preorderstate.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="openpreorderaction.h">
+      <Filter>GUI\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -595,6 +604,21 @@
     </None>
     <None Include="enemyarrowGS.glsl">
       <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="bulletVert.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="bulletGeom.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="bulletFrag.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
+    <None Include="wingTrail.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="partLineVert.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

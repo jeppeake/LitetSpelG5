@@ -15,7 +15,11 @@ using namespace entityx;
 
 struct CameraSystem : public System<CameraSystem> {
 
+	double gt = 0;
+
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
+
+		gt += dt;
 
 		ComponentHandle<CameraOnComponent> cameraOn;
 		ComponentHandle<Transform> transform;
@@ -48,6 +52,12 @@ struct CameraSystem : public System<CameraSystem> {
 			double fOrientation = 0.0005;
 			camTrans.orientation = glm::mix(camTrans.orientation, transform->orientation, float(1.0 - glm::pow(fOrientation, 2.0*dt)));
 
+
+			glm::vec3 shakeOffset;
+			shakeOffset.x = cameraOn->shake*glm::sin(20*gt);
+			offset += shakeOffset;
+
+
 			offset = camTrans.orientation * offset;
 			camTrans.pos = transform->pos + offset * (0.5f*glm::smoothstep(brakeSpeed, boostSpeed, speed)+1);
 
@@ -64,6 +74,13 @@ struct CameraSystem : public System<CameraSystem> {
 
 			
 			cameraOn->camera.setTransform(camTrans, newFov);
+
+
+			cameraOn->shake -= cameraOn->shake * float(1.0 - glm::pow(0.5, dt));
+
+			if (Input::isKeyPressed(GLFW_KEY_H)) {
+				cameraOn->shake += 1.0;
+			}
 		}
 	}
 

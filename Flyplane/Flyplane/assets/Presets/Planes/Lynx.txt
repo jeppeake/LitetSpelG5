@@ -14,6 +14,7 @@ turnrate
 skin
 Lynx
 assets/Lynx/Lynx_TEX.png
+0
 weppos
 -0.5
 0.02
@@ -34,5 +35,23 @@ primaryweapon
 assets/Presets/primaryWeapons/Lynx.txt
 turretweapon
 0
+engineradius
+0.04
+enginepos
+-0.145
+-0.017
+-1.17
+enginepos
+0.145
+-0.017
+-1.17
+wingtrailpos
+-1.51
+0.08
+-0.7
+wingtrailpos
+1.51
+0.08
+-0.7
 description
 The ASF-1000 "Lynx" is a small and agile air superiority fighter, the small playload and mediocre speed is made up in incredible manouverability, which few of its opposition can match.

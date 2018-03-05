@@ -15,10 +15,18 @@ layout(std430, binding=10) buffer Col
 {
 	vec4 Colors[];
 };
+
+const float life = 0.15;
+//uniform float life;
+uniform float thrust;
+uniform float radius;
 uniform float dt;
-uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
+
+// [-1, 1]
+uniform float throttle;
+
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 // [-1, 1]
@@ -28,33 +36,51 @@ float rand(float n) {
 
 void main()
 {
+	float r = radius;
+
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
+		// INITAL SPAWN
+
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
-		Colors[gid].rgb = vec3(1.0,0.0,0.0);
+		Colors[gid].rgb = vec3(1.0,0.5,0.0);
 	}
 	else
 	{
-		//Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
-		//Positions[gid].xyz += Velocities[gid].xyz * dt;
+		// UPDATE
+		float t = throttle;
+		
+		Colors[gid].a = 0.5 * sqrt(r) * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
+		Colors[gid].a *= 0.4 + pow(t*0.5 + 0.5, 2);
 
-		Colors[gid].a = pow(1-Lives[gid] / life, 4);
+		//Colors[gid].a = 1.0;
 
-		Positions[gid].xyz = spawn + direction * (Lives[gid]*3 + 2);
+		Positions[gid].xyz = spawn + Velocities[gid].xyz + (direction - 0.15*Velocities[gid].xyz) * Lives[gid]*(22 + 5*t);
 	}
 	Lives[gid] += dt;
-	if(Lives[gid] >= life)
+	if(Lives[gid] >= life + 0.1*life*abs(rand(gid)))
 	{
+		// RESPAWN
 		Lives[gid] -= life;
-		Positions[gid].xyz = spawn; // + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
-		Lives[gid] = (2.0/60.0) * life * (rand(float(gid) + 1000) + 1)/2;
-		vec3 vel;
-		vel.x = rand(float(gid + dt*10));
-		vel.y = rand(float(gid + 1000 + dt*10));
-		vel.z = rand(float(gid + 2000 + dt*10));
-		Velocities[gid].xyz = 20 * direction + 3 * normalize(vel);
+
+		vec3 d = normalize(direction);
+
+		vec3 offset;
+		offset.x = rand(gid * 7 + 100 + dt);
+		offset.y = rand(gid * 13 - 100+ dt);
+		offset.z = rand(gid * 17 - 200+ dt);
+
+		
+		offset = r*rand(gid * 19)*normalize(offset);
+		offset  = r * normalize(offset);
+
+		Velocities[gid].xyz = offset;
+
+		Positions[gid].xyz = spawn + offset; 
+
+		//Lives[gid] = dt * life * (rand(float(gid) + 1000 + dt) + 1)/2;
 	}
 }
 

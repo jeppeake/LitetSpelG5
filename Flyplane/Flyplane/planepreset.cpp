@@ -47,10 +47,19 @@ void PlanePreset::load(std::string presetname)
 		}
 		else if (str.compare("skin") == 0) {
 			std::getline(file, str);
-			textureNames.push_back(str);
 			std::string skinname = str;
 			std::getline(file, str);
 			AssetLoader::getLoader().loadTexture(str, skinname);
+			std::getline(file, str);
+			bool preorder = std::stoi(str);
+			if (preorder) {
+				if(this->preorder)
+					textureNames.push_back(skinname);
+			}
+			else {
+				textureNames.push_back(skinname);
+			}
+				
 			continue;
 		}
 		else if (str.compare("weppos") == 0) {
@@ -92,6 +101,38 @@ void PlanePreset::load(std::string presetname)
 		else if (str.compare("description") == 0) {
 			std::getline(file, str);
 			description = str;
+		}
+		else if (str.compare("enginepos") == 0) {
+			glm::vec3 pos;
+
+			std::getline(file, str);
+			pos.x = std::stod(str, NULL);
+
+			std::getline(file, str);
+			pos.y = std::stod(str, NULL);
+
+			std::getline(file, str);
+			pos.z = std::stod(str, NULL);
+
+			enginePos.push_back(pos);
+		}
+		else if (str.compare("engineradius") == 0) {
+			std::getline(file, str);
+			engineRadius = std::stod(str, NULL);
+		}
+		else if (str.compare("wingtrailpos") == 0) {
+			glm::vec3 pos;
+
+			std::getline(file, str);
+			pos.x = std::stod(str, NULL);
+
+			std::getline(file, str);
+			pos.y = std::stod(str, NULL);
+
+			std::getline(file, str);
+			pos.z = std::stod(str, NULL);
+
+			wingTrailPos.push_back(pos);
 		}
 	}
 }

@@ -14,6 +14,7 @@ turnrate
 skin
 Brown/gray
 assets/G-201/G-201_TEX.png
+0
 weppos
 -1.55
 -0.1
@@ -26,5 +27,19 @@ primaryweapon
 assets/Presets/primaryWeapons/G-201.txt
 turretweapon
 0
+engineradius
+0.12
+enginepos
+0
+0.02
+-1
+wingtrailpos
+-1.52
+-0.1
+-0.65
+wingtrailpos
+1.52
+-0.1
+-0.65
 description
 The first batch of the G-201 started manufacturing in 1952, making this the by far oldest plane currently in active service, owing its long lifespan to ease of manufacture and a timeless design. Worth noting is that this aircraft shares a surprising amount of parts in common with agricultural machines.

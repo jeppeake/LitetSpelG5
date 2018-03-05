@@ -118,12 +118,21 @@ private:
 					if(hitSound.getStatus() != sf::Sound::Playing)
 						hitSound.play();
 				}
+
+				auto btransform = b.component<Transform>();
+
+
 				auto handle = a.component<ParticleComponent>();
 				if (!handle)
 				{
 					handle = a.assign<ParticleComponent>();
 				}
-				es.emit<AddParticleEvent>(SPARKS, handle, 3);
+
+				ParticleParameters p;
+				p.effectLength = 1.f;
+				if(btransform)
+					p.sparks.pos = btransform->pos;
+				es.emit<AddParticleEvent>(SPARKS, handle, p);
 			}
 		}
 	}
@@ -150,6 +159,11 @@ private:
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Fishrod"));
 			std::cout << " Fishrod!" << std::endl;
 			break;
+		case DropComponent::HAAM_166:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("HAAM-166"));
+			std::cout << " HAAM-166!" << std::endl;
+			break;
 		case DropComponent::Micromissile:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Micromissile"));
@@ -164,6 +178,11 @@ private:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Rodfish"));
 			std::cout << " Rodfish!" << std::endl;
+			break;
+		case DropComponent::SHAAM_200:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("SHAAM-200"));
+			std::cout << " SHAAM-200!" << std::endl;
 			break;
 		}
 	}
@@ -201,8 +220,12 @@ private:
 		auto a_model = a.component<ModelComponent>();
 		auto b_model = b.component<ModelComponent>();
 
-		auto a_boxes = *a_model->mptr->getBoundingBoxes();
-		auto b_boxes = *b_model->mptr->getBoundingBoxes();
+		std::vector<BoundingBox> a_boxes;
+		std::vector<BoundingBox> b_boxes;
+		if (a_model)
+			a_boxes = *a_model->mptr->getBoundingBoxes();
+		if (b_model)
+			b_boxes = *b_model->mptr->getBoundingBoxes();
 
 		if (!a_boxes.empty() && !b_boxes.empty())
 		{
@@ -230,13 +253,16 @@ private:
 		} else {
 
 			if (!entity.has_component<LifeTimeComponent>())
-				entity.assign<LifeTimeComponent>(5.0);
+				entity.assign<LifeTimeComponent>(20.0);
 
 			auto handle = entity.component<ParticleComponent>();
 			if (!handle) {
 				handle = entity.assign<ParticleComponent>();
 			}
-			event.emit<AddParticleEvent>(EXPLOSION, handle);
+			ParticleParameters p;
+			p.effectLength = 3.f;
+			p.explosion.radius = 50.f;
+			event.emit<AddParticleEvent>(EXPLOSION, handle, p);
 
 
 			auto transform = entity.component<Transform>();
@@ -281,15 +307,7 @@ public:
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override
 	{
-		/******************
-		**     DEBUG     **
-		******************/
-
-
-
-		/******************
-		**    \DEBUG     **
-		******************/
+		
 
 
 		Heightmap* map = nullptr;
@@ -304,8 +322,7 @@ public:
 		
 		entityx::ComponentHandle<CollisionComponent> collision;
 		entityx::ComponentHandle<Transform> transform;
-		entityx::ComponentHandle<ModelComponent> model;
-		for(entityx::Entity entity : es.entities_with_components(collision, transform, model))
+		for(entityx::Entity entity : es.entities_with_components(collision, transform))
 		{
 			// Collision with other entitites 
 			if (entity.has_component<Projectile>()) {
@@ -333,11 +350,17 @@ public:
 						}
 				}
 			}
-			
+
+
+
 			if (!map || entity.has_component<HouseComponent>()) {
 				continue;
 			}
-			auto boxes = *model->mptr->getBoundingBoxes();
+
+			std::vector<BoundingBox> boxes;
+			auto model = entity.component<ModelComponent>();
+			if(model)
+				boxes = *model->mptr->getBoundingBoxes();
 
 			// Collision with terrain
 			glm::vec3 pos = transform.get()->pos;

@@ -161,6 +161,7 @@ void PlayingState::loadLoadout()
 
 	//read name
 	PlanePreset pp;
+	pp.preorder = true;
 	std::getline(file, str);
 	pp.load(str);
 
@@ -190,10 +191,26 @@ void PlayingState::loadLoadout()
 	entity_p.assign<BurstSoundComponent>(*machinegunShortSB);
 	entity_p.assign<Target>(10.0, FACTION_PLAYER);
 	entity_p.assign<FactionPlayer>();
+
 	auto handle = entity_p.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(TRAIL, handle);
-	ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(SPEED_PARTICLE, handle);
+
+	
+
+	ParticleParameters p;
+	p.engineTrail.radius = pp.engineRadius;
+	for (auto pos : pp.enginePos) {
+		p.engineTrail.offset = pos;
+		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle, p);
+	}
+	for (auto pos : pp.wingTrailPos) {
+		p.wingTrail.respawnCounter = 0;
+		p.wingTrail.offset = pos;
+		ex.events.emit<AddParticleEvent>(WING_TRAIL, handle, p);
+	}
+
+
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
@@ -230,6 +247,7 @@ void PlayingState::loadLoadout()
 			pweapons.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 		}
 	}
+
 
 	//turret load
 	for (int i = 0; i < pp.turretFiles.size(); i++) {
@@ -474,6 +492,15 @@ void PlayingState::init()
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
+
+	/*
+	for (int i = 0; i < 200; i++) {
+		entityx::Entity house = ex.entities.create();
+		glm::vec3 pos = AssetLoader::getLoader().getHeightmap("testmap")->generateHousePos();
+		house.assign<Transform>(pos);
+		house.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
+	}
+	*/
 }
 
 void PlayingState::update(double dt)
@@ -570,7 +597,7 @@ void PlayingState::update(double dt)
 		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
 	}
 	else {
-		ex.systems.update<CameraSystem>(dt);
+		//ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		Renderer::getRenderer().RenderTransparent();
 		if (!playerAlive) {

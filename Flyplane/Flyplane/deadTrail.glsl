@@ -23,6 +23,9 @@ layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 float rand(float n);
 
+const vec3 black = vec3(0);
+const vec3 fire = vec3(1.0, 0.5, 0.0);
+
 void main()
 {
 	uint gid = gl_GlobalInvocationID.x;
@@ -30,12 +33,20 @@ void main()
 	{
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
-		Colors[gid].rgb = vec3(0.0,0.0,0.0);
+		Colors[gid].rgb = fire;
 	}
 	else
 	{
-		Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
+		vec3 dir;
+		dir.x = rand(gid*23);
+		dir.z = rand(gid*27);
+		dir = normalize(dir);
+		dir += vec3(0, 13, 0);
+		Velocities[gid].xyz = mix(Velocities[gid].xyz, dir, 1-pow(0.1, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
+
+
+		Colors[gid].rgb = mix(fire, black, smoothstep(0, 0.02*life, Lives[gid]));
 
 		Colors[gid].a = pow(1-Lives[gid] / life, 4);
 
@@ -45,13 +56,13 @@ void main()
 	if(Lives[gid] >= life + 0.1*life*rand(float(gid)))
 	{
 		Lives[gid] -= life;
-		Positions[gid].xyz = spawn + direction*abs(300 * dt  * (rand(float(gid) + dt) + 1) + 2.5);
+		Positions[gid].xyz = spawn + direction*abs(dt * 0.5*(rand(float(gid) + dt) + 1));
 
 		vec3 vel;
 		vel.x = rand(float(gid + dt*10));
 		vel.y = rand(float(gid + 1000 + dt*10));
 		vel.z = rand(float(gid + 2000 + dt*10));
-		Velocities[gid].xyz = 20 * direction + 3 * normalize(vel);
+		Velocities[gid].xyz = 4 * normalize(vel);
 	}
 }
 
