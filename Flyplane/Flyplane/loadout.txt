@@ -1,3 +1,8 @@
-assets\Presets\Planes\TU-101.txt
-0
+assets\Presets\Planes\laken.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
+assets\Presets\Weapons\micro.txt
 0
