@@ -12,6 +12,7 @@
 #include "terraincomponent.h"
 #include "flightsystem.h"
 #include "flightcomponent.h"
+#include "equipment.h"
 #include "collisionsystem.h"
 #include "soundsystem.h"
 #include "gameoversystem.h"
@@ -70,6 +71,8 @@ entityx::Entity entity2;
 
 //sf::SoundBuffer* missileSB;
 
+std::vector<Weapon> Equipment::playerLoadout;
+
 void PlayingState::spawnEnemies(int nr) {
 
 	for (int i = 0; i < nr; i++) {
@@ -127,14 +130,14 @@ void PlayingState::spawnDrop() {
 	std::cout << "Drop spawned" << std::endl;
 
 	auto entity = ex.entities.create();
-	glm::vec3 pos(rand() % 1000 - 500, 0, rand() % 1000 - 500);
+	glm::vec3 pos(rand() % 10000 - 5000, 0, rand() % 10000 - 5000);
 	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 2500;
 	auto handle = entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
 	handle->scale = glm::vec3(75.0, 75.0, 75.0);
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
-	entity.assign<DropComponent>(static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems), 500);
-	entity.assign<Physics>(10, 1.5, glm::vec3(0), glm::vec3(0));
+	entity.assign<DropComponent>(static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
+	entity.assign<LifeTimeComponent>(30.0);
 }
 
 void PlayingState::drawHighscore() {
@@ -214,7 +217,6 @@ void PlayingState::loadLoadout()
 	std::vector<Weapon> weapons;
 	std::vector<Weapon> pweapons;
 
-	int nrOfWeapons = 0;
 	for (int i = 0; i < pp.wepPos.size(); i++) {
 		std::getline(file, str);
 		if (str.compare("0") != 0) {
@@ -227,8 +229,6 @@ void PlayingState::loadLoadout()
 			WeaponStats stats = WeaponStats(wp.ammo, wp.lifetime, wp.speed, wp.mass, wp.cooldown, wp.infAmmo, wp.turnRate, wp.detonateRange, wp.explodeRadius, wp.damage, wp.droptime);
 
 			weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
-
-			nrOfWeapons++;
 		}
 	}
 	std::vector<Turret> turrets;
@@ -271,7 +271,8 @@ void PlayingState::loadLoadout()
 	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
 	//turrets.emplace_back(stats2, info, placement, WInfo, false);
 
-	entity_p.assign <Equipment>(pweapons, weapons, turrets, pp.wepPos, nrOfWeapons);
+	Equipment::setPlayerLoadout(weapons);
+	entity_p.assign <Equipment>(pweapons, weapons, turrets);
 	entity_p.assign <HealthComponent>(1000.0);
 
 	entityx::Entity terrain = ex.entities.create();
@@ -291,6 +292,7 @@ void PlayingState::restart() {
 
 void PlayingState::init() 
 {
+
 	srand(static_cast<unsigned>(time(NULL)));
 	Window::getWindow().showCursor(true);
 

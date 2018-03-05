@@ -143,12 +143,16 @@ private:
 
 		switch (drop.component<DropComponent>()->type) {
 		case DropComponent::Health:
-			player.component<HealthComponent>()->health += drop.component<DropComponent>()->amount;
-			if (player.component<HealthComponent>()->health > player.component<HealthComponent>()->maxHP) {
-				player.component<HealthComponent>()->health = player.component<HealthComponent>()->maxHP;
-			}
+			if (player.has_component<HealthComponent>())
+			 player.component<HealthComponent>()->health = player.component<HealthComponent>()->maxHP;
+			
 			std::cout << " Health!" << std::endl;
 			break;
+		case DropComponent::Ammo:
+			if (player.has_component<Equipment>())
+				player.component<Equipment>()->refill();
+		
+		/*
 		case DropComponent::Bigboi:
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("Bigboi"));
@@ -184,6 +188,7 @@ private:
 				player.component<Equipment>()->addSpecialWeapon(*AssetLoader::getLoader().getWeapon("SHAAM-200"));
 			std::cout << " SHAAM-200!" << std::endl;
 			break;
+		*/
 		}
 	}
 
