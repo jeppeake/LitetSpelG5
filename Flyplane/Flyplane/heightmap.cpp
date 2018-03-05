@@ -269,6 +269,39 @@ void Heightmap::unbindIndices() {
 
 
 
+glm::vec3 Heightmap::generateHousePos() {
+	bool found = false;
+
+	glm::vec3 result;
+	glm::vec3 normal;
+	bool water = false;
+
+	while (!found) {
+		float x = scale.x * width * float(rand()) / float(RAND_MAX);
+		float z = scale.z * height * float(rand()) / float(RAND_MAX);
+		x += pos.x;
+		z += pos.z;
+
+		result = glm::vec3(x, 0, z);
+
+		normal = normalAt(result);
+
+		water = isWater(result);
+
+		float angle = glm::acos(normal.y);
+		if (angle < glm::radians(10.f) && !water) {
+			result.y = heightAt(result);
+			found = true;
+		}
+	}
+	/*
+	std::cout << "Generated pos: " << result.x << ", " << result.y << ", " << result.z << "\n";
+	std::cout << "normal: " << normal.x << ", " << normal.y << ", " << normal.z << "\n";
+	std::cout << "is water: " << water << "\n";
+	*/
+	return result;
+}
+
 glm::vec2 Heightmap::getMinMaxHeights() {
 	glm::vec2 result;
 	result.x = pos.y + waterHeight;
@@ -725,6 +758,99 @@ void Heightmap::createIndices(int x, int y, int i) {
 			indices[i].push_back(index(x + 1, y + 1, numPatchVerts));
 		}
 	}
+}
+
+glm::vec3 Heightmap::normalAt(glm::vec3 _pos) {
+	glm::vec3 groundPos = _pos;
+
+
+	glm::vec3 result(0,-1,0);
+	_pos -= pos;
+	int x = (int)(_pos.x / scale.x);
+	int z = (int)(_pos.z / scale.z);
+
+
+	if (x < 0)
+		x = 0;
+	if (x >= width - 1)
+		x = width - 2;
+	if (z < 0)
+		z = 0;
+	if (z >= height - 1)
+		z = height - 2;
+
+
+	glm::vec3 v1 = vertices[index(x, z, width)];
+	glm::vec3 v2 = vertices[index(x + 1, z, width)];
+	glm::vec3 v3 = vertices[index(x, z + 1, width)];
+	glm::vec3 v4 = vertices[index(x + 1, z + 1, width)];
+
+
+	float sqX = (_pos.x / scale.x) - x;
+	float sqZ = (_pos.z / scale.z) - z;
+
+
+	if ((sqX + sqZ) < 1) {
+		// v1 v2 v3
+		result = normal(v1, v2, v3);
+	} else {
+		// v2 v3 v4
+		result = normal(v2, v4, v3);
+	}
+
+	return result;
+}
+
+bool Heightmap::isWater(glm::vec3 _pos) {
+	glm::vec3 groundPos = _pos;
+
+
+	double heightAt = 0;
+	_pos -= pos;
+	int x = (int)(_pos.x / scale.x);
+	int z = (int)(_pos.z / scale.z);
+
+
+	if (x < 0)
+		x = 0;
+	if (x >= width - 1)
+		x = width - 2;
+	if (z < 0)
+		z = 0;
+	if (z >= height - 1)
+		z = height - 2;
+
+
+	glm::vec3 v1 = vertices[index(x, z, width)];
+	glm::vec3 v2 = vertices[index(x + 1, z, width)];
+	glm::vec3 v3 = vertices[index(x, z + 1, width)];
+	glm::vec3 v4 = vertices[index(x + 1, z + 1, width)];
+
+
+	float sqX = (_pos.x / scale.x) - x;
+	float sqZ = (_pos.z / scale.z) - z;
+
+	if ((sqX + sqZ) < 1) {
+		heightAt = v1.y;
+		heightAt += (v2.y - v1.y) * sqX;
+		heightAt += (v3.y - v1.y) * sqZ;
+	} else {
+		heightAt = v4.y;
+		heightAt += (v2.y - v4.y) * (1.0f - sqZ);
+		heightAt += (v3.y - v4.y) * (1.0f - sqX);
+	}
+
+
+	groundPos.y = heightAt;
+
+	bool result = false;
+
+	float currWaterHeight = heightOfWater(groundPos);
+	if (heightAt <= currWaterHeight) {
+		result = true;
+	}
+
+	return result;
 }
 
 
