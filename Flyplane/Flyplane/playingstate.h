@@ -6,6 +6,7 @@
 #include "ButtonAction.h"
 #include "highscore.h"
 #include "map.h"
+#include "dropcomponent.h"
 
 struct PointObject {
 	int points;
@@ -33,7 +34,7 @@ private:
 	sf::SoundBuffer* missileSB;
 
 	void spawnEnemies(int nr);
-	void spawnDrop();
+	void spawnDrop(DropComponent::TypeOfDrop typeOfDrop);
 	void drawHighscore();
 
 	std::string name;
@@ -56,18 +57,5 @@ public:
 
 	void gameOver();
 
-	void addPoints(int p) {
-		if (pointObject.time > 0) {
-			pointObject.points += p * multiplier;
-		}
-		
-		else {
-			pointObject.points = p * multiplier;
-		}
-		pointObject.time = 0.8;
-		points += pointObject.points;
-		multiplier++;
-		timerMultiplier = 10;
-	}
-
+	void addPoints(int p);
 };

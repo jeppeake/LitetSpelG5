@@ -292,7 +292,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Weapon lastWep = equip->special[equip->selected];
 				equip->selected = (equip->selected + 1) % equip->special.size();
 				unsigned int count = 0;
-				while (equip->special[equip->selected].model == lastWep.model && count < equip->special.size() || equip->special[equip->selected].stats.ammo <= 0) {
+				while (count < equip->special.size() - 1 && (equip->special[equip->selected].model == lastWep.model || equip->special[equip->selected].stats.ammo <= 0)) {
 					equip->selected = (equip->selected + 1) % equip->special.size();
 					count++;
 				}

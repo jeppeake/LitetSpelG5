@@ -447,7 +447,7 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 	bool divideBottom = false;
 
 	float neighbourSize = patchSize * 2.f;
-	float len = glm::root_two<float>() * neighbourSize*2.f;
+	float len = lengthMult * neighbourSize*2;
 	float dist;
 	glm::vec2 center;
 
@@ -472,7 +472,7 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 		glm::vec2 center = offset + patchSize * glm::vec2(x + 0.5f, y + 0.5f);
 
 		float dist = length(pos - center);
-		float len = glm::root_two<float>() * patchSize*2.f;
+		float len = lengthMult * patchSize;
 
 		bool is_close = dist < len;
 
@@ -515,7 +515,7 @@ void Heightmap::recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float pa
 	bool divideBottom = false;
 
 	float neighbourSize = patchSize * 2.f;
-	float len = glm::root_two<float>() * neighbourSize*2.f;
+	float len = lengthMult * neighbourSize;
 	float dist;
 	glm::vec2 center;
 
@@ -540,7 +540,7 @@ void Heightmap::recursiveBuildPatchesOrtho(std::vector<Patch>& patches, float pa
 		glm::vec2 center = offset + patchSize * glm::vec2(x + 0.5f, y + 0.5f);
 
 		float dist = length(pos - center);
-		float len = glm::root_two<float>() * patchSize*2.f;
+		float len = lengthMult * patchSize;
 
 		bool is_close = dist < len;
 
