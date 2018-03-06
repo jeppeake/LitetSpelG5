@@ -14,6 +14,11 @@
 namespace fs = std::experimental::filesystem;
 using namespace entityx;
 
+glm::vec3 getRandomEdgePos() {
+	glm::vec3 rnd = glm::vec3(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1);
+	return rnd * 9000.0f;
+}
+
 struct MissionSystem : public entityx::System<MissionSystem> {
 	bool active = false;
 	bool failed = false;
@@ -95,6 +100,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 		}
 	}
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
+		srand(time(NULL));
 		if (active) {
 			glClear(GL_DEPTH_BUFFER_BIT);
 			glm::vec3 textColor = glm::vec3(1, 0, 0);
@@ -202,12 +208,11 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			}
 		}
 		else {
+			//select a random mission
+			int i = rand() % missions.size();
+			Mission mi = missions[i];
+			curMission = mi;
 			if (timer.elapsed() >= downtime) {
-				//select a random mission
-				int i = rand() % missions.size();
-				Mission mi = missions[i];
-				curMission = mi;
-
 				//spawn houses
 				for (HouseInfo house : missions[i].houses) {
 					auto entity = es.create();
@@ -252,7 +257,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					std::getline(file, str);
 					pp.load(str);
 
-					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
+					glm::vec3 pos = getRandomEdgePos();
+					pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0, pos.z));// (x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
@@ -347,7 +353,18 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					pp.load(str);
 
 					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
-					entity.assign<Transform>(pos, glm::quat());
+					//spawn pos random for KILLALL and DEFEND
+					glm::vec3 spos = getRandomEdgePos();
+					spos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(spos.x, 0, spos.z));
+					if (mi.type == MISSIONTYPE_ATTACK) {
+						//enemies should spawn around target house
+						spos = pos;
+					}
+					if (mi.formation) {
+						//enemies should spawn around their leader
+						spos = formLeader.component<Transform>()->pos + glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10);
+					}
+					entity.assign<Transform>(spos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
