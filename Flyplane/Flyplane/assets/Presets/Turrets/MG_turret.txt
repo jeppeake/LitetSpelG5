@@ -51,7 +51,7 @@ orientation
 0
 0
 damage
-8
+15
 projectileOffset
 0.0
 0.0
