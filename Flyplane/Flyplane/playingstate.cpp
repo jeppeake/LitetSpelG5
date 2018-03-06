@@ -126,17 +126,30 @@ void PlayingState::spawnEnemies(int nr) {
 	}
 }
 
-void PlayingState::spawnDrop() {
-	std::cout << "Drop spawned" << std::endl;
+void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
+	std::cout << "Drop spawned!";
+
+	glm::vec3 pos(rand() % 10000 - 5000, 0, rand() % 10000 - 5000);
+
+	ComponentHandle<PlayerComponent> player;
+	ComponentHandle<Transform> transform;
+	for (entityx::Entity entity : ex.entities.entities_with_components(transform, player)) {
+		float distance = glm::distance(pos, glm::vec3(transform->pos.x, 0, transform->pos.z));
+
+		if (distance > 2500) {
+			glm::vec3 direction = glm::normalize(pos - glm::vec3(transform->pos.x, 0, transform->pos.z));
+
+			pos = glm::vec3(transform->pos.x, 0, transform->pos.z) + direction * 2500.f;
+		}
+	}
 
 	auto entity = ex.entities.create();
-	glm::vec3 pos(rand() % 10000 - 5000, 0, rand() % 10000 - 5000);
 	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 2500;
 	auto handle = entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
 	handle->scale = glm::vec3(75.0, 75.0, 75.0);
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
-	entity.assign<DropComponent>(static_cast<DropComponent::TypeOfDrop>(rand() % DropComponent::NrOfItems));
+	entity.assign<DropComponent>(typeOfDrop);
 	entity.assign<LifeTimeComponent>(30.0);
 }
 
@@ -255,6 +268,8 @@ void PlayingState::loadLoadout()
 		TP.load(pp.turretFiles[i]);
 		Turret turret = TP.getTurret();
 		turret.placement.offset = pp.turretPositions[i];
+		turret.placement.orientation = glm::quat(glm::radians(pp.turretOrientations[i]));
+		turret.placement.front = pp.turretFronts[i];
 		turrets.emplace_back(turret);
 	}
 
@@ -266,9 +281,9 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
-	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
-	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
+	//TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
+	//TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
+	//WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
 	//turrets.emplace_back(stats2, info, placement, WInfo, false);
 
 	Equipment::setPlayerLoadout(weapons);
@@ -570,12 +585,13 @@ void PlayingState::update(double dt)
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
 			spawnEnemies(2);
-			spawnDrop();
+			spawnDrop(DropComponent::Ammo);
 		}
 
 		timerMultiplier -= dt;
-		if (timerMultiplier <= 0) {
-			multiplier = 1;
+		if (timerMultiplier <= 0 && multiplier > 1) {
+			multiplier--;
+			timerMultiplier = 10.0;
 		}
 
 		Window::getWindow().showCursor(false);
@@ -652,4 +668,20 @@ void PlayingState::gameOver() {
 	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);*/
 	//this->changeState(new GameOverState(name, points));
 }
+
+void PlayingState::addPoints(int p) {
+	if (pointObject.time > 0) {
+		pointObject.points += p * multiplier;
+	}
+
+	else {
+		pointObject.points = p * multiplier;
+	}
+	pointObject.time = 0.8;
+	points += pointObject.points;
+	if (multiplier <= 7)
+		multiplier++;
+	timerMultiplier = 10;
+}
+
 

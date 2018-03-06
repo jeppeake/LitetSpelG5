@@ -52,6 +52,12 @@ assets/presets/Turrets/MG_turret.txt
 0.0
 0.4
 -0.7
+0.0
+0.0
+1.0
+0.0
+0.0
+1.0
 engineradius
 0.06
 enginepos

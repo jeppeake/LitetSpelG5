@@ -279,6 +279,10 @@ private:
 			if (!entity.has_component<LifeTimeComponent>())
 				entity.assign<LifeTimeComponent>(20.0);
 
+			if (entity.has_component<HealthComponent>()) {
+				entity.component<HealthComponent>()->health = 0;
+			}
+
 			auto handle = entity.component<ParticleComponent>();
 			if (!handle) {
 				handle = entity.assign<ParticleComponent>();
