@@ -84,6 +84,24 @@ bool BoundingBox::intersect(Heightmap *map)
 	return false;
 }
 
+bool BoundingBox::intersect(glm::dvec3 normals[4], glm::dvec3 orig) {
+	bool intersection = true;
+	for (int i = 0; i < 4 && intersection; i++) {
+		float oDot = dot(orig, normals[i]);
+
+		bool inside = false;
+		for (int j = 0; j < 8 && !inside; j++) {
+			float dotVal = dot(corners[j], glm::vec3(normals[i]));
+			inside = dotVal > oDot;
+		}
+
+		if (!inside) {
+			intersection = false;
+		}
+	}
+	return intersection;
+}
+
 void BoundingBox::setTransform(const Transform & transform)
 {
 	glm::vec3 rotSides[3];

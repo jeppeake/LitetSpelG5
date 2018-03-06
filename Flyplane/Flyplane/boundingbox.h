@@ -14,5 +14,6 @@ struct BoundingBox {
 	bool intersect(BoundingBox &box);
 	bool intersect(const glm::vec3& point);
 	bool intersect(Heightmap *map);
+	bool intersect(glm::dvec3 normals[4], glm::dvec3 orig);
 	void setTransform(const Transform& transform);
 };

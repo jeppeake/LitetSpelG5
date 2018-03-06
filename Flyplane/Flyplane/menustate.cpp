@@ -122,6 +122,7 @@ void MenuState::init() {
 	machinegunSB = AssetLoader::getLoader().getSoundBuffer("machinegun");
 	machinegunShortSB = AssetLoader::getLoader().getSoundBuffer("machinegunShort");*/
 
+
 	/*
 	* add systems
 	*
