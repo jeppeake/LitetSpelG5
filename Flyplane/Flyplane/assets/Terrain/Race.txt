@@ -1,0 +1,9 @@
+5 1500 5
+51
+5
+500
+assets/Textures/race.png
+assets/Terrain/coolmap/biome_coolmap.png
+assets/Textures/bog.png
+assets/Textures/grass.png
+assets/Textures/water.png
