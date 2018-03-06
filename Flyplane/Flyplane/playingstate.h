@@ -56,18 +56,5 @@ public:
 
 	void gameOver();
 
-	void addPoints(int p) {
-		if (pointObject.time > 0) {
-			pointObject.points += p * multiplier;
-		}
-		
-		else {
-			pointObject.points = p * multiplier;
-		}
-		pointObject.time = 0.8;
-		points += pointObject.points;
-		multiplier++;
-		timerMultiplier = 10;
-	}
-
+	void addPoints(int p);
 };

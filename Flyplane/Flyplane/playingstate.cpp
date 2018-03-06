@@ -574,8 +574,9 @@ void PlayingState::update(double dt)
 		}
 
 		timerMultiplier -= dt;
-		if (timerMultiplier <= 0) {
-			multiplier = 1;
+		if (timerMultiplier <= 0 && multiplier > 1) {
+			multiplier--;
+			timerMultiplier = 10.0;
 		}
 
 		Window::getWindow().showCursor(false);
@@ -652,4 +653,20 @@ void PlayingState::gameOver() {
 	AssetLoader::getLoader().getText()->drawText("HIGH SCORES", pos, glm::vec3(1, 0, 0), 0.4);*/
 	//this->changeState(new GameOverState(name, points));
 }
+
+void PlayingState::addPoints(int p) {
+	if (pointObject.time > 0) {
+		pointObject.points += p * multiplier;
+	}
+
+	else {
+		pointObject.points = p * multiplier;
+	}
+	pointObject.time = 0.8;
+	points += pointObject.points;
+	if (multiplier <= 7)
+		multiplier++;
+	timerMultiplier = 10;
+}
+
 
