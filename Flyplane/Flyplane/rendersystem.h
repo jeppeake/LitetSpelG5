@@ -200,7 +200,7 @@ struct RenderSystem : public System<RenderSystem> {
 		for (Entity e : es.entities_with_components(particles)) {
 			for (auto &p : particles->systems)
 			{
-				Renderer::getRenderer().renderParticles(p);
+				Renderer::getRenderer().addParticles(p);
 			}
 		}
 		if (playing) {
