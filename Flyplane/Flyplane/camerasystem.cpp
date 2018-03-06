@@ -43,6 +43,8 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		float maxShake = 8.f;
 		cameraOn->shake = glm::min(maxShake, cameraOn->shake);
 
+		//std::cout << "Shake: " << cameraOn->shake << "\n";
+
 		glm::vec3 shakeOffset;
 		shakeOffset.x = 0.02f*cameraOn->shake*glm::perlin(glm::vec3(5 * gt, 0, 0));
 		shakeOffset.y = 0.02f*cameraOn->shake*glm::perlin(glm::vec3(0, 5 * gt, 0));
@@ -52,7 +54,7 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		glm::vec3 axis;
 		axis.x = glm::perlin(glm::vec3(5 * gt, 20, 20));
 		axis.y = glm::perlin(glm::vec3(20, 5 * gt, 20));
-		axis.z = glm::perlin(glm::vec3(20, 20, 5 * gt));
+		axis.z = glm::perlin(glm::vec3(20, 20, 5 * gt))+0.1;
 		axis = normalize(axis);
 
 		float angle = 0.05f*cameraOn->shake*glm::perlin(glm::vec3(-20, -20, 20 * gt));
@@ -83,10 +85,10 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		cameraOn->camera.setTransform(camTrans, newFov);
 
-		cameraOn->shake -= cameraOn->shake * float(1.0 - glm::pow(0.005, dt));
+		cameraOn->shake = glm::mix(cameraOn->shake, 0.f, float(1.0 - glm::pow(0.005, dt)));
 
 		if (Input::isKeyDown(GLFW_KEY_H)) {
-			cameraOn->shake += 2.0;
+			cameraOn->shake += 1.5f*dt;
 		}
 	}
 }

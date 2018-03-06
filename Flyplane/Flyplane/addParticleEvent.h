@@ -33,6 +33,7 @@ struct ParticleParameters {
 			int respawnCounter;
 		} wingTrail;
 	};
+	float distFromCam = 0;
 	float effectLength = 0;
 };
 

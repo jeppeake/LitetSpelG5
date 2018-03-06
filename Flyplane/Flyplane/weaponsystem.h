@@ -23,6 +23,7 @@
 #include "healthcomponent.h"
 #include "factioncomponents.h"
 #include "particlecomponent.h"
+#include "cameraoncomponent.h"
 
 using namespace entityx;
 
@@ -279,6 +280,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 							if (s->sound.getStatus() != s->sound.Playing) {
 								s->sound.play();
 							}
+						}
+
+						auto cameraOn = entity.component<CameraOnComponent>();
+						if (cameraOn) {
+							cameraOn->shake += 3.f*dt;
 						}
 					}
 				}

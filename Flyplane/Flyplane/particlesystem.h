@@ -99,6 +99,8 @@ public:
 			if (transform) {
 				trailShader.uniform("spawn", transform->pos);
 				trailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+
+				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
 			trailShader.uniform("life", 10.f);
 			trailShader.uniform("dt", float(dt));
@@ -113,6 +115,8 @@ public:
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
 				explosionShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+
+				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
 			explosionShader.uniform("explosionRadius", p->params.explosion.radius);
 			explosionShader.uniform("life", p->params.effectLength);
@@ -133,6 +137,8 @@ public:
 			}
 			sparkShader.uniform("life", p->params.effectLength);
 			sparkShader.uniform("dt", float(dt));
+
+			p->params.distFromCam = length(p->params.sparks.pos - camTrans.pos);
 			break;
 
 
@@ -145,6 +151,8 @@ public:
 			if (transform) {
 				engineTrailShader.uniform("spawn", transform->pos + transform->orientation * p->params.engineTrail.offset);
 				engineTrailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+
+				p->params.distFromCam = length(transform->pos + transform->orientation * p->params.engineTrail.offset - camTrans.pos);
 			}
 			if (flight) {
 				engineTrailShader.uniform("throttle", flight->throttle - flight->airBrake);
@@ -161,6 +169,8 @@ public:
 			deadTrailShader.use();
 			if (transform) {
 				deadTrailShader.uniform("spawn", transform->pos);
+
+				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
 			if (physics) {
 				deadTrailShader.uniform("direction", -physics->velocity);
@@ -169,6 +179,7 @@ public:
 			}
 			deadTrailShader.uniform("life", 10.f);
 			deadTrailShader.uniform("dt", float(dt));
+
 			break;
 
 
@@ -179,6 +190,8 @@ public:
 			speedShader.use();
 			if (transform) {
 				speedShader.uniform("spawn", transform->pos);
+
+				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
 			speedShader.uniform("direction", camTrans.orientation * glm::vec3(0, 0, -1));
 			speedShader.uniform("life", 6.f);
@@ -194,6 +207,8 @@ public:
 			if (transform) {
 				wingTrailShader.uniform("spawn", transform->orientation*p->params.wingTrail.offset + transform->pos);
 				wingTrailShader.uniform("up", transform->orientation * glm::vec3(0,1,0));
+
+				p->params.distFromCam = length(transform->orientation*p->params.wingTrail.offset + transform->pos - camTrans.pos);
 			}
 			if (physics) {
 				wingTrailShader.uniform("velocity", physics->velocity);
