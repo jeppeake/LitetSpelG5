@@ -100,6 +100,7 @@ void LoadoutState::init() {
 
 	Renderer::getRenderer().setHeightmap(nullptr);
 	Renderer::getRenderer().setDrawShadows(false);
+	Renderer::getRenderer().setDrawClouds(false);
 	ex.systems.system<RenderSystem>()->playing = false;
 
 

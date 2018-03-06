@@ -86,6 +86,7 @@ MenuState::~MenuState() {
 
 void MenuState::init() {
 	Renderer::getRenderer().setDrawShadows(true);
+	Renderer::getRenderer().setDrawClouds(true);
 	vignette.load("assets/Textures/vignette.png");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hover.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hammerclick.wav", "buttonforward");

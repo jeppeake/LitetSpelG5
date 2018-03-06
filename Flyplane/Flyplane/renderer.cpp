@@ -466,9 +466,10 @@ void Renderer::RenderCrosshair(glm::vec3 pos, glm::quat orientation) {
 }
 
 void Renderer::RenderClouds() {
-	for (int i = 0; i < clouds.transform.size(); i++) {
-		renderTexture(clouds.texture, camera.getProjMatrix() * camera.getViewMatrix() * clouds.transform[i]);
-	}
+	if(drawClouds)
+		for (int i = 0; i < clouds.transform.size(); i++) {
+			renderTexture(clouds.texture, camera.getProjMatrix() * camera.getViewMatrix() * clouds.transform[i]);
+		}
 }
 
 void Renderer::RenderHPBar(float hp) {
