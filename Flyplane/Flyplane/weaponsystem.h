@@ -78,7 +78,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
 		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage, weapon->stats.droptime);
 		missile.assign<CollisionComponent>();
-		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"));
+		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"), 100);
 		auto handle = missile.assign<ParticleComponent>();
 		em.emit<AddParticleEvent>(TRAIL, handle);
 	}
@@ -465,7 +465,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity explosion = es.create();
 				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
 				explosion.assign<Transform>(trans->pos);
-				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500);
+				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500, 1);
 				auto handle = explosion.assign<ParticleComponent>();
 				ParticleParameters params;
 				params.effectLength = 3.f;
