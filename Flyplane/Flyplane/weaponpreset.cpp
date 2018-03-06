@@ -239,6 +239,15 @@ void TurretPreset::load(std::string presetname) {
 		else if (str.compare("range") == 0) {
 			std::getline(f, str);
 			range = std::stod(str, NULL);
+			continue;
+		}
+		else if (str.compare("projectileOffset") == 0) {
+			std::getline(f, str);
+			projectileOffset.x = std::stod(str, NULL);
+			std::getline(f, str);
+			projectileOffset.y = std::stod(str, NULL);
+			std::getline(f, str);
+			projectileOffset.z = std::stod(str, NULL);
 		}
 	}
 }
@@ -247,7 +256,7 @@ Turret TurretPreset::getTurret() {
 	WeaponStats stats(ammo, lifetime, speed, mass, cooldown, infAmmo, damage);//done
 	TurretPlacement placement(glm::quat(), glm::vec3(scale), offset, glm::vec3());//done
 	TurretInfo info(turnRate, elevationLimit, traverseLimit, range, AssetLoader::getLoader().getModel(baseModel), AssetLoader::getLoader().getModel(gunModel));//done
-	WeaponInfo wInfo(glm::vec3(projScale), AssetLoader::getLoader().getModel(projModel));//done
+	WeaponInfo wInfo(glm::vec3(projScale), AssetLoader::getLoader().getModel(projModel), projectileOffset);//done
 
 	Turret turret(stats, info, placement, wInfo, autoFire);//done
 	return turret;
