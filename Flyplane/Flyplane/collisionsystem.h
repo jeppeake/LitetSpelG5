@@ -25,6 +25,7 @@ private:
 	sf::Sound hitSound;
 	sf::Sound dropSound;
 	sf::Sound explosionSound;
+	std::vector<sf::Sound> playerHitSounds;
 
 	std::map<entityx::Entity::Id, entityx::Entity> to_remove;
 
@@ -118,9 +119,27 @@ private:
 					if(hitSound.getStatus() != sf::Sound::Playing)
 						hitSound.play();
 				}
+				
+
+				auto cameraOn = a.component<CameraOnComponent>();
+				if (cameraOn) {
+					cameraOn->shake += 2.0;
+				}
+
 
 				auto btransform = b.component<Transform>();
 
+
+				if (a.has_component<PlayerComponent>()) {
+					for (int i = 0; i < playerHitSounds.size(); i++) {
+						if (playerHitSounds[i].getStatus() != sf::Sound::Playing) {
+							glm::vec3 pos = btransform->pos;
+							playerHitSounds[i].setPosition(pos.x, pos.y, pos.z);
+							playerHitSounds[i].play();
+							break;
+						}
+					}
+				}
 
 				auto handle = a.component<ParticleComponent>();
 				if (!handle)
@@ -296,6 +315,13 @@ private:
 		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
 		dropSound.setRelativeToListener(true);
 		dropSound.setPosition(0, 0, 0);
+
+		for (int i = 0; i < 10; i++) {
+			playerHitSounds.emplace_back();
+			playerHitSounds.back().setBuffer(*AssetLoader::getLoader().getSoundBuffer("playerhit"));
+		}
+		
+		//playerHitSound.
 
 		explosionSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("explosion"));
 		explosionSound.setPosition(0, 0, 0);

@@ -31,7 +31,7 @@ private:
 	unsigned int width, height;
 	int numPatchVerts = 7;
 	int maxLevels = 3;
-	float lengthMult = glm::root_two<float>() * 2.f;
+	float lengthMult = glm::root_two<float>() * 1.1f;
 	
 	float waterHeight = 0;
 
