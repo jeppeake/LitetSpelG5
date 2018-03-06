@@ -2,33 +2,35 @@
 #include "weapon.h"
 #include "turret.h"
 
+/*
 struct WeaponSlot {
 	glm::vec3 pos;
 	bool used;
 	int slotNumber;
-};
+};*/
 
 
 struct Equipment {
 	//projectile model, sound, range?, ammo, speed, 
 	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special) : primary(primary), special(special) {}
-	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special, std::vector<Turret> turrets, std::vector<glm::vec3> weaponPos, int nrOfWeapons) : primary(primary), turrets(turrets), special(special) {
-		for (int i = 0; i < weaponPos.size(); i++) {
-			bool used = true;
-			if (nrOfWeapons <= i)
-				used = false;
-
-			weaponSlots.push_back({ weaponPos[i], used, i });
-		}
-		//std::cout << weaponPos.size() << " weapon slots and " << nrOfWeapons << " slots used" << std::endl;
-	}
+	//Equipment(std::vector<Weapon> primary, std::vector<Weapon> special, std::vector<Turret> turrets /*, std::vector<glm::vec3>& weaponPos, int nrOfWeapons*/) : primary(primary), turrets(turrets), special(special) {}
 
 	Equipment(std::vector<Weapon> primary, std::vector<Weapon> special, std::vector<Turret> turrets) : primary(primary), special(special), turrets(turrets) {}
 	unsigned int selected = 0;
 	std::vector<Weapon> primary;
 	std::vector<Weapon> special;
-	std::vector<WeaponSlot> weaponSlots;
+	static std::vector<Weapon> playerLoadout;
+	//std::vector<WeaponSlot> weaponSlots;
 
+	static void setPlayerLoadout(std::vector<Weapon>& special) {
+		playerLoadout = special;
+	}
+
+	void refill() {
+		special = playerLoadout;
+	}
+
+	/*
 	void addSpecialWeapon(Weapon weapon) {
 		if (special.size() < weaponSlots.size()) {
 			for (int i = 0; i < weaponSlots.size(); i++) {
@@ -52,9 +54,10 @@ struct Equipment {
 		else {
 			//std::cout << "size of special isnt less than weaponSlots" << std::endl;			
 		}
-	}
+	}*/
 
 	void removeSpecialWeapon() {
+	/*
 		for (int i = 0; i < weaponSlots.size(); i++) {
 			if (weaponSlots[i].slotNumber == selected) {
 				weaponSlots[i].used = false;
@@ -69,7 +72,9 @@ struct Equipment {
 				}
 			}
 		}
+	*/
 		special.erase(special.begin() + selected);
 	}
+
 	std::vector<Turret> turrets;
 };

@@ -487,35 +487,18 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 			recursiveBuildPatches(patches, patchSize*0.5f, new_offset, level + 1, normals, orig);
 		} else {
 
-			bool intersection = false;
+			Transform t;
+			BoundingBox patch;
 
-			// check all corners of the patch
-			for (int iy = -1; iy <= 1 && !intersection; iy += 2) {
-				for (int ix = -1; ix <= 1 && !intersection; ix += 2) {
+			t.pos = scale * glm::vec3(center.x, 0.5f, center.y) + this->pos;
+			patch.center = glm::vec3(0);
+			patch.sides[0] = scale * glm::vec3(patchSize*0.5f, 0, 0);
+			patch.sides[1] = scale * glm::vec3(0, 0, patchSize*0.5f);
+			patch.sides[2] = scale * glm::vec3(0, 0.5f, 0);
 
-					glm::vec3 centerBottom = glm::vec3(center.x, 0, center.y);
-					centerBottom += patchSize * 0.5f * glm::vec3(ix, 0, iy);
-					centerBottom = scale * centerBottom + this->pos;
+			patch.setTransform(t);
 
-					glm::vec3 centerTop = centerBottom;
-
-					// REMOVED "255.f*", CHECK IF WORKS!!!
-					centerTop.y += scale.y;
-
-					bool cornerIntersection = true;
-					for (int j = 0; j < 4; j++) {
-						if (!lineSegmentSAT(normals[j], orig, centerBottom, centerTop)) {
-							cornerIntersection = false;
-							break;
-						}
-					}
-
-					if (cornerIntersection)
-						intersection = true;
-				}
-			}
-
-			if (intersection)
+			if (patch.intersect(normals, orig))
 				patches.emplace_back(patchSize, new_offset, indices);
 		}
 	}
