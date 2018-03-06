@@ -15,8 +15,8 @@ namespace fs = std::experimental::filesystem;
 using namespace entityx;
 
 glm::vec3 getRandomEdgePos() {
-	glm::vec3 rnd = glm::vec3(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1);
-	return rnd * 9000.0f;
+	glm::vec3 rnd = glm::vec3((rand() % 2000) - 1000, (rand() % 2000) - 1000, (rand() % 2000) - 1000);
+	return rnd * 8.0f;
 }
 
 struct MissionSystem : public entityx::System<MissionSystem> {
@@ -70,6 +70,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	}
 
 	MissionSystem(PlayingState *state) : state(state) {
+		srand(time(NULL));
 		std::string path = "assets/Presets/Missions";
 		
 		for (auto & p : fs::directory_iterator(path)) {
@@ -100,7 +101,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 		}
 	}
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
-		srand(time(NULL));
+		
 		if (active) {
 			glClear(GL_DEPTH_BUFFER_BIT);
 			glm::vec3 textColor = glm::vec3(1, 0, 0);
@@ -217,11 +218,11 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				for (HouseInfo house : missions[i].houses) {
 					auto entity = es.create();
 					entity.assign<ModelComponent>(house.model);
-					glm::vec3 pos = glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
-					if (house.random) {
+					glm::vec3 pos = AssetLoader::getLoader().getHeightmap("testmap")->generateHousePos();//glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
+					/*if (house.random) {
 						pos = pos + glm::vec3((rand() % 8000)-4000, 0, (rand() % 8000)-4000);
 						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z));
-					}
+					}*/
 					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
 					entity.assign<Transform>(pos);
 					entity.component<Transform>()->scale = glm::vec3(1.0f);
@@ -258,7 +259,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					pp.load(str);
 
 					glm::vec3 pos = getRandomEdgePos();
-					pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0, pos.z));// (x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
+					pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0, pos.z)) + 1500;// (x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
 					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
@@ -355,7 +356,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					//spawn pos random for KILLALL and DEFEND
 					glm::vec3 spos = getRandomEdgePos();
-					spos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(spos.x, 0, spos.z));
+					spos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(spos.x, 0, spos.z)) + 1500;
 					if (mi.type == MISSIONTYPE_ATTACK) {
 						//enemies should spawn around target house
 						spos = pos;
@@ -395,7 +396,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						plotter.push_back(glm::vec3(housepos.x - 200, housepos.y + 100, housepos.z + 200));
 						behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 					}
-					behaviours.push_back(new Hunt_Target(5, new Enemy_Close(mi.huntPlayerDist), state->entity_p, 0.05f, mi.firingDistance));
+					behaviours.push_back(new Hunt_Target(7, new Enemy_Close(mi.huntPlayerDist), state->entity_p, 0.05f, mi.firingDistance));
 					//behaviours.push_back(new Hunt_Target(3, new Always_True(), target, 0.05, 500.f));
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));

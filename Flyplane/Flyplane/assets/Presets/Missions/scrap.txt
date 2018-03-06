@@ -4,6 +4,8 @@ spawnenemy
 53.4 1000 -52
 scrap.txt
 
+makeleader
+
 spawnenemy
 63.4 1000 -52
 scrap.txt
