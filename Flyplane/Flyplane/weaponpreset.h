@@ -34,8 +34,8 @@ public:
 	double detonateRange, explodeRadius, damage, droptime = 1.0;
 
 	glm::vec3 offset = glm::vec3(0, 0, 0);
-	glm::quat orientation = glm::quat(1, 0, 0, 0);
-	glm::vec3 front = glm::vec3(1.f, 0.f, 0.f);
+	//glm::quat orientation = glm::quat(1, 0, 0, 0);
+	//glm::vec3 front = glm::vec3(1.f, 0.f, 0.f);
 
 	glm::vec2 elevationLimit = glm::vec2(90.f, 90.f);
 	glm::vec2 traverseLimit = glm::vec2(90.f, 90.f);

@@ -255,6 +255,8 @@ void PlayingState::loadLoadout()
 		TP.load(pp.turretFiles[i]);
 		Turret turret = TP.getTurret();
 		turret.placement.offset = pp.turretPositions[i];
+		turret.placement.orientation = glm::quat(glm::radians(pp.turretOrientations[i]));
+		turret.placement.front = pp.turretFronts[i];
 		turrets.emplace_back(turret);
 	}
 
