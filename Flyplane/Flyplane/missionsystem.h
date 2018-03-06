@@ -293,7 +293,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					//behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
-					entity.assign<AIComponent>(behaviours, true, true, false);
+					entity.assign<AIComponent>(behaviours, true, true, false, true);
 					entity.assign<CollisionComponent>();
 					entity.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("takeoff"));
 					entity.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("machinegun"));
@@ -407,7 +407,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					if (mi.type == MISSIONTYPE_KILLALL) {
 						entity.assign<MissionMarker>(MARKER_KILL);
 					}
-					entity.assign<AIComponent>(behaviours, true, true, false);
+					entity.assign<AIComponent>(behaviours, true, true, false, true);
 					entity.assign<CollisionComponent>();
 					entity.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("takeoff"));
 					entity.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("machinegun"));

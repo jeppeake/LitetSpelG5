@@ -69,7 +69,7 @@ void MenuState::spawnEnemies(int nr) {
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
-		entity.assign<AIComponent>(behaviours, true, true, false);
+		entity.assign<AIComponent>(behaviours, true, true, false, true);
 		entity.assign<CollisionComponent>();
 
 		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
@@ -176,7 +176,7 @@ void MenuState::init() {
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
-	entity3.assign<AIComponent>(behaviours, true, true, false);
+	entity3.assign<AIComponent>(behaviours, true, true, false, true);
 	entity3.assign<Target>(10.0, FACTION_DUMMY);
 	entity3.assign <HealthComponent>(100.0);
 
