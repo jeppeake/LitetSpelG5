@@ -108,7 +108,7 @@ void PlayingState::spawnEnemies(int nr) {
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
-		entity.assign<AIComponent>(behaviours, true, true, false);
+		entity.assign<AIComponent>(behaviours, true, true, false, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
@@ -150,7 +150,7 @@ void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(typeOfDrop);
-	entity.assign<LifeTimeComponent>(30.0);
+	entity.assign<LifeTimeComponent>(60.0);
 }
 
 void PlayingState::drawHighscore() {
@@ -438,7 +438,7 @@ void PlayingState::init()
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
-		entity.assign<AIComponent>(behaviours, true, true, false);
+		entity.assign<AIComponent>(behaviours, true, true, false, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
