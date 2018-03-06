@@ -84,6 +84,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
+		ComponentHandle<Target> T;
+		for (Entity TE : es.entities_with_components(T)) {
+			T = TE.component<Target>();
+			T->is_targeted = false;
+		}
 		ComponentHandle<WeaponStats> stats;
 		ComponentHandle<Equipment> equip;
 		ComponentHandle<Target> target;
@@ -407,7 +412,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();
-					//target->is_targeted = false;
 					double score = (dot * target->heat) / glm::length(dir);
 					if (score > bestScore && projectile->parentFaction != target->faction) {
 						bestDot = dot;
@@ -427,8 +431,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					noTarget = true;
 				}
 
-				/*if (cure.valid() && !noTarget)
-					cure.component<Target>()->is_targeted = true;*/
+				if (cure.valid() && !noTarget) {
+					cure.component<Target>()->is_targeted = true;
+				}
 					
 
 				glm::quat q;
