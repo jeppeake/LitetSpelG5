@@ -571,6 +571,8 @@ void PlayingState::update(double dt)
 			deltatime.restart();
 			spawnEnemies(2);
 			spawnDrop();
+			spawnDrop();
+			spawnDrop();
 		}
 
 		timerMultiplier -= dt;
