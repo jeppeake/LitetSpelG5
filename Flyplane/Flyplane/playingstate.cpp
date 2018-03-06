@@ -584,6 +584,8 @@ void PlayingState::update(double dt)
 			deltatime.restart();
 			spawnEnemies(2);
 			spawnDrop(DropComponent::Ammo);
+			spawnDrop(DropComponent::Ammo);
+			spawnDrop(DropComponent::Ammo);
 		}
 
 		timerMultiplier -= dt;
