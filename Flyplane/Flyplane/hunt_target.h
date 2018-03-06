@@ -17,6 +17,7 @@ public:
 
 			if (glm::length(AI_vector - glm::normalize(aimVector)) < cone && glm::length(aimVector) < distance) {
 				com.fire_primary = true;
+				com.fire_secondary = true;
 			}
 			float speed = AI.component<FlightComponent>()->base_speed;
 			closingSpeed = lastDist - glm::length(aimVector);

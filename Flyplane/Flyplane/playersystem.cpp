@@ -2,6 +2,7 @@
 
 #include "terraincomponent.h"
 #include "healthcomponent.h"
+#include "targetcomponent.h"
 
 PlayerSystem::PlayerSystem()
 {
@@ -13,8 +14,11 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 	ComponentHandle<Physics> physics;
 	ComponentHandle<PlayerComponent> player;
 	ComponentHandle<FlightComponent> flight;
-	for (Entity entity : es.entities_with_components(physics, transform, player, flight)) {
-
+	ComponentHandle<Target> target;
+	for (Entity entity : es.entities_with_components(physics, transform, player, flight, target)) {
+		if(entity.component<Target>()->is_targeted) {
+			std::cout << "GO EVASIVE!\n";
+		}
 		auto mv = Input::mouseMov();
 
 		double fbt = 0.05;

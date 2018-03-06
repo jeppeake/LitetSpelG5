@@ -1,6 +1,8 @@
-assets\Presets\Planes\Lynx.txt
-assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Planes\Spectre.txt
+assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\rocketpod.txt
 assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\HAAM_166.txt
 0
