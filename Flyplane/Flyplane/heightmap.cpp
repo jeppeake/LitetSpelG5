@@ -68,6 +68,10 @@ void Heightmap::loadMap(const std::string &maptxt) {
 		system("pause");
 		std::exit(EXIT_FAILURE);
 	}
+	
+	lengthMult = glm::root_two<float>() * 1.1f;
+
+	std::cout << "Heightmap::lengthMult = " << lengthMult << "\n";
 
 	pos = glm::vec3(-float(width*scale.x/2.f), 0, -(height*scale.z/2.f));
 
@@ -447,7 +451,7 @@ void Heightmap::recursiveBuildPatches(std::vector<Patch>& patches, float patchSi
 	bool divideBottom = false;
 
 	float neighbourSize = patchSize * 2.f;
-	float len = lengthMult * neighbourSize*2;
+	float len = lengthMult * neighbourSize;
 	float dist;
 	glm::vec2 center;
 

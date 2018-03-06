@@ -4,6 +4,8 @@ spawnenemy
 53.4 1000 -52
 amerikan.txt
 
+makeleader
+
 spawnenemy
 33.4 1000 -52
 amerikan.txt

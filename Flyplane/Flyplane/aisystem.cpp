@@ -62,6 +62,9 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 					}
 					if (entity_ai.has_component<Equipment>()) {
 						entity_ai.component<Equipment>()->primary.at(0).shouldFire = com.fire_primary;
+						if (entity_ai.component<Equipment>()->special.size() > 0 && entity_ai.component<AIComponent>()->secondary_allowed) {
+							entity_ai.component<Equipment>()->special[entity_ai.component<Equipment>()->selected].shouldFire = com.fire_secondary;
+						}
 						if (com.fire_primary) {
 							//std::cout << "FIRING!" << std::endl;
 						}

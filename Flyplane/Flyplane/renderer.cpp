@@ -283,47 +283,8 @@ void Renderer::RenderTerrainShadow() {
 	}
 }
 
-void Renderer::RenderScene() {
-
-	if (drawShadows) {
-		RenderPlaneShadow();
-		RenderTerrainShadow();
-	}
-
-
-	//Render scene
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	auto s = Window::getWindow().size();
-	glViewport(0, 0, s.x, s.y);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shader.use();
-	shader.uniform("texSampler", 0);
-
-	shader.uniform("shadowMap", 1);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-
-	shader.uniform("terrainShadowMap", 6);
-	glActiveTexture(GL_TEXTURE6);
-	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
-
+void Renderer::RenderTerrain() {
 	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
-	shader.uniform("ViewProjMatrix", viewProjMatrix);
-	shader.uniform("shadowMatrix", m * planeShadowMatrix);
-	shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
-	shader.uniform("cameraPos", camera.getTransform().pos);
-	shader.uniform("sunDir", sunDir);
-	shader.uniform("drawShadows", (int)drawShadows);
-	for (int i = 0; i < list.size(); i++) {
-		Render(list[i]);
-	}
-	for (int i = 0; i < listStatics.size(); i++) {
-		Render(listStatics[i]);
-	}
-
-	RenderBullets();
-
-
 	//Render terrain
 	terrain_shader.use();
 	terrain_shader.uniform("shadowMatrix", m * planeShadowMatrix);
@@ -351,6 +312,61 @@ void Renderer::RenderScene() {
 			glDrawElements(GL_TRIANGLES, (GLuint)hm->indices[indices].size(), GL_UNSIGNED_INT, 0);
 		}
 	}
+}
+
+void Renderer::RenderObjects() {
+	shader.use();
+	shader.uniform("texSampler", 0);
+
+	shader.uniform("shadowMap", 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+	shader.uniform("terrainShadowMap", 6);
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, terrainDepthTexture);
+
+	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
+	shader.uniform("ViewProjMatrix", viewProjMatrix);
+	shader.uniform("shadowMatrix", m * planeShadowMatrix);
+	shader.uniform("terrainShadowMatrix", m * terrainShadowMatrix);
+	shader.uniform("cameraPos", camera.getTransform().pos);
+	shader.uniform("sunDir", sunDir);
+	shader.uniform("drawShadows", (int)drawShadows);
+	for (int i = 0; i < list.size(); i++) {
+		Render(list[i]);
+	}
+	for (int i = 0; i < listStatics.size(); i++) {
+		Render(listStatics[i]);
+	}
+}
+
+void Renderer::RenderScene() {
+
+	if (drawShadows) {
+		RenderPlaneShadow();
+		RenderTerrainShadow();
+	}
+
+
+	//Render scene
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	auto s = Window::getWindow().size();
+	glViewport(0, 0, s.x, s.y);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	RenderObjects();
+
+	RenderBullets();
+
+	RenderTerrain();
+
+	RenderClouds();
+
+	RenderParticles();
+
+
+	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
 
 	//Render markers
 	enemyMarkerShader.use();
@@ -395,7 +411,7 @@ void Renderer::RenderScene() {
 }
 
 void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
-	RenderClouds();
+	
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 
@@ -450,9 +466,10 @@ void Renderer::RenderCrosshair(glm::vec3 pos, glm::quat orientation) {
 }
 
 void Renderer::RenderClouds() {
-	for (int i = 0; i < clouds.transform.size(); i++) {
-		renderTexture(clouds.texture, camera.getProjMatrix() * camera.getViewMatrix() * clouds.transform[i]);
-	}
+	if(drawClouds)
+		for (int i = 0; i < clouds.transform.size(); i++) {
+			renderTexture(clouds.texture, camera.getProjMatrix() * camera.getViewMatrix() * clouds.transform[i]);
+		}
 }
 
 void Renderer::RenderHPBar(float hp) {
@@ -651,15 +668,28 @@ void Renderer::setMultiplier(int multiplier) {
 	this->multiplier = multiplier;
 }
 
-void Renderer::renderParticles(Particles * p) {
-	if (p->type == WING_TRAIL) {
-		glDisable(GL_LINE_SMOOTH);
-		float width = 1.0f;
-		glLineWidth(width);
-		p->render(particleLineShader, GL_LINES);
-	} else {
-		p->render(particleShader, GL_POINTS);
+void Renderer::addParticles(Particles * p) {
+	particles.push_back(p);
+}
+
+void Renderer::RenderParticles() {
+
+	std::sort(particles.begin(), particles.end(), [](Particles* a, Particles* b) {
+		return a->params.distFromCam > b->params.distFromCam;
+	});
+
+	for (auto p : particles) {
+		if (p->type == WING_TRAIL) {
+			glDisable(GL_LINE_SMOOTH);
+			float width = 1.0f;
+			glLineWidth(width);
+			p->render(particleLineShader, GL_LINES);
+		} else {
+			p->render(particleShader, GL_POINTS);
+		}
 	}
+
+	particles.clear();
 }
 
 /*void Renderer::setCrosshairPos(glm::vec3 pos) {

@@ -84,6 +84,8 @@ private:
 	std::vector<Patch> patches;
 	std::vector<Patch> shadowPatches;
 
+	std::vector<Particles*> particles;
+
 	std::vector<glm::vec3> bulletPositions;
 	std::vector<glm::quat> bulletOrientations;
 	GLuint bulletPosVBO;
@@ -107,6 +109,8 @@ private:
 
 	bool drawShadows = true;
 
+	bool drawClouds = true;
+
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
 
@@ -125,6 +129,9 @@ private:
 
 	void RenderPlaneShadow();
 	void RenderTerrainShadow();
+	void RenderTerrain();
+	void RenderObjects();
+	void RenderParticles();
 public:
 	Renderer(const Renderer &other) = delete;
 	static Renderer& getRenderer()
@@ -159,7 +166,14 @@ public:
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
 	void setScore(int points);
 	void setMultiplier(int multiplier);
-	void renderParticles(Particles* p);
+	void addParticles(Particles* p);
+
+
+	void setDrawClouds(bool drawClouds) {
+		this->drawClouds = drawClouds;
+	}
+
+
 
 
 	void setDrawShadows(bool drawShadows) {

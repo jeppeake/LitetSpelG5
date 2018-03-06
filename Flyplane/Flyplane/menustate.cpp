@@ -69,7 +69,7 @@ void MenuState::spawnEnemies(int nr) {
 		behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 
-		entity.assign<AIComponent>(behaviours, true, true, false);
+		entity.assign<AIComponent>(behaviours, true, true, false, true);
 		entity.assign<CollisionComponent>();
 
 		WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
@@ -86,6 +86,7 @@ MenuState::~MenuState() {
 
 void MenuState::init() {
 	Renderer::getRenderer().setDrawShadows(true);
+	Renderer::getRenderer().setDrawClouds(true);
 	vignette.load("assets/Textures/vignette.png");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hover.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/hammerclick.wav", "buttonforward");
@@ -93,7 +94,7 @@ void MenuState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/buttonback.wav", "loadingmusic");
 	bHandler.addButton(new Button("START", glm::vec2(100, 100), glm::vec2(100,36), glm::vec3(1,1,1), glm::vec3(0.5, 0.5, 0.5), new StartLoadingAction(this), "buttonforward"));
 	bHandler.addButton(new Button("LOADOUT", glm::vec2(100, 150), glm::vec2(150, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new LoadoutAction(this), "buttonforward"));
-	bHandler.addButton(new Button("OPTIONS", glm::vec2(100, 200), glm::vec2(140, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new OptionsAction(this), "buttonforward"));
+	bHandler.addButton(new Button("TUTORIAL", glm::vec2(100, 200), glm::vec2(140, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new OptionsAction(this), "buttonforward"));
 	bHandler.addButton(new Button("HIGHSCORE", glm::vec2(100, 250), glm::vec2(170, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new HighscoreAction(this), "buttonforward"));
 	Window::getWindow().showCursor(true);
 
@@ -176,7 +177,7 @@ void MenuState::init() {
 	//behaviours.push_back(new Constant_Turn(0));
 	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
-	entity3.assign<AIComponent>(behaviours, true, true, false);
+	entity3.assign<AIComponent>(behaviours, true, true, false, true);
 	entity3.assign<Target>(10.0, FACTION_DUMMY);
 	entity3.assign <HealthComponent>(100.0);
 

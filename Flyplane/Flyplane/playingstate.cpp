@@ -108,7 +108,7 @@ void PlayingState::spawnEnemies(int nr) {
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
-		entity.assign<AIComponent>(behaviours, true, true, false);
+		entity.assign<AIComponent>(behaviours, true, true, false, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
@@ -150,7 +150,7 @@ void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
 	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(typeOfDrop);
-	entity.assign<LifeTimeComponent>(30.0);
+	entity.assign<LifeTimeComponent>(60.0);
 }
 
 void PlayingState::drawHighscore() {
@@ -268,6 +268,8 @@ void PlayingState::loadLoadout()
 		TP.load(pp.turretFiles[i]);
 		Turret turret = TP.getTurret();
 		turret.placement.offset = pp.turretPositions[i];
+		turret.placement.orientation = glm::quat(glm::radians(pp.turretOrientations[i]));
+		turret.placement.front = pp.turretFronts[i];
 		turrets.emplace_back(turret);
 	}
 
@@ -279,9 +281,9 @@ void PlayingState::loadLoadout()
 	WeaponStats bomb = WeaponStats(10, 1000000000, 0, 100, 0.5f, true);
 	//weapons.emplace_back(bomb, AssetLoader::getLoader().getModel("bullet"), AssetLoader::getLoader().getModel("fishrod"), glm::vec3(0, -0.3, -0.1));
 
-	TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
-	TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
-	WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
+	//TurretInfo info(180.f, glm::vec2(35.f, 35.f), glm::vec2(90.f, 90.f), 1000.f, AssetLoader::getLoader().getModel("spectre_mount"), AssetLoader::getLoader().getModel("spectre_gun"));
+	//TurretPlacement placement(glm::normalize(orien), glm::vec3(1.f), glm::vec3(0.f, -0.32f, 1.5f), glm::vec3(0.f, 0.f, 1.f));
+	//WeaponInfo WInfo(glm::vec3(3.f), AssetLoader::getLoader().getModel("bullet"));
 	//turrets.emplace_back(stats2, info, placement, WInfo, false);
 
 	Equipment::setPlayerLoadout(weapons);
@@ -436,7 +438,7 @@ void PlayingState::init()
 		behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 		behaviours.push_back(new Form_On_Formation(8, new Always_True(), entity_formation));
 
-		entity.assign<AIComponent>(behaviours, true, true, false);
+		entity.assign<AIComponent>(behaviours, true, true, false, true);
 		entity.assign<CollisionComponent>();
 		entity.assign<SoundComponent>(*flyingSB);
 		entity.assign<BurstSoundComponent>(*machinegunSB);
@@ -583,6 +585,8 @@ void PlayingState::update(double dt)
 		if (deltatime.elapsed() > 30) {
 			deltatime.restart();
 			spawnEnemies(2);
+			spawnDrop(DropComponent::Ammo);
+			spawnDrop(DropComponent::Ammo);
 			spawnDrop(DropComponent::Ammo);
 		}
 

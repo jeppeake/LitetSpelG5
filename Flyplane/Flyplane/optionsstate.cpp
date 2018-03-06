@@ -5,7 +5,9 @@
 #include "window.h"
 
 void OptionsState::init() {
-	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 100), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
+	glm::vec2 s = Window::getWindow().size();
+	bHandler.addButton(new Button("Back to menu", glm::vec2(s.x - 200, s.y - 100), glm::vec2(200, 40), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
+	fi.load("assets/textures/tutorial.png");
 }
 
 void OptionsState::startMenu() {
@@ -15,7 +17,9 @@ void OptionsState::startMenu() {
 void OptionsState::update(double dt) {
 	glClearColor(33.0 / 255, 33.0 / 255, 33.0 / 255, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	AssetLoader::getLoader().getBigtext()->drawText("OPTIONS", glm::vec2(100, Window::getWindow().size().y - 100), glm::vec3(1, 1, 1), 1);
+	fi.bind();
+	fi.draw();
+	glClear(GL_DEPTH_BUFFER_BIT);
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
 }

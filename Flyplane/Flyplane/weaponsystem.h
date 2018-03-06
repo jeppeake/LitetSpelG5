@@ -23,6 +23,7 @@
 #include "healthcomponent.h"
 #include "factioncomponents.h"
 #include "particlecomponent.h"
+#include "cameraoncomponent.h"
 
 using namespace entityx;
 
@@ -32,11 +33,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	void turretSpawnBullet(Transform* trans, Turret turret, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
 		entityx::Entity projectile = es.create();
 
-		projectile.assign<Transform>(trans->pos + trans->orientation * turret.placement.offset, trans->orientation * turret.getGunOrientation(), turret.weapon.projScale);
+		projectile.assign<Transform>(trans->pos + (trans->orientation * turret.placement.offset) + (trans->orientation * turret.getGunOrientation() * turret.weapon.projectileOffset), trans->orientation * turret.getGunOrientation(), turret.weapon.projScale);
 
 		glm::vec3 dir = trans->orientation * turret.getGunOrientation() * glm::vec3(0.0, 0.0, 1.0);
-		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
-		glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
+		glm::quat randomdquat = glm::angleAxis((rand() % 10) / 10.f, dir);
+		glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 10 - 5, (rand() % 10) - 5, (rand() % 10) - 5));
 		projectile.assign<Physics>(turret.stats.mass, 1, turret.stats.speed * glm::normalize(dir + randvec * 0.01f) + planeSpeed, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
 		//projectile.assign<ModelComponent>(turret.weapon.projModel);
@@ -84,6 +85,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
+		ComponentHandle<Target> T;
+		for (Entity TE : es.entities_with_components(T)) {
+			T = TE.component<Target>();
+			T->is_targeted = false;
+		}
 		ComponentHandle<WeaponStats> stats;
 		ComponentHandle<Equipment> equip;
 		ComponentHandle<Target> target;
@@ -116,20 +122,16 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				float closest = -1.1f;
 				float new_closest = 0.f;
 
-				ComponentHandle<FlightComponent> closest_flight;
 				ComponentHandle<Transform> closest_transform;
+				ComponentHandle<Target> closest_target;
 				ComponentHandle<ModelComponent> closest_model;
 
-				for (Entity entity_closest_search : es.entities_with_components(closest_flight, closest_transform)) {
+				for (Entity entity_closest_search : es.entities_with_components(closest_target, closest_transform, closest_model)) {
 					if (entity_closest_search != entity) {
 						glm::vec3 interdictionTest = SAIB::ADVInterdiction(entity_closest_search, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
-						//interdictionPoint = SAIB::calculateInterdiction(entity_closest_search, entity);
-
-						//new_closest = glm::length(interdictionTest - trans->pos);
 						glm::vec3 gunOrientation = glm::normalize(trans->orientation * equip->turrets.at(i).getGunOrientation() * glm::vec3(0.f, 0.f, 1.f));
 						new_closest = glm::dot(glm::normalize(interdictionTest - trans->pos), gunOrientation);
-						//std::cout << new_closest << "\n";
-						//std::cout << new_closest << "\n";
+
 						if (new_closest > closest) {//check if target is inside frustum
 
 							glm::vec2 traverseLimits = equip->turrets.at(i).info.traverseLimit;
@@ -284,6 +286,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 								s->sound.play();
 							}
 						}
+
+						auto cameraOn = entity.component<CameraOnComponent>();
+						if (cameraOn) {
+							cameraOn->shake += 3.f*dt;
+						}
 					}
 				}
 			}
@@ -411,7 +418,6 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();
-					//target->is_targeted = false;
 					double score = (dot * target->heat) / glm::length(dir);
 					if (score > bestScore && projectile->parentFaction != target->faction) {
 						bestDot = dot;
@@ -431,8 +437,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					noTarget = true;
 				}
 
-				/*if (cure.valid() && !noTarget)
-					cure.component<Target>()->is_targeted = true;*/
+				if (cure.valid() && !noTarget) {
+					cure.component<Target>()->is_targeted = true;
+				}
 					
 
 				glm::quat q;
