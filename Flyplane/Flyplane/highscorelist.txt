@@ -2,6 +2,8 @@
 gab
 297500
 gurk
+265300
+gurk
 264300
 gurk
 243000
@@ -16,5 +18,3 @@ gab
 frukt
 161200
 sdasd
-144100
-kkkkkk
