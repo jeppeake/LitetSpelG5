@@ -30,15 +30,20 @@ using namespace entityx;
 struct WeaponSystem : public entityx::System<WeaponSystem> {
 	Timer switchT;
 
-	void turretSpawnBullet(Transform* trans, Turret turret, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
+	void turretSpawnBullet(Transform* trans, Turret turret, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction, float timeOffset = 0.f) {
 		entityx::Entity projectile = es.create();
 
-		projectile.assign<Transform>(trans->pos + (trans->orientation * turret.placement.offset) + (trans->orientation * turret.getGunOrientation() * turret.weapon.projectileOffset), trans->orientation * turret.getGunOrientation(), turret.weapon.projScale);
 
 		glm::vec3 dir = trans->orientation * turret.getGunOrientation() * glm::vec3(0.0, 0.0, 1.0);
-		glm::quat randomdquat = glm::angleAxis((rand() % 10) / 10.f, dir);
 		glm::vec3 randvec = glm::normalize(glm::vec3(rand() % 10 - 5, (rand() % 10) - 5, (rand() % 10) - 5));
-		projectile.assign<Physics>(turret.stats.mass, 1, turret.stats.speed * glm::normalize(dir + randvec * 0.01f) + planeSpeed, glm::vec3());
+		glm::vec3 velocity = turret.stats.speed * glm::normalize(dir + randvec * 0.01f);
+		glm::vec3 pos = trans->pos + (trans->orientation * turret.placement.offset) + (trans->orientation * turret.getGunOrientation() * turret.weapon.projectileOffset);
+		pos += velocity * timeOffset;
+		velocity += planeSpeed;
+
+
+		projectile.assign<Transform>(pos, trans->orientation * turret.getGunOrientation(), turret.weapon.projScale);
+		projectile.assign<Physics>(turret.stats.mass, 1, velocity, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
 		//projectile.assign<ModelComponent>(turret.weapon.projModel);
 		projectile.assign<Projectile>(turret.stats.lifetime, parentFaction, turret.stats.damage);
@@ -51,15 +56,22 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		//projectile.assign<SoundComponent>(machinegunSB, false);
 	}
 
-	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction) {
+	void spawnBullet(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, unsigned int parentFaction, float timeOffset = 0.f) {
 		//std::cout << "Spawning bullet!\n";
 		entityx::Entity projectile = es.create();
 		//std::cout << weapon->projScale.x << " : " << weapon->projScale.y << " : " << weapon->projScale.z << "\n";
-		projectile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->projScale);
-		glm::vec3 dir = glm::toMat3(trans->orientation) * glm::vec3(0.0, 0.0, 1.0);
-		glm::quat randomdquat = glm::angleAxis((rand() % 20) / 20.f, dir);
+
+
+		glm::vec3 dir = trans->orientation * glm::vec3(0.0, 0.0, 1.0);
 		glm::vec3 randvec = glm::normalize(glm::vec3(rand()%20 - 10, (rand() % 20) - 10, (rand() % 20) - 10));
-		projectile.assign<Physics>(weapon->stats.mass, 1, weapon->stats.speed * glm::normalize(dir + randvec*0.01f) + planeSpeed, glm::vec3());
+		glm::vec3 velocity = weapon->stats.speed * glm::normalize(dir + randvec * 0.01f);
+		glm::vec3 pos = trans->pos + trans->orientation * weapon->offset;
+		pos += velocity * timeOffset;
+		velocity += planeSpeed;
+
+
+		projectile.assign<Transform>(pos, trans->orientation, weapon->projScale);
+		projectile.assign<Physics>(weapon->stats.mass, 1, velocity, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
 		//projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
@@ -176,7 +188,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					}
 				}
 				equip->turrets.at(i).shouldFire = false;
-				if (player && !equip->turrets.at(i).autoFire && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && equip->turrets.at(i).timer.elapsed() > equip->turrets.at(i).stats.cooldown && equip->turrets.at(i).stats.ammo > 0) {
+				if (player && !equip->turrets.at(i).autoFire && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
 					equip->turrets.at(i).shouldFire = true;
 					equip->turrets.at(i).timer.restart();
 				}
@@ -192,7 +204,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 					float to_aim = glm::dot(turret_aim, glm::normalize(interdiction - trans->pos));
 					//std::cout << to_aim << "\n";
 
-					if (equip->turrets.at(i).autoFire && to_aim > 0.999f && equip->turrets.at(i).timer.elapsed() > equip->turrets.at(i).stats.cooldown) {
+					if (equip->turrets.at(i).autoFire && to_aim > 0.999f) {
 						equip->turrets.at(i).shouldFire = true;
 						equip->turrets.at(i).timer.restart();
 					} else if (equip->turrets.at(i).autoFire) {
@@ -209,14 +221,20 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 				if (target) {
 					parentfaction = target->faction;
-					if (equip->turrets.at(i).shouldFire) {
-						turretSpawnBullet(trans.get(), equip->turrets.at(i), planeSpeed, es, parentfaction);
-						burstSound = entity.component<BurstSoundComponent>();
-						if (burstSound) {
-							BurstSoundComponent* s = burstSound.get();
+					if (equip->turrets.at(i).shouldFire && equip->turrets.at(i).stats.ammo > 0) {
+						equip->turrets.at(i).timeAccum += dt;
 
-							if (s->sound.getStatus() != s->sound.Playing) {
-								s->sound.play();
+						while (equip->turrets.at(i).timeAccum > equip->turrets.at(i).stats.cooldown && equip->turrets.at(i).stats.ammo > 0) {
+							equip->turrets.at(i).timeAccum -= equip->turrets.at(i).stats.cooldown;
+
+							turretSpawnBullet(trans.get(), equip->turrets.at(i), planeSpeed, es, parentfaction, equip->turrets.at(i).timeAccum);
+							burstSound = entity.component<BurstSoundComponent>();
+							if (burstSound) {
+								BurstSoundComponent* s = burstSound.get();
+
+								if (s->sound.getStatus() != s->sound.Playing) {
+									s->sound.play();
+								}
 							}
 						}
 					}
@@ -260,37 +278,44 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			
 			for (int i = 0; i < equip->primary.size(); i++) {
 				Weapon* pweapon = &equip->primary[i];
-				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER)) && pweapon->timer.elapsed() > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
+				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
 					pweapon->shouldFire = true;
 					//std::cout << "FIRING!\n";
 				}
-				if (pweapon->shouldFire) {
-					pweapon->shouldFire = false;
-					pweapon->timer.restart();
+				if (pweapon->shouldFire && pweapon->stats.ammo > 0) {
+					pweapon->timeAccum += dt;
 
-					unsigned int parentfaction = FACTION_PLAYER;
+					while (pweapon->timeAccum > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
+						
+						pweapon->timeAccum -= pweapon->stats.cooldown;
+						pweapon->shouldFire = false;
+						pweapon->timer.restart();
 
-					if (target)
-						parentfaction = target->faction;
+						unsigned int parentfaction = FACTION_PLAYER;
 
-					if(pweapon->isMissile)
-						spawnMissile(trans.get(), pweapon, planeSpeed, es, events, parentfaction);
-					else {
-						spawnBullet(trans.get(), pweapon, planeSpeed, es, parentfaction);
+						if (target)
+							parentfaction = target->faction;
 
-						burstSound = entity.component<BurstSoundComponent>();
-						if (burstSound) {
-							BurstSoundComponent* s = burstSound.get();
-							
-							if (s->sound.getStatus() != s->sound.Playing) {
-								s->sound.play();
+						if (pweapon->isMissile)
+							spawnMissile(trans.get(), pweapon, planeSpeed, es, events, parentfaction);
+						else {
+							spawnBullet(trans.get(), pweapon, planeSpeed, es, parentfaction, pweapon->timeAccum);
+
+							burstSound = entity.component<BurstSoundComponent>();
+							if (burstSound) {
+								BurstSoundComponent* s = burstSound.get();
+
+								if (s->sound.getStatus() != s->sound.Playing) {
+									s->sound.play();
+								}
+							}
+
+							auto cameraOn = entity.component<CameraOnComponent>();
+							if (cameraOn) {
+								cameraOn->shake += 60.f*pweapon->stats.cooldown*dt;
 							}
 						}
 
-						auto cameraOn = entity.component<CameraOnComponent>();
-						if (cameraOn) {
-							cameraOn->shake += 3.f*dt;
-						}
 					}
 				}
 			}

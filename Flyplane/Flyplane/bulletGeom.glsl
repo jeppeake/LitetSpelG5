@@ -19,7 +19,7 @@ vec3 qtransform( vec4 q, vec3 v ){
 
 void main() {
 	
-	vec3 forward = 1.0*qtransform(Orientation[0], vec3(0,0,1));
+	vec3 forward = 0.8*qtransform(Orientation[0], vec3(0,0,1));
 
 	gl_Position = ViewProjMatrix * vec4(Pos[0] + forward, 1);
 	EmitVertex();
