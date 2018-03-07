@@ -117,8 +117,8 @@ void PlayingState::spawnEnemies(int nr) {
 		WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 		std::vector<Weapon> primary;
 		std::vector<Weapon> secondary;
-		secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
-		secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		//secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(-0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+		//secondary.emplace_back(rocketpodstat, AssetLoader::getLoader().getModel("rocketpod"), AssetLoader::getLoader().getModel("stinger"), glm::vec3(0.9, -0.37, -1.5), glm::vec3(0.2), glm::vec3(0.8f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
 
 		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 		entity.assign<Equipment>(primary, secondary);
@@ -341,7 +341,8 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
-	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
+	//AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
+	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_shorter.wav", "machinegunShort");
 
 
 	//get all assets (not really needed, can be used inline)
@@ -545,8 +546,8 @@ void PlayingState::update(double dt)
 				burstSound = entity.component<BurstSoundComponent>();
 
 				BurstSoundComponent* s = burstSound.get();
-
-				s->sound.stop();
+				for(auto& sound : s->sounds)
+					sound.stop();
 			}
 		}
 		else {
@@ -667,7 +668,8 @@ void PlayingState::gameOver() {
 		burstSound = entity.component<BurstSoundComponent>();
 		BurstSoundComponent* s = burstSound.get();
 
-		s->sound.pause();
+		for(auto& sound : s->sounds)
+			sound.pause();
 	}
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();

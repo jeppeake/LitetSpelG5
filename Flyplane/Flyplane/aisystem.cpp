@@ -40,11 +40,17 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 						if (b->getPriority() < ai_ai->behaviours.at(i)->getPriority() && ai_ai->behaviours.at(i)->getActive() && !ai_ai->behaviours.at(i)->terminated) {
 							b = ai_ai->behaviours.at(i);
 						}
+						else if (!b->getActive() && ai_ai->behaviours.at(i)->getActive() && !ai_ai->behaviours.at(i)->terminated) {
+							b = ai_ai->behaviours.at(i);
+						}
 					}
 					Commands com;
 					glm::vec3 input;
 					if (b->getActive()) {
 						com = b->act(entity_player, entity_ai, entity_terrain, entity_closest, dt);
+					}
+					else {
+						std::cout << "No behaviour active!\n";
 					}
 
 					ai_flight->setInput(com.steering);

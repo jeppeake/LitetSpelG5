@@ -8,7 +8,10 @@ public:
 	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (formation.valid()) {
-			if (id == -1) {//add position on formation
+			if (!formation.has_component<FormationComponent>()) {
+				std::cout << "Formation terminated\n";
+				terminated = true;
+			} else if (id == -1) {//add position on formation
 				id = formation.component<FormationComponent>()->positions.size();
 				float posCalc = formation.component<FormationComponent>()->posCalc;
 				glm::vec2 position(posCalc * formation.component<FormationComponent>()->mult, -posCalc);
@@ -20,12 +23,8 @@ public:
 				formation.component<FormationComponent>()->add = !formation.component<FormationComponent>()->add;
 				formation.component<FormationComponent>()->positions.push_back(position);
 				//std::cout << position.x << " : " << position.y << "\n";
-			}
-			glm::quat ori = formation.component<Transform>()->orientation;
-			if (!formation.has_component<FormationComponent>() || formation.component<HealthComponent>()->isDead) {
-				terminated = true;
-			}
-			else {
+			} else {
+				glm::quat ori = formation.component<Transform>()->orientation;
 				glm::vec2 pos = formation.component<FormationComponent>()->positions.at(id);
 				glm::vec3 w_pos = ori * glm::vec3(pos.x, 0.f, pos.y);
 				glm::vec3 flyToPos = formation.component<Transform>()->pos + (w_pos * formation.component<FormationComponent>()->distance);
@@ -43,6 +42,7 @@ public:
 			
 		}
 		else {
+			//std::cout << "Formation terminated\n";
 			terminated = true;
 		}
 

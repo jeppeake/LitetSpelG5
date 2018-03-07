@@ -19,6 +19,7 @@
 using namespace entityx;
 
 struct PlayerSystem : public System<PlayerSystem> {
+	sf::Sound warningSound;
 	Particles *S;
 	PlayerSystem();
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override;

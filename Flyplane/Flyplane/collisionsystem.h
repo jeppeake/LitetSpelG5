@@ -276,12 +276,20 @@ private:
 			}
 		} else {
 
-			if (!entity.has_component<LifeTimeComponent>())
-				entity.assign<LifeTimeComponent>(20.0);
+			if (!entity.has_component<LifeTimeComponent>()) {
+				double life = 20.0;
+				if (entity.has_component<PlayerComponent>()) {
+					life = 1.0;
+				}
+
+				entity.assign<LifeTimeComponent>(life);
+			}
 
 			if (entity.has_component<HealthComponent>()) {
 				entity.component<HealthComponent>()->health = 0;
 			}
+
+			
 
 			auto handle = entity.component<ParticleComponent>();
 			if (!handle) {
@@ -300,7 +308,6 @@ private:
 			}
 			explosionSound.play();
 			
-
 
 			entity.remove<CollisionComponent>();
 			if(entity.has_component<Physics>())
