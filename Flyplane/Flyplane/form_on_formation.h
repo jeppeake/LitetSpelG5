@@ -8,7 +8,7 @@ public:
 	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (formation.valid()) {
-			if (!formation.has_component<FormationComponent>()) {
+			if (!formation.has_component<FormationComponent>() || formation.component<HealthComponent>()->isDead) {
 				std::cout << "Formation terminated\n";
 				terminated = true;
 			} else if (id == -1) {//add position on formation
