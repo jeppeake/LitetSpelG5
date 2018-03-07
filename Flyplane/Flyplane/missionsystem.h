@@ -210,7 +210,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 		}
 		else {
 			//select a random mission
-			int i = 1;//rand() % missions.size();
+			int i = rand() % missions.size();
 			Mission mi = missions[i];
 			curMission = mi;
 			if (timer.elapsed() >= downtime) {
