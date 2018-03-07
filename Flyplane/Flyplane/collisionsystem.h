@@ -32,20 +32,10 @@ private:
 	void checkOBBvsPoint(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)
 	{
 		// OBB
-		auto a_trans = a.component<Transform>();
-		auto a_model = a.component<ModelComponent>();
+		std::vector<BoundingBox>& a_boxes = a.component<CollisionComponent>()->boxes;
 
 		// Point
 		auto b_trans = b.component<Transform>();
-		//auto b_model = b.component<ModelComponent>();
-
-		auto a_boxes = *a_model->mptr->getBoundingBoxes();
-
-		for (int i = 0; i < a_boxes.size(); i++)
-		{
-			a_boxes[i].setTransform(*a_trans.get());
-		}
-
 
 		for (int i = 0; i < a_boxes.size(); i++)
 		{
@@ -64,24 +54,8 @@ private:
 
 	void checkOBBvsOBB(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)
 	{
-		auto a_trans = a.component<Transform>();
-		auto a_model = a.component<ModelComponent>();
-
-		auto b_trans = b.component<Transform>();
-		auto b_model = b.component<ModelComponent>();
-
-		auto a_boxes = *a_model->mptr->getBoundingBoxes();
-		auto b_boxes = *b_model->mptr->getBoundingBoxes();
-
-		for (int i = 0; i < a_boxes.size(); i++)
-		{
-			a_boxes[i].setTransform(*a_trans.get());
-		}
-		for (int i = 0; i < b_boxes.size(); i++)
-		{
-			b_boxes[i].setTransform(*b_trans.get());
-		}
-		
+		std::vector<BoundingBox>& a_boxes = a.component<CollisionComponent>()->boxes;
+		std::vector<BoundingBox>& b_boxes = b.component<CollisionComponent>()->boxes;
 
 		for (int i = 0; i < a_boxes.size(); i++) {
 			for (int j = 0; j < b_boxes.size(); j++) {
@@ -241,15 +215,8 @@ private:
 		if (a.id() == b.id())
 			return;
 
-		auto a_model = a.component<ModelComponent>();
-		auto b_model = b.component<ModelComponent>();
-
-		std::vector<BoundingBox> a_boxes;
-		std::vector<BoundingBox> b_boxes;
-		if (a_model)
-			a_boxes = *a_model->mptr->getBoundingBoxes();
-		if (b_model)
-			b_boxes = *b_model->mptr->getBoundingBoxes();
+		std::vector<BoundingBox>& a_boxes = a.component<CollisionComponent>()->boxes;
+		std::vector<BoundingBox>& b_boxes = b.component<CollisionComponent>()->boxes;
 
 		if (!a_boxes.empty() && !b_boxes.empty())
 		{
@@ -363,9 +330,19 @@ public:
 		if (!map) {
 			std::cout << "WARNING: could not find map in collision system\n";
 		}
-		
+
 		entityx::ComponentHandle<CollisionComponent> collision;
 		entityx::ComponentHandle<Transform> transform;
+		entityx::ComponentHandle<ModelComponent> modelComp;
+		for (entityx::Entity entity : es.entities_with_components(collision, transform, modelComp)) {
+			collision->boxes = *modelComp->mptr->getBoundingBoxes();
+			for (auto& box : collision->boxes) {
+				box.setTransform(*transform.get());
+			}
+		}
+		
+		
+		
 		for(entityx::Entity entity : es.entities_with_components(collision, transform))
 		{
 			// Collision with other entitites 
@@ -401,10 +378,8 @@ public:
 				continue;
 			}
 
-			std::vector<BoundingBox> boxes;
+			std::vector<BoundingBox>& boxes = collision->boxes;
 			auto model = entity.component<ModelComponent>();
-			if(model)
-				boxes = *model->mptr->getBoundingBoxes();
 
 			// Collision with terrain
 			glm::vec3 pos = transform.get()->pos;
