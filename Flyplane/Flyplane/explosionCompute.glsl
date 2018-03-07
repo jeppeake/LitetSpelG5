@@ -20,9 +20,14 @@ uniform float life;
 uniform vec3 spawn;
 uniform float explosionRadius;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
+
+
 float rand(float n) { 
 	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
 }
+float noise(vec3 p);
+
+
 void main()
 {
 	uint gid = gl_GlobalInvocationID.x;
@@ -38,7 +43,7 @@ void main()
 		vel.z = rand(gid * 11);
 		vel = normalize(vel);
 
-		Velocities[gid].xyz = 4.0 * explosionRadius * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
+		Velocities[gid].xyz = 4.0 * (explosionRadius + noise(vec3(0))) * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
 	}
 	else
 	{
@@ -49,4 +54,31 @@ void main()
 		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 0.3);
 	}
 	Lives[gid] += dt;
+}
+
+
+float mod289(float x){return x - floor(x / 289.0) * 289.0;}
+vec4 mod289(vec4 x){return x - floor(x / 289.0) * 289.0;}
+vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
+
+float noise(vec3 p){
+    vec3 a = floor(p);
+    vec3 d = p - a;
+    d = d * d * (3.0 - 2.0 * d);
+
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy);
+    vec4 k2 = perm(k1.xyxy + b.zzww);
+
+    vec4 c = k2 + a.zzzz;
+    vec4 k3 = perm(c);
+    vec4 k4 = perm(c + 1.0);
+
+    vec4 o1 = fract(k3 / 41.0);
+    vec4 o2 = fract(k4 / 41.0);
+
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+    return o4.y * d.y + o4.x * (1.0 - d.y) - 1.0;
 }

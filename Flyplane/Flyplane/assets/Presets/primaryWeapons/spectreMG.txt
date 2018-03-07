@@ -14,7 +14,7 @@ speed
 mass
 0.2
 cooldown
-0.005
+0.01
 scale
 1.0
 projscale
