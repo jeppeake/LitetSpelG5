@@ -7,7 +7,10 @@
 
 PlayerSystem::PlayerSystem()
 {
-	
+	warningSound.setRelativeToListener(true);
+	warningSound.setPosition(0, 0, 0);
+	warningSound.setVolume(25);
+	warningSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("warning"));
 }
 void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta dt)
 {
@@ -18,11 +21,14 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 	ComponentHandle<Target> target;
 	for (Entity entity : es.entities_with_components(physics, transform, player, flight, target)) {
 		if(entity.component<Target>()->is_targeted) {
-			//std::cout << "GO EVASIVE!\n";'
+			//std::cout << "GO EVASIVE!\n";
 			Renderer::getRenderer().setTargeted(true);
+			if (warningSound.getStatus() != warningSound.Playing)
+				warningSound.play();
 		}
 		else {
 			Renderer::getRenderer().setTargeted(false);
+			warningSound.stop();
 		}
 		auto mv = Input::mouseMov();
 

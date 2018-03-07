@@ -88,13 +88,21 @@ public:
 				}
 			}
 
-
 			//s.sound.setPosition(t.pos.x, t.pos.y, t.pos.z);
 			sf::Listener::setPosition(t.pos.x, t.pos.y, t.pos.z);
 			glm::vec3 vec = glm::toMat3(t.orientation) * glm::vec3(0.0, 0.0, 1.0);
 			sf::Listener::setDirection(vec.x, vec.y, vec.z);
 			vec = glm::toMat3(t.orientation) * glm::vec3(0.0, 1.0, 0.0);
 			sf::Listener::setUpVector(vec.x, vec.y, vec.z);
+		}
+
+		if (Input::isKeyPressed(GLFW_KEY_M)) {
+			sf::Listener::setGlobalVolume(sf::Listener::getGlobalVolume() + 1);
+			std::cout << "Volume: " << sf::Listener::getGlobalVolume() << std::endl;
+		}
+		if (Input::isKeyPressed(GLFW_KEY_N)) {
+			sf::Listener::setGlobalVolume(sf::Listener::getGlobalVolume() - 1);
+			std::cout << "Volume: " << sf::Listener::getGlobalVolume() << std::endl;
 		}
 	}
 };

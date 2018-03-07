@@ -50,6 +50,7 @@ struct RenderSystem : public System<RenderSystem> {
 		glm::quat playerOrientation;
 		float hp = 100.f;
 		float speed = 10.f;
+		bool isDead = true;
 		for (Entity entity : es.entities_with_components(player, transform)) {
 			radar.setPlayer(*transform.get());
 			player = entity.component<PlayerComponent>();
@@ -58,7 +59,7 @@ struct RenderSystem : public System<RenderSystem> {
 			playerOrientation = transform.get()->orientation;
 			playerDir = playerOrientation * glm::vec3(0, 0, 1);
 			playerUp = playerOrientation * glm::vec3(0, 1, 0);
-
+			isDead = false;
 
 			ComponentHandle<HealthComponent> hpComponent = entity.component<HealthComponent>();
 			if(hpComponent)
@@ -245,6 +246,7 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			radar.draw((float)dt);
+			Renderer::getRenderer().setDead(isDead);
 			Renderer::getRenderer().RenderGui(hp, playerPos.y, speed, newPos, playerOrientation);
 		}
 		//Renderer::getRenderer().RenderScene();
