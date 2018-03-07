@@ -315,10 +315,12 @@ private:
 		hitSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("tink"));
 		hitSound.setRelativeToListener(true);
 		hitSound.setPosition(0, 0, 0);
+		hitSound.setVolume(50);
 
 		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
 		dropSound.setRelativeToListener(true);
 		dropSound.setPosition(0, 0, 0);
+		dropSound.setVolume(50);
 
 		for (int i = 0; i < 10; i++) {
 			playerHitSounds.emplace_back();

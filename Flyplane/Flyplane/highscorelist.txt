@@ -18,3 +18,5 @@ gab
 gab
 169400
 frukt
+161200
+sdasd

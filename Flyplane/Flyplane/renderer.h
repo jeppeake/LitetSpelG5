@@ -109,6 +109,8 @@ private:
 
 	bool drawShadows = true;
 
+	bool drawClouds = true;
+
 	void Render(Model &model, Transform &trans);
 	void Render(RenderObject& obj);
 
@@ -164,8 +166,14 @@ public:
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
 	void setScore(int points);
 	void setMultiplier(int multiplier);
-
 	void addParticles(Particles* p);
+
+
+	void setDrawClouds(bool drawClouds) {
+		this->drawClouds = drawClouds;
+	}
+
+
 
 
 	void setDrawShadows(bool drawShadows) {
