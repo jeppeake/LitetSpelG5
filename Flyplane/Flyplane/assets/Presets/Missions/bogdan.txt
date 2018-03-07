@@ -5,7 +5,7 @@ spawnenemy
 bogdan.txt
 
 settimer
-40
+100
 
 huntplayerdist
 4000

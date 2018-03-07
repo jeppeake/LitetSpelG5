@@ -1,3 +1,7 @@
+743500
+Laken
+449400
+gurk
 313300
 gab
 297500
@@ -6,6 +10,8 @@ gurk
 gurk
 264300
 gurk
+245600
+Tupolev
 243000
 gurk
 203400
@@ -14,7 +20,3 @@ sdasd
 gab
 182000
 gab
-169400
-frukt
-167500
-Tupolev
