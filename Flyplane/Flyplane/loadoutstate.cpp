@@ -67,6 +67,10 @@ void LoadoutState::updatePreview() {
 		TP.load(this->planePresets[this->selected].turretFiles[i]);
 		Turret turret = TP.getTurret();
 		turret.placement.offset = this->planePresets[this->selected].turretPositions[i];
+		glm::vec3 ori = this->planePresets[this->selected].turretFronts[i];
+		std::cout << ori.x << " : " << ori.y << " : " << ori.z << "\n";
+		turret.placement.orientation = glm::quat(glm::radians(this->planePresets[this->selected].turretOrientations[i]));
+		turret.placement.front = this->planePresets[this->selected].turretFronts[i];
 		turrets.emplace_back(turret);
 	}
 	//secondary load
@@ -96,6 +100,7 @@ void LoadoutState::init() {
 
 	Renderer::getRenderer().setHeightmap(nullptr);
 	Renderer::getRenderer().setDrawShadows(false);
+	Renderer::getRenderer().setDrawClouds(false);
 	ex.systems.system<RenderSystem>()->playing = false;
 
 

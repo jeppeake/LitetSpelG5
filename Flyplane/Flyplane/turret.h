@@ -22,9 +22,10 @@ struct TurretInfo {
 };
 
 struct WeaponInfo {
-	WeaponInfo(glm::vec3 projScale, Model* projModel) : projScale(projScale), projModel(projModel){}
+	WeaponInfo(glm::vec3 projScale, Model* projModel, glm::vec3 projectileOffset) : projScale(projScale), projModel(projModel), projectileOffset(projectileOffset){}
 	glm::vec3 projScale = glm::vec3(1.f);
 	Model* projModel;
+	glm::vec3 projectileOffset = glm::vec3(1.f);
 };
 
 struct Turret {

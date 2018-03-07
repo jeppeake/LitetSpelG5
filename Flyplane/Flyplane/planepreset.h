@@ -18,6 +18,8 @@ public:
 	std::string weapon = "nan";
 	std::vector<std::string> turretFiles;
 	std::vector<glm::vec3> turretPositions;
+	std::vector<glm::vec3> turretOrientations;
+	std::vector<glm::vec3> turretFronts;
 	bool turretWeapon = false;
 	bool preorder = false;
 	PlanePreset() {}

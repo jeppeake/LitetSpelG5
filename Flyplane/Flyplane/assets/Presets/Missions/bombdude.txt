@@ -29,7 +29,7 @@ spawnenemy
 ryss.txt
 
 settimer
-40
+100
 
 huntplayerdist
 1000

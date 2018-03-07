@@ -132,6 +132,9 @@
     <ClCompile Include="preorderstate.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="camerasystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />

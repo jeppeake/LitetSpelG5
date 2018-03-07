@@ -96,6 +96,24 @@ void PlanePreset::load(std::string presetname)
 			std::getline(file, str);
 			Tpos.z = std::stod(str, NULL);
 			turretPositions.push_back(Tpos);
+			//turret orientation
+			glm::vec3 Tori;
+			std::getline(file, str);
+			Tori.x = std::stod(str, NULL);
+			std::getline(file, str);
+			Tori.y = std::stod(str, NULL);
+			std::getline(file, str);
+			Tori.z = std::stod(str, NULL);
+			turretOrientations.push_back(Tori);
+			//turret front
+			glm::vec3 Tfront;
+			std::getline(file, str);
+			Tfront.x = std::stod(str, NULL);
+			std::getline(file, str);
+			Tfront.y = std::stod(str, NULL);
+			std::getline(file, str);
+			Tfront.z = std::stod(str, NULL);
+			turretFronts.push_back(Tfront);
 			continue;
 		}
 		else if (str.compare("description") == 0) {

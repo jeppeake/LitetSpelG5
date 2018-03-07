@@ -136,6 +136,7 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="camerasystem.cpp" />
     <ClCompile Include="crosshair.cpp" />
     <ClCompile Include="enemymarker.cpp" />
     <ClCompile Include="flightsystem.cpp" />

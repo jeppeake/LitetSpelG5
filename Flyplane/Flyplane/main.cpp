@@ -15,7 +15,7 @@
 
 int main(void)
 {	
-	sf::Listener::setGlobalVolume(30);
+	sf::Listener::setGlobalVolume(50);
 
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
