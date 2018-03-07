@@ -119,9 +119,13 @@ Renderer::Renderer() {
 
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
 	scoreTexture.loadTexture("assets/Textures/score.png", 1);
+	plus.loadTexture("assets/Textures/+.png", 1);
 
 	for (int i = 0; i < 10; i++) {
 		numbers[i].loadTexture("assets/Textures/" + to_string(i) + ".png", 1);
+	}
+	for (int i = 0; i < 10; i++) {
+		bNumbers[i].loadTexture("assets/Textures/b" + to_string(i) + ".png", 1);
 	}
 	x.loadTexture("assets/Textures/x.png", 1);
 	ammoTexture.loadTexture("assets/Textures/ammo.png", 1);
@@ -217,13 +221,13 @@ void Renderer::RenderWeapon() {
 
 	glViewport(0, 0, s.x, s.y);
 	//AssetLoader::getLoader().getText()->drawText(std::to_string(weaponAmmo), glm::vec2(s.x - 300, 20), glm::vec3(1, 1, 0), 0.4);
-	glViewport(s.x - 450, 0, 100, 30);
+	glViewport(s.x - 450, 25, 100, 30);
 	renderTexture(ammoTexture, glm::mat4(1));
 	string temp = to_string(weaponAmmo);
 
 	for (int i = 0; i < temp.size(); i++) {
-		glViewport(s.x - 340 + 14 * i, 5, 14, 20);
-		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+		glViewport(s.x - 340 + 14 * i, 30, 14, 20);
+		renderTexture(bNumbers[temp[i] - '0'], glm::mat4(1));
 	}
 	glViewport(0, 0, s.x, s.y);
 }
@@ -404,21 +408,32 @@ void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshai
 	RenderHeightIndicator(height);
 	RenderSpeedometer(speed);
 	auto s = Window::getWindow().size();
-	glViewport(0, s.y - 50, 125, 50);
+	glViewport(0, s.y - 40, 100, 40);
 	renderTexture(scoreTexture, glm::mat4(1));
 
 	string temp = to_string(score);
 
 	for (int i = 0; i < temp.size(); i++) {
-		glViewport(130 + 20 * i, s.y - 40, 20, 30);
+		glViewport(105 + 16 * i, s.y - 32, 16, 24);
 		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
 	}
-	glViewport(20, s.y - 70, 20, 30);
+	if (points > 0) {
+		glViewport(200, s.y - 40, 20, 30);
+		renderTexture(plus, glm::mat4(1));
+		temp = to_string(points);
+
+		for (int i = 0; i < temp.size(); i++) {
+			glViewport(220 + 20 * i, s.y - 40, 20, 30);
+			renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+		}
+	}
+
+	glViewport(10, s.y - 60, 16, 24);
 	renderTexture(x, glm::mat4(1));
 
 	temp = to_string(multiplier);
 	for (int i = 0; i < temp.size(); i++) {
-		glViewport(40 + 22 * i, s.y - 70, 20, 30);
+		glViewport(26 + 16 * i, s.y - 60, 16, 24);
 		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
 	}
 	glViewport(0, 0, s.x, s.y);
@@ -649,6 +664,10 @@ void Renderer::setScore(int points) {
 
 void Renderer::setMultiplier(int multiplier) {
 	this->multiplier = multiplier;
+}
+
+void Renderer::setPoints(int points) {
+	this->points = points;
 }
 
 void Renderer::renderParticles(Particles * p) {

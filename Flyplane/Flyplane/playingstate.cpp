@@ -609,8 +609,13 @@ void PlayingState::update(double dt)
 		ex.systems.update<CameraSystem>(dt);
 		ex.systems.update<RenderSystem>(dt);
 		ex.systems.update<MissionSystem>(dt);
-		if (pointObject.time >  0)
-		AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x / 2.0f - 30.0f, window.y / 2.0f - 100.0f), glm::vec3(1, 1, 0), 0.7);
+
+		if (pointObject.time <= 0) {
+			points += pointObject.points;
+			pointObject.points = 0;
+		}
+		
+		//AssetLoader::getLoader().getText()->drawText("+" + std::to_string(pointObject.points), glm::vec2(window.x * 0.2f, window.y * 0.95f), glm::vec3(1, 1, 0), 1.0);
 	}
 	else {
 		//ex.systems.update<CameraSystem>(dt);
@@ -633,6 +638,7 @@ void PlayingState::update(double dt)
 	Renderer::getRenderer().setScore(points);
 	//AssetLoader::getLoader().getText()->drawText("X" + std::to_string(multiplier), glm::vec2(10, window.y - 80), glm::vec3(0, 1, 0), 0.4);
 	Renderer::getRenderer().setMultiplier(multiplier);
+	Renderer::getRenderer().setPoints(pointObject.points);
 
 	if (Input::isKeyPressed(GLFW_KEY_F5)) {
 		this->changeState(new PlayingState(name));
@@ -676,7 +682,7 @@ void PlayingState::addPoints(int p) {
 		pointObject.points = p * multiplier;
 	}
 	pointObject.time = 0.8;
-	points += pointObject.points;
+	//points += pointObject.points;
 	if (multiplier <= 7)
 		multiplier++;
 	timerMultiplier = 10;
