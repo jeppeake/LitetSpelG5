@@ -416,58 +416,62 @@ void Renderer::RenderScene() {
 }
 
 void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
-	
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
-
-	RenderCrosshair(crosshairPos, orientation);
-	RenderHPBar(hp);
-	RenderHeightIndicator(height);
-	RenderSpeedometer(speed);
 	auto s = Window::getWindow().size();
+	string temp;
+
+	if (!isDead) {
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+	
+		RenderCrosshair(crosshairPos, orientation);
+		RenderHPBar(hp);
+		RenderHeightIndicator(height);
+		RenderSpeedometer(speed);
+	
+		if (points > 0) {
+			glViewport(200, s.y - 40, 20, 30);
+			renderTexture(plus, glm::mat4(1));
+			temp = to_string(points);
+	
+			for (int i = 0; i < temp.size(); i++) {
+				glViewport(220 + 20 * i, s.y - 40, 20, 30);
+				renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+			}
+		}
+	
+		glViewport(10, s.y - 60, 16, 24);
+		renderTexture(x, glm::mat4(1));
+	
+		temp = to_string(multiplier);
+		for (int i = 0; i < temp.size(); i++) {
+			glViewport(26 + 16 * i, s.y - 60, 16, 24);
+			renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+		}
+		if (isTargeted) {
+			glViewport(s.x * 0.5 - 150, s.y * 0.8, 300, 50);
+			renderTexture(warning, glm::mat4(1));
+		}
+	
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
+	
+		//Render weapon
+		if (weaponAmmo)
+			RenderWeapon();
+	
+		if (isOutside)
+			RenderOutsideMessage();
+	}
 	glViewport(0, s.y - 40, 100, 40);
 	renderTexture(scoreTexture, glm::mat4(1));
 
-	string temp = to_string(score);
+	temp = to_string(score);
 
 	for (int i = 0; i < temp.size(); i++) {
 		glViewport(105 + 16 * i, s.y - 32, 16, 24);
 		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
 	}
-	if (points > 0) {
-		glViewport(200, s.y - 40, 20, 30);
-		renderTexture(plus, glm::mat4(1));
-		temp = to_string(points);
-
-		for (int i = 0; i < temp.size(); i++) {
-			glViewport(220 + 20 * i, s.y - 40, 20, 30);
-			renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
-		}
-	}
-
-	glViewport(10, s.y - 60, 16, 24);
-	renderTexture(x, glm::mat4(1));
-
-	temp = to_string(multiplier);
-	for (int i = 0; i < temp.size(); i++) {
-		glViewport(26 + 16 * i, s.y - 60, 16, 24);
-		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
-	}
-	if (isTargeted) {
-		glViewport(s.x * 0.5 - 150, s.y * 0.8, 300, 50);
-		renderTexture(warning, glm::mat4(1));
-	}
 	glViewport(0, 0, s.x, s.y);
-
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-
-	//Render weapon
-	if (weaponAmmo)
-		RenderWeapon();
-
-	if (isOutside)
-		RenderOutsideMessage();
 }
 
 void Renderer::RenderTransparent() {
@@ -714,17 +718,6 @@ void Renderer::RenderParticles() {
 }
 void Renderer::setPoints(int points) {
 	this->points = points;
-}
-
-void Renderer::renderParticles(Particles * p) {
-	if (p->type == WING_TRAIL) {
-		glDisable(GL_LINE_SMOOTH);
-		float width = 1.0f;
-		glLineWidth(width);
-		p->render(particleLineShader, GL_LINES);
-	} else {
-		p->render(particleShader, GL_POINTS);
-	}
 }
 
 /*void Renderer::setCrosshairPos(glm::vec3 pos) {
