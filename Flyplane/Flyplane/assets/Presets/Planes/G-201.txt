@@ -15,6 +15,10 @@ skin
 Brown/gray
 assets/G-201/G-201_TEX.png
 0
+skin
+Zero
+assets/G-201/G-201_Zero_TEX.png
+0
 weppos
 -1.55
 -0.1
