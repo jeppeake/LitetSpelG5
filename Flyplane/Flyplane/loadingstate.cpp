@@ -75,6 +75,7 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/wind1.wav", "wind");
 	AssetLoader::getLoader().loadSound("assets/Sound/drop.wav", "drop");
 	AssetLoader::getLoader().loadSound("assets/Sound/playerhit.wav", "playerhit");
+	AssetLoader::getLoader().loadSound("assets/Sound/bomb-siren.wav", "warning");
 
 	done = true;
 }

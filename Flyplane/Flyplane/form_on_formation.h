@@ -37,7 +37,7 @@ public:
 					com.throttle = glm::pow(glm::clamp(length(pt), 0.f, 1000.f) / 1000.f, 2.f);
 				}
 				//std::cout << com.throttle << "\n";
-				std::cout << glm::length(player.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";
+				//std::cout << glm::length(player.component<Transform>()->pos - AI.component<Transform>()->pos) << "\n";
 			}
 			
 		}

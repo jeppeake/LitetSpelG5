@@ -107,7 +107,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			glm::vec3 textColor = glm::vec3(1, 0, 0);
 
 			if (curMission.type == MISSIONTYPE_DEFEND) {
-				textColor = MARKER_DEFEND;
+				textColor = MARKER_KILL;
 				
 				if (target.valid() && formLeader.valid()) {
 					//win condition
@@ -287,8 +287,15 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					//behaviours.push_back(new Constant_Turn(0));
 
 					//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
-					//behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), entity_p, 0.05f, 500.f));
-					behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
+					if (mi.type == MISSIONTYPE_DEFEND) {
+						behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
+					}
+					if (mi.type == MISSIONTYPE_KILLALL) {
+						plotter.push_back(glm::vec3(0, 0, 0));
+						behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+						behaviours.push_back(new Hunt_Target(2, new Enemy_Close(5000.f), state->entity_p, 0.05f, 500.f));
+					}
+						
 					//behaviours.push_back(new Follow_Target(7,new Always_True(), target));
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					//behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
