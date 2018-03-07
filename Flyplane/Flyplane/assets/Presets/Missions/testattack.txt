@@ -3,7 +3,7 @@
 spawnhouse
 1
 500.4 -500
-hus1
+assets/Presets/Buildings/radome.txt
 1
 
 spawnenemy
@@ -20,10 +20,6 @@ tysk.txt
 
 spawnenemy
 500.4 240 -500
-tysk.txt
-
-spawnenemy
-55.45 250 -500
 tysk.txt
 
 settimer

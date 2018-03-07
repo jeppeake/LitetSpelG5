@@ -1,0 +1,20 @@
+2
+
+spawnenemy
+53.4 1000 -52
+sergei.txt
+
+settimer
+100
+
+huntplayerdist
+7000
+
+firingdistance
+1000
+
+points
+2500
+
+text
+Russian supersoldier, Sergei Ivanov, is pissed off that you killed his komrades, watch out.

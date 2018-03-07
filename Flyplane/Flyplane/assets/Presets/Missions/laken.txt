@@ -1,0 +1,30 @@
+2
+
+spawnenemy
+53.4 1000 -52
+laken_interceptor.txt
+
+makeleader
+
+spawnenemy
+33.4 1000 -52
+laken_interceptor.txt
+
+spawnenemy
+23.4 1000 -72
+laken_interceptor.txt
+
+settimer
+100
+
+huntplayerdist
+7000
+
+firingdistance
+500
+
+points
+5000
+
+text
+Angry rebels in very fast planes has been spotted closing in on your location, eliminate them.

@@ -1,0 +1,9 @@
+assets\Presets\Planes\MIG-212A.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+1
+200
