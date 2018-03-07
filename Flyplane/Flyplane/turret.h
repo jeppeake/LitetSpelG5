@@ -35,6 +35,7 @@ struct Turret {
 	TurretPlacement placement;
 	WeaponInfo weapon;
 	Timer timer;
+	double timeAccum = 0;
 	bool shouldFire = false;
 	bool autoFire = false;
 
