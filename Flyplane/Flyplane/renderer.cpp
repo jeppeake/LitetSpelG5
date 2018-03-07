@@ -118,6 +118,7 @@ Renderer::Renderer() {
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
+	warning.loadTexture("assets/Textures/warning.png", 1);
 	scoreTexture.loadTexture("assets/Textures/score.png", 1);
 	plus.loadTexture("assets/Textures/+.png", 1);
 
@@ -451,6 +452,10 @@ void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshai
 	for (int i = 0; i < temp.size(); i++) {
 		glViewport(26 + 16 * i, s.y - 60, 16, 24);
 		renderTexture(numbers[temp[i] - '0'], glm::mat4(1));
+	}
+	if (isTargeted) {
+		glViewport(s.x * 0.5 - 150, s.y * 0.8, 300, 50);
+		renderTexture(warning, glm::mat4(1));
 	}
 	glViewport(0, 0, s.x, s.y);
 

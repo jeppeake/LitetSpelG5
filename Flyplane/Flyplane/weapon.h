@@ -29,6 +29,7 @@ struct Weapon {
 	bool isMissile = false;
 	bool dissappear = false;
 	Timer timer;
+	double timeAccum = 0;
 	glm::vec3 offset = glm::vec3(1.0,-0.5,0.0);
 	glm::vec3 projScale = glm::vec3(1);
 	glm::vec3 scale = glm::vec3(1);
