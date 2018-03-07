@@ -94,6 +94,9 @@ private:
 
 
 	Texture transparent;
+	Texture warning;
+
+	bool isTargeted = false;
 
 	Texture scoreTexture;
 	Texture numbers[10];
@@ -173,6 +176,9 @@ public:
 	void renderParticles(Particles* p);
 	void addParticles(Particles* p);
 
+	void setTargeted(bool targeted) {
+		isTargeted = targeted;
+	}
 
 	void setDrawClouds(bool drawClouds) {
 		this->drawClouds = drawClouds;
