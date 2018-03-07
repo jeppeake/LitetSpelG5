@@ -699,12 +699,14 @@ void Renderer::RenderParticles() {
 			float width = 1.0f;
 			glLineWidth(width);
 			p->render(particleLineShader, GL_LINES);
-		} else {
+		}
+		else {
 			p->render(particleShader, GL_POINTS);
 		}
 	}
 
 	particles.clear();
+}
 void Renderer::setPoints(int points) {
 	this->points = points;
 }
