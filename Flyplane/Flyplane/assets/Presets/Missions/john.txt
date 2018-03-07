@@ -1,0 +1,20 @@
+2
+
+spawnenemy
+53.4 1000 -52
+john.txt
+
+settimer
+100
+
+huntplayerdist
+7000
+
+firingdistance
+1000
+
+points
+2500
+
+text
+John Frick, an American star pilot, has entered our territory and he's looking for blood. Watch out.

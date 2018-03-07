@@ -1,0 +1,9 @@
+assets\Presets\Planes\Spectre.txt
+assets\Presets\Weapons\missile.txt
+assets\Presets\Weapons\missile.txt
+0
+0
+0
+0
+0
+300
