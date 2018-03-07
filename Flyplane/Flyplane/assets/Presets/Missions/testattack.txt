@@ -27,7 +27,7 @@ spawnenemy
 tysk.txt
 
 settimer
-50
+100
 
 huntplayerdist
 3000
