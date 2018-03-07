@@ -10,6 +10,7 @@ public:
 	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (target.valid()) {
+
 			glm::vec3 aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->primary.at(0).stats.speed, glm::vec3(), dt);
 			glm::vec3 AI_vector = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
 			glm::vec3 AI_position = AI.component<Transform>()->pos;
@@ -17,8 +18,17 @@ public:
 
 			if (glm::length(AI_vector - glm::normalize(aimVector)) < cone && glm::length(aimVector) < distance) {
 				com.fire_primary = true;
-				com.fire_secondary = true;
 			}
+			if (AI.component<Equipment>()->special.size() > 0) {
+				WeaponStats stats = AI.component<Equipment>()->special[AI.component<Equipment>()->selected].stats;
+				//std::cout << stats.speed * stats.lifetime * 0.75f << " : " << glm::length(aimVector) << "\n";
+				if (stats.speed * stats.lifetime * 0.75f > glm::length(aimVector) && glm::length(AI_vector - glm::normalize(aimVector)) < cone) {
+					//std::cout << "FIRING SECONDARY!\n";
+					com.fire_secondary = true;
+				}
+			}
+
+
 			float speed = AI.component<FlightComponent>()->base_speed;
 			closingSpeed = lastDist - glm::length(aimVector);
 			lastDist = glm::length(aimVector);

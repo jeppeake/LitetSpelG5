@@ -8,11 +8,11 @@ ammo
 lifetime
 3
 speed
-350
+300
 mass
 0.05
 cooldown
-0.05
+0.01
 scale
 0.25
 projscale

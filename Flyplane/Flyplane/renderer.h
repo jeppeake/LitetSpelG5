@@ -94,13 +94,19 @@ private:
 
 
 	Texture transparent;
+	Texture warning;
+
+	bool isTargeted = false;
 
 	Texture scoreTexture;
-	int score;
 	Texture numbers[10];
 	Texture x;
+	Texture plus;
+	int score;
 	int multiplier;
+	int points;
 	Texture ammoTexture;
+	Texture bNumbers[10];
 
 	bool isOutside = false;
 	double outsideTime = -1;
@@ -166,8 +172,13 @@ public:
 	void renderTexture(const Texture& texture, const glm::mat4& matrix);
 	void setScore(int points);
 	void setMultiplier(int multiplier);
+	void setPoints(int points);
+	void renderParticles(Particles* p);
 	void addParticles(Particles* p);
 
+	void setTargeted(bool targeted) {
+		isTargeted = targeted;
+	}
 
 	void setDrawClouds(bool drawClouds) {
 		this->drawClouds = drawClouds;
