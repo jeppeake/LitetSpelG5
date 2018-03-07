@@ -8,6 +8,8 @@
 #include "missionmarker.h"
 #include "huntStatic.h"
 
+#include "buildingpreset.h"
+
 #include <iomanip>
 #include <cmath>
 #include <limits>
@@ -217,7 +219,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 				//spawn houses
 				for (HouseInfo house : missions[i].houses) {
 					auto entity = es.create();
-					entity.assign<ModelComponent>(house.model);
+					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(house.preset.name));
+					if (house.preset.explode) {
+						entity.assign<ExplosiveComponenet>(house.preset.explodedamage, house.preset.exploderadius);
+					}
 					glm::vec3 pos = AssetLoader::getLoader().getHeightmap("testmap")->generateHousePos();//glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
 					/*if (house.random) {
 						pos = pos + glm::vec3((rand() % 8000)-4000, 0, (rand() % 8000)-4000);
@@ -239,7 +244,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}
 					target = entity;
 					entity.assign<HouseComponent>();
-					entity.assign<HealthComponent>(300);
+					entity.assign<HealthComponent>(house.preset.health);
 					entity.assign<CollisionComponent>();
 					
 				}
@@ -408,7 +413,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					behaviours.push_back(new Fly_Up(10, new Ground_Close_Front(4.f, 10)));
 					behaviours.push_back(new Avoid_Closest(9, new Entity_Close(40.f)));
 					if (mi.formation) {
-						behaviours.push_back(new Form_On_Formation(6, new Always_True(), formLeader));
+     						behaviours.push_back(new Form_On_Formation(6, new Always_True(), formLeader));
 					}
 
 					if (mi.type == MISSIONTYPE_KILLALL) {

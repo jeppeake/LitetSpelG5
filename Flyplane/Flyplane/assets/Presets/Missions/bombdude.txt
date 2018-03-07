@@ -3,7 +3,7 @@
 spawnhouse
 1
 33.4 -80
-hus1
+assets/Presets/Buildings/radome.txt
 2
 
 spawnenemy

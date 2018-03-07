@@ -14,9 +14,7 @@ gurk
 Tupolev
 243000
 gurk
+220100
+ddasd
 203400
 sdasd
-197900
-gab
-182000
-gab

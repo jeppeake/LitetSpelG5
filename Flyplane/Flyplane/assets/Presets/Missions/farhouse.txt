@@ -3,7 +3,7 @@
 spawnhouse
 1
 500.4 -500
-bunker
+assets/Presets/Buildings/bunker.txt
 1
 
 spawnenemy

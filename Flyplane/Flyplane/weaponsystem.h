@@ -331,7 +331,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				switchT.restart();
 			}
 
-			if (equip->special.size() > 0 && weapon->shouldFire) {
+			if (equip->special.size() > 0 && weapon->shouldFire && weapon->timer.elapsed() > weapon->stats.cooldown) {
 				weapon->shouldFire = false;
 				weapon->timer.restart();
 

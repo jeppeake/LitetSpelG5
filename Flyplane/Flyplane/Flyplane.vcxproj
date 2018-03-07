@@ -133,6 +133,7 @@
     <ClCompile Include="aisystem.cpp" />
     <ClCompile Include="assetloader.cpp" />
     <ClCompile Include="boundingbox.cpp" />
+    <ClCompile Include="buildingpreset.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="backtomenuaction.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
+    <ClInclude Include="buildingpreset.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="ButtonAction.h" />
     <ClInclude Include="buttonhandler.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
+    <ClInclude Include="explosivecomponenet.h" />
     <ClInclude Include="factioncomponents.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />

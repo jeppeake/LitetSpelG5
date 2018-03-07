@@ -1,0 +1,16 @@
+Radome
+
+model
+assets/buildings/Bunker_small/Bunker_small2.fbx
+
+health
+400
+
+explode
+
+exploderadius 
+50
+
+explodedamage
+300
+
