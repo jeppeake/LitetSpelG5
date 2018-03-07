@@ -210,7 +210,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 		}
 		else {
 			//select a random mission
-			int i = 1;//rand() % missions.size();
+			int i = rand() % missions.size();
 			Mission mi = missions[i];
 			curMission = mi;
 			if (timer.elapsed() >= downtime) {
@@ -326,7 +326,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					double hp = std::stod(str);
 					entity.assign<HealthComponent>(hp);
 
-					WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
+					WeaponStats MGstats = WeaponStats(350, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
 					std::vector<Weapon> primary;
 

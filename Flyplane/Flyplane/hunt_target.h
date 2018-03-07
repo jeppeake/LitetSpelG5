@@ -18,6 +18,7 @@ public:
 
 			if (glm::length(AI_vector - glm::normalize(aimVector)) < cone && glm::length(aimVector) < distance) {
 				com.fire_primary = true;
+				//std::cout << distance << "\n";
 			}
 			if (AI.component<Equipment>()->special.size() > 0) {
 				WeaponStats stats = AI.component<Equipment>()->special[AI.component<Equipment>()->selected].stats;

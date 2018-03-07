@@ -76,6 +76,9 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/drop.wav", "drop");
 	AssetLoader::getLoader().loadSound("assets/Sound/playerhit.wav", "playerhit");
 	AssetLoader::getLoader().loadSound("assets/Sound/bomb-siren.wav", "warning");
+	AssetLoader::getLoader().loadSound("assets/Sound/high-def-machine-gun.wav", "HD-MG");
+	AssetLoader::getLoader().loadSound("assets/Sound/mp5-smg.wav", "mp5-smg");
+	AssetLoader::getLoader().loadSound("assets/Sound/shooting-an-mp5.wav", "mp5");
 
 	done = true;
 }
