@@ -1,8 +1,4 @@
-assets\Presets\Planes\laken2.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Planes\G-201.txt
+0
+0
 0

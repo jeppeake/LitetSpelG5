@@ -44,7 +44,9 @@ public:
 			BurstSoundComponent* s = burstSound.get();
 			Transform* t = transform.get();
 
-			s->sound.setPosition(t->pos.x, t->pos.y, t->pos.z);
+			for (auto& sound : s->sounds) {
+				sound.setPosition(t->pos.x, t->pos.y, t->pos.z);
+			}
 			/*if ((Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
 				//s->sound.stop();
 				if (s->sound.getStatus() != s->sound.Playing) {

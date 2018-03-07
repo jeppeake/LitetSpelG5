@@ -12,6 +12,8 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	size_t searchIndex = 0;
 	std::vector<Particles*> pool;
 
+	int numParticles = 10000;
+
 	ComputeShader resetShader;
 	ComputeShader trailShader;
 	ComputeShader explosionShader;
@@ -43,7 +45,7 @@ public:
 		speedShader.create("speedPart.glsl");
 		wingTrailShader.create("wingTrail.glsl");
 		for (int i = 0; i < 40; i++) {
-			pool.push_back(new Particles(5000));
+			pool.push_back(new Particles(numParticles));
 		}
 	}
 
@@ -110,7 +112,7 @@ public:
 		case EXPLOSION:
 			//p->setComputeShader(&explosionShader);
 			//p->setTexture("explosion");
-			p->setSize(p->params.explosion.radius*0.002f);
+			p->setSize(0.02f*glm::sqrt(p->params.explosion.radius));
 			explosionShader.use();
 			if (transform) {
 				explosionShader.uniform("spawn", transform->pos);
@@ -264,7 +266,7 @@ public:
 		else {
 			std::cout << "[WARNING] out of particles in pool, creating new!\n";
 			for (int i = 0; i < 20; i++) {
-				pool.push_back(new Particles(5000));
+				pool.push_back(new Particles(numParticles));
 			}
 			receive(event);
 			/*

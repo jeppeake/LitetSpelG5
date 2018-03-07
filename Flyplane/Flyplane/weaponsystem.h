@@ -24,6 +24,7 @@
 #include "factioncomponents.h"
 #include "particlecomponent.h"
 #include "cameraoncomponent.h"
+#include <SFML\System.hpp>
 
 using namespace entityx;
 
@@ -232,8 +233,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 							if (burstSound) {
 								BurstSoundComponent* s = burstSound.get();
 
-								if (s->sound.getStatus() != s->sound.Playing) {
-									s->sound.play();
+								for (auto& sound : s->sounds) {
+									if (sound.getStatus() != sound.Playing) {
+										sound.play();
+										break;
+									}
 								}
 							}
 						}
@@ -281,13 +285,16 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
 					pweapon->shouldFire = true;
 					//std::cout << "FIRING!\n";
+				} else if (player) {
+					pweapon->shouldFire = false;
 				}
-				if (pweapon->shouldFire && pweapon->stats.ammo > 0) {
+				if(pweapon->timeAccum < pweapon->stats.cooldown)
 					pweapon->timeAccum += dt;
 
-					while (pweapon->timeAccum > pweapon->stats.cooldown && pweapon->stats.ammo > 0) {
+				if (pweapon->shouldFire && pweapon->stats.ammo > 0) {
+
+					while (pweapon->timeAccum > 0 && pweapon->stats.ammo > 0) {
 						
-						pweapon->timeAccum -= pweapon->stats.cooldown;
 						pweapon->shouldFire = false;
 						pweapon->timer.restart();
 
@@ -305,9 +312,23 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 							if (burstSound) {
 								BurstSoundComponent* s = burstSound.get();
 
+								bool found = false;
+								for (auto& sound : s->sounds) {
+									if (sound.getStatus() != sound.Playing) {
+										sound.play();
+										sound.setPlayingOffset(sf::seconds(pweapon->timeAccum));
+										found = true;
+										break;
+									}
+								}
+								if (!found) {
+									std::cout << "Could not find non playing sound for weapon!\n";
+								}
+								/*
 								if (s->sound.getStatus() != s->sound.Playing) {
 									s->sound.play();
 								}
+								*/
 							}
 
 							auto cameraOn = entity.component<CameraOnComponent>();
@@ -316,6 +337,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 							}
 						}
 
+						pweapon->timeAccum -= pweapon->stats.cooldown;
 					}
 				}
 			}
@@ -497,7 +519,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity explosion = es.create();
 				explosion.assign<ExplosionComponent>(missile->explodeDamage, missile->explodeRadius);
 				explosion.assign<Transform>(trans->pos);
-				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500, 1);
+				explosion.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), trans->pos, true, 500, 1, 1);
 				auto handle = explosion.assign<ParticleComponent>();
 				ParticleParameters params;
 				params.effectLength = 3.f;

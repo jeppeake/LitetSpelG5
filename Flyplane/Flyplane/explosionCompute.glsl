@@ -28,6 +28,12 @@ float rand(float n) {
 float noise(vec3 p);
 
 
+const vec3 flash = vec3(1.0, 0.9, 0.1);
+const vec3 fire = vec3(1.0, 0.1, 0.0);
+const vec3 smoke = vec3(0.1);
+
+const float every = 30;
+
 void main()
 {
 	uint gid = gl_GlobalInvocationID.x;
@@ -35,7 +41,8 @@ void main()
 	{
 		Positions[gid].xyz = spawn + 10 * normalize(vec3(rand(gid * 2), rand(gid * 3), rand(gid * 5)));
 		Lives[gid] = 0;
-		Colors[gid].xyz = vec3(1.0, 0.5, 0.0);
+
+		
 
 		vec3 vel;
 		vel.x = rand(gid * 17);
@@ -43,15 +50,32 @@ void main()
 		vel.z = rand(gid * 11);
 		vel = normalize(vel);
 
-		Velocities[gid].xyz = 4.0 * (explosionRadius + noise(vec3(0))) * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
+		if(mod(gid, every) < 1) {
+			Colors[gid].xyz = smoke;
+		} else {
+			vec3 mixer;
+			mixer.x = abs(noise(vec3(12*vel+ vec3(20))));
+			mixer.y = abs(noise(vec3(12*vel+ vec3(-10))));
+			mixer.z = abs(noise(vec3(12*vel + vec3(10))));
+			mixer = normalize(pow(normalize(mixer), vec3(3)));
+			Colors[gid].xyz = mixer.x * flash + mixer.y * fire + mixer.z * smoke;
+		}
+
+		
+		Velocities[gid].xyz = 100.0 * (sqrt(explosionRadius) * abs(noise(vec3(12*vel)))) * pow(rand(gid * 13)*0.5+0.5, 0.3)* vel;
 	}
 	else
 	{
-		Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.01, dt));
+		if(mod(gid, every) < 1) {
+			Velocities[gid].xyz += vec3(0, -9.82, 0) * dt;
+			Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.8, dt));
+		} else {
+			Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.01, dt));
+		}
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].rgb = mix(Colors[gid].rgb, vec3(0.3), pow(smoothstep(0, life, Lives[gid]), 1));
-		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 0.3);
+		Colors[gid].rgb = mix(Colors[gid].rgb, smoke, pow(smoothstep(0, 2*life, Lives[gid]), 1));
+		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 1);
 	}
 	Lives[gid] += dt;
 }
