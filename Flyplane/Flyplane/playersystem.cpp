@@ -21,7 +21,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 	ComponentHandle<Target> target;
 	for (Entity entity : es.entities_with_components(physics, transform, player, flight, target)) {
 		if(entity.component<Target>()->is_targeted) {
-			//std::cout << "GO EVASIVE!\n";'
+			//std::cout << "GO EVASIVE!\n";
 			Renderer::getRenderer().setTargeted(true);
 			if (warningSound.getStatus() != warningSound.Playing)
 				warningSound.play();
