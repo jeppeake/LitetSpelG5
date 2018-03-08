@@ -248,17 +248,17 @@ public:
 
 
 		case FLARE:
-			p->setSize(0.05);
+			p->setSize(0.01);
 			flareShader.use();
 			if (transform) {
-				flareShader.uniform("spawn", transform->pos + glm::vec3(0, 0, 50));
+				flareShader.uniform("spawn", transform->pos);
 
 				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
 			if (physics) {
 				flareShader.uniform("velocity", physics->velocity);
 			}
-			flareShader.uniform("life", 10.f);
+			flareShader.uniform("time", (float)p->t.elapsed());
 			flareShader.uniform("dt", float(dt));
 			break;
 

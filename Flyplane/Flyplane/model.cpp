@@ -17,14 +17,14 @@ Model::Mesh::Mesh(aiMesh * mesh)
 	name = mesh->mName.C_Str();
 
 
-	std::cout << "\t\t[DEBUG] parsing mesh: '" << name << "'\n";
+	std::cout << "\t\t[DEBUG] parsing mesh: '" << name;
 
 	is_bb = false;
 	if (name.substr(0, 3) == "BB_") {
-		//std::cout << mesh->mNumVertices << "\n";
+		std::cout << "', Is BB";
 		is_bb = true;
 	}
-
+	std::cout << "\n";
 
 	material_index = mesh->mMaterialIndex;
 
