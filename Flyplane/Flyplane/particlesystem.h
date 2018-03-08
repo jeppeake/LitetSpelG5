@@ -104,6 +104,7 @@ public:
 
 				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
+			trailShader.uniform("color", glm::vec3(0.96));
 			trailShader.uniform("life", 10.f);
 			trailShader.uniform("dt", float(dt));
 			break;
@@ -227,6 +228,22 @@ public:
 			wingTrailShader.uniform("respawnID3", (p->params.wingTrail.respawnCounter + 1) % (int)p->numParticles);
 
 			break;
+
+
+		case MISSILE_TRAIL:
+			p->setSize(0.1);
+			trailShader.use();
+			if (transform) {
+				trailShader.uniform("spawn", transform->pos);
+				trailShader.uniform("direction", transform->orientation * glm::vec3(0, 0, -1));
+
+				p->params.distFromCam = length(transform->pos - camTrans.pos);
+			}
+			trailShader.uniform("color", glm::vec3(0.7));
+			trailShader.uniform("life", 10.f);
+			trailShader.uniform("dt", float(dt));
+			break;
+
 
 		default:
 			// plz no

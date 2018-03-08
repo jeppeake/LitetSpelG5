@@ -64,7 +64,7 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 				}
 				ParticleParameters p;
 				p.effectLength = 3.f;
-				p.explosion.radius = 50.f;
+				p.explosion.radius = 20.f;
 				events.emit<AddParticleEvent>(EXPLOSION, handle, p);
 				events.emit<RemoveParticleEvent>(TRAIL, handle);
 				events.emit<RemoveParticleEvent>(ENGINE_TRAIL, handle);

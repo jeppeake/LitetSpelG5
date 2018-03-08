@@ -38,6 +38,11 @@ void BuildingPreset::load(std::string path)
 			explodedamage = std::stod(str);
 			continue;
 		}
+		if (str.compare("scale") == 0) {
+			std::getline(file, str);
+			scale = std::stod(str);
+			continue;
+		}
 		if (str.compare("explode") == 0) {
 			explode = true;
 			continue;

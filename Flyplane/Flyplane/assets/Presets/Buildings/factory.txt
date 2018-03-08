@@ -1,4 +1,4 @@
-Bunker
+Factory
 
 model
 assets/buildings/Bunker_small/Bunker_small2.fbx
@@ -15,4 +15,4 @@ explodedamage
 300
 
 scale
-4
+20
