@@ -19,6 +19,7 @@ uniform float dt;
 uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
+uniform vec3 color;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 float rand(float n);
@@ -30,6 +31,8 @@ void main()
 	{
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
+		Colors[gid].rgb = color;
+		Colors[gid].a = 1;
 	}
 	else
 	{
