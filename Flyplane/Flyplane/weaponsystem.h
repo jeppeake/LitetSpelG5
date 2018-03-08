@@ -94,7 +94,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 		missile.assign<CollisionComponent>();
 		missile.assign<SoundComponent>(*AssetLoader::getLoader().getSoundBuffer("missile"), 100);
 		auto handle = missile.assign<ParticleComponent>();
-		em.emit<AddParticleEvent>(TRAIL, handle);
+		em.emit<AddParticleEvent>(MISSILE_TRAIL, handle);
 	}
 
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
@@ -235,6 +235,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 								for (auto& sound : s->sounds) {
 									if (sound.getStatus() != sound.Playing) {
+										sound.setPlayingOffset(sf::seconds(equip->turrets.at(i).timeAccum));
 										sound.play();
 										break;
 									}
