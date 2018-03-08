@@ -1,0 +1,20 @@
+2
+
+spawnenemy
+53.4 1000 -52
+lynx.txt
+
+settimer
+100
+
+huntplayerdist
+7000
+
+firingdistance
+500
+
+points
+1000
+
+text
+Don Von Boilon, the french ace, has decided to join the fight, take care of him. He will probably surrender anyway.

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include "assetloader.h"
+#include "buildingpreset.h"
 
 #define CONDITION_NONE 0
 #define CONDITION_DESTROY 1
@@ -24,7 +25,7 @@ struct EnemyInfo {
 
 struct HouseInfo {
 	glm::vec3 pos;
-	Model* model;
+	BuildingPreset preset;
 	unsigned int condition; //0 = nothing, 1 = destroy, 2 = defend
 	bool random;
 };
@@ -88,7 +89,7 @@ struct Mission {
 				ss >> temp.pos.x;
 				ss >> temp.pos.z;
 				std::getline(f, str);
-				temp.model = AssetLoader::getLoader().getModel(str);
+				temp.preset.load(str);
 				std::getline(f, str);
 				temp.condition = std::stoi(str);
 				houses.push_back(temp);

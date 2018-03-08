@@ -95,7 +95,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib\debug;$(SolutionDir)lib\entityx\lib\Debug;$(SolutionDir)lib\sfml\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx-d.lib;sfml-audio-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,13 +126,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\assimp\lib;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib\release;$(SolutionDir)lib\entityx\lib\Release;$(SolutionDir)lib\sfml\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;glfw3.lib;opengl32.lib;glew32.lib;glew32s.lib;assimp-vc140-mt.lib;entityx.lib;sfml-audio.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aisystem.cpp" />
     <ClCompile Include="assetloader.cpp" />
     <ClCompile Include="boundingbox.cpp" />
+    <ClCompile Include="buildingpreset.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="buttonhandler.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="backtomenuaction.h" />
     <ClInclude Include="behaviour.h" />
     <ClInclude Include="boundingbox.h" />
+    <ClInclude Include="buildingpreset.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="ButtonAction.h" />
     <ClInclude Include="buttonhandler.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
     <ClInclude Include="enginestate.h" />
+    <ClInclude Include="explosivecomponenet.h" />
     <ClInclude Include="factioncomponents.h" />
     <ClInclude Include="flightcomponent.h" />
     <ClInclude Include="flightsystem.h" />

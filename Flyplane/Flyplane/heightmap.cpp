@@ -247,9 +247,11 @@ double Heightmap::heightAt(glm::vec3 _pos) {
 
 	groundPos.y = result;
 
-	float currWaterHeight = heightOfWater(groundPos);
-	if (result <= currWaterHeight) {
-		result = currWaterHeight;
+	if (result <= waterHeight) {
+		float currWaterHeight = heightOfWater(groundPos);
+		if (result <= currWaterHeight) {
+			result = currWaterHeight;
+		}
 	}
 	
 	return result;
@@ -832,6 +834,7 @@ bool Heightmap::isWater(glm::vec3 _pos) {
 
 	bool result = false;
 
+	
 	float currWaterHeight = heightOfWater(groundPos);
 	if (heightAt <= currWaterHeight) {
 		result = true;

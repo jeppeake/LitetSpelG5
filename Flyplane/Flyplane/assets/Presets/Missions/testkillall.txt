@@ -18,7 +18,7 @@ settimer
 100
 
 huntplayerdist
-1000
+4000
 
 firingdistance
 500

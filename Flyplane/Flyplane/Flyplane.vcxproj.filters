@@ -87,12 +87,6 @@
     <ClCompile Include="namestate.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="planepreset.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="weaponpreset.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="radar.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -134,6 +128,15 @@
     </ClCompile>
     <ClCompile Include="camerasystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="weaponpreset.cpp">
+      <Filter>Presets</Filter>
+    </ClCompile>
+    <ClCompile Include="planepreset.cpp">
+      <Filter>Presets</Filter>
+    </ClCompile>
+    <ClCompile Include="buildingpreset.cpp">
+      <Filter>Presets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -354,12 +357,6 @@
     <ClInclude Include="presetloader.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="weaponpreset.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="planepreset.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="changeplaneaction.h">
       <Filter>GUI\Actions</Filter>
     </ClInclude>
@@ -480,12 +477,6 @@
     <ClInclude Include="globaltimer.h">
       <Filter>UTILS</Filter>
     </ClInclude>
-    <ClInclude Include="turretpreset.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="turretpreset.cpp">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="lifetimecomponent.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
@@ -497,6 +488,24 @@
     </ClInclude>
     <ClInclude Include="openpreorderaction.h">
       <Filter>GUI\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="weaponpreset.h">
+      <Filter>Presets</Filter>
+    </ClInclude>
+    <ClInclude Include="turretpreset.h">
+      <Filter>Presets</Filter>
+    </ClInclude>
+    <ClInclude Include="turretpreset.cpp">
+      <Filter>Presets</Filter>
+    </ClInclude>
+    <ClInclude Include="planepreset.h">
+      <Filter>Presets</Filter>
+    </ClInclude>
+    <ClInclude Include="buildingpreset.h">
+      <Filter>Presets</Filter>
+    </ClInclude>
+    <ClInclude Include="explosivecomponenet.h">
+      <Filter>Systems\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -666,6 +675,9 @@
     </Filter>
     <Filter Include="Missions">
       <UniqueIdentifier>{453888e5-478d-46e4-9d2d-8f2b83f85b2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Presets">
+      <UniqueIdentifier>{b326433e-f822-49c9-9dd4-80fd7049014b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

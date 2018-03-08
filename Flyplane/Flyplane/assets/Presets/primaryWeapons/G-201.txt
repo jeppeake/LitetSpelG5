@@ -10,9 +10,9 @@ lifetime
 speed
 300
 mass
-0.05
+0.1
 cooldown
-0.01
+0.03
 scale
 0.25
 projscale

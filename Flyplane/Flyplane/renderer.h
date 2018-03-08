@@ -110,6 +110,7 @@ private:
 
 	bool isOutside = false;
 	double outsideTime = -1;
+	bool isDead;
 
 	glm::vec3 sunDir;
 
@@ -173,7 +174,11 @@ public:
 	void setScore(int points);
 	void setMultiplier(int multiplier);
 	void setPoints(int points);
-	void renderParticles(Particles* p);
+
+	void setDead(bool isDead) {
+		this->isDead = isDead;
+	}
+
 	void addParticles(Particles* p);
 
 	void setTargeted(bool targeted) {

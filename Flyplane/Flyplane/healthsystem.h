@@ -4,6 +4,7 @@
 #include <entityx\Entity.h>
 #include <iostream>
 #include "pointcomponent.h"
+#include "explosivecomponenet.h"
 #include "playingstate.h"
 
 using namespace entityx;
@@ -41,6 +42,19 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 					if(!entity.has_component<LifeTimeComponent>())
 						entity.assign<LifeTimeComponent>(1.5f);
 					explosionSound.play();
+				}
+
+				if (entity.has_component<ExplosiveComponenet>()) {
+					ComponentHandle<ExplosiveComponenet> explosive = entity.component<ExplosiveComponenet>();
+					Entity boom = es.create();
+					boom.assign<ExplosionComponent>(explosive->explodeDamage, explosive->explodeRadius);
+					boom.assign<Transform>(entity.component<Transform>()->pos + glm::vec3(0,100,0));
+					boom.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), entity.component<Transform>()->pos + glm::vec3(0, 100, 0), true, 500, 1);
+					auto handle = boom.assign<ParticleComponent>();
+					ParticleParameters params;
+					params.effectLength = 3.f;
+					params.explosion.radius = explosive->explodeRadius;
+					events.emit<AddParticleEvent>(EXPLOSION, handle, params);
 				}
 
 				auto handle = entity.component<ParticleComponent>();

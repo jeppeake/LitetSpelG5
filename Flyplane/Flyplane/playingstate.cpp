@@ -348,7 +348,8 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
-	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
+	//AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
+	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_shorter.wav", "machinegunShort");
 
 
 	//get all assets (not really needed, can be used inline)
@@ -552,8 +553,8 @@ void PlayingState::update(double dt)
 				burstSound = entity.component<BurstSoundComponent>();
 
 				BurstSoundComponent* s = burstSound.get();
-
-				s->sound.stop();
+				for(auto& sound : s->sounds)
+					sound.stop();
 			}
 		}
 		else {
@@ -675,7 +676,8 @@ void PlayingState::gameOver() {
 		burstSound = entity.component<BurstSoundComponent>();
 		BurstSoundComponent* s = burstSound.get();
 
-		s->sound.pause();
+		for(auto& sound : s->sounds)
+			sound.pause();
 	}
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();

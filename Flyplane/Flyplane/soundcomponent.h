@@ -15,17 +15,20 @@ struct SoundComponent {
 };
 
 struct BurstSoundComponent {
-	BurstSoundComponent(sf::SoundBuffer& buffer, glm::vec3 pos = glm::vec3(0), bool shouldPlay = false, float minDistance = 50.f, float attenuation = 1.1f) {
-		sound.setBuffer(buffer);
-		sound.setLoop(false);
-		sound.setMinDistance(minDistance);
-		sound.setAttenuation(attenuation);
-		sound.setVolume(50);
-		sound.setPosition(pos.x, pos.y, pos.z);
+	BurstSoundComponent(sf::SoundBuffer& buffer, glm::vec3 pos = glm::vec3(0), bool shouldPlay = false, float minDistance = 50.f, float attenuation = 1.1f, size_t numSounds = 5) {
+		for (int i = 0; i < numSounds; i++) {
+			sounds.emplace_back();
+			sounds.back().setBuffer(buffer);
+			sounds.back().setLoop(false);
+			sounds.back().setMinDistance(minDistance);
+			sounds.back().setAttenuation(attenuation);
+			sounds.back().setVolume(50);
+			sounds.back().setPosition(pos.x, pos.y, pos.z);
 		
-		if(shouldPlay)
-			sound.play();
+			if(shouldPlay)
+				sounds.back().play();
+		}
 	}
 
-	sf::Sound sound;
+	std::vector<sf::Sound> sounds;
 };
