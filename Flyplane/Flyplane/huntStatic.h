@@ -18,6 +18,13 @@ public:
 			if (glm::length(AI_vector - glm::normalize(aimVector)) < cone && glm::length(aimVector) < distance) {
 				com.fire_primary = true;
 			}
+			if (AI.component<Equipment>()->special.size() > 0) {
+				WeaponStats stats = AI.component<Equipment>()->special[AI.component<Equipment>()->selected].stats;
+				if (stats.speed * stats.lifetime * 0.75f > glm::length(aimVector) && glm::length(AI_vector - glm::normalize(aimVector)) < cone) {
+					std::cout << "FIRING SECONDARY!\n";
+					com.fire_secondary = true;
+				}
+			}
 			com.steering = SAIB::flyTo(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, aimPos);
 		}
 		else {

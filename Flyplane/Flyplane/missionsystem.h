@@ -311,6 +311,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("machinegun"));
 
 					std::vector<Weapon> weapons;
+					std::vector<Weapon> primary;
+					std::vector<Turret> turrets;
 
 					for (int i = 0; i < pp.wepPos.size(); i++) {
 						std::getline(file, str);
@@ -326,6 +328,35 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 						}
 					}
+
+					if (pp.weapon != "nan") {
+						if (pp.turretWeapon) {//turret
+							TurretPreset TP;
+							TP.load(pp.weapon);
+							//std::cout << "Loaded: " << pp.weapon << "\n";
+							turrets.emplace_back(TP.getTurret());
+						}
+						else {//primary
+							WeaponPreset PW;
+							PW.load(pp.weapon);
+							//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+							WeaponStats stats = WeaponStats(PW.ammo, PW.lifetime, PW.speed, PW.mass, PW.cooldown, PW.infAmmo);
+							primary.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+						}
+					}
+
+
+					//turret load
+					for (int i = 0; i < pp.turretFiles.size(); i++) {
+						TurretPreset TP;
+						TP.load(pp.turretFiles[i]);
+						Turret turret = TP.getTurret();
+						turret.placement.offset = pp.turretPositions[i];
+						turret.placement.orientation = glm::quat(glm::radians(pp.turretOrientations[i]));
+						turret.placement.front = pp.turretFronts[i];
+						turrets.emplace_back(turret);
+					}
+
 					std::getline(file, str);
 					std::getline(file, str);
 					double hp = std::stod(str);
@@ -333,11 +364,10 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					WeaponStats MGstats = WeaponStats(350, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
-					std::vector<Weapon> primary;
 
-					primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+					//primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 					
-					entity.assign<Equipment>(primary, weapons);
+					entity.assign<Equipment>(primary, weapons, turrets);
 					entity.assign<PointComponent>(100);
 					formLeader = entity;
 					enemyList.push_back(entity);
@@ -425,6 +455,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					entity.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("machinegun"));
 
 					std::vector<Weapon> weapons;
+					std::vector<Turret> turrets;
+					std::vector<Weapon> primary;
 
 					for (int i = 0; i < pp.wepPos.size(); i++) {
 						std::getline(file, str);
@@ -440,16 +472,34 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 							weapons.emplace_back(stats, AssetLoader::getLoader().getModel(wp.name), AssetLoader::getLoader().getModel(wp.projModel), pp.wepPos[i] + wp.extraOffset, glm::vec3(wp.scale), glm::vec3(wp.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), wp.isMissile, wp.dissappear);
 						}
 					}
-					std::vector<Turret> turrets;
+
+					if (pp.weapon != "nan") {
+						if (pp.turretWeapon) {//turret
+							TurretPreset TP;
+							TP.load(pp.weapon);
+							//std::cout << "2Loaded: " << pp.weapon << "\n";
+							turrets.emplace_back(TP.getTurret());
+						}
+						else {//primary
+							WeaponPreset PW;
+							PW.load(pp.weapon);
+							//std::cout << "Loaded: " << this->planePresets[this->selected].weapon << "\n";
+							WeaponStats stats = WeaponStats(PW.ammo, PW.lifetime, PW.speed, PW.mass, PW.cooldown, PW.infAmmo);
+							primary.emplace_back(stats, AssetLoader::getLoader().getModel(PW.name), AssetLoader::getLoader().getModel(PW.projModel), PW.extraOffset, glm::vec3(PW.scale), glm::vec3(PW.projScale), glm::angleAxis(0.f, glm::vec3(0, 0, 1)), false, false);
+						}
+					}
+
+
 					//turret load
 					for (int i = 0; i < pp.turretFiles.size(); i++) {
 						TurretPreset TP;
 						TP.load(pp.turretFiles[i]);
 						Turret turret = TP.getTurret();
 						turret.placement.offset = pp.turretPositions[i];
+						turret.placement.orientation = glm::quat(glm::radians(pp.turretOrientations[i]));
+						turret.placement.front = pp.turretFronts[i];
 						turrets.emplace_back(turret);
 					}
-
 
 					std::getline(file, str);
 					std::getline(file, str);
@@ -458,9 +508,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 
 					WeaponStats MGstats = WeaponStats(10000, 3, 35000, 0.2, 0.02f, true);
 					WeaponStats rocketpodstat = WeaponStats(14, 100, 700, 0.2, 0.5f, false);
-					std::vector<Weapon> primary;
 
-					primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+					//primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 					entity.assign<Equipment>(primary, weapons, turrets);
 					entity.assign<PointComponent>(100);
 					enemyList.push_back(entity);
