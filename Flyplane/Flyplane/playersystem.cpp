@@ -152,27 +152,28 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		/***********
 		** flares **
 		***********/
+		player->flareTime += dt;
 		if (Input::isKeyPressed(GLFW_KEY_F) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) {
 			
-			if (player->flareTimer.elapsed() > player->coolDown) {
-				player->flareTimer.restart();
+			if (player->flareTime > player->coolDown) {
+				player->flareTime = 0;
 				player->flareAccum = 0;
 				player->flareActive = true;
 			}
 		}
-		if (player->flareTimer.elapsed() > 2.f) {
+		if (player->flareTime  > 1.f) {
 			player->flareActive = false;
 		}
 
 		if (player->flareActive) {
 			player->flareAccum += dt;
 
-			float emitCoolDown = 1.0 / 5.0;
+			float emitCoolDown = 1.0 / 10.0;
 
 			while (player->flareAccum > 0) {
 
-				spawnFlare(es.create(), glm::vec3(1, 2, 0), transform.get(), physics.get(), events);
-				spawnFlare(es.create(), glm::vec3(-1, 2, 0), transform.get(), physics.get(), events);
+				spawnFlare(es.create(), glm::vec3(1, 2, -2), transform.get(), physics.get(), events);
+				spawnFlare(es.create(), glm::vec3(-1, 2, -2), transform.get(), physics.get(), events);
 
 				player->flareAccum -= emitCoolDown;
 			}
@@ -191,6 +192,8 @@ void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* phys
 
 	flare.assign<Physics>(1, 1, vel, glm::vec3(0));
 	flare.assign<Target>(15.0, FACTION_PLAYER);
+
+	flare.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("flare"), transform->pos, true);
 
 	auto handle = flare.assign<ParticleComponent>();
 

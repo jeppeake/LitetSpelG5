@@ -19,6 +19,8 @@
 using namespace entityx;
 
 struct PlayerSystem : public System<PlayerSystem> {
+	std::vector<sf::Sound> flareSounds;
+
 	sf::Sound warningSound;
 	Particles *S;
 	PlayerSystem();

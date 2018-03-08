@@ -80,6 +80,7 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/high-def-machine-gun.wav", "HD-MG");
 	AssetLoader::getLoader().loadSound("assets/Sound/mp5-smg.wav", "mp5-smg");
 	AssetLoader::getLoader().loadSound("assets/Sound/shooting-an-mp5.wav", "mp5");
+	AssetLoader::getLoader().loadSound("assets/Sound/flare.wav", "flare");
 
 	done = true;
 }
