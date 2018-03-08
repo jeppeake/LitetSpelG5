@@ -73,7 +73,8 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadSound("assets/Sound/explosion.wav", "explosion");
 	AssetLoader::getLoader().loadSound("assets/Sound/newTink.wav", "tink");
 	AssetLoader::getLoader().loadSound("assets/Sound/wind1.wav", "wind");
-	AssetLoader::getLoader().loadSound("assets/Sound/drop.wav", "drop");
+	AssetLoader::getLoader().loadSound("assets/Sound/ammodrop.wav", "ammodrop");
+	AssetLoader::getLoader().loadSound("assets/Sound/healthdrop.wav", "healthdrop");
 	AssetLoader::getLoader().loadSound("assets/Sound/playerhit.wav", "playerhit");
 	AssetLoader::getLoader().loadSound("assets/Sound/bomb-siren.wav", "warning");
 	AssetLoader::getLoader().loadSound("assets/Sound/high-def-machine-gun.wav", "HD-MG");
