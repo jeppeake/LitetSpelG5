@@ -11,6 +11,8 @@ public:
 		Commands com;
 		if (target.valid()) {
 			glm::vec3 aimPos;
+			bool turretWeapon = false;
+			int  turrPos = 0;
 			if (AI.component<Equipment>()->primary.size() != 0) {
 				aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->primary.at(0).stats.speed, glm::vec3(), dt);
 			}
@@ -18,27 +20,29 @@ public:
 				for (int i = 0; i < AI.component<Equipment>()->turrets.size(); i++) {
 					if (!AI.component<Equipment>()->turrets.at(i).autoFire) {
 						aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->turrets.at(i).stats.speed, glm::vec3(), dt);
+						turretWeapon = true;
+						turrPos = i;
 						break;
 					}
 				}
 			}
 			else {
-				std::cout << "[Warning] Cannot calculate interception: no weapon on aircraft!\n";
+				std::cout << "[Warning] Cannot calculate interdiction: no weapon on aircraft!\n";
 				return com;
 			}
 			glm::vec3 AI_vector = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
 			glm::vec3 AI_position = AI.component<Transform>()->pos;
 			glm::vec3 aimVector = aimPos - AI_position;
 
-			if (glm::length(AI_vector - glm::normalize(aimVector)) < cone && glm::length(aimVector) < distance) {
+			if (!turretWeapon && glm::length(AI_vector - glm::normalize(aimVector)) < cone && glm::length(aimVector) < distance) {
 				com.fire_primary = true;
-				//std::cout << distance << "\n";
+			}
+			else if (turretWeapon && glm::length((AI.component<Transform>()->orientation * AI.component<Equipment>()->turrets.at(turrPos).getGunOrientation() * glm::vec3(0.f, 0.f, 1.f)) - glm::normalize(aimVector)) < cone && glm::length(aimVector) < AI.component<Equipment>()->turrets.at(turrPos).info.range) {
+				com.fire_primary = true;
 			}
 			if (AI.component<Equipment>()->special.size() > 0) {
 				WeaponStats stats = AI.component<Equipment>()->special[AI.component<Equipment>()->selected].stats;
-				//std::cout << stats.speed * stats.lifetime * 0.75f << " : " << glm::length(aimVector) << "\n";
 				if (stats.speed * stats.lifetime * 0.75f > glm::length(aimVector) && glm::length(AI_vector - glm::normalize(aimVector)) < cone) {
-					//std::cout << "FIRING SECONDARY!\n";
 					com.fire_secondary = true;
 				}
 			}
