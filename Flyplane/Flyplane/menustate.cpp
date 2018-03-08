@@ -33,11 +33,13 @@
 #include "entity_close.h"
 #include "ground_close_front.h"
 
+#include "constant_turn.h"
 #include "camerasystem.h"
 
 #include "mission.h"
 
 entityx::Entity entity3;
+entityx::Entity randomEnemy;
 
 void MenuState::spawnEnemies(int nr) {
 
@@ -80,6 +82,7 @@ void MenuState::spawnEnemies(int nr) {
 
 		primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
 		entity.assign<Equipment>(primary, secondary);
+		randomEnemy = entity;
 	}
 }
 
@@ -154,7 +157,7 @@ void MenuState::init() {
 	entity3 = ex.entities.create();
 	float x = 0;
 	float z = 100;
-	glm::vec3 pos(x, 2500, z);
+	glm::vec3 pos(x, 2000, z);
 	glm::quat orien(1, 0, 0, 0);
 	entity3.assign<Transform>(pos, normalize(orien));
 	entity3.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
@@ -176,22 +179,33 @@ void MenuState::init() {
 	plotter.push_back(glm::vec3(1000, 2500, 500));
 
 	
-	//behaviours.push_back(new Constant_Turn(0));
-	behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
+	behaviours.push_back(new Constant_Turn(1, new Always_True()));
+	//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 
-	entity3.assign<AIComponent>(behaviours, true, true, false, true);
+	
 	entity3.assign<Target>(10.0, FACTION_DUMMY);
 	entity3.assign <HealthComponent>(100.0);
 
+	WeaponStats MGstats = WeaponStats(10000, 3, 500, 0.2, 0.02f, true);
+	std::vector<Weapon> primary;
+	std::vector<Weapon> secondary;
+
+	primary.emplace_back(MGstats, AssetLoader::getLoader().getModel("gunpod"), AssetLoader::getLoader().getModel("bullet"), glm::vec3(-0.0, -0.5, 1.0), glm::vec3(0.5), glm::vec3(3.f, 3.f, 6.f), glm::angleAxis(0.f, glm::vec3(0, 0, 1)));
+	entity3.assign<Equipment>(primary, secondary);
+
 	spawnEnemies(5);
+
+	//behaviours.push_back(new Hunt_Target(2, new Always_True(), randomEnemy, 0.05, 500.f));
+
+	entity3.assign<AIComponent>(behaviours, true, true, false, true);
 
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
 
 	Transform trans;
-	trans.pos = glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-200, 0, 0)) + 1000, 0);
-	cangles.push_back(CameraAngle(glm::vec3(-200, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-200, 0, 0)) + 1000, 0), glm::vec3(1,0,0)));
+	trans.pos = glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-200, 0, 0)) + 1000, -1000);
+	cangles.push_back(CameraAngle(glm::vec3(-200, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-200, 0, 0)) + 1000, -1000), glm::vec3(1,0,0)));
 	cangles.push_back(CameraAngle(glm::vec3(400, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(400, 0, -2000)) + 400, -2000), glm::vec3(0, 0, 1)));
 	cangles.push_back(CameraAngle(glm::vec3(-500, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-500, 0, -4000)) + 400, -4000), glm::vec3(1, 0, 0)));
 	entity3.component<CameraOnComponent>()->camera.setTransform(trans);
@@ -223,7 +237,12 @@ void MenuState::update(double dt) {
 	switch (cstate) {
 	case panning:
 		if (timer.elapsed() > 30) {
-			cstate = follow;
+			unsigned int old = curAngle;
+			while (old == curAngle) {
+				curAngle = rand() % cangles.size();
+			}
+			trans.pos = cangles[curAngle].pos;
+			entity3.component<CameraOnComponent>()->camera.setTransform(trans);
 			timer.restart();
 		}
 		trans = entity3.component<CameraOnComponent>()->camera.getTransform().pos + (float)(dt*panMulti)*cangles[curAngle].pandir;
