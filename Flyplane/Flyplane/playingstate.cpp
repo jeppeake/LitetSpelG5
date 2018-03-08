@@ -339,7 +339,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "kub");
 	AssetLoader::getLoader().loadModel("assets/misc/Ammo_sign.fbx", "Ammo_sign");
-	AssetLoader::getLoader().loadModel("assets/misc/Repair_sign.fbx", "Repair_sign");
+	AssetLoader::getLoader().loadModel("assets/misc/Repair_sign2.fbx", "Repair_sign");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 

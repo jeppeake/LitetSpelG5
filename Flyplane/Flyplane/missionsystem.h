@@ -212,7 +212,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 		}
 		else {
 			//select a random mission
-			int i = 8;//rand() % missions.size();
+			int i = rand() % missions.size();
 			Mission mi = missions[i];
 			curMission = mi;
 			if (timer.elapsed() >= downtime) {
@@ -225,7 +225,6 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}
 					glm::vec3 pos = AssetLoader::getLoader().getHeightmap("testmap")->generateHousePos();//glm::vec3(house.pos.x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(house.pos.x, 0.f, house.pos.z)) + 200, house.pos.z);
 					/*if (house.random) {
-						pos = pos + glm::vec3((rand() % 8000)-4000, 0, (rand() % 8000)-4000);
 						pos = pos + glm::vec3((rand() % 8000)-4000, 0, (rand() % 8000)-4000);
 						pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0.f, pos.z));
 					}*/
