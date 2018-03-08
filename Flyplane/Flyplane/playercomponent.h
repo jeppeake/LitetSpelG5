@@ -11,4 +11,9 @@ struct PlayerComponent {
 	Timer outsideTimer;
 	bool isOutside = false;
 	double outsideTimeLeft = 0;
+
+
+	Timer flareTimer;
+	bool flareActive = false;
+	double flareAccum = 0;
 };

@@ -3,6 +3,7 @@
 #include "terraincomponent.h"
 #include "healthcomponent.h"
 #include "targetcomponent.h"
+#include "lifetimecomponent.h"
 #include "renderer.h"
 
 PlayerSystem::PlayerSystem()
@@ -145,23 +146,44 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 
 
-		/******************
-		**     DEBUG     **
-		******************/
 
-		/*
-		if(Input::isKeyPressed(GLFW_KEY_G)) {
-			auto handle = entity.component<ParticleComponent>();
-			ParticleParameters p;
-			p.effectLength = 1.f;
-			if (transform)
-				p.sparks.pos = transform->pos;
-			events.emit<AddParticleEvent>(SPARKS, handle, p);
+		/***********
+		** flares **
+		***********/
+		if (Input::isKeyPressed(GLFW_KEY_F) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) {
+			
+			float coolDown = 5.f;
+
+			if (player->flareTimer.elapsed() > coolDown) {
+				player->flareTimer.restart();
+				player->flareAccum = 0;
+				player->flareActive = true;
+			}
 		}
-		*/
+		if (player->flareTimer.elapsed() > 2.f) {
+			player->flareActive = false;
+		}
 
-		/******************
-		**    \DEBUG     **
-		******************/
+		if (player->flareActive) {
+			player->flareAccum += dt;
+
+			float emitCoolDown = 1.0 / 5.0;
+
+			while (player->flareAccum > 0) {
+				Entity flare = es.create();
+				flare.assign<Transform>(transform->pos);
+				flare.assign<Physics>(1, 1, physics->velocity, glm::vec3(0));
+				flare.assign<Target>(15.0, FACTION_PLAYER);
+
+				auto handle = flare.assign<ParticleComponent>();
+
+				events.emit<AddParticleEvent>(FLARE, handle);
+
+				flare.assign<LifeTimeComponent>(5.f);
+
+				player->flareAccum -= emitCoolDown;
+			}
+		}
+
 	}
 }

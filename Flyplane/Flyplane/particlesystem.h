@@ -22,6 +22,7 @@ class ParticleSystem : public entityx::System<ParticleSystem>, public entityx::R
 	ComputeShader sparkShader;
 	ComputeShader speedShader;
 	ComputeShader wingTrailShader;
+	ComputeShader flareShader;
 public:
 
 	~ParticleSystem() {
@@ -44,6 +45,7 @@ public:
 		sparkShader.create("sparks.glsl");
 		speedShader.create("speedPart.glsl");
 		wingTrailShader.create("wingTrail.glsl");
+		flareShader.create("flare.glsl");
 		for (int i = 0; i < 40; i++) {
 			pool.push_back(new Particles(numParticles));
 		}
@@ -242,6 +244,22 @@ public:
 			trailShader.uniform("color", glm::vec3(0.7));
 			trailShader.uniform("life", 10.f);
 			trailShader.uniform("dt", float(dt));
+			break;
+
+
+		case FLARE:
+			p->setSize(0.05);
+			flareShader.use();
+			if (transform) {
+				flareShader.uniform("spawn", transform->pos + glm::vec3(0, 0, 50));
+
+				p->params.distFromCam = length(transform->pos - camTrans.pos);
+			}
+			if (physics) {
+				flareShader.uniform("velocity", physics->velocity);
+			}
+			flareShader.uniform("life", 10.f);
+			flareShader.uniform("dt", float(dt));
 			break;
 
 

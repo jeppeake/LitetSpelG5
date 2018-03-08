@@ -34,6 +34,8 @@ private:
 	bool preorder = false;
 	Timer timer;
 	entityx::EntityX ex;
+	sf::Sound sound;
+	sf::SoundBuffer sb;
 	void updatePreview();
 public:
 	LoadoutState(bool preorder = false) { this->preorder = preorder; }
