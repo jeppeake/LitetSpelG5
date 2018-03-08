@@ -1,4 +1,4 @@
 assets/Presets/Planes/TU-101.txt
-assets\Presets\Weapons\SHAAM-200.txt
+assets\Presets\AI_Weapons\SHAAM-200SR.txt
 0
 200
