@@ -1,5 +1,5 @@
 #include "musicmanager.h"
-
+#include <iostream>
 MusicManager::MusicManager() {
 	music.setLoop(true);
 	music.setRelativeToListener(true);
@@ -12,7 +12,9 @@ void MusicManager::play() {
 }
 
 void MusicManager::play(std::string songFile) {
-	music.openFromFile(songFile);
+	bool worked = music.openFromFile(songFile);
+	if (!worked)
+		std::cout << "could not load " + songFile << std::endl;
 	music.play();
 }
 
