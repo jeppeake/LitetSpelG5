@@ -230,7 +230,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					}*/
 					std::cout << "Spawned house at: " << std::to_string(pos.x) << " " << std::to_string(pos.y) << " " << std::to_string(pos.z) << "\n";
 					entity.assign<Transform>(pos);
-					entity.component<Transform>()->scale = glm::vec3(1.0f);
+					entity.component<Transform>()->scale = glm::vec3(house.preset.scale);
 					
 					if (house.condition == CONDITION_DEFEND) {
 						entity.assign<Target>(FACTION_PLAYER, 100);

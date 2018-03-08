@@ -23,7 +23,8 @@ private:
 	Heightmap *map;
 	PlayingState *state;
 	sf::Sound hitSound;
-	sf::Sound dropSound;
+	sf::Sound ammoDropSound;
+	sf::Sound healthDropSound;
 	sf::Sound explosionSound;
 	std::vector<sf::Sound> playerHitSounds;
 
@@ -132,16 +133,16 @@ private:
 
 	void handleDrop(entityx::Entity player, entityx::Entity drop) {
 		std::cout << "Picked up drop! ";
-		dropSound.play();
-
 		switch (drop.component<DropComponent>()->type) {
 		case DropComponent::Health:
+			healthDropSound.play();
 			if (player.has_component<HealthComponent>())
-			 player.component<HealthComponent>()->health = player.component<HealthComponent>()->maxHP;
+				player.component<HealthComponent>()->health = player.component<HealthComponent>()->maxHP;
 			
 			std::cout << " Health!" << std::endl;
 			break;
 		case DropComponent::Ammo:
+			ammoDropSound.play();
 			if (player.has_component<Equipment>())
 				player.component<Equipment>()->refill();
 		
@@ -291,10 +292,15 @@ private:
 		hitSound.setPosition(0, 0, 0);
 		hitSound.setVolume(50);
 
-		dropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("drop"));
-		dropSound.setRelativeToListener(true);
-		dropSound.setPosition(0, 0, 0);
-		dropSound.setVolume(50);
+		ammoDropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("ammodrop"));
+		ammoDropSound.setRelativeToListener(true);
+		ammoDropSound.setPosition(0, 0, 0);
+		ammoDropSound.setVolume(50);
+
+		healthDropSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("healthdrop"));
+		healthDropSound.setRelativeToListener(true);
+		healthDropSound.setPosition(0, 0, 0);
+		healthDropSound.setVolume(50);
 
 		for (int i = 0; i < 10; i++) {
 			playerHitSounds.emplace_back();

@@ -63,6 +63,7 @@
 #include "missionsystem.h"
 
 #include "lifetimesystem.h"
+#include "musicmanager.h"
 
 //entityx::Entity entity;
 
@@ -129,7 +130,13 @@ void PlayingState::spawnEnemies(int nr) {
 void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
 	std::cout << "Drop spawned!";
 
+	std::string model;
 	glm::vec3 pos(rand() % 10000 - 5000, 0, rand() % 10000 - 5000);
+
+	if (typeOfDrop == DropComponent::Ammo)
+		model = "Ammo_sign";
+	else if (typeOfDrop == DropComponent::Health)
+		model = "Repair_sign";
 
 	ComponentHandle<PlayerComponent> player;
 	ComponentHandle<Transform> transform;
@@ -147,7 +154,7 @@ void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
 	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 2500;
 	auto handle = entity.assign<Transform>(pos, glm::quat(1, 0, 0, 0));
 	handle->scale = glm::vec3(75.0, 75.0, 75.0);
-	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel("Ammo_sign"));
+	entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(model));
 	entity.assign<CollisionComponent>();
 	entity.assign<DropComponent>(typeOfDrop);
 	entity.assign<LifeTimeComponent>(60.0);
@@ -314,7 +321,8 @@ void PlayingState::init()
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 
-
+	//string filename = "Assets/Sound/Darth Vader";
+	//MusicManager::getMusicManager().play(filename);
 
 	/*sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
@@ -333,6 +341,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadModel("assets/buildings/bighus.fbx", "hus1");
 	AssetLoader::getLoader().loadModel("assets/buildings/kub.fbx", "kub");
 	AssetLoader::getLoader().loadModel("assets/misc/Ammo_sign.fbx", "Ammo_sign");
+	AssetLoader::getLoader().loadModel("assets/misc/Repair_sign2.fbx", "Repair_sign");
 
 	//AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -589,6 +598,7 @@ void PlayingState::update(double dt)
 			spawnDrop(DropComponent::Ammo);
 			spawnDrop(DropComponent::Ammo);
 			spawnDrop(DropComponent::Ammo);
+			spawnDrop(DropComponent::Health);
 		}
 
 		timerMultiplier -= dt;

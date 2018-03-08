@@ -138,6 +138,7 @@
     <ClCompile Include="buildingpreset.cpp">
       <Filter>Presets</Filter>
     </ClCompile>
+    <ClCompile Include="musicmanager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -507,6 +508,9 @@
     <ClInclude Include="explosivecomponenet.h">
       <Filter>Systems\Components</Filter>
     </ClInclude>
+    <ClInclude Include="musicmanager.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.glsl">
@@ -630,6 +634,9 @@
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
     <None Include="partLineVert.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
+    <None Include="flare.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
   </ItemGroup>

@@ -71,7 +71,7 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		glm::vec3 targetPos = transform->pos + offset * (0.5f*glm::smoothstep(brakeSpeed, boostSpeed, speed) + 1);
 		camTrans.pos = glm::mix(camTrans.pos, targetPos, float(1.0 - glm::pow(fPos, 2.0*dt)));
 
-		float baseFov = 50.f;
+		float baseFov = 85.f;
 		float currentFov = cameraOn->camera.getFov();
 		float spread = 10.f;
 
@@ -87,8 +87,10 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 		cameraOn->shake = glm::mix(cameraOn->shake, 0.f, float(1.0 - glm::pow(0.005, dt)));
 
+		/*
 		if (Input::isKeyDown(GLFW_KEY_H)) {
 			cameraOn->shake += 1.5f*dt;
 		}
+		*/
 	}
 }
