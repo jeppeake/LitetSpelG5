@@ -6,6 +6,8 @@
 #include "lifetimecomponent.h"
 #include "renderer.h"
 
+void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* physics, EventManager & events);
+
 PlayerSystem::PlayerSystem()
 {
 	warningSound.setRelativeToListener(true);
@@ -152,9 +154,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		***********/
 		if (Input::isKeyPressed(GLFW_KEY_F) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) {
 			
-			float coolDown = 5.f;
-
-			if (player->flareTimer.elapsed() > coolDown) {
+			if (player->flareTimer.elapsed() > player->coolDown) {
 				player->flareTimer.restart();
 				player->flareAccum = 0;
 				player->flareActive = true;
@@ -170,20 +170,33 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			float emitCoolDown = 1.0 / 5.0;
 
 			while (player->flareAccum > 0) {
-				Entity flare = es.create();
-				flare.assign<Transform>(transform->pos);
-				flare.assign<Physics>(1, 1, physics->velocity, glm::vec3(0));
-				flare.assign<Target>(15.0, FACTION_PLAYER);
 
-				auto handle = flare.assign<ParticleComponent>();
-
-				events.emit<AddParticleEvent>(FLARE, handle);
-
-				flare.assign<LifeTimeComponent>(5.f);
+				spawnFlare(es.create(), glm::vec3(1, 2, 0), transform.get(), physics.get(), events);
+				spawnFlare(es.create(), glm::vec3(-1, 2, 0), transform.get(), physics.get(), events);
 
 				player->flareAccum -= emitCoolDown;
 			}
 		}
 
 	}
+
+
+}
+
+void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* physics, EventManager & events) {
+	flare.assign<Transform>(transform->pos);
+
+	float speed = 10.f;
+	glm::vec3 vel = physics->velocity + speed * (transform->orientation * normalize(dir));
+
+	flare.assign<Physics>(1, 1, vel, glm::vec3(0));
+	flare.assign<Target>(15.0, FACTION_PLAYER);
+
+	auto handle = flare.assign<ParticleComponent>();
+
+	events.emit<AddParticleEvent>(FLARE, handle);
+
+	flare.assign<LifeTimeComponent>(5.f);
+
+	
 }

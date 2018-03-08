@@ -15,8 +15,10 @@ layout(std430, binding=10) buffer Col
 {
 	vec4 Colors[];
 };
+const float life = 3.f;
+
+uniform float time;
 uniform float dt;
-const float life = 8.f;
 uniform vec3 spawn;
 uniform vec3 velocity;
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
@@ -34,46 +36,54 @@ void main()
 	if(Positions[gid].xyz == vec3(0))
 	{
 		Positions[gid].xyz = spawn;
-		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
-		Colors[gid].rgb = light;
-
-		vec3 vel;
-		vel.x = rand(float(gid + dt*10));
-		vel.y = rand(float(gid + 1000 + dt*10));
-		vel.z = rand(float(gid + 2000 + dt*10));
-		Velocities[gid].xyz = 1 * normalize(vel);
+		Lives[gid] = life * (rand(gid) + 1)/2;
 	}
 	else
 	{
-		if(Lives[gid] < life*0.01) {
-			
+		if(gid < 20) {
 			Colors[gid].rgb = light;
-			vec3 vel;
-			vel.x = rand(float(gid + dt*10));
-			vel.y = rand(float(gid + 1000 + dt*10));
-			vel.z = rand(float(gid + 2000 + dt*10));
-			Velocities[gid].xyz = 1 * normalize(vel);
-
-			Positions[gid].xyz = spawn;
-			Colors[gid].a = 1;
-		} else {
-			vec3 dir;
-			dir.x = rand(gid*23);
-			dir.z = rand(gid*27);
-			dir = normalize(dir);
-			dir += vec3(0, 13, 0);
-			Velocities[gid].xyz = mix(Velocities[gid].xyz, dir, 1-pow(0.1, dt));
+			Colors[gid].a = 0.6 + 0.4 * rand(gid + dt * 1000);
 			
-			Colors[gid].rgb = smoke;
+			Colors[gid].a *= smoothstep(3.5, 3, time);
 
-			Colors[gid].a = pow(1-Lives[gid] / life, 2);
+			vec3 offset;
+			offset.x = rand(20 * gid + dt * 100 + 100);
+			offset.y = rand(30 * gid + dt * 150 + 200);
+			offset.z = rand(40 * gid + dt * 200 + 300);
+			offset = normalize(offset);
+
+			Positions[gid].xyz = spawn + 0.05*rand(gid * 10 + dt * 200) * offset;
+		} else {
+			Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
+			Positions[gid].xyz += Velocities[gid].xyz * dt;
+			Positions[gid].xyz += 0.5 * velocity * dt;
+			Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 4)*0.5;
 		}
-		//Positions[gid].xyz = spawn + direction * Lives[gid];
+		Colors[gid].a *= smoothstep(5, 3, time);
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
 	{
-		Lives[gid] = 0;
+		Lives[gid] -= life;
+
+		vec3 offset;
+		offset.x = rand(20 * gid + dt * 100 + 100);
+		offset.y = rand(30 * gid + dt * 150 + 200);
+		offset.z = rand(40 * gid + dt * 200 + 300);
+		offset = normalize(offset);
+
+		Positions[gid].xyz = spawn - abs(rand(gid*10 + dt*500)) * velocity * dt;
+		Positions[gid].xyz += 0.05*rand(gid * 10 + dt * 200) * offset;
+
+
+
+		vec3 vel;
+		vel.x = rand(-20 * gid - dt * 100 - 100);
+		vel.y = rand(-30 * gid - dt * 150 - 200);
+		vel.z = rand(-40 * gid - dt * 200 - 300);
+		vel = normalize(vel);
+
+		Velocities[gid].xyz = 0.05*rand(gid * 20 + dt * 200) * vel;
 	}
 }
 

@@ -16,4 +16,6 @@ struct PlayerComponent {
 	Timer flareTimer;
 	bool flareActive = false;
 	double flareAccum = 0;
+
+	float coolDown = 7.f;
 };
