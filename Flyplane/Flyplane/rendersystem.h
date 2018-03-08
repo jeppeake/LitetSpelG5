@@ -242,7 +242,14 @@ struct RenderSystem : public System<RenderSystem> {
 			}
 			ComponentHandle<DropComponent> dropHandle;
 			for (Entity entity : es.entities_with_components(dropHandle, transform)) {
-				radar.addPlane(*transform.get(), glm::vec3(235.f / 255.f, 85.f / 255.f, 0.f));
+				glm::vec3 color(0);
+
+				if (dropHandle->type == DropComponent::Ammo)
+					color = glm::vec3(235.f / 255.f, 85.f / 255.f, 0.f);
+				else if (dropHandle->type == DropComponent::Health)
+					color = glm::vec3(83.0f / 255.0f, 227.0f / 255.0f, 20.0f / 255.0f);
+
+				radar.addPlane(*transform.get(), color);
 			}
 			glm::vec3 newPos = playerPos + normalize(playerDir) * 3000.0f;
 			radar.draw((float)dt);
