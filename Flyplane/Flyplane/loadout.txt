@@ -1,3 +1,10 @@
-assets\Presets\Planes\TU-101.txt
-assets\Presets\Weapons\SHAAM-200.txt
+assets\Presets\Planes\supertest.txt
+0
+0
+0
+0
+0
+0
+0
+0
 0

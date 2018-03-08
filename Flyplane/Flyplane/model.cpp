@@ -164,13 +164,14 @@ void Model::load(const std::string & file)
 		auto t = aiTextureType_DIFFUSE;
 		auto mat = scene->mMaterials[i];
 
-		aiString name;
-		mat->Get(AI_MATKEY_NAME, name);
+		aiString ainame;
+		mat->Get(AI_MATKEY_NAME, ainame);
 
-		
+		std::string matName(ainame.C_Str());
+
 		std::string tex_file;
 		if (mat->GetTextureCount(t) == 0) {
-			std::cout << "\t[ERROR] one material missing texture, using korven.png\n";
+			std::cout << "\t[ERROR] material missing diffuse texture, using korven.png\n";
 			//system("pause");
 			//exit(EXIT_FAILURE);
 			tex_file = "assets/textures/korven.png";
@@ -181,7 +182,7 @@ void Model::load(const std::string & file)
 			mat->Get(AI_MATKEY_TEXTURE(t, 0), filename);
 			tex_file = model_dir + std::string(filename.C_Str());
 		}
-		 
+		std::cout << "\t[DEBUG] Processing mat: '" << matName << "', using texture: '" << tex_file << "'\n";
 		if (!texture.loadTexture(tex_file))
 		{
 			//std::cout << "\tERROR: Could not load texture: '" << tex_file << "'\n";

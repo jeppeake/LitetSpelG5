@@ -314,6 +314,7 @@
     <None Include="explosionCompute.glsl" />
     <None Include="fcimageFrag.glsl" />
     <None Include="fcimageVertex.glsl" />
+    <None Include="flare.glsl" />
     <None Include="fragmentShader.glsl" />
     <None Include="geometryShader.glsl" />
     <None Include="guiFragmentShader.glsl" />

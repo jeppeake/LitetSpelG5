@@ -461,8 +461,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				Entity cure;
 				entityx::ComponentHandle<Target> target;
 				entityx::ComponentHandle<Transform> aitrans;
-				entityx::ComponentHandle<HealthComponent> health;
-				for (Entity enemy : es.entities_with_components(aitrans, target, health)) {
+				//entityx::ComponentHandle<HealthComponent> health;
+				//for (Entity enemy : es.entities_with_components(aitrans, target, health)) {
+				for (Entity enemy : es.entities_with_components(aitrans, target)) {
 					glm::vec3 dir = aitrans->pos - trans->pos;
 					float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
 					ai = enemy.component<AIComponent>();

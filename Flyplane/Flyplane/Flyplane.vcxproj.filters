@@ -632,6 +632,9 @@
     <None Include="partLineVert.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
+    <None Include="flare.glsl">
+      <Filter>Graphics\Shaders\particles</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">
