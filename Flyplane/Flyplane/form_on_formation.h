@@ -28,7 +28,7 @@ public:
 				glm::vec2 pos = formation.component<FormationComponent>()->positions.at(id);
 				glm::vec3 w_pos = ori * glm::vec3(pos.x, 0.f, pos.y);
 				glm::vec3 flyToPos = formation.component<Transform>()->pos + (w_pos * formation.component<FormationComponent>()->distance);
-				std::cout << "Flying on formation" << "\n";
+				//std::cout << "Flying on formation" << "\n";
 				com.steering = SAIB::flyTo(AI.component<Transform>()->pos, AI.component<Transform>()->orientation, flyToPos);
 
 				glm::vec3 AI_front = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
