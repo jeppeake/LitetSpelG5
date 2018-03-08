@@ -67,7 +67,15 @@ void AISystem::update(entityx::EntityManager &es, entityx::EventManager &events,
 						//std::cout << "BOOSTING\n";
 					}
 					if (entity_ai.has_component<Equipment>()) {
-						entity_ai.component<Equipment>()->primary.at(0).shouldFire = com.fire_primary;
+						for (int i = 0; i < entity_ai.component<Equipment>()->primary.size(); i++) {
+							entity_ai.component<Equipment>()->primary.at(i).shouldFire = com.fire_primary;
+						}
+						for (int i = 0; i < entity_ai.component<Equipment>()->turrets.size(); i++) {
+							if (!entity_ai.component<Equipment>()->turrets.at(i).autoFire) {
+								entity_ai.component<Equipment>()->turrets.at(i).shouldFire = com.fire_primary;
+								//std::cout << "FIRING TURRET PRIMARY!\n";
+							}
+						}
 						if (entity_ai.component<Equipment>()->special.size() > 0 && entity_ai.component<AIComponent>()->secondary_allowed) {
 							entity_ai.component<Equipment>()->special[entity_ai.component<Equipment>()->selected].shouldFire = com.fire_secondary;
 						}

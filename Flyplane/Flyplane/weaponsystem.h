@@ -140,58 +140,63 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				ComponentHandle<ModelComponent> closest_model;
 
 				for (Entity entity_closest_search : es.entities_with_components(closest_target, closest_transform, closest_model)) {
-					if (entity_closest_search != entity) {
-						glm::vec3 interdictionTest = SAIB::ADVInterdiction(entity_closest_search, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
-						glm::vec3 gunOrientation = glm::normalize(trans->orientation * equip->turrets.at(i).getGunOrientation() * glm::vec3(0.f, 0.f, 1.f));
-						new_closest = glm::dot(glm::normalize(interdictionTest - trans->pos), gunOrientation);
+					if (entity_closest_search.has_component<Target>() && entity.has_component<Target>()) {
+						if (entity_closest_search != entity && entity_closest_search.component<Target>()->faction != entity.component<Target>()->faction) {
+							glm::vec3 interdictionTest = SAIB::ADVInterdiction(entity_closest_search, entity, equip->turrets.at(i).stats.speed, equip->turrets.at(i).placement.offset, dt);
+							glm::vec3 gunOrientation = glm::normalize(trans->orientation * equip->turrets.at(i).getGunOrientation() * glm::vec3(0.f, 0.f, 1.f));
+							new_closest = glm::dot(glm::normalize(interdictionTest - trans->pos), gunOrientation);
 
-						if (new_closest > closest) {//check if target is inside frustum
+							if (new_closest > closest) {//check if target is inside frustum
 
-							glm::vec2 traverseLimits = equip->turrets.at(i).info.traverseLimit;
-							glm::vec2 elevationLimits = equip->turrets.at(i).info.elevationLimit;
+								glm::vec2 traverseLimits = equip->turrets.at(i).info.traverseLimit;
+								glm::vec2 elevationLimits = equip->turrets.at(i).info.elevationLimit;
 
-							glm::vec3 turretFront = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 0.f, 1.f));
-							glm::vec3 turretUp = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 1.f, 0.f));
-							glm::vec3 turretLeft = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(1.f, 0.f, 0.f));
+								glm::vec3 turretFront = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 0.f, 1.f));
+								glm::vec3 turretUp = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(0.f, 1.f, 0.f));
+								glm::vec3 turretLeft = glm::normalize(trans->orientation * equip->turrets.at(i).placement.orientation * glm::vec3(1.f, 0.f, 0.f));
 
-							glm::vec3 pt = glm::normalize(interdictionTest - trans->pos);
+								glm::vec3 pt = glm::normalize(interdictionTest - trans->pos);
 
-							glm::vec3 pt_trav = glm::normalize(pt - glm::proj(pt, turretUp));
-							//std::cout << pt.x << " : " << pt.y << " : " << pt.z << "	" << pt_trav.x << " : " << pt_trav.y << " : " << pt_trav.z << "\n";
-							float LRC = glm::degrees(glm::acos(glm::dot(pt_trav, turretLeft)));
-							float traverseAngle = glm::degrees(glm::acos(glm::dot(pt_trav, turretFront)));
-							float traverseLimit;
-							if (LRC < 90) {//left
-								traverseLimit = traverseLimits.x;
-							}
-							else {//right
-								traverseLimit = traverseLimits.y;
-							}
+								glm::vec3 pt_trav = glm::normalize(pt - glm::proj(pt, turretUp));
+								//std::cout << pt.x << " : " << pt.y << " : " << pt.z << "	" << pt_trav.x << " : " << pt_trav.y << " : " << pt_trav.z << "\n";
+								float LRC = glm::degrees(glm::acos(glm::dot(pt_trav, turretLeft)));
+								float traverseAngle = glm::degrees(glm::acos(glm::dot(pt_trav, turretFront)));
+								float traverseLimit;
+								if (LRC < 90) {//left
+									traverseLimit = traverseLimits.x;
+								}
+								else {//right
+									traverseLimit = traverseLimits.y;
+								}
 
-							glm::vec3 pt_elev = glm::normalize(pt - glm::proj(pt, turretLeft));
+								glm::vec3 pt_elev = glm::normalize(pt - glm::proj(pt, turretLeft));
 
-							float UDC = glm::degrees(glm::acos(glm::dot(pt_elev, turretUp)));
-							glm::vec3 adjTurretFront = pt - glm::proj(pt, turretUp);
-							float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, adjTurretFront)));
-							float elevationLimit;
-							if (UDC < 90) {//up
-								elevationLimit = elevationLimits.x;
-							}
-							else {//down
-								elevationLimit = elevationLimits.y;
-							}
-							//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
-							if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(interdictionTest - trans->pos) < equip->turrets.at(i).info.range) {
-								entity_closest = entity_closest_search;
-								closest = new_closest;
+								float UDC = glm::degrees(glm::acos(glm::dot(pt_elev, turretUp)));
+								glm::vec3 adjTurretFront = pt - glm::proj(pt, turretUp);
+								float elevationAngle = glm::degrees(glm::acos(glm::dot(pt_elev, adjTurretFront)));
+								float elevationLimit;
+								if (UDC < 90) {//up
+									elevationLimit = elevationLimits.x;
+								}
+								else {//down
+									elevationLimit = elevationLimits.y;
+								}
+								//std::cout << traverseAngle << " vs " << traverseLimit << " ::::: " << elevationAngle << " vs " << elevationLimit << "\n";
+								if (traverseAngle < traverseLimit && elevationAngle < elevationLimit && glm::length(interdictionTest - trans->pos) < equip->turrets.at(i).info.range) {
+									entity_closest = entity_closest_search;
+									closest = new_closest;
+								}
 							}
 						}
 					}
 				}
-				equip->turrets.at(i).shouldFire = false;
-				if (player && !equip->turrets.at(i).autoFire && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
-					equip->turrets.at(i).shouldFire = true;
-					equip->turrets.at(i).timer.restart();
+				if (player) {
+					equip->turrets.at(i).shouldFire = false;
+					if (!equip->turrets.at(i).autoFire && (Input::isKeyDown(GLFW_KEY_LEFT_CONTROL) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER))) {
+						equip->turrets.at(i).shouldFire = true;
+						equip->turrets.at(i).timer.restart();
+					}
+					
 				}
 
 				if (entity_closest.valid()) {

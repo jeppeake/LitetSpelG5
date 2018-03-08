@@ -10,8 +10,22 @@ public:
 	Commands act(entityx::Entity player, entityx::Entity AI, entityx::Entity terrain, entityx::Entity closest, entityx::TimeDelta dt) {
 		Commands com;
 		if (target.valid()) {
-
-			glm::vec3 aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->primary.at(0).stats.speed, glm::vec3(), dt);
+			glm::vec3 aimPos;
+			if (AI.component<Equipment>()->primary.size() != 0) {
+				aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->primary.at(0).stats.speed, glm::vec3(), dt);
+			}
+			else if (AI.component<Equipment>()->turrets.size() != 0) {
+				for (int i = 0; i < AI.component<Equipment>()->turrets.size(); i++) {
+					if (!AI.component<Equipment>()->turrets.at(i).autoFire) {
+						aimPos = SAIB::ADVInterdiction(target, AI, AI.component<Equipment>()->turrets.at(i).stats.speed, glm::vec3(), dt);
+						break;
+					}
+				}
+			}
+			else {
+				std::cout << "[Warning] Cannot calculate interception: no weapon on aircraft!\n";
+				return com;
+			}
 			glm::vec3 AI_vector = glm::normalize(glm::toMat3(AI.component<Transform>()->orientation) * glm::vec3(0.0, 0.0, 1.0));
 			glm::vec3 AI_position = AI.component<Transform>()->pos;
 			glm::vec3 aimVector = aimPos - AI_position;
