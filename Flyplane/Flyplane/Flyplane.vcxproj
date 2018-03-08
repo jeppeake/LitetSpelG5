@@ -157,6 +157,7 @@
     <ClCompile Include="menustate.cpp" />
     <ClCompile Include="mission.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="musicmanager.cpp" />
     <ClCompile Include="namestate.cpp" />
     <ClCompile Include="optionsstate.cpp" />
     <ClCompile Include="computeShader.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="missionsystem.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelcomponent.h" />
+    <ClInclude Include="musicmanager.h" />
     <ClInclude Include="namestate.h" />
     <ClInclude Include="computeShader.h" />
     <ClInclude Include="openpreorderaction.h" />

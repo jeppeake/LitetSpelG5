@@ -138,6 +138,7 @@
     <ClCompile Include="buildingpreset.cpp">
       <Filter>Presets</Filter>
     </ClCompile>
+    <ClCompile Include="musicmanager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -506,6 +507,9 @@
     </ClInclude>
     <ClInclude Include="explosivecomponenet.h">
       <Filter>Systems\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="musicmanager.h">
+      <Filter>UTILS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
