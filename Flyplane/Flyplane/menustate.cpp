@@ -33,6 +33,8 @@
 #include "entity_close.h"
 #include "ground_close_front.h"
 
+#include "camerasystem.h"
+
 #include "mission.h"
 
 entityx::Entity entity3;
@@ -132,15 +134,14 @@ void MenuState::init() {
 	ex.systems.add<System class here>();
 	*/
 
-	Camera camera;
-	Transform trans;
-	trans.pos = glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(0, 0, 0)) + 1000, 0);
-	camera.setTransform(trans);
-	Renderer::getRenderer().setCamera(camera);
+	
+	
+	//Renderer::getRenderer().setCamera(camera);
 
 	ex.systems.add<PhysicsSystem>();
 	ex.systems.add<WeaponSystem>();
 	ex.systems.add<RenderSystem>();
+	ex.systems.add<CameraSystem>();
 	ex.systems.system<RenderSystem>()->cullingCamera = camera;
 	ex.systems.system<RenderSystem>()->playing = false;
 	//ex.systems.add<PlayerSystem>();
@@ -161,6 +162,7 @@ void MenuState::init() {
 	entity3.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 	entity3.assign <CollisionComponent>();
 	entity3.assign<PlayerComponent>();
+	entity3.assign<CameraOnComponent>();
 	auto handle = entity3.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::TRAIL, handle);
 	ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::ENGINE_TRAIL, handle);
@@ -186,6 +188,13 @@ void MenuState::init() {
 	entityx::Entity terrain = ex.entities.create();
 	terrain.assign<Terrain>(AssetLoader::getLoader().getHeightmap("testmap"));
 	AssetLoader::getLoader().getHeightmap("testmap")->buildStructures(ex.entities);
+
+	Transform trans;
+	trans.pos = glm::vec3(0, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-200, 0, 0)) + 1000, 0);
+	cangles.push_back(CameraAngle(glm::vec3(-200, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-200, 0, 0)) + 1000, 0), glm::vec3(1,0,0)));
+	cangles.push_back(CameraAngle(glm::vec3(400, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(400, 0, -2000)) + 400, -2000), glm::vec3(0, 0, 1)));
+	cangles.push_back(CameraAngle(glm::vec3(-500, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-500, 0, -4000)) + 400, -4000), glm::vec3(1, 0, 0)));
+	entity3.component<CameraOnComponent>()->camera.setTransform(trans);
 }
 
 void MenuState::startOptions() {
@@ -207,6 +216,33 @@ void MenuState::startLoadout() {
 void MenuState::update(double dt) {
 	glClearColor(100.0 / 255, 149.0 / 255, 234.0 / 255, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//update camera
+	double panMulti = 25.0;
+	Transform trans;
+	switch (cstate) {
+	case panning:
+		if (timer.elapsed() > 30) {
+			cstate = follow;
+			timer.restart();
+		}
+		trans = entity3.component<CameraOnComponent>()->camera.getTransform().pos + (float)(dt*panMulti)*cangles[curAngle].pandir;
+		entity3.component<CameraOnComponent>()->camera.setTransform(trans);
+		break;
+	case follow:
+		if (timer.elapsed() > 10) {
+			Transform trans1;
+			curAngle = rand() % cangles.size();
+			trans1.pos = cangles[curAngle].pos;
+			entity3.component<CameraOnComponent>()->camera.setTransform(trans1);
+			cstate = panning;
+			timer.restart();
+		}
+		ex.systems.update<CameraSystem>(dt);
+		break;
+	}
+	
+	
 	
 	ex.systems.update<AISystem>(dt);
 	ex.systems.update<FlightSystem>(dt);
