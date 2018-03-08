@@ -148,6 +148,12 @@ void LoadoutState::init() {
 	}
 	
 	bHandler.buttons[this->page]->color = bHandler.buttons[this->page]->hcolor;
+
+	if (preorder) {
+		sb.loadFromFile("assets/Sound/sellout.wav");
+		sound.setBuffer(sb);
+		sound.play();
+	}
 }
 
 void LoadoutState::startMenu() {

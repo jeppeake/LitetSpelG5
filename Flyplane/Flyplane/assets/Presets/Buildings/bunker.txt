@@ -1,4 +1,4 @@
-Radome
+Bunker
 
 model
 assets/buildings/Bunker_small/Bunker_small2.fbx
@@ -14,3 +14,5 @@ exploderadius
 explodedamage
 300
 
+scale
+4

@@ -12,10 +12,13 @@
 #include "timevisualizer.h"
 #include "highscore.h"
 #include "globaltimer.h"
+#include "musicmanager.h"
 
 int main(void)
 {	
 	sf::Listener::setGlobalVolume(50);
+	string filename = "Assets/Sound/Darth Vader.wav";
+	MusicManager::getMusicManager().play(filename);
 
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
