@@ -73,6 +73,27 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			brake = ((Input::gamepad_axis(GLFW_GAMEPAD_AXIS_LEFT_TRIGGER) + 1) / 2.f);
 		}
 
+		if (throttle > 0.9f && !BPHold) {
+			BP++;
+			BPHold = true;
+			boostTimer.restart();
+		}
+		else if (BPHold && throttle < 0.1f) {
+			BPHold = false;
+			boostTimer.restart();
+		}
+		if (boostTimer.elapsed() > 0.2f && throttle < 0.1f || flight->burnOut) {
+			BP = 0;
+		}
+
+		if (BP >= 2) {
+			//std::cout << "AFTERBURNER ACTIVE!\n";
+			flight->afterBurner = true;
+		}
+		else {
+			flight->afterBurner = false;
+		}
+
 		float new_drift = 0.f;
 		float d1 = 0;
 		float d2 = 0;

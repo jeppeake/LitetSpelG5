@@ -2,9 +2,9 @@ Lynx
 model
 assets/Lynx/Lynx.fbx
 normalspeed
-100
-boostspeed
 150
+boostspeed
+250
 breakforce
 75
 acceleration
