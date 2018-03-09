@@ -31,14 +31,20 @@ void main()
 	uint gid = gl_GlobalInvocationID.x;
 	if(Positions[gid].xyz == vec3(0))
 	{
+		Lives[gid] = abs(rand(gid + 1000)) * life;
 		Positions[gid].xyz = spawn - direction * 100 + vec3(rand(gid), rand(gid * gid), rand(gid + 2000)) * 750;
 		Colors[gid].rgba = vec4(0.7,0.7,0.5, rand(gid + 5000));
-		Lives[gid] = rand(gid + 1000) * life;
 	}
+	else 
+	{
+		
+	}
+
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
 	{
-		Positions[gid].xyz = vec3(0);
+		Positions[gid].xyz = spawn - direction * 100 + vec3(rand(gid), rand(gid * gid), rand(gid + 2000)) * 750;
+		Colors[gid].rgba = vec4(0.7,0.7,0.5, rand(gid + 5000));
 		Lives[gid] -= life;
 	}
 }

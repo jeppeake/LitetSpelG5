@@ -220,8 +220,9 @@ struct RenderSystem : public System<RenderSystem> {
 		if (playing) {
 			if (hasAimTarget) {
 				glm::vec3 pos = SAIB::ADVInterdiction(aimTarget, pEntity, 350.f, glm::vec3(), dt);
+				glm::vec3 targetPos = aimTarget.component<Transform>()->pos;
 
-				Renderer::getRenderer().RenderAimAssist(pos);
+				Renderer::getRenderer().RenderAimAssist(pos, targetPos);
 			}
 
 

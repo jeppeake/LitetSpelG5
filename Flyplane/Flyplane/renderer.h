@@ -94,6 +94,7 @@ private:
 
 
 	Texture aimAssistTexture;
+	Texture smallDotTexture;
 	Texture flareReadyTexture;
 	Texture transparent;
 	Texture warning;
@@ -167,7 +168,7 @@ public:
 	void RenderTransparent();
 	void RenderClouds();
 	void RenderFlareReady();
-	void RenderAimAssist(glm::vec3 pos);
+	void RenderAimAssist(glm::vec3 markerPos, glm::vec3 targetPos);
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;

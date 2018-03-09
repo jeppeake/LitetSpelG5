@@ -121,6 +121,7 @@ Renderer::Renderer() {
 	flareReadyTexture.loadTexture("assets/Textures/flareicon.png", 1);
 	
 	aimAssistTexture.loadTexture("assets/Textures/aimassist.png", 1);
+	smallDotTexture.loadTexture("assets/Textures/dot.png", 1);
 
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
 	warning.loadTexture("assets/Textures/warning.png", 1);
@@ -514,18 +515,33 @@ void Renderer::RenderFlareReady() {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::RenderAimAssist(glm::vec3 pos) {
-	auto screenPosH = camera.getProjMatrix() * camera.getViewMatrix() * glm::vec4(pos, 1);
+void Renderer::RenderAimAssist(glm::vec3 markerPos, glm::vec3 targetPos) {
+	auto screenPosH = camera.getProjMatrix() * camera.getViewMatrix() * glm::vec4(markerPos, 1);
 	
-	auto screenPos = glm::vec3(screenPosH) / screenPosH.w;
+	if (screenPosH.w < 0)
+		return;
+
+	auto screenMPos = glm::vec3(screenPosH) / screenPosH.w;
+
+	screenPosH = camera.getProjMatrix() * camera.getViewMatrix() * glm::vec4(targetPos, 1);
+
+	auto screenTPos = glm::vec3(screenPosH) / screenPosH.w;
 
 	auto ws = Window::getWindow().size();
 	float aspect = ws.x / ws.y;
 
 	//std::cout << "screenpos: " << screenPos.x << ", " << screenPos.y << "\n";
 
-	auto transform = glm::translate(glm::vec3(screenPos.x, screenPos.y, 0)) * glm::scale(0.006f*glm::vec3(1, aspect*1, 1));;
+	auto transform = glm::translate(glm::vec3(screenMPos.x, screenMPos.y, 0)) * glm::scale(0.006f*glm::vec3(1, aspect*1, 1));;
 	renderTexture(aimAssistTexture, transform);
+
+	float numDots = 3;
+	for (float i = 1; i < numDots+1; i++) {
+		glm::vec3 pos = screenMPos * i / (numDots+1) + screenTPos * (numDots+1 - i) / (numDots+1);
+		pos.z = 0;
+		transform = glm::translate(pos) * glm::scale(0.002f*glm::vec3(1, aspect * 1, 1));;
+		renderTexture(smallDotTexture, transform);
+	}
 }
 
 void Renderer::RenderHPBar(float hp) {

@@ -44,7 +44,7 @@ void main()
 			Colors[gid].rgb = light;
 			Colors[gid].a = 0.6 + 0.4 * rand(gid + dt * 1000);
 			
-			Colors[gid].a *= smoothstep(3.5, 3, time);
+			Colors[gid].a *= smoothstep(3.5, 3.0, time);
 
 			vec3 offset;
 			offset.x = rand(20 * gid + dt * 100 + 100);

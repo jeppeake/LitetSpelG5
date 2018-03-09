@@ -31,7 +31,7 @@ bool ComputeShader::create(const std::string & path)
 					glGetShaderInfoLog(shader, log_size, &log_size, &error[0]);
 					std::string errorstr{ &error[0] };
 
-					std::cout << "Error in ComputeShader:\n" << errorstr << "\n";
+					std::cout << "Error in '" << path << "'\n" << errorstr << "\n";
 
 					glDeleteShader(shader);
 					system("pause");
