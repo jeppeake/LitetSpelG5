@@ -84,6 +84,9 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		if (!flight->afterBurner || flight->burnOut) {
 			speedAim = normalSpeed + ((boostSpeed - normalSpeed) * boostFactor) + ((breakSpeed - normalSpeed) * brakeFactor);//speed components
 			flight->boost += dt * 10.f;
+			if (flight->burnOut) {
+				flight->throttle = 0.f;
+			}
 			if (flight->boost >= 100.f && flight->burnOut) {
 				flight->burnOut = false;
 			}
@@ -91,11 +94,13 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		else if (!flight->burnOut){
 			speedAim = boostSpeed * 2.f * flight->throttle;
 			flight->boost -= dt * 10.f;
-			std::cout << flight->boost << "\n";
+			//std::cout << flight->boost << "\n";
+			if (flight->boost < 10.f) {
+				flight->throttle = flight->boost / 10.f;
+			}
 			if (flight->boost <= 0.f) {
 				flight->afterBurner = false;
 				flight->burnOut = true;
-				flight->throttle = 0.f;
 			}
 			//play sound?
 			auto cameraOn = entity.component<CameraOnComponent>();

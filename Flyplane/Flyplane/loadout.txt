@@ -1,8 +1,8 @@
-assets\Presets\Planes\Spectre.txt
+assets\Presets\Planes\laken.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
 assets\Presets\Weapons\micro.txt
 assets\Presets\Weapons\micro.txt
-assets\Presets\Weapons\micro.txt
-assets\Presets\Weapons\micro.txt
-assets\Presets\Weapons\missile.txt
-assets\Presets\Weapons\missile.txt
 0
