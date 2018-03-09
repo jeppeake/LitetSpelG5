@@ -74,13 +74,41 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 		float boostSpeed = flight->boost_speed;
 		float breakSpeed = flight->brake_speed;
 		float normalSpeed = flight->base_speed;
-		float acc = flight->engine_acceleration;
+		float acc = flight->engine_acceleration * 0.05f;
 		float currentSpeed = flight->current_speed;
 
 		float boostFactor = glm::clamp(flight->throttle - flight->airBrake, 0.f, 1.f);
 		float brakeFactor = glm::clamp(flight->airBrake - flight->throttle, 0.f, 1.f);
 
-		float speedAim = normalSpeed + ((boostSpeed - normalSpeed) * boostFactor) + ((breakSpeed - normalSpeed) * brakeFactor);//speed components
+		float speedAim;
+		if (!flight->afterBurner || flight->burnOut) {
+			speedAim = normalSpeed + ((boostSpeed - normalSpeed) * boostFactor) + ((breakSpeed - normalSpeed) * brakeFactor);//speed components
+			flight->boost += dt * 10.f;
+			if (flight->burnOut) {
+				flight->throttle = 0.f;
+			}
+			if (flight->boost >= 100.f && flight->burnOut) {
+				flight->burnOut = false;
+			}
+		}
+		else if (!flight->burnOut){
+			speedAim = boostSpeed * 2.f * flight->throttle;
+			flight->boost -= dt * 10.f;
+			//std::cout << flight->boost << "\n";
+			if (flight->boost < 10.f) {
+				flight->throttle = flight->boost / 10.f;
+			}
+			if (flight->boost <= 0.f) {
+				flight->afterBurner = false;
+				flight->burnOut = true;
+			}
+			//play sound?
+			auto cameraOn = entity.component<CameraOnComponent>();
+			if (cameraOn) {
+				cameraOn->shake += 2.f * flight->throttle * dt;
+			}
+		}
+		flight->boost = glm::clamp(flight->boost, 0.f, 100.f);
 
 		float speed = glm::mix(speedAim, currentSpeed, float(1.0 - glm::pow(acc, dt))) * (1.f - flight->driftReduction);
 

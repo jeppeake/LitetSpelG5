@@ -22,6 +22,7 @@
 #include <fstream>
 #include <iostream>
 #include <experimental\filesystem>
+#include "musicmanager.h"
 namespace fs = std::experimental::filesystem;
 
 entityx::Entity entityp;
@@ -298,5 +299,7 @@ void LoadoutState::update(double dt) {
 		skinsBHandler.drawButtons();
 		skinsBHandler.handleButtonClicks();
 	}
+	if (Input::isKeyPressed(GLFW_KEY_TAB))
+		MusicManager::getMusicManager().changeSong();
 	
 }

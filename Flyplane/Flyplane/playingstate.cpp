@@ -144,8 +144,7 @@ void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
 
 		if (distance > 2500) {
 			glm::vec3 direction = glm::normalize(pos - glm::vec3(transform->pos.x, 0, transform->pos.z));
-
-			pos = glm::vec3(transform->pos.x, 0, transform->pos.z) + direction * 2500.f;
+			pos = glm::vec3(transform->pos.x, transform->pos.y, transform->pos.z) + direction * 2500.f;
 		}
 	}
 
@@ -302,6 +301,7 @@ void PlayingState::loadLoadout()
 
 void PlayingState::startMenu() {
 	this->changeState(new MenuState());
+	MusicManager::getMusicManager().playMenuMusic();
 }
 
 void PlayingState::restart() {
@@ -320,8 +320,7 @@ void PlayingState::init()
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 
-	//string filename = "Assets/Sound/Darth Vader";
-	//MusicManager::getMusicManager().play(filename);
+	MusicManager::getMusicManager().playPlayingMusic();
 
 	/*sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;
@@ -595,15 +594,15 @@ void PlayingState::update(double dt)
 			deltatime.restart();
 			spawnEnemies(2);
 			spawnDrop(DropComponent::Ammo);
-			spawnDrop(DropComponent::Ammo);
-			spawnDrop(DropComponent::Ammo);
+			//spawnDrop(DropComponent::Ammo);
+			//spawnDrop(DropComponent::Ammo);
 			spawnDrop(DropComponent::Health);
 		}
 
 		timerMultiplier -= dt;
 		if (timerMultiplier <= 0 && multiplier > 1) {
 			multiplier--;
-			timerMultiplier = 10.0;
+			timerMultiplier = 5.0;
 		}
 
 		Window::getWindow().showCursor(false);
@@ -700,7 +699,7 @@ void PlayingState::addPoints(int p) {
 	//points += pointObject.points;
 	if (multiplier <= 7)
 		multiplier++;
-	timerMultiplier = 10;
+	timerMultiplier = 5;
 }
 
 
