@@ -10,13 +10,13 @@
 #include "assetloader.h"
 #include "timer.h"
 #include "globaltimer.h"
+#include "pauseEvent.h"
 
 using namespace entityx;
 
-struct SoundSystem : public System<SoundSystem> {
+struct SoundSystem : public System<SoundSystem>, public Receiver<SoundSystem> {
 private:
 	sf::Sound driftSound;
-	Timer timer;
 public:
 	SoundSystem() {
 		driftSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("wind"));
@@ -24,28 +24,17 @@ public:
 		driftSound.setPosition(0, 0, 0);
 	}
 
+	void configure(EventManager &eventManager) override {
+		eventManager.subscribe<PauseEvent>(*this);
+	}
+
+	void receive(const PauseEvent &event) {
+		driftSound.pause();
+	}
+
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<SoundComponent> sound;
 		ComponentHandle<Transform> transform;
-		
-		
-		
-		
-		if (timer.elapsed() > 1.0) {
-			timer.restart();
-			int nrOfSoundsPlaying = 0;
-			for (Entity entity : es.entities_with_components<BurstSoundComponent>()) {
-				if (entity.component<BurstSoundComponent>()->sounds[0].getStatus() == sf::Sound::Playing) {
-					nrOfSoundsPlaying++;
-				}
-			}
-			std::cout << "nr of sounds playing: " << nrOfSoundsPlaying << std::endl;
-		}
-
-
-
-
-
 		for (Entity entity : es.entities_with_components(sound, transform)) {
 			sound = entity.component<SoundComponent>();
 			transform = entity.component<Transform>();

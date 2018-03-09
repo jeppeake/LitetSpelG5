@@ -224,3 +224,11 @@ void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* phys
 
 	
 }
+
+void PlayerSystem::configure(EventManager &eventManager) {
+	eventManager.subscribe<PauseEvent>(*this);
+}
+
+void PlayerSystem::receive(const PauseEvent &event) {
+	warningSound.pause();
+}
