@@ -603,7 +603,7 @@ void PlayingState::update(double dt)
 		timerMultiplier -= dt;
 		if (timerMultiplier <= 0 && multiplier > 1) {
 			multiplier--;
-			timerMultiplier = 10.0;
+			timerMultiplier = 5.0;
 		}
 
 		Window::getWindow().showCursor(false);
@@ -700,7 +700,7 @@ void PlayingState::addPoints(int p) {
 	//points += pointObject.points;
 	if (multiplier <= 7)
 		multiplier++;
-	timerMultiplier = 10;
+	timerMultiplier = 5;
 }
 
 
