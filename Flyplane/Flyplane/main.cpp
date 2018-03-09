@@ -17,8 +17,7 @@
 int main(void)
 {	
 	sf::Listener::setGlobalVolume(50);
-	string filename = "Assets/Sound/Darth Vader.wav";
-	MusicManager::getMusicManager().play(filename);
+	MusicManager::getMusicManager().playMenuMusic();
 
 	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
