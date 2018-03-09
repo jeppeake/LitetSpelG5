@@ -5,7 +5,7 @@ MusicManager::MusicManager() {
 	music.setLoop(true);
 	music.setRelativeToListener(true);
 	music.setPosition(0.0f, 0.0f, 0.0f);
-	music.setVolume(50);
+	//music.setVolume(50);
 	offset[0] = 0;
 	offset[1] = 195;
 	offset[2] = 403;
@@ -31,6 +31,13 @@ void MusicManager::play(std::string songFile) {
 	bool worked = music.openFromFile(songFile);
 	if (!worked)
 		std::cout << "could not load " + songFile << std::endl;
+	music.play();
+}
+
+void MusicManager::playPlayingMusic() {
+	bool worked = music.openFromFile("Assets/Sound/playingmusic.wav");
+	if (!worked)
+		std::cout << "could not load menumusig.ogg" << std::endl;
 	music.play();
 }
 

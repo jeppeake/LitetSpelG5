@@ -17,6 +17,7 @@ public:
 	}
 	void play();
 	void play(std::string songFile);
+	void playPlayingMusic();
 	void playMenuMusic();
 	void changeSong();
 	void pause();
