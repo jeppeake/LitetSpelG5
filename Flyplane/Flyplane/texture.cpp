@@ -2,6 +2,18 @@
 #include <GL/glew.h>
 #include <iostream>
 
+Texture::Texture() {
+	hints[GL_TEXTURE_MIN_FILTER] = GL_LINEAR_MIPMAP_LINEAR;
+	hints[GL_TEXTURE_MAG_FILTER] = GL_NEAREST;
+	hints[GL_TEXTURE_WRAP_S] = GL_REPEAT;
+	hints[GL_TEXTURE_WRAP_T] = GL_REPEAT;
+}
+
+void Texture::hint(GLenum pname, GLint param) {
+	hints[pname] = param;
+}
+
+
 bool Texture::loadTexture(const std::string& file, int format) {
 	std::vector<unsigned char> image;
 	unsigned error = lodepng::decode(image, width, height, file);
@@ -12,10 +24,9 @@ bool Texture::loadTexture(const std::string& file, int format) {
 
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	for (auto& elem : hints) {
+		glTexParameteri(GL_TEXTURE_2D, elem.first, elem.second);
+	}
 
 	if (format) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);

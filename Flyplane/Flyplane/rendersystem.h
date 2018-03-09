@@ -44,6 +44,7 @@ struct RenderSystem : public System<RenderSystem> {
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
 		
+		bool flareReady = false;
 		glm::vec3 playerPos;
 		glm::vec3 playerDir;
 		glm::vec3 playerUp;
@@ -95,6 +96,7 @@ struct RenderSystem : public System<RenderSystem> {
 				speed = 0;
 			}
 
+			flareReady = player->flareTime > player->coolDown;
 
 			Renderer::getRenderer().setIsOutside(player->isOutside, player->outsideTimeLeft);
 		}
@@ -255,6 +257,10 @@ struct RenderSystem : public System<RenderSystem> {
 			radar.draw((float)dt);
 			Renderer::getRenderer().setDead(isDead);
 			Renderer::getRenderer().RenderGui(hp, playerPos.y, speed, newPos, playerOrientation);
+
+			if (flareReady) {
+				Renderer::getRenderer().RenderFlareReady();
+			}
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));
