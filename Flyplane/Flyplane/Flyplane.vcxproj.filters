@@ -318,9 +318,6 @@
     <ClInclude Include="lodepng.h">
       <Filter>UTILS</Filter>
     </ClInclude>
-    <ClInclude Include="soundbuffers.h">
-      <Filter>UTILS</Filter>
-    </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>UTILS</Filter>
     </ClInclude>

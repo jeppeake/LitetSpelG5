@@ -93,6 +93,7 @@ private:
 	GLuint bulletVAO;
 
 
+	Texture flareReadyTexture;
 	Texture transparent;
 	Texture warning;
 
@@ -164,6 +165,7 @@ public:
 	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);
 	void RenderTransparent();
 	void RenderClouds();
+	void RenderFlareReady();
 	void setWeaponModel(Model *mptr);
 	void setAmmo(int ammo);
 	Camera getCamera() &;

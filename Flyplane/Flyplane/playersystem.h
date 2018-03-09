@@ -15,10 +15,12 @@
 #include "input.h "
 #include "particles.h"
 
+#include "pauseEvent.h"
+
 #include "SAIB.h"
 using namespace entityx;
 
-struct PlayerSystem : public System<PlayerSystem> {
+struct PlayerSystem : public System<PlayerSystem>, public Receiver<PlayerSystem> {
 	std::vector<sf::Sound> flareSounds;
 
 	sf::Sound warningSound;
@@ -28,5 +30,6 @@ struct PlayerSystem : public System<PlayerSystem> {
 	bool BPHold = false;
 	PlayerSystem();
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override;
-
+	void configure(EventManager &eventManager) override;
+	void receive(const PauseEvent &event);
 };

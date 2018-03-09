@@ -24,7 +24,6 @@
 #include "aisystem.h"
 #include "behaviour.h"
 #include "constant_turn.h"
-#include "soundbuffers.h"
 #include "follow_path.h"
 #include "targetcomponent.h"
 #include "condition.h"
@@ -51,6 +50,7 @@
 #include "highscore.h"
 #include "backtomenuaction.h"
 #include "restartaction.h"
+#include "pauseEvent.h"
 
 #include "weaponpreset.h"
 #include "planepreset.h"
@@ -541,6 +541,8 @@ void PlayingState::update(double dt)
 		this->menuOpen = !this->menuOpen;
 
 		if (this->menuOpen) {
+			ex.events.emit<PauseEvent>();
+
 			ComponentHandle<SoundComponent> sound;
 			for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
 				sound = entity.component<SoundComponent>();
@@ -663,6 +665,8 @@ void PlayingState::gameOver() {
 	playerAlive = false;
 	Highscore::getHighscore().addScore(name, points);
 	Highscore::getHighscore().writeToFile();
+
+	ex.events.emit<PauseEvent>();
 
 	ComponentHandle<SoundComponent> sound;
 	for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {

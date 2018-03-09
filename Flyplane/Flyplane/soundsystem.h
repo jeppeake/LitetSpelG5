@@ -8,13 +8,15 @@
 #include "flightcomponent.h"
 #include "input.h"
 #include "assetloader.h"
+#include "timer.h"
+#include "globaltimer.h"
+#include "pauseEvent.h"
 
 using namespace entityx;
 
-struct SoundSystem : public System<SoundSystem> {
+struct SoundSystem : public System<SoundSystem>, public Receiver<SoundSystem> {
 private:
 	sf::Sound driftSound;
-
 public:
 	SoundSystem() {
 		driftSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("wind"));
@@ -22,10 +24,17 @@ public:
 		driftSound.setPosition(0, 0, 0);
 	}
 
+	void configure(EventManager &eventManager) override {
+		eventManager.subscribe<PauseEvent>(*this);
+	}
+
+	void receive(const PauseEvent &event) {
+		driftSound.pause();
+	}
+
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<SoundComponent> sound;
 		ComponentHandle<Transform> transform;
-
 		for (Entity entity : es.entities_with_components(sound, transform)) {
 			sound = entity.component<SoundComponent>();
 			transform = entity.component<Transform>();

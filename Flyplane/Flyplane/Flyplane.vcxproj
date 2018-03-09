@@ -262,6 +262,7 @@
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />
     <ClInclude Include="particlesystem.h" />
+    <ClInclude Include="pauseEvent.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="pickweaponaction.h" />
     <ClInclude Include="planepreset.h" />
@@ -282,7 +283,6 @@
     <ClInclude Include="saveloadoutaction.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="physicssystem.h" />
-    <ClInclude Include="soundbuffers.h" />
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
     <ClInclude Include="speedindicator.h" />

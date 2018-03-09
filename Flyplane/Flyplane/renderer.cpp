@@ -117,6 +117,8 @@ Renderer::Renderer() {
 	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
 	missileModelMatrix = glm::rotate(3.14f / 4.0f, glm::vec3(0, 0, -1)) * glm::rotate(3.14f / 4.0f, glm::vec3(-1, 0, 0));
 
+	flareReadyTexture.hint(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	flareReadyTexture.loadTexture("assets/Textures/flareicon.png", 1);
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
 	warning.loadTexture("assets/Textures/warning.png", 1);
 	scoreTexture.loadTexture("assets/Textures/score.png", 1);
@@ -494,6 +496,19 @@ void Renderer::RenderClouds() {
 		for (int i = 0; i < clouds.transform.size(); i++) {
 			renderTexture(clouds.texture, camera.getProjMatrix() * camera.getViewMatrix() * clouds.transform[i]);
 		}
+}
+
+void Renderer::RenderFlareReady() {
+	glDisable(GL_DEPTH_TEST);
+
+	auto ws = Window::getWindow().size();
+	float aspect = ws.x / ws.y;
+
+
+	glm::mat4 transform = glm::translate(glm::vec3(-0.5, -0.8, 0)) * glm::scale(0.03f*glm::vec3(4.02f, aspect*0.92f, 1));
+	renderTexture(flareReadyTexture, transform);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::RenderHPBar(float hp) {
