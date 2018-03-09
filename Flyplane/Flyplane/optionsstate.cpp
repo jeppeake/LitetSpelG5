@@ -3,6 +3,8 @@
 #include "optionsaction.h"
 #include "backtomenuaction.h"
 #include "window.h"
+#include "musicmanager.h"
+#include "input.h"
 
 void OptionsState::init() {
 	glm::vec2 s = Window::getWindow().size();
@@ -22,4 +24,6 @@ void OptionsState::update(double dt) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
+	if (Input::isKeyPressed(GLFW_KEY_TAB))
+		MusicManager::getMusicManager().changeSong();
 }

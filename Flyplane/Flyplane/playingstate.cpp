@@ -303,6 +303,7 @@ void PlayingState::loadLoadout()
 
 void PlayingState::startMenu() {
 	this->changeState(new MenuState());
+	MusicManager::getMusicManager().playMenuMusic();
 }
 
 void PlayingState::restart() {
@@ -321,8 +322,8 @@ void PlayingState::init()
 	bHandler.addButton(new Button("Restart", glm::vec2(100, 100), glm::vec2(120, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new RestartAction(this), "buttonforward"));
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 150), glm::vec2(200, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
 
-	//string filename = "Assets/Sound/Darth Vader";
-	//MusicManager::getMusicManager().play(filename);
+	string filename = "Assets/Sound/Darth Vader.wav";
+	MusicManager::getMusicManager().play(filename);
 
 	/*sf::SoundBuffer* flyingSB;
 	sf::SoundBuffer* bulletSB;

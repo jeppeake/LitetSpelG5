@@ -138,7 +138,9 @@
     <ClCompile Include="buildingpreset.cpp">
       <Filter>Presets</Filter>
     </ClCompile>
-    <ClCompile Include="musicmanager.cpp" />
+    <ClCompile Include="musicmanager.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />

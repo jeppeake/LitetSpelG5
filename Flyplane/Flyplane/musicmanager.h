@@ -5,6 +5,8 @@
 class MusicManager {
 private:
 	sf::Music music;
+	int offset[15];
+	int index;
 public:
 	MusicManager();
 	MusicManager(const MusicManager &other) = delete;
@@ -15,6 +17,8 @@ public:
 	}
 	void play();
 	void play(std::string songFile);
+	void playMenuMusic();
+	void changeSong();
 	void pause();
 	void stop();
 };

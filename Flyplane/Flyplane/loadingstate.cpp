@@ -5,8 +5,10 @@
 #include "playingstate.h"
 #include "startgameaction.h"
 #include "input.h"
+#include "musicmanager.h"
 
 void LoadingState::init() {
+	MusicManager::getMusicManager().stop();
 	AssetLoader::getLoader().clearTerrains();
 	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");
