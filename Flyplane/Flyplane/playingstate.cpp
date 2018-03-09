@@ -24,7 +24,6 @@
 #include "aisystem.h"
 #include "behaviour.h"
 #include "constant_turn.h"
-#include "soundbuffers.h"
 #include "follow_path.h"
 #include "targetcomponent.h"
 #include "condition.h"

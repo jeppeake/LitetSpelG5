@@ -8,13 +8,15 @@
 #include "flightcomponent.h"
 #include "input.h"
 #include "assetloader.h"
+#include "timer.h"
+#include "globaltimer.h"
 
 using namespace entityx;
 
 struct SoundSystem : public System<SoundSystem> {
 private:
 	sf::Sound driftSound;
-
+	Timer timer;
 public:
 	SoundSystem() {
 		driftSound.setBuffer(*AssetLoader::getLoader().getSoundBuffer("wind"));
@@ -25,6 +27,24 @@ public:
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		ComponentHandle<SoundComponent> sound;
 		ComponentHandle<Transform> transform;
+		
+		
+		
+		
+		if (timer.elapsed() > 1.0) {
+			timer.restart();
+			int nrOfSoundsPlaying = 0;
+			for (Entity entity : es.entities_with_components<BurstSoundComponent>()) {
+				if (entity.component<BurstSoundComponent>()->sounds[0].getStatus() == sf::Sound::Playing) {
+					nrOfSoundsPlaying++;
+				}
+			}
+			std::cout << "nr of sounds playing: " << nrOfSoundsPlaying << std::endl;
+		}
+
+
+
+
 
 		for (Entity entity : es.entities_with_components(sound, transform)) {
 			sound = entity.component<SoundComponent>();

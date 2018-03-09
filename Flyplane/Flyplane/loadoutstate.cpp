@@ -151,8 +151,8 @@ void LoadoutState::init() {
 
 	if (preorder) {
 		sb.loadFromFile("assets/Sound/sellout.wav");
-		sound.setBuffer(sb);
-		sound.play();
+		selloutSound.setBuffer(sb);
+		selloutSound.play();
 	}
 }
 

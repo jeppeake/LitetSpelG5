@@ -17,7 +17,6 @@
 #include "flightcomponent.h"
 #include <glm/gtx/vector_angle.hpp>
 #include <ctime>
-#include "soundbuffers.h"
 #include "targetcomponent.h"
 #include "window.h"
 #include "healthcomponent.h"
@@ -240,8 +239,8 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 								for (auto& sound : s->sounds) {
 									if (sound.getStatus() != sound.Playing) {
-										sound.setPlayingOffset(sf::seconds(equip->turrets.at(i).timeAccum));
 										sound.play();
+										sound.setPlayingOffset(sf::seconds(equip->turrets.at(i).timeAccum));
 										break;
 									}
 								}
