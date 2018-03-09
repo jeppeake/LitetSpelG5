@@ -98,11 +98,12 @@ void FlightSystem::update(entityx::EntityManager &es, entityx::EventManager &eve
 			if (flight->boost < 10.f) {
 				flight->throttle = flight->boost / 10.f;
 			}
+			//afterburner sound
 			if (flight->boost <= 0.f) {
 				flight->afterBurner = false;
 				flight->burnOut = true;
+				//burnout sound
 			}
-			//play sound?
 			auto cameraOn = entity.component<CameraOnComponent>();
 			if (cameraOn) {
 				cameraOn->shake += 2.f * flight->throttle * dt;

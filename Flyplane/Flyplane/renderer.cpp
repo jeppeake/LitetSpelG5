@@ -602,6 +602,7 @@ void Renderer::InitBullets() {
 }
 
 void Renderer::RenderBullets() {
+	if (bulletPositions.size() > 0) {
 	GLint access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
 	
 	bulletShader.use();
@@ -624,6 +625,7 @@ void Renderer::RenderBullets() {
 
 	bulletPositions.clear();
 	bulletOrientations.clear();
+	}
 }
 
 void Renderer::setWeaponModel(Model * mptr) {

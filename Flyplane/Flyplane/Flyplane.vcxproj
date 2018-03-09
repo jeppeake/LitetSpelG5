@@ -262,6 +262,7 @@
     <ClInclude Include="optionsaction.h" />
     <ClInclude Include="optionsstate.h" />
     <ClInclude Include="particlesystem.h" />
+    <ClInclude Include="pauseEvent.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="pickweaponaction.h" />
     <ClInclude Include="planepreset.h" />
