@@ -41,9 +41,14 @@ struct RenderSystem : public System<RenderSystem> {
 	{}
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {
 		
+
+
 		ComponentHandle<PlayerComponent> player;
 		ComponentHandle<Transform> transform;
-		
+
+		Entity pEntity;
+		Entity aimTarget;
+		bool hasAimTarget = false;
 		bool flareReady = false;
 		glm::vec3 playerPos;
 		glm::vec3 playerDir;
@@ -96,9 +101,18 @@ struct RenderSystem : public System<RenderSystem> {
 				speed = 0;
 			}
 
+			if (player->hasTarget) {
+				hasAimTarget = true;
+				aimTarget = player->target;
+				pEntity = entity;
+			}
+
 			flareReady = player->flareTime > player->coolDown;
 
 			Renderer::getRenderer().setIsOutside(player->isOutside, player->outsideTimeLeft);
+
+
+
 		}
 
 
@@ -204,6 +218,13 @@ struct RenderSystem : public System<RenderSystem> {
 
 
 		if (playing) {
+			if (hasAimTarget) {
+				glm::vec3 pos = SAIB::ADVInterdiction(aimTarget, pEntity, 350.f, glm::vec3(), dt);
+
+				Renderer::getRenderer().RenderAimAssist(pos);
+			}
+
+
 			ComponentHandle<AIComponent> ai;
 			ComponentHandle<MissionMarker> mmarker;
 
@@ -261,6 +282,8 @@ struct RenderSystem : public System<RenderSystem> {
 			if (flareReady) {
 				Renderer::getRenderer().RenderFlareReady();
 			}
+
+			
 		}
 		//Renderer::getRenderer().RenderScene();
 		//radar.draw(float(dt));

@@ -4,6 +4,7 @@
 #include "healthcomponent.h"
 #include "targetcomponent.h"
 #include "lifetimecomponent.h"
+#include "factioncomponents.h"
 #include "renderer.h"
 
 void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* physics, EventManager & events);
@@ -200,6 +201,25 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			}
 		}
 
+
+		/***************
+		** aim assist **
+		***************/
+		glm::vec3 forward = transform->orientation * glm::vec3(0, 0, 1);
+		player->hasTarget = false;
+		double bestScore = -1;
+		ComponentHandle<Target> target;
+		ComponentHandle<Transform> tTrans;
+		ComponentHandle<FactionEnemy> factionEnemy;
+		for (Entity enemy : es.entities_with_components(target, tTrans, factionEnemy)) {
+			glm::vec3 dir = tTrans->pos - transform->pos;
+			double score = dot(normalize(dir), forward) / length(dir); 
+			if (score > bestScore && length(dir) < 400.f) {
+				bestScore = score;
+				player->hasTarget = true;
+				player->target = enemy;
+			}
+		}
 	}
 
 

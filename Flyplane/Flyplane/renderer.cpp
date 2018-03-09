@@ -119,6 +119,9 @@ Renderer::Renderer() {
 
 	flareReadyTexture.hint(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	flareReadyTexture.loadTexture("assets/Textures/flareicon.png", 1);
+	
+	aimAssistTexture.loadTexture("assets/Textures/aimassist.png", 1);
+
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
 	warning.loadTexture("assets/Textures/warning.png", 1);
 	scoreTexture.loadTexture("assets/Textures/score.png", 1);
@@ -509,6 +512,20 @@ void Renderer::RenderFlareReady() {
 	renderTexture(flareReadyTexture, transform);
 
 	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::RenderAimAssist(glm::vec3 pos) {
+	auto screenPosH = camera.getProjMatrix() * camera.getViewMatrix() * glm::vec4(pos, 1);
+	
+	auto screenPos = glm::vec3(screenPosH) / screenPosH.w;
+
+	auto ws = Window::getWindow().size();
+	float aspect = ws.x / ws.y;
+
+	//std::cout << "screenpos: " << screenPos.x << ", " << screenPos.y << "\n";
+
+	auto transform = glm::translate(glm::vec3(screenPos.x, screenPos.y, 0)) * glm::scale(0.006f*glm::vec3(1, aspect*1, 1));;
+	renderTexture(aimAssistTexture, transform);
 }
 
 void Renderer::RenderHPBar(float hp) {

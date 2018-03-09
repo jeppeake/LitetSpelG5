@@ -1,6 +1,7 @@
 #pragma once
 #include "camera.h"
 #include "timer.h"
+#include <entityx\Entity.h>
 
 struct PlayerComponent {
 	PlayerComponent() {
@@ -18,4 +19,7 @@ struct PlayerComponent {
 	bool flareActive = false;
 	double flareAccum = 0;
 
+
+	bool hasTarget = false;
+	entityx::Entity target;
 };
