@@ -2,9 +2,9 @@ Spectre
 model
 assets/Spectre/Spectre_BODY.fbx
 normalspeed
-100
+125
 boostspeed
-175
+200
 breakforce
 75
 acceleration
