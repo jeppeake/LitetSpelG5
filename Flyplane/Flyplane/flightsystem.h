@@ -6,6 +6,7 @@
 #include "physics.h"
 #include "input.h"
 #include "flightcomponent.h"
+#include "cameraoncomponent.h"
 #include <iostream>
 #include <glm/gtx/projection.hpp>
 

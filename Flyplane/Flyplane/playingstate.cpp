@@ -145,8 +145,7 @@ void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
 
 		if (distance > 2500) {
 			glm::vec3 direction = glm::normalize(pos - glm::vec3(transform->pos.x, 0, transform->pos.z));
-
-			pos = glm::vec3(transform->pos.x, 0, transform->pos.z) + direction * 2500.f;
+			pos = glm::vec3(transform->pos.x, transform->pos.y, transform->pos.z) + direction * 2500.f;
 		}
 	}
 
@@ -596,8 +595,8 @@ void PlayingState::update(double dt)
 			deltatime.restart();
 			spawnEnemies(2);
 			spawnDrop(DropComponent::Ammo);
-			spawnDrop(DropComponent::Ammo);
-			spawnDrop(DropComponent::Ammo);
+			//spawnDrop(DropComponent::Ammo);
+			//spawnDrop(DropComponent::Ammo);
 			spawnDrop(DropComponent::Health);
 		}
 

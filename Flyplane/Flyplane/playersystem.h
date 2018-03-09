@@ -23,6 +23,9 @@ struct PlayerSystem : public System<PlayerSystem> {
 
 	sf::Sound warningSound;
 	Particles *S;
+	Timer boostTimer;
+	int BP = 0;
+	bool BPHold = false;
 	PlayerSystem();
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override;
 

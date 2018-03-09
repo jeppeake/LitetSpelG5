@@ -17,6 +17,8 @@ using namespace entityx;
 struct CameraSystem : public System<CameraSystem> {
 
 	double gt = 0;
+	bool following = true;
+	Camera* cam;
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override;
 
