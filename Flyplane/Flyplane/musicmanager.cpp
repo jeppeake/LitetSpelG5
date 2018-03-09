@@ -37,14 +37,14 @@ void MusicManager::play(std::string songFile) {
 void MusicManager::playPlayingMusic() {
 	bool worked = music.openFromFile("Assets/Sound/playingmusic.wav");
 	if (!worked)
-		std::cout << "could not load menumusig.ogg" << std::endl;
+		std::cout << "could not load playingmusic.wav" << std::endl;
 	music.play();
 }
 
 void MusicManager::playMenuMusic() {
 	bool worked = music.openFromFile("Assets/Sound/menumusic.ogg");
 	if (!worked)
-		std::cout << "could not load menumusig.ogg" << std::endl;
+		std::cout << "could not load menumusic.ogg" << std::endl;
 	index = rand() % 15;
 	music.play();
 	music.setPlayingOffset(sf::seconds(offset[index]));
