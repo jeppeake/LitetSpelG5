@@ -24,7 +24,7 @@ void main() {
 	Tex = tex;
 	Normal = transpose(inverse(mat3(modelMatrix)))*normal;
 
-	float bias = 0.02*(1-dot(normal, sunDir));
+	float bias = 0.009;
 	vec3 shadowModelPos = modelPos.xyz + bias*Normal;
 	ShadowSpace = (shadowMatrix * vec4(shadowModelPos, 1)).xyz;
 	TerrainShadowSpace = (terrainShadowMatrix * modelPos).xyz;
