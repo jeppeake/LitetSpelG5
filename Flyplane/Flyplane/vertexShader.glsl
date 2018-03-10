@@ -8,6 +8,8 @@ uniform mat4 ViewProjMatrix;
 uniform mat4 shadowMatrix;
 uniform mat4 terrainShadowMatrix;
 
+uniform vec3 sunDir;
+
 out vec3 Pos;
 out vec3 Normal;
 out vec2 Tex;
@@ -22,7 +24,9 @@ void main() {
 	Tex = tex;
 	Normal = transpose(inverse(mat3(modelMatrix)))*normal;
 
-	ShadowSpace = (shadowMatrix * modelPos).xyz;
+	float bias = 0.02*(1-dot(normal, sunDir));
+	vec3 shadowModelPos = modelPos.xyz + bias*Normal;
+	ShadowSpace = (shadowMatrix * vec4(shadowModelPos, 1)).xyz;
 	TerrainShadowSpace = (terrainShadowMatrix * modelPos).xyz;
 
 	gl_Position = ViewProjMatrix * modelPos;

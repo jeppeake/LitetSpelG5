@@ -355,7 +355,9 @@ void Renderer::RenderObjects() {
 void Renderer::RenderScene() {
 
 	if (drawShadows) {
+		//glCullFace(GL_FRONT);
 		RenderPlaneShadow();
+		//glCullFace(GL_BACK);
 		RenderTerrainShadow();
 	}
 
