@@ -132,11 +132,14 @@ float testShadow(vec3 shadowCoord, sampler2D sampler) {
 	float depth = texture(sampler, shadowCoord.xy).r;
 	float visibility = 1.0;
 	
+	/*
 	vec3 normal = vNormal;
 	vec3 sun = sunDir;
 	float cosa = clamp(dot(normal, sun), 0.0, 1.0);
 	float bias = 0.005*tan(acos(cosa));
 	bias = clamp(bias, 0.0, 0.01);
+	*/
+	float bias = 0;
 
 	if(depth < shadowCoord.z-bias) {
 		visibility = 0.05;

@@ -2,8 +2,6 @@
 layout(location = 0) in vec2 uv;
 uniform mat4 modelMatrix;
 uniform mat4 ViewProjMatrix;
-uniform mat4 shadowMatrix;
-uniform mat4 terrainShadowMatrix;
 
 uniform sampler2D heightmap;
 uniform sampler2D materialmap;
@@ -24,8 +22,6 @@ out vec3 Normal;
 out vec2 Tex;
 out vec3 Materials;
 out vec3 Color;
-out vec3 ShadowSpace;
-out vec3 TerrainShadowSpace;
 
 float rand(vec2 p);
 
@@ -52,10 +48,12 @@ vec3 sampleNormal(vec2 hmUV) {
 	h[2] = sampleHeightmap(hmUV, vec2(1, 0));
 	h[3] = sampleHeightmap(hmUV, vec2(0, 1));
 
+	float ratioX = scale.x/scale.y;
+	float ratioZ = scale.z/scale.y;
 	vec3 n;
-	n.z = h[0] - h[3];
-	n.x = h[1] - h[2];
-	n.y = 1.0/255.0;
+	n.z = ratioZ * (h[0] - h[3]);
+	n.x = ratioX * (h[1] - h[2]);
+	n.y = 2 * ratioX*ratioZ;
 	return normalize(n);
 }
 
@@ -136,8 +134,6 @@ void main() {
 	
 	GeometryPos = pos;
 
-	ShadowSpace = (shadowMatrix * vec4(pos, 1.0)).xyz;
-	TerrainShadowSpace = (terrainShadowMatrix * vec4(pos, 1.0)).xyz;
 	gl_Position = ViewProjMatrix * vec4(pos, 1.0);
 }
 

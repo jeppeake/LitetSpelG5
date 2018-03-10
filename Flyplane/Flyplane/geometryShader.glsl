@@ -3,14 +3,15 @@ layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 //layout(line_strip, max_vertices = 4) out;
 
+uniform mat4 shadowMatrix;
+uniform mat4 terrainShadowMatrix;
+
 in vec3 Pos[];
 in vec3 Normal[];
 in vec2 Tex[];
 in vec3 Materials[];
 in vec3 Color[];
 in vec3 GeometryPos[];
-in vec3 ShadowSpace[];
-in vec3 TerrainShadowSpace[];
 
 out vec3 vPos;
 out vec3 vNormal;
@@ -22,6 +23,8 @@ out vec3 vTerrainShadowSpace;
 flat out vec3 vColor;
 
 
+
+
 void main() {
 	vec3 v1 = GeometryPos[0] - GeometryPos[1];
 	vec3 v2 = GeometryPos[0] - GeometryPos[2];
@@ -30,8 +33,10 @@ void main() {
 		vPos = Pos[i];
 		//vNormal = Normal[i];
 		vGeometryPos = GeometryPos[i];
-		vShadowSpace = ShadowSpace[i];
-		vTerrainShadowSpace = TerrainShadowSpace[i];
+
+		vShadowSpace = (shadowMatrix * vec4(vGeometryPos - 1*vNormal, 1.0)).xyz;
+		vTerrainShadowSpace = (terrainShadowMatrix * vec4(vGeometryPos + 20.0*vNormal, 1.0)).xyz;
+
 		vTex = Tex[i];
 		vColor = Color[i];
 		vMaterials = Materials[i];
