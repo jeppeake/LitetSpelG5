@@ -63,6 +63,9 @@ private:
 	EnemyMarker markers;
 	Cloud clouds;
 
+	// position and color
+	std::vector<std::pair<glm::vec3, glm::vec3>> beams;
+
 	Texture hpbar;
 	HPIndicator hpIndicator;
 	glm::mat4 hpMatrix;
@@ -98,6 +101,7 @@ private:
 	Texture flareReadyTexture;
 	Texture transparent;
 	Texture warning;
+	Texture beam;
 
 	bool isTargeted = false;
 
@@ -164,6 +168,7 @@ public:
 	}
 
 	void RenderScene();
+	void RenderBeams();
 	void RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation);
 	void RenderTransparent();
 	void RenderClouds();
@@ -175,7 +180,8 @@ public:
 	void setCamera(const Camera& camera);
 	void addMarker(glm::vec3 pos, float scale);
 	void addMarker(glm::vec3 pos, glm::vec3 color, float scale);
-	void renderTexture(const Texture& texture, const glm::mat4& matrix);
+	void addBeam(glm::vec3 pos, glm::vec3 color);
+	void renderTexture(const Texture& texture, const glm::mat4& matrix, glm::vec4 colorFilter = glm::vec4(1));
 	void setScore(int points);
 	void setMultiplier(int multiplier);
 	void setPoints(int points);

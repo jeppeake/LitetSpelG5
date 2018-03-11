@@ -25,7 +25,7 @@ void main() {
 	Normal = transpose(inverse(mat3(modelMatrix)))*normal;
 
 	ShadowSpace = (shadowMatrix * vec4(modelPos.xyz + 0.009*Normal, 1)).xyz;
-	TerrainShadowSpace = (terrainShadowMatrix * vec4(modelPos.xyz + 0.009*Normal, 1)).xyz;
+	TerrainShadowSpace = (terrainShadowMatrix * vec4(modelPos.xyz + 1.0*Normal, 1)).xyz;
 
 	gl_Position = ViewProjMatrix * modelPos;
 }

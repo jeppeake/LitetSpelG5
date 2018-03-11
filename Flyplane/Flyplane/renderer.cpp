@@ -123,6 +123,7 @@ Renderer::Renderer() {
 	aimAssistTexture.loadTexture("assets/Textures/aimassist.png", 1);
 	smallDotTexture.loadTexture("assets/Textures/dot.png", 1);
 
+	beam.loadTexture("assets/Textures/beam.png", 1);
 	transparent.loadTexture("assets/Textures/transparent.png", 1);
 	warning.loadTexture("assets/Textures/warning.png", 1);
 	scoreTexture.loadTexture("assets/Textures/score.png", 1);
@@ -180,6 +181,8 @@ void Renderer::Render(Model &model, Transform &trans) {
 		this->shader.uniform("modelMatrix", modelMatrix*model.model_meshes[i].second);
 		glDrawElements(GL_TRIANGLES, model.model_meshes[i].first->numIndices(), GL_UNSIGNED_INT, 0);
 	}
+
+	
 }
 
 
@@ -376,6 +379,8 @@ void Renderer::RenderScene() {
 
 	RenderClouds();
 
+	RenderBeams();
+
 	RenderParticles();
 
 
@@ -421,6 +426,33 @@ void Renderer::RenderScene() {
 
 	// old
 	//mapList.clear();
+}
+
+void Renderer::RenderBeams() {
+	std::sort(beams.begin(), beams.end(), [&](auto& a, auto& b) {
+		float aDist = length(a.first - camera.getTransform().pos);
+		float bDist = length(b.first - camera.getTransform().pos);
+		return aDist > bDist;
+	});
+
+	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
+
+	for (auto& b : beams) {
+		glm::vec3 dir = b.first - camera.getTransform().pos;
+		float distance = length(dir);
+		float edge1 = 1500.f;
+		float edge2 = 3000.f;
+		float alpha = glm::smoothstep(edge1, edge2, distance);
+		if (alpha > 1.f / 255.f) {
+			dir.y = 0;
+			float angle = -acos(dot(normalize(dir), glm::vec3(0, 0, 1)));
+			glm::vec3 axis = cross(normalize(dir), glm::vec3(0, 0, 1));
+			glm::mat4 transform = glm::translate(b.first + 20.f*normalize(dir)) * glm::rotate(angle, axis) * glm::scale(glm::vec3(50, 3000, 50));
+			renderTexture(beam, viewProjMatrix*transform, glm::vec4(b.second, alpha));
+		}
+	}
+
+	beams.clear();
 }
 
 void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshairPos, glm::quat orientation) {
@@ -718,8 +750,13 @@ void Renderer::addMarker(glm::vec3 pos, glm::vec3 color, float scale)
 	markers.addPosition(pos, color, scale);
 }
 
-void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix) {
+void Renderer::addBeam(glm::vec3 pos, glm::vec3 color) {
+	beams.emplace_back(pos, color);
+}
+
+void Renderer::renderTexture(const Texture& texture, const glm::mat4& matrix, glm::vec4 colorFilter) {
 	guiShader.use();
+	guiShader.uniform("colorFilter", colorFilter);
 	guiShader.uniform("matrix", matrix);
 	guiShader.uniform("texSampler", 0);
 

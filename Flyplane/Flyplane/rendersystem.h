@@ -262,6 +262,7 @@ struct RenderSystem : public System<RenderSystem> {
 					float length = glm::distance(transform->pos, playerPos);
 					length = 5.0 + length / 100.0f;
 					Renderer::getRenderer().addMarker(transform->pos, color, length);
+					Renderer::getRenderer().addBeam(transform->pos, color);
 				}
 			}
 			ComponentHandle<DropComponent> dropHandle;
