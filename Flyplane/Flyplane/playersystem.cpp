@@ -221,8 +221,6 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			}
 		}
 	}
-
-
 }
 
 void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* physics, EventManager & events) {
@@ -250,5 +248,12 @@ void PlayerSystem::configure(EventManager &eventManager) {
 }
 
 void PlayerSystem::receive(const PauseEvent &event) {
-	warningSound.pause();
+	if (event.pause) {
+		if (warningSound.getStatus() == sf::Sound::Playing)
+			warningSound.pause();
+	}
+	else {
+		if (warningSound.getStatus() == sf::Sound::Paused)
+			warningSound.play();
+	}
 }

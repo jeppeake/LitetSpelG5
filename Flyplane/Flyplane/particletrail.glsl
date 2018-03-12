@@ -32,14 +32,16 @@ void main()
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
 		Colors[gid].rgb = color;
-		Colors[gid].a = 1;
+		Colors[gid].a = 1.0;
+		Positions[gid].w = 1;
 	}
 	else
 	{
 		Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].a = pow(1-Lives[gid] / life, 4);
+		//Colors[gid].a = pow(1-Lives[gid] / life, 4);
+		Positions[gid].w = pow(1-Lives[gid] / life, 4);
 
 		//Positions[gid].xyz = spawn + direction * Lives[gid];
 	}

@@ -37,14 +37,19 @@ void main()
 	{
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(gid) + 1)/2;
+		Colors[gid].a = 1.0;
+		Positions[gid].a = 1.0;
 	}
 	else
 	{
 		if(gid < 20) {
 			Colors[gid].rgb = light;
-			Colors[gid].a = 0.6 + 0.4 * rand(gid + dt * 1000);
+			//Colors[gid].a = 0.6 + 0.4 * rand(gid + dt * 1000);
 			
-			Colors[gid].a *= smoothstep(3.5, 3.0, time);
+			//Colors[gid].a *= smoothstep(3.5, 3.0, time);
+
+			Positions[gid].a = 0.6 + 0.4 * rand(gid + dt * 1000);
+			Positions[gid].a *= smoothstep(3.5, 3.0, time);
 
 			vec3 offset;
 			offset.x = rand(20 * gid + dt * 100 + 100);
@@ -56,10 +61,11 @@ void main()
 		} else {
 			Velocities[gid].xyz -= 0.3*Velocities[gid].xyz * dt;
 			Positions[gid].xyz += Velocities[gid].xyz * dt;
-			Positions[gid].xyz += 0.5 * velocity * dt;
-			Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 4)*0.5;
+			//Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 4)*0.5;
+			Positions[gid].a = pow(smoothstep(life, 0, Lives[gid]), 4)*0.5;
 		}
-		Colors[gid].a *= smoothstep(5, 3, time);
+		//Colors[gid].a *= smoothstep(5, 3, time);
+		Positions[gid].a *= smoothstep(5, 3, time);
 	}
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
