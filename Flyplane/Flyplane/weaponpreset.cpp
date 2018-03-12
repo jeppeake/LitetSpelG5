@@ -109,6 +109,11 @@ void WeaponPreset::load(std::string presetname)
 			droptime = std::stod(str, NULL);
 			continue;
 		}
+		else if (str.compare("limit") == 0) {
+			std::getline(f, str);
+			limit = std::stoi(str, NULL);
+			continue;
+		}
 	}
 }
 

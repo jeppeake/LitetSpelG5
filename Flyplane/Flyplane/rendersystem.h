@@ -236,7 +236,7 @@ struct RenderSystem : public System<RenderSystem> {
 					float length = glm::distance(enemyPos, playerPos);
 					glm::vec3 color = glm::vec3(1, 0, 0);
 					if (entity.has_component<Target>()) {
-						if (entity.component<Target>().get()->is_targeted) {
+						if (entity.component<Target>().get()->preview_target) {
 							color += glm::vec3(-0.5, 0.9, -0.5);
 						}
 					}
@@ -255,7 +255,7 @@ struct RenderSystem : public System<RenderSystem> {
 					glm::vec3 color = mmarker->color;
 					radar.addPlane(*transform.get(), color);
 					if (entity.has_component<Target>()) {
-						if (entity.component<Target>().get()->is_targeted) {
+						if (entity.component<Target>().get()->preview_target) {
 							color += glm::vec3(-0.5, 0.9, -0.5);
 						}
 					}

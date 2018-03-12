@@ -428,7 +428,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (Entity enemy : es.entities_with_components(aitran, target)) {
 				glm::vec3 dir = aitran->pos - trans->pos;
 				float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
-				target->is_targeted = false;
+				target->preview_target = false;
 				double score = (dot * target->heat) / glm::length(dir);
 				if (score > bestScore && entity.has_component<Target>() && entity.component<Target>()->faction != target->faction) {
 					bestDot = dot;
@@ -446,7 +446,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			}
 
 			if (cure.valid() && !noTarget)
-				cure.component<Target>()->is_targeted = true;
+				cure.component<Target>()->preview_target = true;
 		}
 		
 

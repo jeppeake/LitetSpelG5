@@ -3,6 +3,11 @@
 #include <vector>
 #include "glm\glm.hpp"
 
+#define SLOTLIMIT_LIGHT 1
+#define SLOTLIMIT_MEDIUM 2
+#define SLOTLIMIT_HEAVY 3
+#define SLOTLIMIT_MASSIVE 4
+
 class PlanePreset {
 public:
 	std::string name = "";
@@ -12,6 +17,7 @@ public:
 	double normalspeed, boostspeed, breakforce, acceleration, turnrate;
 	std::vector<std::string> textureNames;
 	std::vector<glm::vec3> wepPos;
+	std::vector<unsigned int> slotLimits;
 	std::vector<glm::vec3> enginePos;
 	std::vector<glm::vec3> wingTrailPos;
 	float engineRadius;
