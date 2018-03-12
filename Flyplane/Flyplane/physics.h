@@ -8,8 +8,8 @@ public:
 	Physics(double mass, double dragCoeff, glm::vec3 velocity, glm::vec3 acceleration) : mass(mass), dragCoeff(dragCoeff), velocity(velocity), acceleration(acceleration){
 
 	}
-	float calcTotalDrag () {
-		return 0.5 * density * dragCoeff * glm::length(velocity);
+	glm::vec3 calcTotalDrag () {
+		return 0.5f * density * float(dragCoeff) * velocity;
 	}
 	double mass, dragCoeff;
 	glm::vec3 acceleration = glm::vec3(0.0, 0.0, 0.0);

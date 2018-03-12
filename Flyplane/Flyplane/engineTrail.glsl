@@ -30,10 +30,15 @@ uniform vec3 direction;
 // [-1, 1]
 uniform float throttle;
 
+uniform float afterBurner;
+
 // [-1, 1]
 float rand(float n) { 
 	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
 }
+
+const vec3 normalColor = vec3(1.0,0.5,0.0);
+const vec3 afterBurnColor = vec3(0.4,0.4,1.0);
 
 void main()
 {
@@ -46,13 +51,17 @@ void main()
 
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
-		Colors[gid].rgb = vec3(1.0,0.5,0.0);
+		Colors[gid].rgb = normalColor;
 		Positions[gid].a = 1.0;
 	}
 	else
 	{
 		// UPDATE
 		float t = throttle;
+		
+		vec3 targetColor = afterBurnColor * afterBurner + (1-afterBurner) * normalColor;
+		Colors[gid].rgb = mix(Colors[gid].rgb, targetColor, 1-pow(0.2, dt));
+
 		
 		Colors[gid].a = 0.5 * sqrt(r) * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
 		Colors[gid].a *= 0.4 + pow(t*0.5 + 0.5, 2);

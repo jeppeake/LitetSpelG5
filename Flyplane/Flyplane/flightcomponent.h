@@ -28,9 +28,9 @@ struct FlightComponent {
 	float engine_acceleration = 0.f;
 	float current_speed = 0.f;
 
-	float afterBurner = false;
+	bool afterBurner = false;
 	float boost = 100.f;
-	float burnOut = false;
+	bool burnOut = false;
 
 	//Timer driftTime;
 	float driftReduction = 0.f;

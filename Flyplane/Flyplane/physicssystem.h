@@ -23,7 +23,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem> {
 			transform = entity.component<Transform>();
 			
 			calcAcceleration(physics);
-			
+
 			physics->velocity += physics->acceleration * float(dt);
 
 			transform->pos += float(dt) * physics->velocity;
@@ -44,5 +44,6 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem> {
 		if (physics->gravity) {
 			physics->acceleration = physics->g;
 		}
+		physics->acceleration -= physics->calcTotalDrag()/float(physics->mass);
 	}
 };

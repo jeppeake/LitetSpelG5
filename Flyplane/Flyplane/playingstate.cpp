@@ -83,7 +83,7 @@ void PlayingState::spawnEnemies(int nr) {
 		glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign<Physics>(1000.0, 0.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
@@ -203,7 +203,7 @@ void PlayingState::loadLoadout()
 	AssetLoader::getLoader().loadModel(pp.model, pp.name);
 
 	entity_p.assign<Transform>(pos, normalize(orien));
-	entity_p.assign<Physics>(1000.0, 1.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
+	entity_p.assign<Physics>(1000.0, 0.0, glm::vec3(v(), v(), v()), glm::vec3(0.0, 0.0, 0.0));
 	entity_p.assign <ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 	entity_p.assign <PlayerComponent>();
 	entity_p.assign <CameraOnComponent>();
@@ -427,7 +427,7 @@ void PlayingState::init()
 		glm::vec3 pos(rand() % 100, 4500, rand() % 100);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign<Physics>(1000.0, 0.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
@@ -564,12 +564,16 @@ void PlayingState::update(double dt)
 
 	glm::vec2 window = Window::getWindow().size();
 
+
+
 	if (playerAlive && !menuOpen) {
 		//points += 10 * dt;
+		gt += dt;
 
-		if (deltatime.elapsed() > 30) {
-			deltatime.restart();
-			spawnEnemies(2);
+		if (gt > 30.0) {
+			gt -= 30.0;
+			spawnEnemies(spawnCounter);
+			spawnCounter++;
 			spawnDrop(DropComponent::Ammo);
 			//spawnDrop(DropComponent::Ammo);
 			//spawnDrop(DropComponent::Ammo);

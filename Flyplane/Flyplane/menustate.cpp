@@ -42,22 +42,37 @@ entityx::Entity entity3;
 entityx::Entity randomEnemy;
 
 void MenuState::spawnEnemies(int nr) {
+	PlanePreset pp;
+	pp.load("assets/Presets/Planes/Starfighter.txt");
 
 	for (int i = 0; i < nr; i++) {
+
+
 		auto entity = ex.entities.create();
 		float x = rand() % 2000 - 1000;
 		float z = rand() % 2000;
 		glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
-		entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+		entity.assign<Physics>(1000.0, 0.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 		entity.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 		entity.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 		entity.assign<Target>(10.0, FACTION_AI);
 		entity.assign <HealthComponent>(100.0);
 		auto handle = entity.assign<ParticleComponent>();
 		ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::TRAIL, handle);
-		ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::ENGINE_TRAIL, handle);
+
+		ParticleParameters p;
+		p.engineTrail.radius = pp.engineRadius;
+		for (auto pos : pp.enginePos) {
+			p.engineTrail.offset = pos;
+			ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle, p);
+		}
+		for (auto pos : pp.wingTrailPos) {
+			p.wingTrail.respawnCounter = 0;
+			p.wingTrail.offset = pos;
+			ex.events.emit<AddParticleEvent>(WING_TRAIL, handle, p);
+		}
 
 		std::vector<Behaviour*> behaviours;
 
@@ -154,13 +169,24 @@ void MenuState::init() {
 
 	ex.systems.configure();
 
+
+	std::ifstream file("loadout.txt");
+	std::string str;
+
+	//read name
+	PlanePreset pp;
+	pp.preorder = true;
+	std::getline(file, str);
+	pp.load(str);
+
+
 	entity3 = ex.entities.create();
 	float x = 0;
 	float z = 100;
 	glm::vec3 pos(x, 2000, z);
 	glm::quat orien(1, 0, 0, 0);
 	entity3.assign<Transform>(pos, normalize(orien));
-	entity3.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+	entity3.assign<Physics>(1000.0, 0.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 	entity3.assign <ModelComponent>(AssetLoader::getLoader().getModel("MIG-212A"));
 	entity3.assign <FlightComponent>(100.f, 200.f, 50.f, 1.5f, 0.5f);
 	entity3.assign <CollisionComponent>();
@@ -168,7 +194,18 @@ void MenuState::init() {
 	entity3.assign<CameraOnComponent>();
 	auto handle = entity3.assign<ParticleComponent>();
 	ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::TRAIL, handle);
-	ex.events.emit<AddParticleEvent>(PARTICLE_TYPES::ENGINE_TRAIL, handle);
+
+	ParticleParameters p;
+	p.engineTrail.radius = pp.engineRadius;
+	for (auto pos : pp.enginePos) {
+		p.engineTrail.offset = pos;
+		ex.events.emit<AddParticleEvent>(ENGINE_TRAIL, handle, p);
+	}
+	for (auto pos : pp.wingTrailPos) {
+		p.wingTrail.respawnCounter = 0;
+		p.wingTrail.offset = pos;
+		ex.events.emit<AddParticleEvent>(WING_TRAIL, handle, p);
+	}
 
 	std::vector<Behaviour*> behaviours;
 

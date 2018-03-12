@@ -194,8 +194,8 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 			while (player->flareAccum > 0) {
 
-				spawnFlare(es.create(), glm::vec3(1, 2, -2), transform.get(), physics.get(), events);
-				spawnFlare(es.create(), glm::vec3(-1, 2, -2), transform.get(), physics.get(), events);
+				spawnFlare(es.create(), glm::vec3(1, 2, 0), transform.get(), physics.get(), events);
+				spawnFlare(es.create(), glm::vec3(-1, 2, 0), transform.get(), physics.get(), events);
 
 				player->flareAccum -= emitCoolDown;
 			}
@@ -229,7 +229,7 @@ void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* phys
 	float speed = 10.f;
 	glm::vec3 vel = physics->velocity + speed * (transform->orientation * normalize(dir));
 
-	flare.assign<Physics>(1, 1, vel, glm::vec3(0));
+	flare.assign<Physics>(10,  10, vel, glm::vec3(0));
 	flare.assign<Target>(15.0, FACTION_PLAYER);
 
 	flare.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("flare"), transform->pos, true);

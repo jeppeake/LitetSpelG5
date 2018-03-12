@@ -1,6 +1,7 @@
 #include "camerasystem.h"
 
 #include "input.h"
+#include "modelcomponent.h"
 #include <GLFW\glfw3.h>
 
 void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta dt) {
@@ -38,6 +39,11 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			}
 
 			glm::vec3 offset(0, 1, -4.5);
+
+			auto model = entity.component<ModelComponent>();
+			if (model) {
+				offset = 2.5f*model->mptr->getBoundingRadius()*normalize(offset);
+			}
 
 			Transform camTrans = cameraOn->camera.getTransform();
 
@@ -85,6 +91,7 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			float targetFov = baseFov;
 			targetFov += spread * glm::smoothstep(baseSpeed, boostSpeed, speed);
 			targetFov -= spread * glm::smoothstep(baseSpeed, brakeSpeed, speed);
+			targetFov += 2.f*spread * glm::smoothstep(boostSpeed, 2*boostSpeed, speed);
 
 			float fFov = 0.0002;
 			float newFov = glm::mix(currentFov, targetFov, float(1.0 - glm::pow(fFov, dt)));

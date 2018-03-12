@@ -41,6 +41,9 @@ private:
 
 	void loadLoadout();
 
+	double gt = 0.0;
+	int spawnCounter = 2;
+
 public:
 	entityx::Entity entity_p;
 
