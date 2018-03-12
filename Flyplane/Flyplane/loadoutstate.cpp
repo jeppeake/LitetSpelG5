@@ -173,7 +173,22 @@ void LoadoutState::changePlane(unsigned int selected)
 	glm::vec2 pPos = glm::vec2(50, 150);
 	weaponSlotsBHandler.clearButtons();
 	for (int i = 0; i < planePresets[selected].wepPos.size(); i++) {
-		weaponSlotsBHandler.addButton(new Button("EMPTY", pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangeWeaponAction(this, i), "buttonforward"));
+		std::string limitStr = "";
+		switch (planePresets[selected].slotLimits[i]) {
+		case SLOTLIMIT_LIGHT:
+			limitStr = "LIGHT";
+			break;
+		case SLOTLIMIT_MEDIUM:
+			limitStr = "MEDIUM";
+			break;
+		case SLOTLIMIT_HEAVY:
+			limitStr = "HEAVY";
+			break;
+		case SLOTLIMIT_MASSIVE:
+			limitStr = "MASSIVE";
+			break;
+		}
+		weaponSlotsBHandler.addButton(new Button("EMPTY " + limitStr, pPos + glm::vec2(0, i*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new ChangeWeaponAction(this, i), "buttonforward"));
 		pickedWeapons.push_back(NO_WEAPON);
 	}
 	skinsBHandler.clearButtons();
@@ -186,6 +201,8 @@ void LoadoutState::changePlane(unsigned int selected)
 	}
 	planePicked = true;
 	planesBHandler.buttons[this->selected]->color = planesBHandler.buttons[this->selected]->hcolor;
+	weaponsBHandler.buttons.clear();
+	picking = false;
 	changeSkin(0);
 }
 
@@ -201,6 +218,25 @@ void LoadoutState::changeWeapon(unsigned int selected)
 	}
 	if(picking)
 		weaponSlotsBHandler.buttons[this->selectedW]->color = weaponSlotsBHandler.buttons[this->selectedW]->hcolor;
+
+	weaponsBHandler.buttons.clear();
+	glm::vec2 pPos = glm::vec2(450, 150);
+	int liststep = 0;
+	for (int i = 0; i < weaponPresets.size(); i++) {
+
+		if (planePresets[this->selected].slotLimits[this->selectedW] == SLOTLIMIT_MASSIVE) {
+			if (weaponPresets[i].limit == planePresets[this->selected].slotLimits[this->selectedW]) {
+				weaponsBHandler.addButton(new Button(weaponPresets[i].name, pPos + glm::vec2(0, liststep*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new PickWeaponAction(this, i), "buttonback"));
+				liststep++;
+			}
+		}
+		else {
+			if (weaponPresets[i].limit <= planePresets[this->selected].slotLimits[this->selectedW]) {
+				weaponsBHandler.addButton(new Button(weaponPresets[i].name, pPos + glm::vec2(0, liststep*(40)), glm::vec2(210, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new PickWeaponAction(this, i), "buttonback"));
+				liststep++;
+			}
+		}
+	}
 }
 
 void LoadoutState::changeSkin(unsigned int selected)

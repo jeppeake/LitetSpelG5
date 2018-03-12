@@ -35,3 +35,5 @@ exploderadius
 1500
 damage
 5000
+limit
+4

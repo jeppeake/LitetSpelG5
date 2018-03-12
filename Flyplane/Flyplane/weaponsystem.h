@@ -276,8 +276,9 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			//turret code end
 
 
-			Weapon* weapon = &equip->special[equip->selected];
+			Weapon* weapon = nullptr;
 			if (equip->special.size() > 0) {
+				weapon = &equip->special[equip->selected];
 				if (player && (Input::isKeyDown(GLFW_KEY_LEFT_SHIFT) || Input::isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) || Input::gamepad_button_pressed(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER)) && weapon->stats.ammo > 0) {
 					if (weapon->timer.elapsed() > weapon->stats.cooldown)
 						weapon->shouldFire = true;
@@ -394,7 +395,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				equip->special[equip->selected].timer.restart();
 			}
 
-			Weapon lastWep = equip->special[equip->selected];
+			//Weapon lastWep = equip->special[equip->selected];
 			unsigned int count = 0;
 			unsigned int totalAmmo = 0;
 			unsigned int tempselect = equip->selected;
@@ -427,7 +428,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			for (Entity enemy : es.entities_with_components(aitran, target)) {
 				glm::vec3 dir = aitran->pos - trans->pos;
 				float dot = glm::dot(glm::normalize(dir), glm::normalize(v));
-				target->is_targeted = false;
+				target->preview_target = false;
 				double score = (dot * target->heat) / glm::length(dir);
 				if (score > bestScore && entity.has_component<Target>() && entity.component<Target>()->faction != target->faction) {
 					bestDot = dot;
@@ -445,7 +446,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 			}
 
 			if (cure.valid() && !noTarget)
-				cure.component<Target>()->is_targeted = true;
+				cure.component<Target>()->preview_target = true;
 		}
 		
 

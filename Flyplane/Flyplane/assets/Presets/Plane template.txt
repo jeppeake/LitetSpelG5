@@ -26,6 +26,7 @@ weppos
 [double] (x)
 [double] (y)
 [double] (z)
+[unsigned int] (slot limit, 1=light, 2=medium, 3=heavy, 4=massive)
 
 enginepos
 [double] (x)

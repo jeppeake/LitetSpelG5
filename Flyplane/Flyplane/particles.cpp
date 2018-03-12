@@ -5,6 +5,7 @@
 #include <ctime>
 #include "particles.h"
 #include "renderer.h"
+#include "defines.h"
 
 Particles::Particles(unsigned particles, float _effectTime)
 {
@@ -98,7 +99,7 @@ void Particles::update()
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, gColor);
 
 	//Dispatch
-	glDispatchCompute((numParticles / 128) + 1, 1, 1);
+	glDispatchCompute((numParticles / LOCAL_SIZE) + 1, 1, 1);
 	glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	glUseProgram(0);

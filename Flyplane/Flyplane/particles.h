@@ -12,6 +12,7 @@
 class Particles
 {
 private:
+
 	float effectTime;
 	GLuint gPos, gColor, gLife, gVel, VAO;
 	//ComputeShader* compute;

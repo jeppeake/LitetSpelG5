@@ -10,4 +10,5 @@ struct Target {
 	double heat = 10;
 	unsigned int faction = 1;
 	bool is_targeted = false;
+	bool preview_target = false;
 };
