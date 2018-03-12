@@ -3,6 +3,8 @@
 #include <fstream>
 #include "assetloader.h"
 
+
+
 void PlanePreset::load(std::string presetname)
 {
 	this->file = presetname;
@@ -71,6 +73,9 @@ void PlanePreset::load(std::string presetname)
 			std::getline(file, str);
 			pos.z = std::stod(str, NULL);
 			wepPos.push_back(pos);
+			std::getline(file, str);
+			unsigned int limit = std::stoi(str, NULL);
+			slotLimits.push_back(limit);
 			continue;
 		}
 		else if (str.compare("primaryweapon") == 0) {

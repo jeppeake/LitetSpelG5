@@ -11,7 +11,7 @@ public:
 	std::string file;
 	std::string model;
 	std::string projModel;
-	unsigned int ammo, lifetime;
+	unsigned int ammo, lifetime, limit;
 	double speed, mass, cooldown, turnRate, scale, projScale;
 	bool infAmmo, isMissile, dissappear;
 	double detonateRange, explodeRadius, damage, droptime = 1.0;
