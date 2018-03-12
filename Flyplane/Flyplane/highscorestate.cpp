@@ -1,8 +1,7 @@
 #include "highscorestate.h"
 #include "backtomenuaction.h"
 #include "window.h"
-#include "musicmanager.h"
-#include "input.h"
+
 
 void HighscoreState::init() {
 	bHandler.addButton(new Button("Back to menu", glm::vec2(100, 100), glm::vec2(220, 36), glm::vec3(1, 1, 1), glm::vec3(0.5, 0.5, 0.5), new BackToMenuAction(this), "buttonback"));
@@ -30,9 +29,6 @@ void HighscoreState::update(double dt) {
 	pos.y -= 50;
 	AssetLoader::getLoader().getHighscoreText()->drawText(highscore[9], pos, glm::vec3(1, 1, 1), 1.0);
 	AssetLoader::getLoader().getHighscoreText()->drawText(to_string(10) + ". ", pos - glm::vec2(60, 0), glm::vec3(1, 1, 1), 1);
-
-	if (Input::isKeyPressed(GLFW_KEY_TAB))
-		MusicManager::getMusicManager().changeSong();
 }
 
 void HighscoreState::startMenu() {
