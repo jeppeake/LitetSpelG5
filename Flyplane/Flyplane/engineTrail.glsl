@@ -46,6 +46,7 @@ void main()
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
 		Colors[gid].rgb = vec3(1.0,0.5,0.0);
+		Positions[gid].a = 1.0;
 	}
 	else
 	{
@@ -54,6 +55,9 @@ void main()
 		
 		Colors[gid].a = 0.5 * sqrt(r) * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
 		Colors[gid].a *= 0.4 + pow(t*0.5 + 0.5, 2);
+
+		//Positions[gid].a = 0.5 * sqrt(r) * smoothstep(life+ 0.1*life*abs(rand(gid)), 0, Lives[gid]);
+		//Positions[gid].a *= 0.4 + pow(t*0.5 + 0.5, 2);
 
 		//Colors[gid].a = 1.0;
 

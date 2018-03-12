@@ -29,7 +29,7 @@ void main()
 	if(Positions[gid].xyz == vec3(0))
 	{
 		// INITAL SPAWN
-		
+		Positions[gid].a = 1.0;
 		Lives[gid] = 0;
 		Colors[gid].xyz = vec3(1.0,1.0,0.2);
 
@@ -56,7 +56,9 @@ void main()
 		//Velocities[gid].xyz -= Velocities[gid].xyz * (1 - pow(0.1, dt));
 		Positions[gid].xyz += Velocities[gid].xyz * dt;
 
-		Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 20);
+		//Colors[gid].a = pow(smoothstep(life, 0, Lives[gid]), 20);
+		Positions[gid].w = pow(smoothstep(life, 0, Lives[gid]), 20);
+		
 	}
 	Lives[gid] += dt;
 }

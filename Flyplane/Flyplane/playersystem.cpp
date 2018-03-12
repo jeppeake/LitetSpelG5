@@ -221,8 +221,6 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			}
 		}
 	}
-
-
 }
 
 void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* physics, EventManager & events) {
