@@ -5,9 +5,9 @@
 
 void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta dt) {
 
-	if (Input::isKeyPressed(GLFW_KEY_U)) {
+	/*if (Input::isKeyPressed(GLFW_KEY_U)) {
 		following = !following;
-	}
+	}*/
 
 	if (following) {
 		gt += dt;
@@ -74,7 +74,7 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 				camTrans.pos += physics->velocity * float(dt);
 			}
 
-			double fPos = 0.01;
+			double fPos = 0.07;
 			glm::vec3 targetPos = transform->pos + offset * (0.5f*glm::smoothstep(brakeSpeed, boostSpeed, speed) + 1);
 			camTrans.pos = glm::mix(camTrans.pos, targetPos, float(1.0 - glm::pow(fPos, 2.0*dt)));
 
