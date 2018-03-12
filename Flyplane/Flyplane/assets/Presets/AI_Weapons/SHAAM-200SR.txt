@@ -34,4 +34,4 @@ detonaterange
 exploderadius
 1500
 damage
-5000
+500
