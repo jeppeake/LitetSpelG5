@@ -248,5 +248,12 @@ void PlayerSystem::configure(EventManager &eventManager) {
 }
 
 void PlayerSystem::receive(const PauseEvent &event) {
-	warningSound.pause();
+	if (event.pause) {
+		if (warningSound.getStatus() == sf::Sound::Playing)
+			warningSound.pause();
+	}
+	else {
+		if (warningSound.getStatus() == sf::Sound::Paused)
+			warningSound.play();
+	}
 }

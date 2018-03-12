@@ -541,36 +541,10 @@ void PlayingState::update(double dt)
 		this->menuOpen = !this->menuOpen;
 
 		if (this->menuOpen) {
-			ex.events.emit<PauseEvent>();
-
-			ComponentHandle<SoundComponent> sound;
-			for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
-				sound = entity.component<SoundComponent>();
-				SoundComponent* s = sound.get();
-
-				s->sound.pause();
-			}
-
-			ComponentHandle<BurstSoundComponent> burstSound;
-			for (Entity entity : ex.entities.entities_with_components(burstSound)) {
-				burstSound = entity.component<BurstSoundComponent>();
-
-				BurstSoundComponent* s = burstSound.get();
-				for(auto& sound : s->sounds)
-					sound.stop();
-			}
+			ex.events.emit<PauseEvent>(true, ex);
 		}
 		else {
-			ComponentHandle<SoundComponent> sound;
-			for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
-				sound = entity.component<SoundComponent>();
-				SoundComponent* s = sound.get();
-
-				if (s->sound.getStatus() == s->sound.Paused) {
-					s->sound.play();
-					//s->sound.setLoop(true);
-				}
-			}
+			ex.events.emit<PauseEvent>(false, ex);
 		}
 	}
 	
@@ -666,24 +640,8 @@ void PlayingState::gameOver() {
 	Highscore::getHighscore().addScore(name, points);
 	Highscore::getHighscore().writeToFile();
 
-	ex.events.emit<PauseEvent>();
+	ex.events.emit<PauseEvent>(true, ex);
 
-	ComponentHandle<SoundComponent> sound;
-	for (entityx::Entity entity : ex.entities.entities_with_components(sound)) {
-		sound = entity.component<SoundComponent>();
-		SoundComponent* s = sound.get();
-
-		s->sound.pause();
-	}
-
-	ComponentHandle<BurstSoundComponent> burstSound;
-	for (entityx::Entity entity : ex.entities.entities_with_components(burstSound)) {
-		burstSound = entity.component<BurstSoundComponent>();
-		BurstSoundComponent* s = burstSound.get();
-
-		for(auto& sound : s->sounds)
-			sound.pause();
-	}
 	/*Highscore list;
 	glm::vec2 pos = Window::getWindow().size();
 	pos.x = pos.x / 2 - 20;
