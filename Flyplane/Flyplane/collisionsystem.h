@@ -98,7 +98,7 @@ private:
 
 				auto cameraOn = a.component<CameraOnComponent>();
 				if (cameraOn) {
-					cameraOn->shake += 2.0;
+					cameraOn->shake += 1;
 				}
 
 

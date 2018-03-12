@@ -339,7 +339,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 							auto cameraOn = entity.component<CameraOnComponent>();
 							if (cameraOn) {
-								cameraOn->shake += 60.f*pweapon->stats.cooldown*dt;
+								cameraOn->shake += 2.f*pweapon->stats.cooldown;
 							}
 						}
 

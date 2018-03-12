@@ -15,7 +15,7 @@ struct SoundComponent {
 };
 
 struct BurstSoundComponent {
-	BurstSoundComponent(sf::SoundBuffer& buffer, glm::vec3 pos = glm::vec3(0), bool shouldPlay = false, float minDistance = 50.f, float attenuation = 1.1f, size_t numSounds = 5) {
+	BurstSoundComponent(sf::SoundBuffer& buffer, glm::vec3 pos = glm::vec3(0), bool shouldPlay = false, float minDistance = 50.f, float attenuation = 1.1f, size_t numSounds = 3) {
 		for (int i = 0; i < numSounds; i++) {
 			sounds.emplace_back();
 			sounds.back().setBuffer(buffer);

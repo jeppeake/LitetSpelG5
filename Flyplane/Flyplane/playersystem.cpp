@@ -232,7 +232,7 @@ void spawnFlare(Entity flare, glm::vec3 dir, Transform* transform, Physics* phys
 	flare.assign<Physics>(10,  10, vel, glm::vec3(0));
 	flare.assign<Target>(15.0, FACTION_PLAYER);
 
-	flare.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("flare"), transform->pos, true);
+	flare.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("flare"), transform->pos, true, 50.f, 1.1f, 1);
 
 	auto handle = flare.assign<ParticleComponent>();
 

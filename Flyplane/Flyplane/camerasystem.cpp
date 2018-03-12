@@ -4,6 +4,8 @@
 #include "modelcomponent.h"
 #include <GLFW\glfw3.h>
 
+
+
 void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta dt) {
 
 	/*if (Input::isKeyPressed(GLFW_KEY_U)) {
@@ -53,26 +55,28 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 			camTrans.orientation = glm::mix(camTrans.orientation, transform->orientation, float(1.0 - glm::pow(fOrientation, 2.0*dt)));
 
 
-			float maxShake = 8.f;
-			cameraOn->shake = glm::min(maxShake, cameraOn->shake);
+			cameraOn->shake = glm::clamp(cameraOn->shake, 0.f, 1.f);
+			std::cout << "Shake: " << cameraOn->shake << "\n";
 
-			//std::cout << "Shake: " << cameraOn->shake << "\n";
+			float shakeI = pow(cameraOn->shake, 3);
 
+			float offsetSpeed = 15.f;
+
+			glm::vec3 maxOffset(1);
 			glm::vec3 shakeOffset;
-			shakeOffset.x = 0.02f*cameraOn->shake*glm::perlin(glm::vec3(5 * gt, 0, 0));
-			shakeOffset.y = 0.02f*cameraOn->shake*glm::perlin(glm::vec3(0, 5 * gt, 0));
+			shakeOffset.x = shakeI * glm::perlin(glm::vec3(offsetSpeed * gt, 0, 0));
+			shakeOffset.y = shakeI * glm::perlin(glm::vec3(0, offsetSpeed * gt, 0));
 			//shakeOffset.z = cameraOn->shake*glm::perlin(glm::vec3(0, 0, gt));
-			offset += shakeOffset;
+			offset += maxOffset * shakeOffset;
 
-			glm::vec3 axis;
-			axis.x = glm::perlin(glm::vec3(5 * gt, 20, 20));
-			axis.y = glm::perlin(glm::vec3(20, 5 * gt, 20));
-			axis.z = glm::perlin(glm::vec3(20, 20, 5 * gt)) + 0.1;
-			axis = normalize(axis);
+			float maxAngle = 0.09;
 
-			float angle = 0.05f*cameraOn->shake*glm::perlin(glm::vec3(-20, -20, 20 * gt));
+			float angleSpeed = 15.f;
+			float pitch = maxAngle * shakeI * glm::perlin(glm::vec3(20, 20, angleSpeed * gt));
+			float yaw = maxAngle * shakeI * glm::perlin(glm::vec3(angleSpeed * gt, 20, 20));
+			float roll = maxAngle * shakeI * glm::perlin(glm::vec3(20, angleSpeed * gt, 20));
 
-			camTrans.orientation = glm::rotate(glm::quat(), angle, axis) * camTrans.orientation;
+			camTrans.orientation = glm::quat(glm::vec3(pitch, yaw, roll))* camTrans.orientation;
 
 			offset = camTrans.orientation * offset;
 

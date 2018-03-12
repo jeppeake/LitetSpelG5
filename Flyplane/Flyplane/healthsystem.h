@@ -49,7 +49,7 @@ struct HealthSystem : public entityx::System<HealthSystem> {
 					Entity boom = es.create();
 					boom.assign<ExplosionComponent>(explosive->explodeDamage, explosive->explodeRadius);
 					boom.assign<Transform>(entity.component<Transform>()->pos + glm::vec3(0,100,0));
-					boom.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), entity.component<Transform>()->pos + glm::vec3(0, 100, 0), true, 500, 1);
+					boom.assign<BurstSoundComponent>(*AssetLoader::getLoader().getSoundBuffer("explosion"), entity.component<Transform>()->pos + glm::vec3(0, 100, 0), true, 500, 1, 1);
 					auto handle = boom.assign<ParticleComponent>();
 					ParticleParameters params;
 					params.effectLength = 3.f;
