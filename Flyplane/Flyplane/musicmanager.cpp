@@ -34,7 +34,6 @@ void MusicManager::play(std::string songFile) {
 
 void MusicManager::playPlayingMusic() {
 	playing = true;
-	music.setLoop(true);
 	bool worked = music.openFromFile("Assets/Sound/playingmusic.wav");
 	if (!worked)
 		std::cout << "could not load playingmusic.wav" << std::endl;
@@ -44,7 +43,6 @@ void MusicManager::playPlayingMusic() {
 void MusicManager::playMenuMusic() {
 	music.pause();
 	playing = false;
-	music.setLoop(false);
 
 	if (playlist.size() > 0) {
 		index = rand() % playlist.size();

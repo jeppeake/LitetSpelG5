@@ -387,13 +387,11 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 				int max = equip->special.size();
 				int c = 0;
 				if (equip->special.size() > 0) {
-					cout << equip->selected << equip->special.size() << endl;
 					while (equip->special[equip->selected].stats.ammo <= 0 && c <= max) {
 						equip->selected = (equip->selected + 1) % equip->special.size();
 						c++;
 					}
 				}
-				if (equip->special.size() > 0)
 				equip->special[equip->selected].timer.restart();
 			}
 
