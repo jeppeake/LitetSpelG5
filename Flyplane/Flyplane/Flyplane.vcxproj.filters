@@ -510,6 +510,10 @@
     <ClInclude Include="musicmanager.h">
       <Filter>UTILS</Filter>
     </ClInclude>
+    <ClInclude Include="pauseEvent.h" />
+    <ClInclude Include="defines.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
     <ClInclude Include="pauseEvent.h">
       <Filter>Events</Filter>
     </ClInclude>

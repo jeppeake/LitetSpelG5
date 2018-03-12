@@ -207,6 +207,7 @@
     <ClInclude Include="condition.h" />
     <ClInclude Include="constant_turn.h" />
     <ClInclude Include="crosshair.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="dropcomponent.h" />
     <ClInclude Include="enemymarker.h" />
     <ClInclude Include="enemy_close.h" />
