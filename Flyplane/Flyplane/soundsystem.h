@@ -29,7 +29,50 @@ public:
 	}
 
 	void receive(const PauseEvent &event) {
-		driftSound.pause();
+		if (event.pause) {
+			if (driftSound.getStatus() == sf::Sound::Playing)
+				driftSound.pause();
+
+			ComponentHandle<SoundComponent> sound;
+			for (Entity entity : event.ex.entities.entities_with_components(sound)) {
+				if (sound->sound.getStatus() == sf::Sound::Playing) {
+					sound->sound.pause();
+				}
+			}
+
+			ComponentHandle<BurstSoundComponent> burstSound;
+			for (Entity entity : event.ex.entities.entities_with_components(burstSound)) {
+				BurstSoundComponent* s = burstSound.get();
+
+				for (auto& sound : s->sounds) {
+					if (sound.getStatus() == sf::Sound::Playing) {
+						sound.pause();
+					}
+				}
+			}
+		}
+		else {
+			if (driftSound.getStatus() == sf::Sound::Paused)
+				driftSound.play();
+
+			ComponentHandle<SoundComponent> sound;
+			for (Entity entity : event.ex.entities.entities_with_components(sound)) {
+				if (sound->sound.getStatus() == sf::Sound::Paused) {
+					sound->sound.play();
+				}
+			}
+
+			ComponentHandle<BurstSoundComponent> burstSound;
+			for (Entity entity : event.ex.entities.entities_with_components(burstSound)) {
+				BurstSoundComponent* s = burstSound.get();
+
+				for (auto& sound : s->sounds) {
+					if (sound.getStatus() == sf::Sound::Paused) {
+						sound.play();
+					}
+				}
+			}
+		}
 	}
 
 	void update(EntityManager &es, EventManager &events, TimeDelta dt) override {

@@ -16,10 +16,10 @@
 
 int main(void)
 {	
+	srand(time(NULL));
 	sf::Listener::setGlobalVolume(50);
 	MusicManager::getMusicManager().playMenuMusic();
 
-	srand(time(NULL));
 	Window::getWindow().open(1280, 720);
 	//w.open();
 	Input::initialize();
