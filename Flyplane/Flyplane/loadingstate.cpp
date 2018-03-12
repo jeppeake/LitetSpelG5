@@ -8,7 +8,7 @@
 #include "musicmanager.h"
 
 void LoadingState::init() {
-	MusicManager::getMusicManager().stop();
+	MusicManager::getMusicManager().pause();
 	AssetLoader::getLoader().clearTerrains();
 	AssetLoader::getLoader().loadSound("Assets/Sound/button.wav", "buttonsound");
 	AssetLoader::getLoader().loadSound("Assets/Sound/buttonforward.wav", "buttonforward");

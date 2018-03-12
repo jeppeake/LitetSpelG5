@@ -56,6 +56,7 @@ int main(void)
 		}
 		Input::reset();
 		Window::getWindow().update();
+		MusicManager::getMusicManager().update();
 	}
 	
 	return 0;
