@@ -379,10 +379,9 @@ void Renderer::RenderScene() {
 
 	RenderClouds();
 
-	RenderBeams();
-
 	RenderParticles();
 
+	RenderBeams();
 
 	glm::mat4 viewProjMatrix = this->camera.getProjMatrix() * this->camera.getViewMatrix();
 
@@ -444,10 +443,13 @@ void Renderer::RenderBeams() {
 		float edge2 = 3000.f;
 		float alpha = glm::smoothstep(edge1, edge2, distance);
 		if (alpha > 1.f / 255.f) {
+			glm::vec3 pos = b.first + 20.f*normalize(dir);
+			if (hm)
+				pos.y = hm->heightAt(pos) - 100;
 			dir.y = 0;
 			float angle = -acos(dot(normalize(dir), glm::vec3(0, 0, 1)));
 			glm::vec3 axis = cross(normalize(dir), glm::vec3(0, 0, 1));
-			glm::mat4 transform = glm::translate(b.first + 20.f*normalize(dir)) * glm::rotate(angle, axis) * glm::scale(glm::vec3(50, 3000, 50));
+			glm::mat4 transform = glm::translate(pos) * glm::rotate(angle, axis) * glm::scale(glm::vec3(50, 3000, 50));
 			renderTexture(beam, viewProjMatrix*transform, glm::vec4(b.second, alpha));
 		}
 	}

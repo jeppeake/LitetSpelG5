@@ -34,6 +34,8 @@ void main()
 		Positions[gid].xyz = spawn;
 		Lives[gid] = life * (rand(float(gid) + 1000) + 1)/2;
 		Colors[gid].rgb = fire;
+		Colors[gid].a = 1.0;
+		Positions[gid].a = 1.0;
 	}
 	else
 	{
@@ -48,7 +50,8 @@ void main()
 
 		Colors[gid].rgb = mix(fire, black, smoothstep(0, 0.02*life, Lives[gid]));
 
-		Colors[gid].a = pow(1-Lives[gid] / life, 4);
+		//Colors[gid].a = pow(1-Lives[gid] / life, 4);
+		Positions[gid].w = pow(1-Lives[gid] / life, 4);
 
 		//Positions[gid].xyz = spawn + direction * Lives[gid];
 	}
