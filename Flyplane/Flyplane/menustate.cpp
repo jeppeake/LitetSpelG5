@@ -37,7 +37,6 @@
 #include "camerasystem.h"
 
 #include "mission.h"
-#include "musicmanager.h"
 
 entityx::Entity entity3;
 entityx::Entity randomEnemy;
@@ -277,7 +276,4 @@ void MenuState::update(double dt) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	bHandler.drawButtons();
 	bHandler.handleButtonClicks();
-
-	if (Input::isKeyPressed(GLFW_KEY_TAB))
-		MusicManager::getMusicManager().changeSong();
 }
