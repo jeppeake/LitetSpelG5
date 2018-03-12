@@ -1,4 +1,7 @@
 #version 430 core
+
+layout(local_size_x = LOCAL_SIZE_X, local_size_y = 1, local_size_z = 1) in;
+
 layout(std430, binding=7) buffer Pos
 {
 	vec4 Positions[];
@@ -20,7 +23,6 @@ uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
 uniform vec3 color;
-layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 float rand(float n);
 

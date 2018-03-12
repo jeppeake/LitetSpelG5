@@ -14,26 +14,25 @@ uniform vec3 sunDir;
 in vec3 Pos;
 in vec3 Normal;
 in vec2 Tex;
+
+in vec3 ShadowNormal;
 in vec3 ShadowSpace;
+
+in vec3 TerrainShadowNormal;
 in vec3 TerrainShadowSpace;
 
+float rand(float n) { 
+	return 2.0*fract(sin(n * 12.9898) * 43758.5453)-1.0;
+}
 
-float testShadow(vec3 shadowCoord, sampler2D sampler, float c) {
-//float testShadow(vec3 shadowCoord, sampler2D sampler, ivec2 offset, float c) {
-	//float depth = textureOffset(sampler, shadowCoord.xy, offset).r;
-	float depth = texture(sampler, shadowCoord.xy).r;
+//float testShadow(vec3 shadowCoord, sampler2D sampler, float c) {
+float testShadow(vec3 shadowCoord, sampler2D sampler, vec2 offset, float c) {
+	float depth = texture(sampler, shadowCoord.xy + offset).r;
 	float visibility = 1.0;
-	
-	/*
-	vec3 normal = normalize(Normal);
-	vec3 sun = sunDir;
-	//float cosa = clamp(, 0.0, 1.0);
-	float bias = c*(1-dot(normal, sun));
-	bias = clamp(bias, 0.0, 80*c);
-	*/
-	float bias = 0;
 
-	if(depth < shadowCoord.z-bias) {
+	float currFragDepth = shadowCoord.z;
+
+	if(depth < currFragDepth) {
 		visibility = 0.0;
 	}
 	float x = shadowCoord.x;
@@ -45,30 +44,52 @@ float testShadow(vec3 shadowCoord, sampler2D sampler, float c) {
 	return visibility;
 }
 
-float shadow(vec3 shadowCoord, sampler2D sampler, float c) {
-	//float result = 0;
-
+float shadow(vec3 shadowCoord, vec3 shadowNormal, sampler2D sampler, float c) {
+	float result = 0;
 	/*
-	const int hsize = 2;
+	//vec3 xDir = cross(shadowNormal, vec3(0,1,0));
+	//vec3 yDir = cross(shadowNormal, vec3(-1,0,0));
+
+	const int hsize = 5;
 	for(int i = -hsize; i <= hsize; i++) {
 		for(int j = -hsize; j <= hsize; j++) {
-			result += testShadow(shadowCoord, sampler, ivec2(i,j), c);
+			
 		}
 	}
+	float samples = pow(float(hsize)*2.0+1.0, 2);
 	*/
-	//float samples = pow(float(hsize)*2.0+1.0, 2);
 
-	return testShadow(shadowCoord, sampler, c);
+	float samples = 20;
 
-	//return result; // / samples;
+	float div = 0;
+
+	for(float i = 0; i < samples; i++) {
+		vec2 offset;
+		offset.x = rand(i + shadowCoord.x);
+		offset.y = rand(-i-1 - shadowCoord.y);
+		offset = rand(i * i + shadowCoord.z) * normalize(offset);
+		float len = length(offset);
+
+		offset *= 0.001;
+
+		float falloff = pow(smoothstep(1, 0, len), 0.8);
+
+		vec3 coord = shadowCoord;
+		result += testShadow(shadowCoord, sampler, offset, c) * falloff;
+		div += falloff;
+	}
+
+	return result / div ;
 }
+
+
 
 void main() {
 	float visibility = 1.0;
 
 	if(drawShadows!=0) {
-		float visibility1 = shadow(ShadowSpace, shadowMap, 0.0002);
-		float visibility2 = shadow(TerrainShadowSpace, terrainShadowMap, 0.0);
+		float visibility1 = shadow(ShadowSpace, normalize(ShadowNormal), shadowMap, 0.0002);
+		float visibility2 = shadow(TerrainShadowSpace, normalize(TerrainShadowNormal), terrainShadowMap, 0.0);
 		visibility = min(visibility1, visibility2);
 	}
 
@@ -86,9 +107,14 @@ void main() {
 	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 100.0);
 
 	vec3 lighting;
-	lighting += color * diffuse * visibility * 0.7;
+	lighting += color * diffuse * visibility * 0.8;
 	lighting += color * specular * visibility;
-	lighting += color * 0.3;
+	lighting += color * 0.2;
 	gl_FragColor = vec4(lighting, 1);
+
+	
+	//gl_FragColor = vec4(ShadowNormal, 1);
 	
 }
+
+
