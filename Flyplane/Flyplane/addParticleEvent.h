@@ -1,5 +1,6 @@
 #pragma once
 #include "particlecomponent.h"
+
 enum PARTICLE_TYPES
 {
 	TRAIL,

@@ -1,9 +1,13 @@
 #include "computeShader.h"
+
+#include "defines.h"
+
 bool ComputeShader::create(const std::string & path)
 {
 	this->path = path;
 	std::ifstream file(path);
 	std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	c = "#define LOCAL_SIZE_X " + std::to_string(LOCAL_SIZE) + "\n" + c;
 	const char *code = c.c_str();
 	const GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
 	if (shader) {

@@ -1,4 +1,7 @@
 #version 430 core
+
+layout(local_size_x = LOCAL_SIZE_X, local_size_y = 1, local_size_z = 1) in;
+
 layout(std430, binding=7) buffer Pos
 {
 	vec4 Positions[];
@@ -15,8 +18,6 @@ layout(std430, binding=10) buffer Col
 {
 	vec4 Colors[];
 };
-
-layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
 void main()
 {
