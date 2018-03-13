@@ -1,10 +1,6 @@
-assets\Presets\Planes\supertest.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
-assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Planes\Lynx.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
+assets\Presets\Weapons\rocketpod.txt
 0

@@ -12,7 +12,7 @@ speed
 mass
 5
 cooldown
-0.5
+0.1
 scale
 0.25
 projscale
@@ -34,7 +34,7 @@ turnrate
 droptime
 0
 detonaterange
-50
+15
 exploderadius
 60
 limit
