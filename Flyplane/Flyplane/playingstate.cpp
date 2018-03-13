@@ -351,6 +351,7 @@ void PlayingState::init()
 	AssetLoader::getLoader().loadSound("assets/Sound/Missle_Launch.wav", "missile");
 	AssetLoader::getLoader().loadSound("assets/Sound/Sniper_Rifle_short.wav", "sniperrifle");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun.wav", "machinegun");
+	AssetLoader::getLoader().loadSound("assets/Sound/ding.wav", "mission_ding");
 	//AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_short.wav", "machinegunShort");
 	AssetLoader::getLoader().loadSound("assets/Sound/Machine_gun_shorter.wav", "machinegunShort");
 

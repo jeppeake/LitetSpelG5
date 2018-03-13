@@ -1,7 +1,11 @@
 #include "speedindicator.h"
 #include <iostream>
 
-SpeedIndicator::SpeedIndicator() {
+SpeedIndicator::SpeedIndicator(float size, std::string tex_file) {
+	vertexdata = new float[20] { 0.787f, -0.6f, 0.0f, 0.0f, 0.0f,
+		0.9f, -0.6f, 0.0f, 1.0f, 0.0f,
+		0.787f,  0.4f, 0.0f, 0.0f, 3.0f / size,
+		0.9f,  0.4f, 0.0f, 1.0f, 3.0f / size };
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -19,7 +23,7 @@ SpeedIndicator::SpeedIndicator() {
 
 	glBindVertexArray(0);
 
-	std::string tex_file = "assets/textures/speedbars.png";
+	//std::string tex_file = "assets/textures/speedbars.png";
 	if (!texture.loadTexture(tex_file, 1)) {
 		std::cout << "ERROR: Could not load texture: '" << tex_file << "'\n";
 	}

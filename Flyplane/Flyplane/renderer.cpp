@@ -113,6 +113,8 @@ Renderer::Renderer() {
 	indicator.loadTexture("assets/textures/indicator.png", 1);
 	heightMatrix = glm::translate(glm::vec3(-0.8, -0.1, 0)) * glm::scale(glm::vec3(0.1, 0.5, 1));
 
+	speedIndicator = new SpeedIndicator(18.0f, "assets/textures/speedbars.png");
+	speedIndicator2 = new SpeedIndicator(15.0f, "assets/textures/speedbars2.png");
 	speedMatrix = glm::translate(glm::vec3(0.8, -0.1, 0)) * glm::rotate(glm::pi<float>(), glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(0.1, 0.5, 1));
 
 	missileVPMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 10.0f);
@@ -152,7 +154,8 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
-
+	delete speedIndicator;
+	delete speedIndicator2;
 }
 
 void Renderer::addToList(Model* model, Transform trans, bool isStatic) {
@@ -609,12 +612,21 @@ void Renderer::RenderHeightIndicator(float height) {
 
 void Renderer::RenderSpeedometer(float speed) {
 	renderTexture(indicator, speedMatrix);
-	float realSpeed = speed * 3.6;//* 2
+	float realSpeed = speed * 3.6;
 	heightShader.use();
-	heightShader.uniform("value", glm::vec2(0, realSpeed / 1800.0f));
-	speedIndicator.Bind();
+	if (realSpeed < 1350) {
+		heightShader.uniform("value", glm::vec2(0, realSpeed / 1800.0f));
+		speedIndicator->Bind();
+	}
+	else {
+		int speed = realSpeed - 1350.0f;
+		if (speed > 1200)
+			speed = 1200;
+		heightShader.uniform("value", glm::vec2(0, speed / 1500.0f));
+		speedIndicator2->Bind();
+	}
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
+	
 	auto s = Window::getWindow().size();
 	AssetLoader::getLoader().getText()->drawText(std::to_string((int)realSpeed), glm::vec2(1100 * s.x / 1280, 318 * s.y / 720), glm::vec3(0, 1, 0), 0.3 * s.y / 720);
 }
