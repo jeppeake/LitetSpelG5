@@ -732,7 +732,7 @@ void Renderer::setCamera(const Camera & camera)
 	//std::cout << "minmax: " << minmax.x << ", " << minmax.y << "\n";
 	//std::cout << "pos: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
 
-	halfSize = 1500.f + 1.2f*pos.y;
+	halfSize = 4500.f;
 
 	//std::cout << "halfSize: " << halfSize << "\n";
 
@@ -750,10 +750,15 @@ void Renderer::setCamera(const Camera & camera)
 	//std::cout << "h:     " << h << "\n";
 	//std::cout << "extra: " << extra << "\n";
 
-	glm::vec3 offset = t.orientation * glm::vec3(0, 0, 0.4f*halfSize);
+	glm::vec3 offset = t.orientation * glm::vec3(0, 0, 0.3f*halfSize);
 	offset.y = 0;
 
+	float pixelSize = 2.f*halfSize / terrainShadowSize.y;
+	float zjump = pixelSize / sunDir.y;
 	pos = glm::vec3(pos.x, minmax.x, pos.z) + offset;
+	pos.x = glm::floor(pos.x / pixelSize)*pixelSize;
+	pos.z = glm::floor(pos.z / zjump)*zjump;
+
 	proj = glm::ortho<float>(-xHalfSize, xHalfSize, -yHalfSize, yHalfSize, - h - extra, extra);
 	view = glm::lookAt(pos + sunDir, pos, glm::vec3(0, 1, 0));
 	

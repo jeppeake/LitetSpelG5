@@ -26,13 +26,14 @@ void main() {
 
 	Pos = modelPos.xyz;
 	Tex = tex;
-	Normal = transpose(inverse(mat3(modelMatrix)))*normal;
+	Normal = normalize(transpose(inverse(mat3(modelMatrix)))*normal);
+	
 
 	ShadowNormal = normalize((shadowMatrix * vec4(Normal, 0)).xyz);
-	ShadowSpace = (shadowMatrix * vec4(modelPos.xyz + 0.03*Normal, 1)).xyz;
+	ShadowSpace = (shadowMatrix * vec4(modelPos.xyz + 0.08*Normal, 1)).xyz;
 
 	TerrainShadowNormal = normalize((terrainShadowMatrix * vec4(Normal, 0)).xyz);
-	TerrainShadowSpace = (terrainShadowMatrix * vec4(modelPos.xyz + 10.0*Normal, 1)).xyz;
+	TerrainShadowSpace = (terrainShadowMatrix * vec4(modelPos.xyz + 4.0*Normal, 1)).xyz;
 
 	gl_Position = ViewProjMatrix * modelPos;
 }
