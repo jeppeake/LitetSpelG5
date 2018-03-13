@@ -82,7 +82,6 @@ private:
 				auto missile = b.component<Missile>().get();
 				missile->shouldExplode = true;
 			}
-
 			else if (b.has_component<Projectile>()) {
 				auto projectile = b.component<Projectile>().get();
 				health->health -= projectile->damage;
@@ -127,6 +126,16 @@ private:
 				if(btransform)
 					p.sparks.pos = btransform->pos;
 				es.emit<AddParticleEvent>(SPARKS, handle, p);
+			}
+			else if (b.has_component<HouseComponent>()) {
+				if (health) {
+					health->health = -1;
+				}
+				if (a.has_component<Physics>())
+					a.remove<Physics>();
+				if (a.has_component<CollisionComponent>())
+					a.remove<CollisionComponent>();
+
 			}
 		}
 	}
@@ -354,11 +363,11 @@ public:
 			// Collision with other entitites 
 			if (entity.has_component<Projectile>()) {
 				if (entity.has_component<FactionPlayer>()) {
-					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FactionEnemy>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, FactionEnemy>()) {
 						checkCollision(entity, other, events);
 					}
 				} else if (entity.has_component<FactionEnemy>()) {
-					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FactionPlayer>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, FactionPlayer>()) {
 						checkCollision(entity, other, events);
 					}
 				} else {
@@ -367,20 +376,27 @@ public:
 			}
 			else {
 				if (entity.has_component<FlightComponent>()) {
-					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, FlightComponent>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, FlightComponent>()) {
 						checkCollision(entity, other,events);
 					}
-				}
-				else if (entity.has_component<DropComponent>()) {
-						for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, ModelComponent, PlayerComponent>()) {
-							checkCollision(entity, other, events);
-						}
+				} else if (entity.has_component<DropComponent>()) {
+					for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, PlayerComponent>()) {
+						checkCollision(entity, other, events);
+					}
 				}
 			}
 
+			// if entity is house skip check terrain or other houses
+			if (entity.has_component<HouseComponent>()) {
+				continue;
+			}
 
+			// check with houses
+			for (entityx::Entity other : es.entities_with_components<CollisionComponent, Transform, HouseComponent>()) {
+				checkCollision(entity, other, events);
+			}
 
-			if (!map || entity.has_component<HouseComponent>()) {
+			if (!map || !entity.has_component<CollisionComponent>()) {
 				continue;
 			}
 
@@ -406,7 +422,6 @@ public:
 				{
 					for (size_t i = 0; i < boxes.size(); i++)
 					{
-						boxes[i].setTransform(*transform.get());
 						if (boxes[i].intersect(terr->hmptr))
 						{
 							handleTerrainCollision(entity, events);
