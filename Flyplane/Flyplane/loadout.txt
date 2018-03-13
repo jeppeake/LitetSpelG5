@@ -1,10 +1,10 @@
-assets\Presets\Planes\Starfighter.txt
-assets\Presets\Weapons\rocketpod.txt
-assets\Presets\Weapons\rocketpod.txt
-assets\Presets\Weapons\micro.txt
-assets\Presets\Weapons\micro.txt
+assets\Presets\Planes\supertest.txt
 assets\Presets\Weapons\HAAM_166.txt
 assets\Presets\Weapons\HAAM_166.txt
 assets\Presets\Weapons\HAAM_166.txt
 assets\Presets\Weapons\HAAM_166.txt
-1
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\HAAM_166.txt
+assets\Presets\Weapons\HAAM_166.txt
+0
