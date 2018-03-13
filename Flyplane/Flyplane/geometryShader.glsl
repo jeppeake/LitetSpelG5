@@ -35,7 +35,7 @@ void main() {
 		vGeometryPos = GeometryPos[i];
 
 		vShadowSpace = (shadowMatrix * vec4(vGeometryPos - 1*vNormal, 1.0)).xyz;
-		vTerrainShadowSpace = (terrainShadowMatrix * vec4(vGeometryPos + 20.0*vNormal, 1.0)).xyz;
+		vTerrainShadowSpace = (terrainShadowMatrix * vec4(vGeometryPos + 1.0*vNormal, 1.0)).xyz;
 
 		vTex = Tex[i];
 		vColor = Color[i];

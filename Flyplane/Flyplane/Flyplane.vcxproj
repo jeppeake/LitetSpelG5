@@ -338,6 +338,7 @@
     <None Include="sparks.glsl" />
     <None Include="speedPart.glsl" />
     <None Include="terrainFragmentShader.glsl" />
+    <None Include="terrainShadowFrag.glsl" />
     <None Include="terrainShadowVert.glsl" />
     <None Include="terrainVertexShader.glsl" />
     <None Include="particletrail.glsl" />

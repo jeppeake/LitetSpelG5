@@ -645,6 +645,9 @@
     <None Include="flare.glsl">
       <Filter>Graphics\Shaders\particles</Filter>
     </None>
+    <None Include="terrainShadowFrag.glsl">
+      <Filter>Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviours">

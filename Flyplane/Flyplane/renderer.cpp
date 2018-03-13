@@ -17,8 +17,9 @@ using namespace std;
 Renderer::Renderer() {
 	this->shader.create("vertexShader.glsl", "fragmentShader.glsl");
 	this->terrain_shader.create("terrainVertexShader.glsl","geometryShader.glsl", "terrainFragmentShader.glsl");
-	this->shadow.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
-	this->terrainShadow.create("terrainShadowVert.glsl", "shadowFragmentShader.glsl");
+	this->shadow.create("shadowVertexShader.glsl", "terrainShadowFrag.glsl");
+	this->shadowStatic.create("shadowVertexShader.glsl", "shadowFragmentShader.glsl");
+	this->terrainShadow.create("terrainShadowVert.glsl", "terrainShadowFrag.glsl");
 	this->guiShader.create("guiVertexSHader.glsl", "guiFragmentShader.glsl");
 	this->enemyMarkerShader.create("enemymarkerVS.glsl","enemymarkerGS.glsl", "enemymarkerFS.glsl");
 	this->enemyArrowShader.create("enemymarkerVS.glsl", "enemyarrowGS.glsl", "enemymarkerFS.glsl");
@@ -251,10 +252,11 @@ void Renderer::RenderPlaneShadow() {
 	glViewport(0, 0, shadowSize.x, shadowSize.y);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	shadow.uniform("texSampler", 0);
 	//Render shadow
 	for (int i = 0; i < list.size(); i++) {
 		glm::mat4 modelMatrix = glm::translate(list[i].trans.pos) * glm::toMat4(list[i].trans.orientation) * glm::scale(list[i].trans.scale);
-
+		list[i].model->texture.bind(0);
 		for (int j = 0; j < list[i].model->model_meshes.size(); j++) {
 			list[i].model->model_meshes[j].first->bind();
 			shadow.uniform("MVP", planeShadowMatrix * modelMatrix * list[i].model->model_meshes[j].second);
@@ -266,16 +268,18 @@ void Renderer::RenderPlaneShadow() {
 void Renderer::RenderTerrainShadow() {
 	glBindFramebuffer(GL_FRAMEBUFFER, terrainFrameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	shadow.use();
+	shadowStatic.use();
 	glViewport(0, 0, terrainShadowSize.x, terrainShadowSize.y);
 
+	shadowStatic.uniform("texSampler", 0);
 	for (int i = 0; i < listStatics.size(); i++) {
 		auto& current = listStatics[i];
 		glm::mat4 modelMatrix = glm::translate(current.trans.pos) * glm::toMat4(current.trans.orientation) * glm::scale(current.trans.scale);
+		listStatics[i].model->texture.bind(0);
 
 		for (int j = 0; j < current.model->model_meshes.size(); j++) {
 			current.model->model_meshes[j].first->bind();
-			shadow.uniform("MVP", terrainShadowMatrix * modelMatrix * current.model->model_meshes[j].second);
+			shadowStatic.uniform("MVP", terrainShadowMatrix * modelMatrix * current.model->model_meshes[j].second);
 			glDrawElements(GL_TRIANGLES, current.model->model_meshes[j].first->numIndices(), GL_UNSIGNED_INT, 0);
 		}
 	}
@@ -371,11 +375,12 @@ void Renderer::RenderScene() {
 	glViewport(0, 0, s.x, s.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	RenderObjects();
 
 	RenderBullets();
 
 	RenderTerrain();
+
+	RenderObjects();
 
 	RenderClouds();
 
@@ -826,6 +831,8 @@ void Renderer::update(float dt)
 
 	if (Input::isKeyPressed(GLFW_KEY_F8)) {
 		this->shader.reload();
+		this->shadow.reload();
+		this->shadowStatic.reload();
 		this->terrain_shader.reload();
 		this->bulletShader.reload();
 	}

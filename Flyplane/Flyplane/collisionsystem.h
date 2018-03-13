@@ -133,9 +133,11 @@ private:
 				}
 				if (a.has_component<Physics>())
 					a.remove<Physics>();
-				if (a.has_component<CollisionComponent>())
-					a.remove<CollisionComponent>();
 
+				if (a.has_component<Missile>()) {
+					auto missile = a.component<Missile>().get();
+					missile->shouldExplode = true;
+				}
 			}
 		}
 	}
