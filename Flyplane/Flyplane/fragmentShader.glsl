@@ -93,8 +93,13 @@ void main() {
 		visibility = min(visibility1, visibility2);
 	}
 
-	vec3 color = texture(texSampler, vec2(Tex.x, 1 - Tex.y)).rgb;
+	vec4 colora = texture(texSampler, vec2(Tex.x, 1 - Tex.y));
 
+	vec3 color = colora.rgb;
+	float alpha = colora.a;
+	if(alpha < 1.0/255.0) {
+		discard;
+	}
 
 	vec3 sun = normalize(vec3(0, 1, 1));
 	vec3 n = normalize(Normal);
@@ -110,7 +115,7 @@ void main() {
 	lighting += color * diffuse * visibility * 0.8;
 	lighting += color * specular * visibility;
 	lighting += color * 0.2;
-	gl_FragColor = vec4(lighting, 1);
+	gl_FragColor = vec4(lighting, alpha);
 
 	
 	//gl_FragColor = vec4(ShadowNormal, 1);

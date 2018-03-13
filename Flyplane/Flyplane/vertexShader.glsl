@@ -32,7 +32,7 @@ void main() {
 	ShadowSpace = (shadowMatrix * vec4(modelPos.xyz + 0.03*Normal, 1)).xyz;
 
 	TerrainShadowNormal = normalize((terrainShadowMatrix * vec4(Normal, 0)).xyz);
-	TerrainShadowSpace = (terrainShadowMatrix * vec4(modelPos.xyz + 20.0*Normal, 1)).xyz;
+	TerrainShadowSpace = (terrainShadowMatrix * vec4(modelPos.xyz + 10.0*Normal, 1)).xyz;
 
 	gl_Position = ViewProjMatrix * modelPos;
 }

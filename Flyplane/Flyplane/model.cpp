@@ -183,7 +183,7 @@ void Model::load(const std::string & file)
 			tex_file = model_dir + std::string(filename.C_Str());
 		}
 		std::cout << "\t[DEBUG] Processing mat: '" << matName << "', using texture: '" << tex_file << "'\n";
-		if (!texture.loadTexture(tex_file))
+		if (!texture.loadTexture(tex_file, 1))
 		{
 			//std::cout << "\tERROR: Could not load texture: '" << tex_file << "'\n";
 		}

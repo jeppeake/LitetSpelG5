@@ -35,6 +35,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 	Entity formLeader;
 	Mission curMission;
 	std::vector<Entity> enemyList;
+	sf::Sound ding;
 
 	void cleanUpMarkers() {
 		if (formLeader.valid()) {
@@ -103,6 +104,8 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 		}
 	}
 	void update(entityx::EntityManager &es, entityx::EventManager &events, TimeDelta dt) override {
+		if(ding.getBuffer() == NULL)
+			ding.setBuffer(*AssetLoader::getLoader().getSoundBuffer("mission_ding"));
 		
 		if (active) {
 			glClear(GL_DEPTH_BUFFER_BIT);
@@ -199,6 +202,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			if (timer.elapsed() >= mTime) {
 				fail();
 			}
+			downtime = 50;
 		}
 		else if (failed) {
 			std::string txt = "You failed the mission!";
@@ -216,6 +220,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			Mission mi = missions[i];
 			curMission = mi;
 			if (timer.elapsed() >= downtime) {
+				ding.play();
 				//spawn houses
 				for (HouseInfo house : missions[i].houses) {
 					auto entity = es.create();

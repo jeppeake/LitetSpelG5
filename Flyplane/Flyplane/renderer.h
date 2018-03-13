@@ -29,6 +29,7 @@ private:
 	ShaderProgram terrain_shader;
 	ShaderProgram terrainShadow;
 	ShaderProgram shadow;
+	ShaderProgram shadowStatic;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
 	ShaderProgram enemyArrowShader;
@@ -75,7 +76,8 @@ private:
 	HeightIndicator heightIndicator;
 
 	glm::mat4 speedMatrix;
-	SpeedIndicator speedIndicator;
+	SpeedIndicator *speedIndicator;
+	SpeedIndicator *speedIndicator2;
 
 	int weaponAmmo;
 	Model *missile = nullptr;
