@@ -10,13 +10,13 @@ struct SpeedIndicator {
 	Texture texture;
 	GLuint vbo = 0;
 	GLuint vao = 0;
-	float vertexdata[20] = { 0.787f, -0.6f, 0.0f, 0.0f, 0.0f,
+	float *vertexdata;/* = { 0.787f, -0.6f, 0.0f, 0.0f, 0.0f,
 							 0.9f, -0.6f, 0.0f, 1.0f, 0.0f,
 							 0.787f,  0.4f, 0.0f, 0.0f, 3.0f / 18.0f,
-							 0.9f,  0.4f, 0.0f, 1.0f, 3.0f / 18.0f };
+							 0.9f,  0.4f, 0.0f, 1.0f, 3.0f / 18.0f };*/
 
-
-	SpeedIndicator();
+	SpeedIndicator() = default;
+	SpeedIndicator(float size, std::string tex_file);
 	~SpeedIndicator();
 	void Bind();
 };
