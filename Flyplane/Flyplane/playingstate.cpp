@@ -76,10 +76,12 @@ std::vector<Weapon> Equipment::playerLoadout;
 
 void PlayingState::spawnEnemies(int nr) {
 
+
+
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		float x = rand() % 2000;
-		float z = rand() % 2000;
+		float x = rand() % 1000;
+		float z = rand() % 1000;
 		glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
@@ -419,7 +421,7 @@ void PlayingState::init()
 
 	entity2.assign<AIComponent>(behaviours, true, true, false);
 	entity2.assign<Target>(10.0, FACTION_DUMMY);
-	entity2.assign <HealthComponent>(100.0);*/
+	entity2.assign <HealthComponent>(100.0);
 
 
 	int enemies = 0;
@@ -468,7 +470,7 @@ void PlayingState::init()
 		//std::cout << "Enemy added\n";
 	}
 	std::cout << "\nAdded " << enemies << " enemies.\n";
-
+	*/
 	//entity = ex.entities.create();
 	//entity.assign<SoundComponent>(soundBuffer);
 
@@ -528,6 +530,11 @@ void PlayingState::init()
 		house.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 	}
 	*/
+
+
+
+
+
 }
 
 void PlayingState::update(double dt)

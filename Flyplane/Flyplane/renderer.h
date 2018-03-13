@@ -75,7 +75,8 @@ private:
 	HeightIndicator heightIndicator;
 
 	glm::mat4 speedMatrix;
-	SpeedIndicator speedIndicator;
+	SpeedIndicator *speedIndicator;
+	SpeedIndicator *speedIndicator2;
 
 	int weaponAmmo;
 	Model *missile = nullptr;
