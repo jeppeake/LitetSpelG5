@@ -7,6 +7,7 @@ MusicManager::MusicManager() {
 	music.setLoop(false);
 	music.setRelativeToListener(true);
 	music.setPosition(0.0f, 0.0f, 0.0f);
+	music.setVolume(50);
 	playing = false;
 }
 
