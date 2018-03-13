@@ -56,7 +56,7 @@ void CameraSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 
 
 			cameraOn->shake = glm::clamp(cameraOn->shake, 0.f, 1.f);
-			std::cout << "Shake: " << cameraOn->shake << "\n";
+			//std::cout << "Shake: " << cameraOn->shake << "\n";
 
 			float shakeI = pow(cameraOn->shake, 3);
 

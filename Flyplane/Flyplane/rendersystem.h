@@ -62,7 +62,7 @@ struct RenderSystem : public System<RenderSystem> {
 			player = entity.component<PlayerComponent>();
 			transform = entity.component<Transform>();
 			playerPos = transform->pos;
-			playerOrientation = transform.get()->orientation;
+			playerOrientation = transform->orientation;
 			playerDir = playerOrientation * glm::vec3(0, 0, 1);
 			playerUp = playerOrientation * glm::vec3(0, 1, 0);
 			isDead = false;
@@ -255,7 +255,7 @@ struct RenderSystem : public System<RenderSystem> {
 					glm::vec3 color = mmarker->color;
 					radar.addPlane(*transform.get(), color);
 					if (entity.has_component<Target>()) {
-						if (entity.component<Target>().get()->preview_target) {
+						if (entity.component<Target>()->preview_target) {
 							color += glm::vec3(-0.5, 0.9, -0.5);
 						}
 					}
