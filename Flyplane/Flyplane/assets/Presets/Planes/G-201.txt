@@ -23,12 +23,12 @@ weppos
 -1.55
 -0.1
 -0.4
-3
+2
 weppos
 1.55
 -0.1
 -0.4
-3
+2
 primaryweapon
 assets/Presets/primaryWeapons/G-201.txt
 turretweapon
