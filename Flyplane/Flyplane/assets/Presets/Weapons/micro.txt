@@ -32,9 +32,9 @@ offset
 detonaterange
 10
 exploderadius
-15
+20
 damage
-90
+150
 droptime
 0
 limit
