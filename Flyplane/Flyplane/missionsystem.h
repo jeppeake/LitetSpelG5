@@ -266,7 +266,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					glm::vec3 pos = getRandomEdgePos();
 					pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(pos.x, 0, pos.z)) + 1500;// (x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + enemy.pos.y, z);
 					entity.assign<Transform>(pos, glm::quat());
-					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+					entity.assign<Physics>(1000.0, 0.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 					entity.assign<Target>(10.0, FACTION_AI);
@@ -408,7 +408,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 						spos = formLeader.component<Transform>()->pos + glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10);
 					}
 					entity.assign<Transform>(spos, glm::quat());
-					entity.assign<Physics>(1000.0, 1.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
+					entity.assign<Physics>(1000.0, 0.0, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0));
 					entity.assign<ModelComponent>(AssetLoader::getLoader().getModel(pp.name));
 					entity.assign<FlightComponent>(pp.normalspeed, pp.boostspeed, pp.breakforce, pp.turnrate, pp.acceleration);
 					entity.assign<Target>(10.0, FACTION_AI);

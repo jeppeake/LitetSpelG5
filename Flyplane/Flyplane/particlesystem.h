@@ -160,6 +160,8 @@ public:
 				p->params.distFromCam = length(transform->pos + transform->orientation * p->params.engineTrail.offset - camTrans.pos);
 			}
 			if (flight) {
+				float afterBurner = flight->afterBurner ? 1.f : 0.f;
+				engineTrailShader.uniform("afterBurner", afterBurner);
 				engineTrailShader.uniform("throttle", flight->throttle - flight->airBrake);
 			}
 			//engineTrailShader.uniform("life", 0.25f);

@@ -43,7 +43,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 
 		projectile.assign<Transform>(pos, trans->orientation * turret.getGunOrientation(), turret.weapon.projScale);
-		projectile.assign<Physics>(turret.stats.mass, 1, velocity, glm::vec3());
+		projectile.assign<Physics>(turret.stats.mass, 0, velocity, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
 		//projectile.assign<ModelComponent>(turret.weapon.projModel);
 		projectile.assign<Projectile>(turret.stats.lifetime, parentFaction, turret.stats.damage);
@@ -71,7 +71,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 
 		projectile.assign<Transform>(pos, trans->orientation, weapon->projScale);
-		projectile.assign<Physics>(weapon->stats.mass, 1, velocity, glm::vec3());
+		projectile.assign<Physics>(weapon->stats.mass, 0, velocity, glm::vec3());
 		projectile.component<Physics>()->gravity = false;
 		//projectile.assign<ModelComponent>(weapon->projectileModel);
 		projectile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
@@ -86,7 +86,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 	void spawnMissile(Transform* trans, Weapon* weapon, glm::vec3 planeSpeed, entityx::EntityManager &es, entityx::EventManager &em, unsigned int parentFaction) {
 		entityx::Entity missile = es.create();
 		missile.assign<Transform>(trans->pos + glm::toMat3(trans->orientation) * weapon->offset, trans->orientation, weapon->scale);
-		missile.assign<Physics>(weapon->stats.mass, 1, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
+		missile.assign<Physics>(weapon->stats.mass, 0, planeSpeed+glm::vec3(0,-10,0), glm::vec3());
 		missile.assign<ModelComponent>(weapon->projectileModel);
 		missile.assign<Projectile>(weapon->stats.lifetime, parentFaction, weapon->stats.damage);
 		missile.assign<Missile>(trans, weapon->stats.speed, weapon->stats.turnRate, weapon->stats.detonateRange, weapon->stats.explodeRadius, weapon->stats.damage, weapon->stats.droptime);
@@ -339,7 +339,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 
 							auto cameraOn = entity.component<CameraOnComponent>();
 							if (cameraOn) {
-								cameraOn->shake += 60.f*pweapon->stats.cooldown*dt;
+								cameraOn->shake += 2.f*pweapon->stats.cooldown;
 							}
 						}
 
