@@ -127,17 +127,9 @@ private:
 					p.sparks.pos = btransform->pos;
 				es.emit<AddParticleEvent>(SPARKS, handle, p);
 			}
-			else if (b.has_component<HouseComponent>()) {
-				if (health) {
-					health->health = -1;
-				}
-				if (a.has_component<Physics>())
-					a.remove<Physics>();
 
-				if (a.has_component<Missile>()) {
-					auto missile = a.component<Missile>().get();
-					missile->shouldExplode = true;
-				}
+			if (b.has_component<HouseComponent>()) {
+				health->health = -1;
 			}
 		}
 	}
@@ -197,10 +189,23 @@ private:
 		}
 	}
 
+	void handleHouseCollision(entityx::Entity a, entityx::Entity b, entityx::EventManager &es) {
+		if (a.has_component<HouseComponent>()) {
+			auto missile = b.component<Missile>();
+			if (missile) {
+				missile->shouldExplode = true;
+			} else if (b.has_component<Projectile>()) {
+				to_remove[b.id()] = b;
+			}
+		}
+	}
 	
 	void handleCollision(entityx::Entity a, entityx::Entity b, entityx::EventManager &es) {
 		handleHealth(a, b, es);
 		handleHealth(b, a, es);
+
+		handleHouseCollision(a, b, es);
+		handleHouseCollision(b, a, es);
 
 		/*if (a.has_component<PointComponent>())
 			state->addPoints(a.component<PointComponent>().get()->points);
@@ -220,6 +225,9 @@ private:
 			handleDrop(a, b);
 			to_remove[b.id()] = b;
 		}
+
+		
+
 	}
 
 	void checkCollision(entityx::Entity a, entityx::Entity b, entityx::EventManager &es)

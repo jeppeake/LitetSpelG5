@@ -41,8 +41,10 @@ private:
 
 	void loadLoadout();
 
-	double gt = 0.0;
+	double enemySpawnTime = 0.0;
 	int spawnCounter = 2;
+
+	double dropSpawnTime = 0.0;
 
 public:
 	entityx::Entity entity_p;
