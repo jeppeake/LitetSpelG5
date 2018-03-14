@@ -78,7 +78,16 @@ std::vector<Weapon> Equipment::playerLoadout;
 
 void PlayingState::spawnEnemies(int nr) {
 
+	int maxEnemies = 30;
 
+	int currentCount = 0;
+	for (Entity e : ex.entities.entities_with_components<AIComponent>()) {
+		currentCount++;
+	}
+
+	nr = glm::min(nr, maxEnemies - currentCount);
+
+	std::cout << "[DEBUG] Spawning " << nr << " enemies\n";
 
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
@@ -132,7 +141,7 @@ void PlayingState::spawnEnemies(int nr) {
 }
 
 void PlayingState::spawnDrop(DropComponent::TypeOfDrop typeOfDrop) {
-	std::cout << "Drop spawned!";
+	std::cout << "[DEBUG] Drop spawned!\n";
 
 	std::string model;
 	glm::vec3 pos(rand() % 10000 - 5000, 0, rand() % 10000 - 5000);
@@ -457,9 +466,10 @@ void PlayingState::update(double dt)
 		//points += 10 * dt;
 		gt += dt;
 
-		if (gt > 30.0) {
-			gt -= 30.0;
-			spawnEnemies(spawnCounter);
+		double spawnTime = 5.0;
+		if (gt > spawnTime) {
+			gt -= spawnTime;
+			spawnEnemies(glm::ceil(spawnCounter/5.0));
 			spawnCounter++;
 			spawnDrop(DropComponent::Ammo);
 			//spawnDrop(DropComponent::Ammo);
