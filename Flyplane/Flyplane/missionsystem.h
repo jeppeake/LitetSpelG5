@@ -299,6 +299,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 					//behaviours.push_back(new Follow_Path(1, new Always_True(), plotter, true));
 					if (mi.type == MISSIONTYPE_DEFEND) {
 						behaviours.push_back(new Hunt_Static(2, new Always_True(), target, 0.05f, 500.f));
+						behaviours.push_back(new Hunt_Target(1, new Always_True(), state->entity_p, 0.05f, 500.f));
 					}
 					if (mi.type == MISSIONTYPE_KILLALL) {
 						plotter.push_back(glm::vec3(0, 0, 0));
