@@ -431,6 +431,8 @@ void Renderer::RenderScene() {
 	list.clear();
 	listStatics.clear();
 
+	if(this->isOutside)
+		RenderOutsideMessage();
 	// old
 	//mapList.clear();
 }
@@ -509,8 +511,10 @@ void Renderer::RenderGui(float hp, float height, float speed, glm::vec3 crosshai
 		if (weaponAmmo)
 			RenderWeapon();
 	
+		/*
 		if (isOutside)
 			RenderOutsideMessage();
+		*/
 	}
 	glViewport(0, s.y - 40, 100, 40);
 	renderTexture(scoreTexture, glm::mat4(1));

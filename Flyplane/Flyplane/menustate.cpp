@@ -129,6 +129,10 @@ void MenuState::init() {
 
 	AssetLoader::getLoader().loadModel("assets/buildings/Monolith/Monolith.fbx", "monolith");
 	AssetLoader::getLoader().loadModel("assets/buildings/Pyramid/pyramid.fbx", "pyramid");
+	AssetLoader::getLoader().loadModel("assets/buildings/MindcontrolCenter/MCC.fbx", "mindcontrol");
+	AssetLoader::getLoader().loadModel("assets/buildings/Radome/Radome_foundation.fbx", "radome");
+	AssetLoader::getLoader().loadModel("assets/buildings/Radome/Radome_top.fbx", "radometop");
+	AssetLoader::getLoader().loadModel("assets/buildings/Fortress/Fortress.fbx", "fort");
 
 
 	AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
@@ -306,7 +310,11 @@ void MenuState::update(double dt) {
 		break;
 	}
 	
-	
+	ComponentHandle<Transform> htrans;
+	ComponentHandle<RotateComponent> hrot;
+	for (auto e : ex.entities.entities_with_components(htrans, hrot)) {
+		htrans->orientation = glm::quat(glm::vec3(0, hrot->speed*dt, 0)) * htrans->orientation;
+	}
 	
 	ex.systems.update<AISystem>(dt);
 	ex.systems.update<FlightSystem>(dt);

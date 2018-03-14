@@ -150,7 +150,7 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 				player->outsideTimer.restart();
 			}
 
-			double outsideTime = 5.0;
+			double outsideTime = 10.0;
 
 			double elapsed = player->outsideTimer.elapsed();
 			if (elapsed >= outsideTime) {
@@ -222,10 +222,10 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		}
 
 
-		/*
+		
 		glm::vec3 pos = transform->pos;
 		std::cout << "player pos: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
-		*/
+		
 	}
 }
 
