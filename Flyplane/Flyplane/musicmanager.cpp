@@ -9,6 +9,8 @@ MusicManager::MusicManager() {
 	music.setPosition(0.0f, 0.0f, 0.0f);
 	music.setVolume(50);
 	playing = false;
+
+	addSongToPlayList("assets/Sound/arma3Soundtrack.wav");
 }
 
 void MusicManager::update() {

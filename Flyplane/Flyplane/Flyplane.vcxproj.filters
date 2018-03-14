@@ -141,6 +141,9 @@
     <ClCompile Include="musicmanager.cpp">
       <Filter>UTILS</Filter>
     </ClCompile>
+    <ClCompile Include="spawn.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h" />
@@ -518,6 +521,9 @@
     </ClInclude>
     <ClInclude Include="pauseEvent.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="spawn.h">
+      <Filter>UTILS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
