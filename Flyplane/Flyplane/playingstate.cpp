@@ -87,7 +87,8 @@ void PlayingState::spawnEnemies(int nr) {
 
 	nr = glm::min(nr, maxEnemies - currentCount);
 
-	std::cout << "[DEBUG] Spawning " << nr << " enemies\n";
+
+	std::cout << "[DEBUG] Active AI: " << currentCount <<", Spawning " << nr << " enemies\n";
 
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
@@ -466,10 +467,10 @@ void PlayingState::update(double dt)
 		//points += 10 * dt;
 		gt += dt;
 
-		double spawnTime = 5.0;
+		double spawnTime = 30.0;
 		if (gt > spawnTime) {
 			gt -= spawnTime;
-			spawnEnemies(glm::ceil(spawnCounter/5.0));
+			spawnEnemies(glm::ceil(spawnCounter/6.0));
 			spawnCounter++;
 			spawnDrop(DropComponent::Ammo);
 			//spawnDrop(DropComponent::Ammo);
