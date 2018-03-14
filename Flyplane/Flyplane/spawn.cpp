@@ -81,9 +81,9 @@ void Spawn::landmarks(entityx::EntityManager & es) {
 		fort.assign<HouseComponent>();
 		fort.assign<CollisionComponent>();
 		fort.assign<ModelComponent>(AssetLoader::getLoader().getModel("fort"));
-		glm::vec3 pos(0, 0, 0);
-		pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos);
-		float size = 150.f;
+		glm::vec3 pos(-7722, 0, 1200);
+		pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos) + 10;
+		float size = 450.f;
 		fort.assign<Transform>(pos, glm::quat(glm::vec3(0, glm::pi<float>() / 16.f, 0)), glm::vec3(size));
 	}
 
