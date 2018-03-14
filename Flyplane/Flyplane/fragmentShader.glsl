@@ -11,6 +11,9 @@ uniform int drawShadows;
 
 uniform vec3 sunDir;
 
+out vec4 outColor;
+
+
 in vec3 Pos;
 in vec3 Normal;
 in vec2 Tex;
@@ -115,8 +118,18 @@ void main() {
 	lighting += color * diffuse * visibility * 0.8;
 	lighting += color * specular * visibility;
 	lighting += color * 0.2;
-	gl_FragColor = vec4(lighting, alpha);
 
+	float dist = length(cameraPos - Pos);
+	float fog = pow(clamp(dist/30000.0, 0.0, 1.0), 2);
+	vec3 fogColor = 0.9*vec3(100.0/255,149.0/255,234.0/255);
+
+	float thickFog = pow(clamp(dist/30000.0, 0.0, 1.0), 2);
+	vec3 thickFogColor = vec3(100.0/255,149.0/255,234.0/255);
+
+	color = mix(lighting, vec3(fogColor), fog);
+	color = mix(color, vec3(thickFogColor), thickFog);
+
+	outColor = vec4(color, alpha);
 	
 	//gl_FragColor = vec4(ShadowNormal, 1);
 	
