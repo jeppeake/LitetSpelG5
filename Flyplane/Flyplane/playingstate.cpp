@@ -90,10 +90,14 @@ void PlayingState::spawnEnemies(int nr) {
 
 	std::cout << "[DEBUG] Active AI: " << currentCount <<", Spawning " << nr << " enemies\n";
 
+	auto size = AssetLoader::getLoader().getHeightmap("testmap")->getWorldSize();
+	int width = size.x;
+	int height = size.y;
+
 	for (int i = 0; i < nr; i++) {
 		auto entity = ex.entities.create();
-		float x = rand() % 1000;
-		float z = rand() % 1000;
+		float x = (rand() % width) - width/2;
+		float z = (rand() % height) - height / 2;
 		glm::vec3 pos(x, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(x, 0, z)) + 1500, z);
 		glm::quat orien(rand() % 100, rand() % 100, rand() % 100, rand() % 100);
 		entity.assign<Transform>(pos, normalize(orien));
@@ -465,8 +469,6 @@ void PlayingState::update(double dt)
 
 	if (playerAlive && !menuOpen) {
 		//points += 10 * dt;
-		gt += dt;
-
 
 		ComponentHandle<Transform> htrans;
 		ComponentHandle<RotateComponent> hrot;
@@ -476,15 +478,20 @@ void PlayingState::update(double dt)
 
 
 		double spawnTime = 30.0;
-		if (gt > spawnTime) {
-			gt -= spawnTime;
+		enemySpawnTime += dt;
+		if (enemySpawnTime > spawnTime) {
+			enemySpawnTime -= spawnTime;
 			spawnEnemies(glm::ceil(spawnCounter/6.0));
 			spawnCounter++;
+		}
+
+		dropSpawnTime += dt;
+		if (dropSpawnTime > 2 * spawnTime) {
+			dropSpawnTime -= 2 * spawnTime;
 			spawnDrop(DropComponent::Ammo);
-			//spawnDrop(DropComponent::Ammo);
-			//spawnDrop(DropComponent::Ammo);
 			spawnDrop(DropComponent::Health);
 		}
+
 
 		timerMultiplier -= dt;
 		if (timerMultiplier <= 0 && multiplier > 1) {

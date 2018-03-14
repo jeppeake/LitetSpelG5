@@ -73,6 +73,10 @@ public:
 		return glm::vec2(width, height);
 	}
 
+	inline glm::vec2 getWorldSize() {
+		return glm::vec2(scale.x*width, scale.z*height);
+	}
+
 	glm::vec3 generateHousePos();
 
 	glm::vec2 getMinMaxHeights();
