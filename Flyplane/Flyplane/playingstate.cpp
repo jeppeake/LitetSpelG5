@@ -467,6 +467,14 @@ void PlayingState::update(double dt)
 		//points += 10 * dt;
 		gt += dt;
 
+
+		ComponentHandle<Transform> htrans;
+		ComponentHandle<RotateComponent> hrot;
+		for (auto e : ex.entities.entities_with_components(htrans, hrot)) {
+			htrans->orientation = glm::quat(glm::vec3(0, hrot->speed*dt, 0)) * htrans->orientation;
+		}
+
+
 		double spawnTime = 30.0;
 		if (gt > spawnTime) {
 			gt -= spawnTime;

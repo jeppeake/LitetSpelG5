@@ -222,10 +222,10 @@ void PlayerSystem::update(EntityManager & es, EventManager & events, TimeDelta d
 		}
 
 
-		/*
+		
 		glm::vec3 pos = transform->pos;
 		std::cout << "player pos: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
-		*/
+		
 	}
 }
 
