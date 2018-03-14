@@ -65,6 +65,8 @@
 #include "lifetimesystem.h"
 #include "musicmanager.h"
 
+#include "spawn.h"
+
 //entityx::Entity entity;
 
 entityx::Entity entity_formation;
@@ -409,15 +411,7 @@ void PlayingState::init()
 		house.assign<ModelComponent>(AssetLoader::getLoader().getModel("hus1"));
 	}
 	*/
-
-	entityx::Entity tower = ex.entities.create();
-	tower.assign<HouseComponent>();
-	tower.assign<CollisionComponent>();
-	tower.assign<ModelComponent>(AssetLoader::getLoader().getModel("monolith"));
-	glm::vec3 pos(3000,0,-7000);
-	pos.y = AssetLoader::getLoader().getHeightmap("testmap")->heightAt(pos);
-	float size = 200.f;
-	tower.assign<Transform>(pos, glm::quat(glm::vec3(0, glm::pi<float>()/4.f, 0)), glm::vec3(size));
+	Spawn::landmarks(ex.entities);
 
 
 }
