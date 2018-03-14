@@ -202,7 +202,7 @@ struct MissionSystem : public entityx::System<MissionSystem> {
 			if (timer.elapsed() >= mTime) {
 				fail();
 			}
-			downtime = 50;
+			downtime = 45;
 		}
 		else if (failed) {
 			std::string txt = "You failed the mission!";
