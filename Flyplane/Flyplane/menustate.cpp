@@ -37,6 +37,7 @@
 #include "camerasystem.h"
 
 #include "mission.h"
+#include "spawn.h"
 
 entityx::Entity entity3;
 entityx::Entity randomEnemy;
@@ -125,6 +126,10 @@ void MenuState::init() {
 	AssetLoader::getLoader().loadModel("assets/MIG-212A.fbx", "MIG-212A");
 	AssetLoader::getLoader().loadModel("Weapons/Missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 	AssetLoader::getLoader().loadModel("assets/buildings/Radome/Radome_foundation.fbx", "hus1");
+
+	AssetLoader::getLoader().loadModel("assets/buildings/Monolith/Monolith.fbx", "monolith");
+	AssetLoader::getLoader().loadModel("assets/buildings/Pyramid/pyramid.fbx", "pyramid");
+
 
 	AssetLoader::getLoader().loadHeightmap("assets/Terrain/map.txt", "testmap");
 
@@ -246,6 +251,9 @@ void MenuState::init() {
 	cangles.push_back(CameraAngle(glm::vec3(400, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(400, 0, -2000)) + 400, -2000), glm::vec3(0, 0, 1)));
 	cangles.push_back(CameraAngle(glm::vec3(-500, AssetLoader::getLoader().getHeightmap("testmap")->heightAt(glm::vec3(-500, 0, -4000)) + 400, -4000), glm::vec3(1, 0, 0)));
 	entity3.component<CameraOnComponent>()->camera.setTransform(trans);
+
+
+	Spawn::landmarks(ex.entities);
 }
 
 void MenuState::startOptions() {

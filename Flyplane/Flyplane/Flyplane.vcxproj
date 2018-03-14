@@ -170,6 +170,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="SAIB.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="spawn.cpp" />
     <ClCompile Include="speedindicator.cpp" />
     <ClCompile Include="terrain_close.h" />
     <ClCompile Include="text.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="physicssystem.h" />
     <ClInclude Include="soundcomponent.h" />
     <ClInclude Include="soundsystem.h" />
+    <ClInclude Include="spawn.h" />
     <ClInclude Include="speedindicator.h" />
     <ClInclude Include="startgameaction.h" />
     <ClInclude Include="startloadingaction.h" />
