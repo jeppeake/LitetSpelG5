@@ -29,6 +29,7 @@ private:
 	ShaderProgram terrain_shader;
 	ShaderProgram terrainShadow;
 	ShaderProgram shadow;
+	ShaderProgram shadowStatic;
 	ShaderProgram guiShader;
 	ShaderProgram enemyMarkerShader;
 	ShaderProgram enemyArrowShader;

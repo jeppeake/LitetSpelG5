@@ -38,6 +38,7 @@ void LoadingState::init() {
 	AssetLoader::getLoader().loadModel("assets/Weapons/missiles/ALAAT-10/ALAAT-10.fbx", "ALAAT-10");
 
 	AssetLoader::getLoader().loadModel("assets/buildings/Bunker_small/Bunker_small2.fbx", "bunker");
+	AssetLoader::getLoader().loadModel("assets/buildings/Monolith/Monolith.fbx", "monolith");
 
 	AssetLoader::getLoader().loadModel("assets/buildings/911bb.fbx", "testhus");
 	AssetLoader::getLoader().loadModel("assets/buildings/hus1.fbx", "hus1");
