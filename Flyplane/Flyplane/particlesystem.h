@@ -201,7 +201,7 @@ public:
 				p->params.distFromCam = length(transform->pos - camTrans.pos);
 			}
 			speedShader.uniform("direction", camTrans.orientation * glm::vec3(0, 0, -1));
-			speedShader.uniform("life", 3.f);
+			//speedShader.uniform("life", 6.f);
 			speedShader.uniform("dt", float(dt));
 			break;
 
