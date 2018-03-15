@@ -114,7 +114,7 @@ void main() {
 	vec3 h = normalize(look + sun);
 	float specular = pow(clamp(dot(n, h), 0.0, 1.0), 100.0);
 
-	vec3 lighting;
+	vec3 lighting = vec3(0,0,0);
 	lighting += color * diffuse * visibility * 0.8;
 	lighting += color * specular * visibility;
 	lighting += color * 0.2;
