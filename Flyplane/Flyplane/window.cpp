@@ -45,7 +45,7 @@ void Window::open(int width, int height)
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
 
-	title = "Flyplane";
+	title = "Den Siste Piloten";
 
 
 	//glfwWindowHint(GLFW_DEPTH_BITS, 16);
@@ -179,15 +179,16 @@ void Window::updateScrolls() {
 }
 
 void Window::updateTitle() {
-
+	/*
 	if (frame_timer.elapsed() >= 0.5) {
 		double elapsed = frame_timer.restart();
 		double fps = frames / elapsed;
-		std::string new_title = title + " | FPS: " + std::to_string(fps);
+		std::string new_title = title;// +" | FPS: " + std::to_string(fps);
 		glfwSetWindowTitle(window, new_title.c_str());
 		frames = 0;
 	}
 	frames += 1.0;
+	*/
 }
 
 bool Window::shouldClose()
