@@ -18,8 +18,9 @@ layout(std430, binding=10) buffer Col
 {
 	vec4 Colors[];
 };
+
+const float life = 6.0;
 uniform float dt;
-uniform float life;
 uniform vec3 spawn;
 uniform vec3 direction;
 
@@ -34,8 +35,9 @@ void main()
 	if(Positions[gid].xyz == vec3(0))
 	{
 		Lives[gid] = abs(rand(gid + 1000)) * life;
-		Positions[gid].xyz = spawn - direction * 100 + vec3(rand(gid), rand(gid * gid), rand(gid + 2000)) * 750;
-		Colors[gid].rgba = vec4(0.7,0.7,0.5, rand(gid + 5000));
+		Positions[gid].xyz = spawn - direction * 300 + vec3(rand(gid), rand(gid * gid), rand(gid + 2000)) * 900;
+		Colors[gid].rgba = vec4(0.7,0.7,0.5, abs(rand(gid + 5000)));
+		Positions[gid].w = 0.7;
 	}
 	else 
 	{
@@ -45,8 +47,8 @@ void main()
 	Lives[gid] += dt;
 	if(Lives[gid] >= life)
 	{
-		Positions[gid].xyz = spawn - direction * 100 + vec3(rand(gid), rand(gid * gid), rand(gid + 2000)) * 750;
-		Colors[gid].rgba = vec4(0.7,0.7,0.5, rand(gid + 5000));
+		Positions[gid].xyz = spawn - direction * 300 + vec3(rand(gid), rand(gid * gid), rand(gid + 2000)) * 900;
+		Colors[gid].rgba = vec4(0.7,0.7,0.5, abs(rand(gid + 5000)));
 		Lives[gid] -= life;
 	}
 }
