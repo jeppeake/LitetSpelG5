@@ -46,7 +46,7 @@ public:
 		speedShader.create("speedPart.glsl");
 		wingTrailShader.create("wingTrail.glsl");
 		flareShader.create("flare.glsl");
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 80; i++) {
 			pool.push_back(new Particles(numParticles));
 		}
 	}
@@ -62,7 +62,7 @@ public:
 					particles->systems[i]->t.restart();
 					particles->systems.erase(particles->systems.begin() + i);
 					i--;
-					std::cout << "[DEBUG] - Removed timed particleSystem \n";
+					//std::cout << "[DEBUG] - Removed timed particleSystem \n";
 				}
 			}
 

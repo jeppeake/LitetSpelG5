@@ -13,9 +13,15 @@
 #include "highscore.h"
 #include "globaltimer.h"
 #include "musicmanager.h"
+#include <Windows.h>
 
 int main(void)
 {	
+	
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_HIDE);
+	std::cout.setstate(std::ios_base::failbit);
+
 	srand(time(NULL));
 	sf::Listener::setGlobalVolume(50);
 	MusicManager::getMusicManager().playMenuMusic();

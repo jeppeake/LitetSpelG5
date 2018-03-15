@@ -328,7 +328,7 @@ struct WeaponSystem : public entityx::System<WeaponSystem> {
 									}
 								}
 								if (!found) {
-									std::cout << "Could not find non playing sound for weapon!\n";
+									//std::cout << "Could not find non playing sound for weapon!\n";
 								}
 								/*
 								if (s->sound.getStatus() != s->sound.Playing) {
