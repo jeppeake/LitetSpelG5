@@ -29,7 +29,7 @@ GLuint compileShader(GLenum type, const std::string& name)
 {
 	GLuint shader = glCreateShader(type);
 
-	std::string path = name;
+	std::string path = "assets/shaders/" + name;
 	std::ifstream shaderFile(path);
 	std::string shaderText((std::istreambuf_iterator<char>(shaderFile)), std::istreambuf_iterator<char>());
 	if (!shaderFile.is_open())
@@ -82,6 +82,7 @@ ShaderProgram::~ShaderProgram()
 
 void ShaderProgram::create(const std::string & vert, const std::string & geom, const std::string & frag)
 {
+	
 	paths.vert = vert;
 	paths.geom = geom;
 	paths.frag = frag;

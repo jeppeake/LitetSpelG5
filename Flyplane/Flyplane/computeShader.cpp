@@ -5,7 +5,7 @@
 bool ComputeShader::create(const std::string & path)
 {
 	this->path = path;
-	std::ifstream file(path);
+	std::ifstream file("assets/shaders/" + path);
 	std::string c = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	c = "#version 430 core\n#define LOCAL_SIZE_X " + std::to_string(LOCAL_SIZE) + "\n" + c;
 	const char *code = c.c_str();
